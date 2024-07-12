@@ -8,6 +8,7 @@ import issueData from "./issues/issues"
 import issueCommentData from "./issues/issue-comments"
 import issueImageData from "./issues/issue-images"
 import jobData from "./jobs/jobs"
+import jobImageData from "./jobs/job-images"
 
 
 export default {
@@ -20,5 +21,6 @@ export default {
   issueData,
   issueCommentData,
   issueImageData,
-  jobData
+  jobData,
+  jobImageData
 }
