@@ -1,0 +1,9 @@
+# Node
+node_modules
+
+# Output directory
+/dist
+
+# Other
+notes*
+templates*
