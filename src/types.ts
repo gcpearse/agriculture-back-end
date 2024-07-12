@@ -45,9 +45,12 @@ type Comment = {
   created_at: string
 }
 
-
 export type CropComment = {
   crop_id: number
+} & Comment
+
+export type IssueComment = {
+  issue_id: number
 } & Comment
 
 
@@ -56,11 +59,9 @@ type Image = {
   image_url: string
 }
 
-
 export type PlotImage = {
   plot_id: number
 } & Image
-
 
 export type CropImage = {
   crop_id: number
