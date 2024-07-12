@@ -4,6 +4,7 @@ import plotImageData from "./plots/plot-images"
 import cropData from "./crops/crops"
 import cropCommentData from "./crops/crop-comments"
 import cropImageData from "./crops/crop-images"
+import issueData from "./issues/issues"
 
 
 export default {
@@ -12,5 +13,6 @@ export default {
   plotImageData,
   cropData,
   cropCommentData,
-  cropImageData
+  cropImageData,
+  issueData
 }
