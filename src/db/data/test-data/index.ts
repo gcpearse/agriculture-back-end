@@ -6,6 +6,7 @@ import cropCommentData from "./crops/crop-comments"
 import cropImageData from "./crops/crop-images"
 import issueData from "./issues/issues"
 import issueCommentData from "./issues/issue-comments"
+import issueImageData from "./issues/issue-images"
 
 
 export default {
@@ -16,5 +17,6 @@ export default {
   cropCommentData,
   cropImageData,
   issueData,
-  issueCommentData
+  issueCommentData,
+  issueImageData
 }
