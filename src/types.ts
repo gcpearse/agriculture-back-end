@@ -41,6 +41,11 @@ export type PlotImage = {
 } & Image
 
 
+export type CropImage = {
+  crop_id: number
+} & Image
+
+
 type Comment = {
   comment_id?: number
   body: string
