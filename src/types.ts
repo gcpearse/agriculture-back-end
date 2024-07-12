@@ -66,3 +66,7 @@ export type PlotImage = {
 export type CropImage = {
   crop_id: number
 } & Image
+
+export type IssueImage = {
+  issue_id: number
+} & Image
