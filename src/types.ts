@@ -30,6 +30,27 @@ export type Crop = {
 }
 
 
+export type Issue = {
+  issue_id?: number
+  plot_id: number
+  title: string
+  description: string
+  is_resolved: boolean
+}
+
+
+type Comment = {
+  comment_id?: number
+  body: string
+  created_at: string
+}
+
+
+export type CropComment = {
+  crop_id: number
+} & Comment
+
+
 type Image = {
   image_id?: number
   image_url: string
@@ -44,15 +65,3 @@ export type PlotImage = {
 export type CropImage = {
   crop_id: number
 } & Image
-
-
-type Comment = {
-  comment_id?: number
-  body: string
-  created_at: string
-}
-
-
-export type CropComment = {
-  crop_id: number
-} & Comment
