@@ -44,7 +44,7 @@ export type PlotImage = {
 type Comment = {
   comment_id?: number
   body: string
-  created_at: number
+  created_at: string
 }
 
 
