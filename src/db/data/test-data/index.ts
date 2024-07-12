@@ -7,6 +7,7 @@ import cropImageData from "./crops/crop-images"
 import issueData from "./issues/issues"
 import issueCommentData from "./issues/issue-comments"
 import issueImageData from "./issues/issue-images"
+import jobData from "./jobs/jobs"
 
 
 export default {
@@ -18,5 +19,6 @@ export default {
   cropImageData,
   issueData,
   issueCommentData,
-  issueImageData
+  issueImageData,
+  jobData
 }
