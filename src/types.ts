@@ -84,3 +84,7 @@ export type CropImage = {
 export type IssueImage = {
   issue_id: number
 } & Image
+
+export type JobImage = {
+  job_id: number
+} & Image
