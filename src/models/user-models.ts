@@ -57,7 +57,7 @@ export const updateUserByUsername = async (authorisedUser: string, username: str
 }
 
 
-export const changedPasswordByUsername = async (authorisedUser: string, username: string, password: string) => {
+export const changePasswordByUsername = async (authorisedUser: string, username: string, password: string) => {
 
   if (authorisedUser !== username) {
     return Promise.reject({
