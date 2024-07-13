@@ -57,6 +57,34 @@ export const updateUserByUsername = async (authorisedUser: string, username: str
 }
 
 
+export const changedPasswordByUsername = async (authorisedUser: string, username: string, password: string) => {
+
+  if (authorisedUser !== username) {
+    return Promise.reject({
+      status: 403,
+      message: "Permission to change password denied"
+    })
+  }
+
+  const result = await db.query(`
+    UPDATE users
+    SET password = $1
+    WHERE username = $2
+    RETURNING user_id, username, first_name, surname, uses_metric;
+    `,
+    [password, username])
+
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 404,
+      message: "User not found"
+    })
+  }
+
+  return result.rows[0]
+}
+
+
 export const removeUserByUsername = async (authorisedUser: string, username: string) => {
 
   if (authorisedUser !== username) {
