@@ -23,6 +23,31 @@ export const selectUserByUsername = async (authorisedUser: string, username: str
       message: "User not found"
     })
   }
-    
+
   return result.rows[0]
+}
+
+
+export const removeUserByUsername = async (authorisedUser: string, username: string) => {
+
+  if (authorisedUser !== username) {
+    return Promise.reject({
+      status: 403,
+      message: "Permission to delete user data denied"
+    })
+  }
+
+  const result = await db.query(`
+    DELETE FROM users
+    WHERE username = $1
+    RETURNING *;
+    `,
+    [username])
+
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 404,
+      message: "User not found"
+    })
+  }
 }
