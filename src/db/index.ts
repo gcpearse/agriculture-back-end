@@ -11,4 +11,8 @@ if (!process.env.PGDATABASE) {
   throw new Error("PGDATABASE not set")
 }
 
+if (!process.env.JWT_SECRET) {
+  throw new Error("JWT_SECRET not set")
+}
+
 export const db = new Pool()
