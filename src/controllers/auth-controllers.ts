@@ -1,5 +1,5 @@
 import { RequestHandler } from "express"
-import { registerUser, logInUser } from "../models/user-models"
+import { registerUser, logInUser } from "../models/auth-models"
 import { generateToken } from "../middleware/authentication"
 
 
