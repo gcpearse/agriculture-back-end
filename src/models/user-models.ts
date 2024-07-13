@@ -1,5 +1,5 @@
 import { db } from "../db"
-import { Credentials, User } from "../types"
+import { Credentials, User } from "../types/user-types"
 
 
 export const registerUser = async ({ username, password, first_name, surname, uses_metric }: User) => {

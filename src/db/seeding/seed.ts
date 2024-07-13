@@ -1,6 +1,12 @@
 import { db } from ".."
-import { Crop, CropComment, CropImage, Issue, IssueComment, IssueImage, Job, JobImage, Plot, PlotImage, User } from "../../types"
 import format from "pg-format"
+import { User } from "../../types/user-types"
+import { Plot } from "../../types/plot-types"
+import { Crop } from "../../types/crop-types"
+import { Issue } from "../../types/issue-types"
+import { Job } from "../../types/job-types"
+import { CropImage, IssueImage, JobImage, PlotImage } from "../../types/image-types"
+import { CropComment, IssueComment } from "../../types/comment-types"
 
 
 export const seed = async ({

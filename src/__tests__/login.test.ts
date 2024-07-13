@@ -3,7 +3,7 @@ import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
-import { Credentials } from "../types"
+import { Credentials } from "../types/user-types"
 
 
 beforeEach(() => seed(data))
