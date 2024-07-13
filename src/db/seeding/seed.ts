@@ -93,7 +93,7 @@ export const seed = async ({
   await db.query(`
     CREATE TABLE plots (
       plot_id SERIAL PRIMARY KEY,
-      owner_id INT NOT NULL REFERENCES users(user_id),
+      owner_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
       name VARCHAR NOT NULL,
       type VARCHAR NOT NULL,
       description VARCHAR NOT NULL,

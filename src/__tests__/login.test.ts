@@ -24,7 +24,7 @@ describe("POST /api/login", () => {
       .send(user)
       .expect(200)
 
-    expect(body.token).toMatch(/\w+\.\w+\.\w+/)
+    expect(body.token).toMatch(/[\w-]{2,}\.[\w-]{2,}\.[\w-]{2,}/)
   })
 
   test("POST:404 Responds with an error message when the username is not found", async () => {

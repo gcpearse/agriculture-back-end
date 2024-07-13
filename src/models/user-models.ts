@@ -1,67 +1,110 @@
 import { db } from "../db"
-import { Credentials, User } from "../types/user-types"
+import { User } from "../types/user-types"
 
 
-export const registerUser = async ({ username, password, first_name, surname, uses_metric }: User) => {
+export const selectUserByUsername = async (authorisedUser: string, username: string) => {
 
-  const conflictCheck = await db.query(`
-    SELECT username 
-    FROM users 
-    WHERE username = $1
-    `,
-    [username])
-
-  if (conflictCheck.rowCount) {
+  if (authorisedUser !== username) {
     return Promise.reject({
-      status: 409,
-      message: "Username already exists"
+      status: 403,
+      message: "Access to user data denied"
     })
   }
 
   const result = await db.query(`
-    INSERT INTO users
-      (username, password, first_name, surname, uses_metric)
-    VALUES
-      ($1, $2, $3, $4, $5)
-    RETURNING user_id, username, first_name, surname, uses_metric;
+    SELECT user_id, username, first_name, surname, uses_metric
+    FROM users
+    WHERE username = $1
     `,
-    [username, password, first_name, surname, uses_metric]
-  )
+    [username])
+
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 404,
+      message: "User not found"
+    })
+  }
 
   return result.rows[0]
 }
 
 
-export const logInUser = async ({ username, password }: Credentials) => {
+export const updateUserByUsername = async (authorisedUser: string, username: string, user: User) => {
 
-  const usernameCheck = await db.query(`
-    SELECT username 
-    FROM users 
+  if (authorisedUser !== username) {
+    return Promise.reject({
+      status: 403,
+      message: "Permission to edit user data denied"
+    })
+  }
+
+  const result = await db.query(`
+    UPDATE users
+    SET first_name = $1, surname = $2, uses_metric = $3
+    WHERE username = $4
+    RETURNING user_id, username, first_name, surname, uses_metric;
+    `,
+    [user.first_name, user.surname, user.uses_metric, username])
+
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 404,
+      message: "User not found"
+    })
+  }
+
+  return result.rows[0]
+}
+
+
+export const changePasswordByUsername = async (authorisedUser: string, username: string, password: string) => {
+
+  if (authorisedUser !== username) {
+    return Promise.reject({
+      status: 403,
+      message: "Permission to change password denied"
+    })
+  }
+
+  const result = await db.query(`
+    UPDATE users
+    SET password = $1
+    WHERE username = $2
+    RETURNING user_id, username, first_name, surname, uses_metric;
+    `,
+    [password, username])
+
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 404,
+      message: "User not found"
+    })
+  }
+
+  return result.rows[0]
+}
+
+
+export const removeUserByUsername = async (authorisedUser: string, username: string) => {
+
+  if (authorisedUser !== username) {
+    return Promise.reject({
+      status: 403,
+      message: "Permission to delete user data denied"
+    })
+  }
+
+  const result = await db.query(`
+    DELETE FROM users
     WHERE username = $1
+    RETURNING *;
     `,
     [username])
 
-  if (!usernameCheck.rowCount) {
+  if (!result.rowCount) {
     return Promise.reject({
       status: 404,
-      message: "Username not found"
+      message: "User not found"
     })
   }
-
-  const passwordCheck = await db.query(`
-    SELECT password
-    FROM users
-    WHERE username = $1
-    AND password = $2
-    `,
-    [username, password])
-
-  if (!passwordCheck.rowCount) {
-    return Promise.reject({
-      status: 401,
-      message: "Incorrect password"
-    })
-  }
-
-  return usernameCheck.rows[0]
 }

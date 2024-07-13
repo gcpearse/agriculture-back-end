@@ -1,25 +1,63 @@
 import { RequestHandler } from "express"
-import { registerUser, logInUser } from "../models/user-models"
-import { generateToken } from "../middleware/authentication"
+import { changePasswordByUsername, removeUserByUsername, selectUserByUsername, updateUserByUsername } from "../models/user-models"
 
 
-export const postRegistration: RequestHandler = async (req, res, next) => {
+export const getUserByUsername: RequestHandler = async (req, res, next) => {
+
+  const authorisedUser = req.body.user.username
+
+  const { username } = req.params
 
   try {
-    const user = await registerUser(req.body)
-    res.status(201).send({ user })
+    const user = await selectUserByUsername(authorisedUser, username)
+    res.status(200).send({ user })
   } catch (err) {
     next(err)
   }
 }
 
 
-export const postLogin: RequestHandler = async (req, res, next) => {
+export const patchUserByUsername: RequestHandler = async (req, res, next) => {
+
+  const authorisedUser = req.body.user.username
+
+  const { username } = req.params
 
   try {
-    const username = await logInUser(req.body)
-    const token = generateToken(username)
-    res.status(200).send({ token })
+    const user = await updateUserByUsername(authorisedUser, username, req.body)
+    res.status(200).send({ user })
+  } catch (err) {
+    next(err)
+  }
+}
+
+
+export const patchPasswordByUsername: RequestHandler = async (req, res, next) => {
+
+  const authorisedUser = req.body.user.username
+
+  const { username } = req.params
+
+  const { password } = req.body
+
+  try {
+    const user = await changePasswordByUsername(authorisedUser, username, password)
+    res.status(200).send({ user })
+  } catch (err) {
+    next(err)
+  }
+}
+
+
+export const deleteUserByUsername: RequestHandler = async (req, res, next) => {
+
+  const authorisedUser = req.body.user.username
+
+  const { username } = req.params
+
+  try {
+    await removeUserByUsername(authorisedUser, username)
+    res.status(204).send()
   } catch (err) {
     next(err)
   }
