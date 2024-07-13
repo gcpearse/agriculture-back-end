@@ -1,5 +1,5 @@
 import { RequestHandler } from "express"
-import { changedPasswordByUsername, removeUserByUsername, selectUserByUsername, updateUserByUsername } from "../models/user-models"
+import { changePasswordByUsername, removeUserByUsername, selectUserByUsername, updateUserByUsername } from "../models/user-models"
 
 
 export const getUserByUsername: RequestHandler = async (req, res, next) => {
@@ -41,7 +41,7 @@ export const patchPasswordByUsername: RequestHandler = async (req, res, next) =>
   const { password } = req.body
 
   try {
-    const user = await changedPasswordByUsername(authorisedUser, username, password)
+    const user = await changePasswordByUsername(authorisedUser, username, password)
     res.status(200).send({ user })
   } catch (err) {
     next(err)
