@@ -1,11 +1,11 @@
 import { RequestHandler } from "express" 
-import { insertUser, logInUser } from "../models/user-models"
+import { registerUser, logInUser } from "../models/user-models"
 
 
-export const postUser: RequestHandler = async (req, res, next) => {
+export const postRegistration: RequestHandler = async (req, res, next) => {
 
   try {
-    const user = await insertUser(req.body)
+    const user = await registerUser(req.body)
     res.status(201).send(user)
   } catch (err) {
     next(err)
