@@ -11,7 +11,7 @@ export const handleCustomErrors: ErrorRequestHandler = (err, _req, res, next) =>
 }
 
 
-export const handleServerError: ErrorRequestHandler = (_err, _req, res, _next) => {
+export const handleServerErrors: ErrorRequestHandler = (_err, _req, res, _next) => {
 
   res.status(500).send({ message: "Server error" })
 }
