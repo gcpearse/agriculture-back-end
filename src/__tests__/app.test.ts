@@ -12,7 +12,7 @@ afterAll(() => db.end())
 
 describe("POST /api/register", () => {
 
-  test("POST:201 Responds with the newly created user", async () => {
+  test("POST:201 Responds with a new user object without a password property", async () => {
 
     const newUser: User = {
       username: "farmer123",
@@ -27,9 +27,9 @@ describe("POST /api/register", () => {
       .send(newUser)
       .expect(201)
 
-    expect(body).toMatchObject({
+    expect(body.user).toMatchObject({
+      user_id: 3,
       username: "farmer123",
-      password: "password123",
       first_name: "Fred",
       surname: "Flint",
       uses_metric: true
@@ -58,7 +58,7 @@ describe("POST /api/register", () => {
 
 describe("POST /api/login", () => {
 
-  test("POST:200 Responds with the username of the logged in user when the credentials are valid", async () => {
+  test("POST:200 Responds with a JWT token when the credentials are valid", async () => {
 
     const user: Credentials = {
       username: "carrot_king",
@@ -70,9 +70,7 @@ describe("POST /api/login", () => {
       .send(user)
       .expect(200)
 
-    expect(body).toMatchObject({
-      username: "carrot_king"
-    })
+    expect(body.token).toMatch(/\w+\.\w+\.\w+/)
   })
 
   test("POST:404 Responds with an error message when the username is not found", async () => {
@@ -87,7 +85,7 @@ describe("POST /api/login", () => {
       .send(user)
       .expect(404)
 
-      expect(body.message).toBe("Username not found")
+    expect(body.message).toBe("Username not found")
   })
 
   test("POST:401 Responds with an error message when the password is incorrect", async () => {
@@ -102,6 +100,6 @@ describe("POST /api/login", () => {
       .send(user)
       .expect(401)
 
-      expect(body.message).toBe("Incorrect password")
+    expect(body.message).toBe("Incorrect password")
   })
 })
