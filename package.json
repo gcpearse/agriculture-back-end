@@ -7,7 +7,7 @@
     "db-setup": "psql -f src/db/setup.sql",
     "seed": "tsc && node dist/db/seeding/run-seed.js",
     "start": "tsc && node dist/listen.js",
-    "test": "jest"
+    "test": "jest --runInBand"
   },
   "keywords": [],
   "author": "",
