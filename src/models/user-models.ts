@@ -23,7 +23,7 @@ export const registerUser = async ({ username, password, first_name, surname, us
       (username, password, first_name, surname, uses_metric)
     VALUES
       ($1, $2, $3, $4, $5)
-    RETURNING *;
+    RETURNING user_id, username, first_name, surname, uses_metric;
     `,
     [username, password, first_name, surname, uses_metric]
   )
