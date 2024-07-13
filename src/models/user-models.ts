@@ -1,4 +1,5 @@
 import { db } from "../db"
+import { User } from "../types/user-types"
 
 
 export const selectUserByUsername = async (authorisedUser: string, username: string) => {
@@ -16,6 +17,34 @@ export const selectUserByUsername = async (authorisedUser: string, username: str
     WHERE username = $1
     `,
     [username])
+
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 404,
+      message: "User not found"
+    })
+  }
+
+  return result.rows[0]
+}
+
+
+export const updateUserByUsername = async (authorisedUser: string, username: string, user: User) => {
+
+  if (authorisedUser !== username) {
+    return Promise.reject({
+      status: 403,
+      message: "Permission to edit user data denied"
+    })
+  }
+
+  const result = await db.query(`
+    UPDATE users
+    SET first_name = $1, surname = $2, uses_metric = $3
+    WHERE username = $4
+    RETURNING user_id, username, first_name, surname, uses_metric;
+    `,
+    [user.first_name, user.surname, user.uses_metric, username])
 
   if (!result.rowCount) {
     return Promise.reject({
