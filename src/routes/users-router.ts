@@ -5,9 +5,11 @@ import { deleteUserByUsername, getUserByUsername, patchPasswordByUsername, patch
 
 export const usersRouter = Router()
 
-usersRouter.route("/:username")
+
+usersRouter.route("/users/:username")
   .get(verifyToken, getUserByUsername)
   .patch(verifyToken, patchUserByUsername)
   .delete(verifyToken, deleteUserByUsername)
 
-usersRouter.patch("/:username/password", verifyToken, patchPasswordByUsername)
+
+usersRouter.patch("/users/:username/password", verifyToken, patchPasswordByUsername)
