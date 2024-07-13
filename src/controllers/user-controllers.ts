@@ -38,8 +38,10 @@ export const patchPasswordByUsername: RequestHandler = async (req, res, next) =>
 
   const { username } = req.params
 
+  const { password } = req.body
+
   try {
-    const user = await changedPasswordByUsername(authorisedUser, username, req.body.password)
+    const user = await changedPasswordByUsername(authorisedUser, username, password)
     res.status(200).send({ user })
   } catch (err) {
     next(err)
