@@ -50,6 +50,9 @@ describe("POST /api/register", () => {
       .send(newUser)
       .expect(409)
 
-    expect(body.message).toBe("Username already exists")
+    expect(body).toMatchObject({
+      message: "Conflict",
+      details: "Username already exists"
+    })
   })
 })
