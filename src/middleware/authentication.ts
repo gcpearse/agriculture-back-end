@@ -15,7 +15,7 @@ export const verifyToken: RequestHandler = (req, res, next) => {
   const token = bearer && bearer.split(" ")[1]
 
   if (!token) {
-    res.status(401).send({
+    return res.status(401).send({
       message: "Unauthorised"
     })
   }
@@ -23,7 +23,7 @@ export const verifyToken: RequestHandler = (req, res, next) => {
   jwt.verify(token!, process.env.JWT_SECRET!, (err: any, user: any) => {
 
     if (err) {
-      res.status(403).send({
+      return res.status(403).send({
         message: "Forbidden"
       })
     }
