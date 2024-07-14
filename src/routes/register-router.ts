@@ -65,6 +65,9 @@ export const registerRouter = Router()
  *              properties:
  *                message:
  *                  type: string
+ *                  example: "Conflict"
+ *                details:
+ *                  type: string
  *                  example: "Username already exists"
  */
 registerRouter.post("/register", postRegistration)
