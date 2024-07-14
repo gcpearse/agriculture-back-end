@@ -25,7 +25,7 @@ describe("GET /api/auth", () => {
       .set("Authorization", `Bearer ${auth.body.token}`)
       .expect(200)
 
-    expect(body.message).toBe("Success")
+    expect(body.message).toBe("OK")
   })
 
   test("GET:401 Responds with an authorisation warning when valid credentials have not been provided", async () => {
@@ -34,7 +34,7 @@ describe("GET /api/auth", () => {
       .get("/api/auth")
       .expect(401)
 
-    expect(body.message).toBe("Unauthorised")
+    expect(body.message).toBe("Unauthorized")
   })
 
   test("GET:403 Responds with a warning when the token cannot be verified", async () => {
