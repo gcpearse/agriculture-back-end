@@ -128,7 +128,7 @@ describe("GET /api/plots/:owner_id/:plot_id", () => {
     })
   })
 
-  test("GET:403 Responds with a warning when the authenticated user attempts to retrieve another user's plot data", async () => {
+  test("GET:403 Responds with a warning when the authenticated user's user_id does not match owner_id", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/2/2")
@@ -138,13 +138,13 @@ describe("GET /api/plots/:owner_id/:plot_id", () => {
     expect(body.message).toBe("Access to plot data denied")
   })
 
-  test("GET:404 Responds with an error message when the plot_id does not exist", async () => {
+  test("GET:403 Responds with a warning when the plot_id does not belong to the authenticated user", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/1/999")
+      .get("/api/plots/1/99")
       .set("Authorization", `Bearer ${token}`)
-      .expect(404)
+      .expect(403)
 
-    expect(body.message).toBe("Plot not found")
+    expect(body.message).toBe("Access to plot data denied")
   })
 })
