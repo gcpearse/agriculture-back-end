@@ -4,9 +4,15 @@ export type Credentials = {
 }
 
 
+export enum UnitSystem {
+  Metric = "metric",
+  Imperial = "imperial"
+}
+
+
 export type User = {
   user_id?: number
   first_name: string
   surname: string
-  unit_preference: string
+  unit_preference: UnitSystem
 } & Credentials
