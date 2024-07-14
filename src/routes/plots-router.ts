@@ -141,15 +141,5 @@ plotsRouter.get("/plots/:owner_id", verifyToken, getPlotsByOwner)
  *                message:
  *                  type: string
  *                  example: "Access to plot data denied"
- *      404:
- *        description: Not Found
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Plot not found"
  */
 plotsRouter.get("/plots/:owner_id/:plot_id", verifyToken, getPlotByPlotId)
