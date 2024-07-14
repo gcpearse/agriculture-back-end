@@ -9,6 +9,7 @@ import { registerRouter } from "./routes/register-router"
 import { loginRouter } from "./routes/login-router"
 import { authRouter } from "./routes/auth-router"
 import { usersRouter } from "./routes/users-router"
+import { plotsRouter } from "./routes/plots-router"
 
 
 export const app = express()
@@ -39,6 +40,8 @@ app.use("/api", loginRouter)
 app.use("/api", authRouter)
 
 app.use("/api", usersRouter)
+
+app.use("/api", plotsRouter)
 
 
 app.use("/api", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
