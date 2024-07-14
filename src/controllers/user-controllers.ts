@@ -1,10 +1,11 @@
 import { RequestHandler } from "express"
 import { changePasswordByUsername, removeUserByUsername, selectUserByUsername, updateUserByUsername } from "../models/user-models"
+import { Password } from "../types/user-types"
 
 
 export const getUserByUsername: RequestHandler = async (req, res, next) => {
 
-  const authorisedUser = req.body.user.username
+  const authorisedUser: string = req.body.user.username
 
   const { username } = req.params
 
@@ -19,7 +20,7 @@ export const getUserByUsername: RequestHandler = async (req, res, next) => {
 
 export const patchUserByUsername: RequestHandler = async (req, res, next) => {
 
-  const authorisedUser = req.body.user.username
+  const authorisedUser: string = req.body.user.username
 
   const { username } = req.params
 
@@ -34,11 +35,11 @@ export const patchUserByUsername: RequestHandler = async (req, res, next) => {
 
 export const patchPasswordByUsername: RequestHandler = async (req, res, next) => {
 
-  const authorisedUser = req.body.user.username
+  const authorisedUser: string = req.body.user.username
 
   const { username } = req.params
 
-  const { password } = req.body
+  const { password }: Password = req.body
 
   try {
     const user = await changePasswordByUsername(authorisedUser, username, password)
