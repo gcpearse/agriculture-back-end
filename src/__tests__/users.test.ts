@@ -80,7 +80,7 @@ describe("PATCH /api/users/:username", () => {
     })
   })
 
-  test("GET:403 Responds with a warning when the authenticated user attempts to edit another user's data", async () => {
+  test("PATCH:403 Responds with a warning when the authenticated user attempts to edit another user's data", async () => {
 
     const newDetails = {
       first_name: "John",
@@ -118,7 +118,7 @@ describe("PATCH /api/users/:username/password", () => {
     })
   })
 
-  test("GET:403 Responds with a warning when the authenticated user attempts to chanhge another user's password", async () => {
+  test("PATCH:403 Responds with a warning when the authenticated user attempts to chanhge another user's password", async () => {
 
     const { body } = await request(app)
       .patch("/api/users/peach_princess/password")
@@ -148,7 +148,7 @@ describe("DELETE /api/users/:username", () => {
     expect(body.message).toBe("User not found")
   })
 
-  test("GET:403 Responds with a warning when the authenticated user attempts to delete another user's data", async () => {
+  test("DELETE:403 Responds with a warning when the authenticated user attempts to delete another user's data", async () => {
 
     const { body } = await request(app)
       .delete("/api/users/peach_princess")
