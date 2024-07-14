@@ -1,5 +1,5 @@
 import { db } from "../db"
-import { Credentials, SecureUser, User, Username } from "../types/user-types"
+import { Credentials, LoggedInUser, SecureUser, User } from "../types/user-types"
 
 
 export const registerUser = async ({ username, password, first_name, surname, unit_preference }: User): Promise<SecureUser> => {
@@ -7,7 +7,7 @@ export const registerUser = async ({ username, password, first_name, surname, un
   const conflictCheck = await db.query(`
     SELECT username 
     FROM users 
-    WHERE username = $1
+    WHERE username = $1;
     `,
     [username])
 
@@ -32,12 +32,12 @@ export const registerUser = async ({ username, password, first_name, surname, un
 }
 
 
-export const logInUser = async ({ username, password }: Credentials): Promise<Username> => {
+export const logInUser = async ({ username, password }: Credentials): Promise<LoggedInUser> => {
 
   const usernameCheck = await db.query(`
-    SELECT username 
+    SELECT user_id, username 
     FROM users 
-    WHERE username = $1
+    WHERE username = $1;
     `,
     [username])
 
@@ -52,7 +52,7 @@ export const logInUser = async ({ username, password }: Credentials): Promise<Us
     SELECT password
     FROM users
     WHERE username = $1
-    AND password = $2
+    AND password = $2;
     `,
     [username, password])
 

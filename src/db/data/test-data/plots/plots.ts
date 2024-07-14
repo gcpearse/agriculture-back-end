@@ -14,5 +14,21 @@ export default [
     description: "An orchard",
     location: "Lemongrove",
     area: 500
+  },
+  {
+    owner_id: 1,
+    name: "John's Allotment",
+    type: "allotment",
+    description: "An allotment",
+    location: "Farmville",
+    area: 50
+  },
+  {
+    owner_id: 1,
+    name: "John's New Allotment",
+    type: "allotment",
+    description: "A second allotment",
+    location: "Farmville",
+    area: 40
   }
 ]

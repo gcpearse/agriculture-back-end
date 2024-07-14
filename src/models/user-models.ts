@@ -2,9 +2,9 @@ import { db } from "../db"
 import { SecureUser } from "../types/user-types"
 
 
-export const selectUserByUsername = async (authorisedUser: string, username: string): Promise<SecureUser> => {
+export const selectUserByUsername = async (authUsername: string, username: string): Promise<SecureUser> => {
 
-  if (authorisedUser !== username) {
+  if (authUsername !== username) {
     return Promise.reject({
       status: 403,
       message: "Access to user data denied"
@@ -14,7 +14,7 @@ export const selectUserByUsername = async (authorisedUser: string, username: str
   const result = await db.query(`
     SELECT user_id, username, first_name, surname, unit_preference
     FROM users
-    WHERE username = $1
+    WHERE username = $1;
     `,
     [username])
 
@@ -29,9 +29,9 @@ export const selectUserByUsername = async (authorisedUser: string, username: str
 }
 
 
-export const updateUserByUsername = async (authorisedUser: string, username: string, user: SecureUser): Promise<SecureUser> => {
+export const updateUserByUsername = async (authUsername: string, username: string, user: SecureUser): Promise<SecureUser> => {
 
-  if (authorisedUser !== username) {
+  if (authUsername !== username) {
     return Promise.reject({
       status: 403,
       message: "Permission to edit user data denied"
@@ -57,9 +57,9 @@ export const updateUserByUsername = async (authorisedUser: string, username: str
 }
 
 
-export const changePasswordByUsername = async (authorisedUser: string, username: string, password: string): Promise<SecureUser> => {
+export const changePasswordByUsername = async (authUsername: string, username: string, password: string): Promise<SecureUser> => {
 
-  if (authorisedUser !== username) {
+  if (authUsername !== username) {
     return Promise.reject({
       status: 403,
       message: "Permission to change password denied"
@@ -85,9 +85,9 @@ export const changePasswordByUsername = async (authorisedUser: string, username:
 }
 
 
-export const removeUserByUsername = async (authorisedUser: string, username: string): Promise<undefined> => {
+export const removeUserByUsername = async (authUsername: string, username: string): Promise<undefined> => {
 
-  if (authorisedUser !== username) {
+  if (authUsername !== username) {
     return Promise.reject({
       status: 403,
       message: "Permission to delete user data denied"

@@ -8,6 +8,10 @@ export type Password = {
 
 export type Credentials = Username & Password
 
+export type LoggedInUser = {
+  user_id: number
+} & Username
+
 
 export enum UnitSystem {
   Metric = "metric",

@@ -15,5 +15,12 @@ export default [
     first_name: "Olivia",
     surname: "Jones",
     unit_preference: UnitSystem.Metric
+  },
+  {
+    username: "quince_queen",
+    password: "quince123",
+    first_name: "Maria",
+    surname: "Perez",
+    unit_preference: UnitSystem.Metric
   }
 ]

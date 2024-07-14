@@ -65,8 +65,8 @@ usersRouter.route("/users/:username")
  *    description: Responds with an updated user object. The server will respond with an error if the value of unit_preference is not a valid enum value. Permission is denied when the current user's username does not match the target username. 
  *    tags: [Users]
  *    parameters:
- *      - name: username
- *        in: path
+ *      - in: path
+ *        name: username
  *        required: true
  *        schema:
  *          type: string
@@ -139,8 +139,8 @@ usersRouter.route("/users/:username")
  *    description: Removes the user and all associated data from the database. Permission is denied when the current user's username does not match the target username.
  *    tags: [Users]
  *    parameters:
- *      - name: username
- *        in: path
+ *      - in: path
+ *        name: username
  *        required: true
  *        schema:
  *          type: string
@@ -168,8 +168,8 @@ usersRouter.route("/users/:username")
  *    description: Responds with an updated user object without displaying the password property. Permission is denied when the current user's username does not match the target username.
  *    tags: [Users]
  *    parameters:
- *      - name: username
- *        in: path
+ *      - in: path
+ *        name: username
  *        required: true
  *        schema:
  *          type: string
