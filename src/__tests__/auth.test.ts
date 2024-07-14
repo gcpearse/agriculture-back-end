@@ -28,6 +28,15 @@ describe("GET /api/auth", () => {
     expect(body.message).toBe("Success")
   })
 
+  test("GET:401 Responds with an authorisation warning when valid credentials have not been provided", async () => {
+
+    const { body } = await request(app)
+      .get("/api/auth")
+      .expect(401)
+
+    expect(body.message).toBe("Unauthorised")
+  })
+
   test("GET:403 Responds with a warning when the token cannot be verified", async () => {
 
     const { body } = await request(app)
@@ -36,14 +45,5 @@ describe("GET /api/auth", () => {
       .expect(403)
 
     expect(body.message).toBe("Forbidden")
-  })
-
-  test("GET:401 Responds with an authorisation warning when valid credentials have not been provided", async () => {
-
-    const { body } = await request(app)
-      .get("/api/auth")
-      .expect(401)
-
-    expect(body.message).toBe("Unauthorised")
   })
 })
