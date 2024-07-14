@@ -78,7 +78,7 @@ export const plotsRouter = Router()
  *              properties:
  *                message:
  *                  type: string
- *                  example: "No results found!"
+ *                  example: "No results found"
  */
 plotsRouter.get("/plots/:owner_id", verifyToken, getPlotsByOwner)
 
