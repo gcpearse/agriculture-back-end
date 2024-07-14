@@ -60,7 +60,6 @@ describe("PATCH /api/users/:username", () => {
   test("PATCH:200 Responds with an updated user object", async () => {
 
     const newDetails = {
-      username: "carrot_king",
       first_name: "Johnny",
       surname: "Smith-Jones",
       uses_metric: true
@@ -84,7 +83,6 @@ describe("PATCH /api/users/:username", () => {
   test("GET:403 Responds with a warning when the authenticated user attempts to edit another user's data", async () => {
 
     const newDetails = {
-      username: "peach_princess",
       first_name: "John",
       surname: "Smith",
       uses_metric: false
