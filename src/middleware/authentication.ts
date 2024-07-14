@@ -17,7 +17,8 @@ export const verifyToken: RequestHandler = (req, res, next) => {
 
   if (!token) {
     return res.status(401).send({
-      message: "Unauthorized"
+      message: "Unauthorized",
+      details: "Invalid credentials provided"
     })
   }
 
@@ -25,7 +26,8 @@ export const verifyToken: RequestHandler = (req, res, next) => {
 
     if (err) {
       return res.status(403).send({
-        message: "Forbidden"
+        message: "Forbidden",
+        details: "Token could not be verified"
       })
     }
 
