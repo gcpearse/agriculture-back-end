@@ -24,7 +24,7 @@ export const selectPlotsByOwner = async (authUserId: number, owner_id: number, {
 
   if (type && !isValidPlotType) {
     return Promise.reject({
-      status: 400,
+      status: 404,
       message: "No results found"
     })
   }
@@ -61,16 +61,17 @@ export const selectPlotByPlotId = async (authUserId: number, owner_id: number, p
 
   const result = await db.query(`
     SELECT * FROM plots
-    WHERE plot_id = $1;
+    WHERE plot_id = $1
+    AND owner_id = $2;
     `,
-  [plot_id])
+    [plot_id, owner_id])
 
   if (!result.rowCount) {
     return Promise.reject({
-      status: 404,
-      message: "Plot not found"
+      status: 403,
+      message: "Access to plot data denied"
     })
   }
-  
+
   return result.rows[0]
 }

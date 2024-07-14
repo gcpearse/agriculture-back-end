@@ -78,7 +78,7 @@ export const plotsRouter = Router()
  *              properties:
  *                message:
  *                  type: string
- *                  example: "No results found!"
+ *                  example: "No results found"
  */
 plotsRouter.get("/plots/:owner_id", verifyToken, getPlotsByOwner)
 
@@ -141,15 +141,5 @@ plotsRouter.get("/plots/:owner_id", verifyToken, getPlotsByOwner)
  *                message:
  *                  type: string
  *                  example: "Access to plot data denied"
- *      404:
- *        description: Not Found
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Plot not found"
  */
 plotsRouter.get("/plots/:owner_id/:plot_id", verifyToken, getPlotByPlotId)
