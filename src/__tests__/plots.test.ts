@@ -96,13 +96,55 @@ describe("GET /api/plots/:owner_id?type=", () => {
     })).toBe(true)
   })
 
-  test("GET:400 Responds with an error message when the query value is invalid", async () => {
+  test("GET:404 Responds with an error message when the query value is invalid", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/1?type=castle")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body.message).toBe("Invalid query")
+    expect(body.message).toBe("No results found")
+  })
+})
+
+
+describe("GET /api/plots/:owner_id/:plot_id", () => {
+
+  test("GET:200 Responds with a plot object matching the value of the plot_id parameter", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/1/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.plot).toMatchObject({
+      plot_id: 1,
+      owner_id: 1,
+      name: "John's Garden",
+      type: "garden",
+      description: "A vegetable garden",
+      location: "Farmville",
+      area: 100
+    })
+  })
+
+  test("GET:403 Responds with a warning when the authenticated user attempts to retrieve another user's plot data", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/2/2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body.message).toBe("Access to plot data denied")
+  })
+
+  test("GET:404 Responds with an error message when the plot_id does not exist", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/1/999")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body.message).toBe("Plot not found")
   })
 })

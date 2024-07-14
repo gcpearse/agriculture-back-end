@@ -26,21 +26,6 @@ describe("POST /api/login", () => {
     expect(body.token).toMatch(/[\w-]{2,}\.[\w-]{2,}\.[\w-]{2,}/)
   })
 
-  test("POST:404 Responds with an error message when the username is not found", async () => {
-
-    const user = {
-      username: "mango_man",
-      password: "carrots123"
-    }
-
-    const { body } = await request(app)
-      .post("/api/login")
-      .send(user)
-      .expect(404)
-
-    expect(body.message).toBe("Username not found")
-  })
-
   test("POST:401 Responds with an error message when the password is incorrect", async () => {
 
     const user = {
@@ -54,5 +39,20 @@ describe("POST /api/login", () => {
       .expect(401)
 
     expect(body.message).toBe("Incorrect password")
+  })
+
+  test("POST:404 Responds with an error message when the username is not found", async () => {
+
+    const user = {
+      username: "mango_man",
+      password: "carrots123"
+    }
+
+    const { body } = await request(app)
+      .post("/api/login")
+      .send(user)
+      .expect(404)
+
+    expect(body.message).toBe("Username not found")
   })
 })

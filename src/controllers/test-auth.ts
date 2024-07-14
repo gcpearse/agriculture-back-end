@@ -5,7 +5,7 @@ export const testAuth: RequestHandler = async (_req, res, next) => {
 
   try {
     res.status(200).send({
-      message: "Success"
+      message: "OK"
     })
   } catch (err) {
     next(err)
