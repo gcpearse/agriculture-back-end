@@ -1,10 +1,11 @@
 import { RequestHandler } from "express"
 import jwt from "jsonwebtoken"
+import { LoggedInUser } from "../types/user-types"
 
 
-export const generateToken = (username: { username: string }): string => {
+export const generateToken = (user: LoggedInUser): string => {
 
-  return jwt.sign(username, process.env.JWT_SECRET!, { expiresIn: 3600 })
+  return jwt.sign(user, process.env.JWT_SECRET!, { expiresIn: 3600 })
 }
 
 
