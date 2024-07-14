@@ -13,7 +13,7 @@ usersRouter.route("/users/:username")
  * /api/users/{username}:
  *  get:
  *    summary: Retrieve a user's details
- *    description: Responds with a user object. 
+ *    description: Responds with a user object. Permission is denied when the current user's username does not match the target username.
  *    tags: [Users]
  *    parameters:
  *      - name: username
@@ -62,7 +62,7 @@ usersRouter.route("/users/:username")
  * /api/users/{username}:
  *  patch:
  *    summary: Update a user's details
- *    description: Responds with an updated user object. 
+ *    description: Responds with an updated user object. Permission is denied when the current user's username does not match the target username. 
  *    tags: [Users]
  *    parameters:
  *      - name: username
@@ -126,7 +126,7 @@ usersRouter.route("/users/:username")
  * /api/users/{username}:
  *  delete:
  *    summary: Delete a user's details
- *    description: Removes the user from the database. 
+ *    description: Removes the user from the database. Permission is denied when the current user's username does not match the target username.
  *    tags: [Users]
  *    parameters:
  *      - name: username
@@ -155,7 +155,7 @@ usersRouter.route("/users/:username")
  * /api/users/{username}/password:
  *  patch:
  *    summary: Update a user's password
- *    description: Responds with an updated user object without displaying the password property. 
+ *    description: Responds with an updated user object without displaying the password property. Permission is denied when the current user's username does not match the target username.
  *    tags: [Users]
  *    parameters:
  *      - name: username
