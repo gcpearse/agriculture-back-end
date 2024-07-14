@@ -23,7 +23,7 @@ export const authRouter = Router()
  *              properties:
  *                message:
  *                  type: string
- *                  example: Success
+ *                  example: OK
  *      401:
  *        description: Unauthorized
  *        content:
@@ -33,7 +33,7 @@ export const authRouter = Router()
  *              properties:
  *                message:
  *                  type: string
- *                  example: "Unauthorised"
+ *                  example: Unauthorized
  *      403:
  *        description: Forbidden
  *        content:
@@ -43,6 +43,6 @@ export const authRouter = Router()
  *              properties:
  *                message:
  *                  type: string
- *                  example: "Forbidden"
+ *                  example: Forbidden
  */
 authRouter.get("/auth", verifyToken, testAuth)
