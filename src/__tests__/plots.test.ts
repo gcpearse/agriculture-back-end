@@ -101,7 +101,7 @@ describe("GET /api/plots/:owner_id?type=", () => {
     const { body } = await request(app)
       .get("/api/plots/1?type=castle")
       .set("Authorization", `Bearer ${token}`)
-      .expect(400)
+      .expect(404)
 
     expect(body.message).toBe("No results found")
   })
