@@ -17,8 +17,8 @@ export const postRegistration: RequestHandler = async (req, res, next) => {
 export const postLogin: RequestHandler = async (req, res, next) => {
 
   try {
-    const username = await logInUser(req.body)
-    const token = generateToken(username)
+    const user = await logInUser(req.body)
+    const token = generateToken(user)
     res.status(200).send({ token })
   } catch (err) {
     next(err)
