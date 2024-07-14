@@ -35,7 +35,7 @@ describe("GET /api/plots/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.plots).toHaveLength(2)
+    expect(body.plots).toHaveLength(3)
 
     body.plots.forEach((plot: Plot) => {
       expect(plot).toMatchObject({
