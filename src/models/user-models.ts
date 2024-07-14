@@ -7,7 +7,8 @@ export const selectUserByUsername = async (authUsername: string, username: strin
   if (authUsername !== username) {
     return Promise.reject({
       status: 403,
-      message: "Access to user data denied"
+      message: "Forbidden",
+      details: "Permission to view user data denied"
     })
   }
 
@@ -21,7 +22,8 @@ export const selectUserByUsername = async (authUsername: string, username: strin
   if (!result.rowCount) {
     return Promise.reject({
       status: 404,
-      message: "User not found"
+      message: "Not Found",
+      details: "User not found"
     })
   }
 
@@ -34,7 +36,8 @@ export const updateUserByUsername = async (authUsername: string, username: strin
   if (authUsername !== username) {
     return Promise.reject({
       status: 403,
-      message: "Permission to edit user data denied"
+      message: "Forbidden",
+      details: "Permission to edit user data denied"
     })
   }
 
@@ -49,7 +52,8 @@ export const updateUserByUsername = async (authUsername: string, username: strin
   if (!result.rowCount) {
     return Promise.reject({
       status: 404,
-      message: "User not found"
+      message: "Not Found",
+      details: "User not found"
     })
   }
 
@@ -62,7 +66,8 @@ export const changePasswordByUsername = async (authUsername: string, username: s
   if (authUsername !== username) {
     return Promise.reject({
       status: 403,
-      message: "Permission to change password denied"
+      message: "Forbidden",
+      details: "Permission to edit password denied"
     })
   }
 
@@ -77,7 +82,8 @@ export const changePasswordByUsername = async (authUsername: string, username: s
   if (!result.rowCount) {
     return Promise.reject({
       status: 404,
-      message: "User not found"
+      message: "Not Found",
+      details: "User not found"
     })
   }
 
@@ -104,7 +110,8 @@ export const removeUserByUsername = async (authUsername: string, username: strin
   if (!result.rowCount) {
     return Promise.reject({
       status: 404,
-      message: "User not found"
+      message: "Not Found",
+      details: "User not found"
     })
   }
 }
