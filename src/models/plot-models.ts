@@ -24,7 +24,7 @@ export const selectPlotsByOwner = async (authUserId: number, owner_id: number, {
 
   if (type && !isValidPlotType) {
     return Promise.reject({
-      status: 400,
+      status: 404,
       message: "No results found"
     })
   }
