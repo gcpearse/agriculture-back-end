@@ -35,16 +35,6 @@ export const loginRouter = Router()
  *                token:
  *                  type: string
  *                  example: jsonwebtoken
- *      404:
- *        description: Not Found
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Username not found"
  *      401:
  *        description: Unauthorized
  *        content:
@@ -55,5 +45,15 @@ export const loginRouter = Router()
  *                message:
  *                  type: string
  *                  example: "Incorrect password"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Username not found"
  */
 loginRouter.post("/login", postLogin)

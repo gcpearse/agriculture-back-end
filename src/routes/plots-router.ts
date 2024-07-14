@@ -57,5 +57,25 @@ export const plotsRouter = Router()
  *                      area:
  *                        type: integer
  *                        example: 100
+ *      400:
+ *        description: Bad request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Invalid query"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Access to plot data denied"
  */
 plotsRouter.get("/plots/:owner_id", verifyToken, getPlotsByOwner)
