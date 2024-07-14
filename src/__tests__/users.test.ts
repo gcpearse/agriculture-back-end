@@ -80,6 +80,23 @@ describe("PATCH /api/users/:username", () => {
     })
   })
 
+  test("PATCH:400 Responds with an error when an invalid value is passed for unit_preference", async () => {
+
+    const newDetails = {
+      first_name: "Johnny",
+      surname: "Smith-Jones",
+      unit_preference: "international"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/users/carrot_king")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body.message).toBe("Bad request")
+  })
+
   test("PATCH:403 Responds with a warning when the authenticated user attempts to edit another user's data", async () => {
 
     const newDetails = {
