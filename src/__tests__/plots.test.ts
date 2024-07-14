@@ -63,16 +63,42 @@ describe("GET /api/plots/:owner_id", () => {
   test("GET:404 Responds with an error message when no plots are associated with the owner_id", async () => {
 
     const auth = await request(app)
-    .post("/api/login")
-    .send({
-      username: "quince_queen",
-      password: "quince123",
-    })
+      .post("/api/login")
+      .send({
+        username: "quince_queen",
+        password: "quince123",
+      })
 
     token = auth.body.token
 
     const { body } = await request(app)
       .get("/api/plots/3")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body.message).toBe("No plots found")
+  })
+})
+
+
+describe("GET /api/plots/:owner_id?type=", () => {
+
+  test("GET:200 Responds with an array of plot objects filtered by type", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/1?type=garden")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.plots.every((plot: Plot) => {
+      return plot.type === "garden"
+    })).toBe(true)
+  })
+
+  test("GET:404 Responds with an error message when the query value is invalid", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/1?type=castle")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
