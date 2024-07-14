@@ -27,7 +27,7 @@ describe("POST /api/register", () => {
       .expect(201)
 
     expect(body.user).toMatchObject({
-      user_id: 3,
+      user_id: 4,
       username: "farmer123",
       first_name: "Fred",
       surname: "Flint",
