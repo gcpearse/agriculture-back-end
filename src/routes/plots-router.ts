@@ -10,8 +10,10 @@ export const plotsRouter = Router()
  * @swagger
  * /api/plots/{owner_id}:
  *  get:
+ *    security:
+ *      - bearerAuth: []
  *    summary: Retrieve a user's plots
- *    description: Responds with a an array of plot objects. If no plots are found, the server responds with an error. Permission is denied when the current user's ID does not match the target owner_id.
+ *    description: Responds with an array of plot objects. If no plots are found, the server responds with an error. Permission is denied when the current user's ID does not match the target owner_id.
  *    tags: [Plots]
  *    parameters:
  *      - in: path
@@ -76,7 +78,7 @@ export const plotsRouter = Router()
  *              properties:
  *                message:
  *                  type: string
- *                  example: "No results found"
+ *                  example: "No results found!"
  */
 plotsRouter.get("/plots/:owner_id", verifyToken, getPlotsByOwner)
 
@@ -84,6 +86,8 @@ plotsRouter.get("/plots/:owner_id", verifyToken, getPlotsByOwner)
  * @swagger
  * /api/plots/{owner_id}/{plot_id}:
  *  get:
+ *    security:
+ *      - bearerAuth: []
  *    summary: Retrieve a user's plot
  *    description: Responds with a single plot object. If no plot is found, the server responds with an error. Permission is denied when the current user's ID does not match the target owner_id.
  *    tags: [Plots]

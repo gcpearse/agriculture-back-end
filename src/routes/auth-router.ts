@@ -10,6 +10,8 @@ export const authRouter = Router()
  * @swagger
  * /api/auth:
  *  get:
+ *    security:
+ *      - bearerAuth: []
  *    summary: Test the authentication system
  *    description: Responds with a success message when authentication is successful. If the token cannot be verified, or valid user credentials have not been provided, the server responds with an error.
  *    tags: [Authentication]
