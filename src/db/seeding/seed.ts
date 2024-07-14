@@ -80,13 +80,18 @@ export const seed = async ({
     `)
 
   await db.query(`
+    DROP TYPE IF EXISTS UNIT_SYSTEM;
+    CREATE TYPE UNIT_SYSTEM AS ENUM ('metric', 'imperial');
+    `)
+
+  await db.query(`
     CREATE TABLE users (
       user_id SERIAL PRIMARY KEY,
       username VARCHAR NOT NULL,
       password VARCHAR NOT NULL,
       first_name VARCHAR NOT NULL,
       surname VARCHAR NOT NULL,
-      uses_metric BOOLEAN DEFAULT TRUE
+      unit_preference UNIT_SYSTEM DEFAULT 'metric'
     );
     `)
 
@@ -191,7 +196,7 @@ export const seed = async ({
 
   await db.query(format(`
     INSERT INTO users 
-      (username, password, first_name, surname, uses_metric)
+      (username, password, first_name, surname, unit_preference)
     VALUES %L;
     `,
     userData.map(entry => Object.values(entry))
