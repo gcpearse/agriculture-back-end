@@ -9,7 +9,8 @@ export const selectPlotsByOwner = async (authUserId: number, owner_id: number, {
   if (authUserId !== owner_id) {
     return Promise.reject({
       status: 403,
-      message: "Access to plot data denied"
+      message: "Forbidden",
+      details: "Permission to view plot data denied"
     })
   }
 
@@ -25,7 +26,8 @@ export const selectPlotsByOwner = async (authUserId: number, owner_id: number, {
   if (type && !isValidPlotType) {
     return Promise.reject({
       status: 404,
-      message: "No results found"
+      message: "Not Found",
+      details: "No results found for that query"
     })
   }
 
@@ -55,7 +57,8 @@ export const selectPlotByPlotId = async (authUserId: number, owner_id: number, p
   if (authUserId !== owner_id) {
     return Promise.reject({
       status: 403,
-      message: "Access to plot data denied"
+      message: "Forbidden",
+      details: "Permission to view plot data denied"
     })
   }
 
@@ -69,7 +72,8 @@ export const selectPlotByPlotId = async (authUserId: number, owner_id: number, p
   if (!result.rowCount) {
     return Promise.reject({
       status: 403,
-      message: "Access to plot data denied"
+      message: "Forbidden",
+      details: "Permission to view plot data denied"
     })
   }
 
