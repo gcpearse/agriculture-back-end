@@ -14,7 +14,7 @@ export const selectUserByUsername = async (authUsername: string, username: strin
   const result = await db.query(`
     SELECT user_id, username, first_name, surname, unit_preference
     FROM users
-    WHERE username = $1
+    WHERE username = $1;
     `,
     [username])
 
