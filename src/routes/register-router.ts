@@ -31,9 +31,9 @@ export const registerRouter = Router()
  *              surname:
  *                type: string
  *                example: Flint
- *              uses_metric:
- *                type: boolean    
- *                example: true
+ *              unit_preference:
+ *                type: string    
+ *                example: metric
  *    responses:
  *      201:
  *        description: Created
@@ -53,9 +53,9 @@ export const registerRouter = Router()
  *                surname:
  *                  type: string
  *                  example: Flint
- *                uses_metric:
- *                  type: boolean
- *                  example: true
+ *                unit_preference:
+ *                  type: string
+ *                  example: metric
  *      409:
  *        description: Conflict
  *        content:

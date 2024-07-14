@@ -18,7 +18,7 @@ describe("POST /api/register", () => {
       password: "password123",
       first_name: "Fred",
       surname: "Flint",
-      uses_metric: true
+      unit_preference: "metric"
     }
 
     const { body } = await request(app)
@@ -31,7 +31,7 @@ describe("POST /api/register", () => {
       username: "farmer123",
       first_name: "Fred",
       surname: "Flint",
-      uses_metric: true
+      unit_preference: "metric"
     })
   })
 
@@ -42,7 +42,7 @@ describe("POST /api/register", () => {
       password: "password234",
       first_name: "Bob",
       surname: "Booth",
-      uses_metric: false
+      unit_preference: "imperial"
     }
 
     const { body } = await request(app)

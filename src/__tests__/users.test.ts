@@ -39,7 +39,7 @@ describe("GET /api/users/:username", () => {
       username: "carrot_king",
       first_name: "John",
       surname: "Smith",
-      uses_metric: false
+      unit_preference: "imperial"
     })
   })
 
@@ -62,7 +62,7 @@ describe("PATCH /api/users/:username", () => {
     const newDetails = {
       first_name: "Johnny",
       surname: "Smith-Jones",
-      uses_metric: true
+      unit_preference: "metric"
     }
 
     const { body } = await request(app)
@@ -76,16 +76,33 @@ describe("PATCH /api/users/:username", () => {
       username: "carrot_king",
       first_name: "Johnny",
       surname: "Smith-Jones",
-      uses_metric: true
+      unit_preference: "metric"
     })
   })
 
-  test("GET:403 Responds with a warning when the authenticated user attempts to edit another user's data", async () => {
+  test("PATCH:400 Responds with an error when an invalid value is passed for unit_preference", async () => {
+
+    const newDetails = {
+      first_name: "Johnny",
+      surname: "Smith-Jones",
+      unit_preference: "international"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/users/carrot_king")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body.message).toBe("Bad request")
+  })
+
+  test("PATCH:403 Responds with a warning when the authenticated user attempts to edit another user's data", async () => {
 
     const newDetails = {
       first_name: "John",
       surname: "Smith",
-      uses_metric: false
+      unit_preference: "imperial"
     }
 
     const { body } = await request(app)
@@ -114,11 +131,11 @@ describe("PATCH /api/users/:username/password", () => {
       username: "carrot_king",
       first_name: "John",
       surname: "Smith",
-      uses_metric: false
+      unit_preference: "imperial"
     })
   })
 
-  test("GET:403 Responds with a warning when the authenticated user attempts to chanhge another user's password", async () => {
+  test("PATCH:403 Responds with a warning when the authenticated user attempts to chanhge another user's password", async () => {
 
     const { body } = await request(app)
       .patch("/api/users/peach_princess/password")
@@ -148,7 +165,7 @@ describe("DELETE /api/users/:username", () => {
     expect(body.message).toBe("User not found")
   })
 
-  test("GET:403 Responds with a warning when the authenticated user attempts to delete another user's data", async () => {
+  test("DELETE:403 Responds with a warning when the authenticated user attempts to delete another user's data", async () => {
 
     const { body } = await request(app)
       .delete("/api/users/peach_princess")

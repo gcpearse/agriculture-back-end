@@ -1,12 +1,14 @@
 import express from "express"
 import swaggerJSDoc from "swagger-jsdoc"
 import swaggerUi from "swagger-ui-express"
-import { handleCustomErrors, handleServerErrors } from "./middleware/errors"
+
+import { handleCustomErrors, handlePsqlErrors, handleServerErrors } from "./middleware/errors"
 import { handleNotFound } from "./controllers/handle-not-found"
-import { usersRouter } from "./routes/users-router"
-import { authRouter } from "./routes/auth-router"
-import { loginRouter } from "./routes/login-router"
+
 import { registerRouter } from "./routes/register-router"
+import { loginRouter } from "./routes/login-router"
+import { authRouter } from "./routes/auth-router"
+import { usersRouter } from "./routes/users-router"
 
 
 export const app = express()
@@ -42,7 +44,7 @@ app.use("/api", usersRouter)
 app.use("/api", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 
-app.use(handleCustomErrors, handleServerErrors)
+app.use(handleCustomErrors, handlePsqlErrors, handleServerErrors)
 
 
 app.all("*", handleNotFound)

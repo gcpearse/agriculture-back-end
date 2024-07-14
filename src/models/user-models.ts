@@ -12,7 +12,7 @@ export const selectUserByUsername = async (authorisedUser: string, username: str
   }
 
   const result = await db.query(`
-    SELECT user_id, username, first_name, surname, uses_metric
+    SELECT user_id, username, first_name, surname, unit_preference
     FROM users
     WHERE username = $1
     `,
@@ -40,11 +40,11 @@ export const updateUserByUsername = async (authorisedUser: string, username: str
 
   const result = await db.query(`
     UPDATE users
-    SET first_name = $1, surname = $2, uses_metric = $3
+    SET first_name = $1, surname = $2, unit_preference = $3
     WHERE username = $4
-    RETURNING user_id, username, first_name, surname, uses_metric;
+    RETURNING user_id, username, first_name, surname, unit_preference;
     `,
-    [user.first_name, user.surname, user.uses_metric, username])
+    [user.first_name, user.surname, user.unit_preference, username])
 
   if (!result.rowCount) {
     return Promise.reject({
@@ -70,7 +70,7 @@ export const changePasswordByUsername = async (authorisedUser: string, username:
     UPDATE users
     SET password = $1
     WHERE username = $2
-    RETURNING user_id, username, first_name, surname, uses_metric;
+    RETURNING user_id, username, first_name, surname, unit_preference;
     `,
     [password, username])
 

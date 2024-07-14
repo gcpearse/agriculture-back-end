@@ -2,7 +2,7 @@ import { db } from "../db"
 import { Credentials, User } from "../types/user-types"
 
 
-export const registerUser = async ({ username, password, first_name, surname, uses_metric }: User) => {
+export const registerUser = async ({ username, password, first_name, surname, unit_preference }: User) => {
 
   const conflictCheck = await db.query(`
     SELECT username 
@@ -20,12 +20,12 @@ export const registerUser = async ({ username, password, first_name, surname, us
 
   const result = await db.query(`
     INSERT INTO users
-      (username, password, first_name, surname, uses_metric)
+      (username, password, first_name, surname, unit_preference)
     VALUES
       ($1, $2, $3, $4, $5)
-    RETURNING user_id, username, first_name, surname, uses_metric;
+    RETURNING user_id, username, first_name, surname, unit_preference;
     `,
-    [username, password, first_name, surname, uses_metric]
+    [username, password, first_name, surname, unit_preference]
   )
 
   return result.rows[0]
