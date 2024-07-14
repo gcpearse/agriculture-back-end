@@ -7,7 +7,7 @@ export const registerUser = async ({ username, password, first_name, surname, un
   const conflictCheck = await db.query(`
     SELECT username 
     FROM users 
-    WHERE username = $1
+    WHERE username = $1;
     `,
     [username])
 
@@ -37,7 +37,7 @@ export const logInUser = async ({ username, password }: Credentials): Promise<Lo
   const usernameCheck = await db.query(`
     SELECT user_id, username 
     FROM users 
-    WHERE username = $1
+    WHERE username = $1;
     `,
     [username])
 
@@ -52,7 +52,7 @@ export const logInUser = async ({ username, password }: Credentials): Promise<Lo
     SELECT password
     FROM users
     WHERE username = $1
-    AND password = $2
+    AND password = $2;
     `,
     [username, password])
 
