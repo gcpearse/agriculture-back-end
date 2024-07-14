@@ -2,7 +2,7 @@ import { RequestHandler } from "express"
 import jwt from "jsonwebtoken"
 
 
-export const generateToken = (username: { username: string }) => {
+export const generateToken = (username: { username: string }): string => {
 
   return jwt.sign(username, process.env.JWT_SECRET!, { expiresIn: 3600 })
 }

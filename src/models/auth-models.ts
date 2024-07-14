@@ -1,8 +1,8 @@
 import { db } from "../db"
-import { Credentials, User } from "../types/user-types"
+import { Credentials, SecureUser, User, Username } from "../types/user-types"
 
 
-export const registerUser = async ({ username, password, first_name, surname, unit_preference }: User) => {
+export const registerUser = async ({ username, password, first_name, surname, unit_preference }: User): Promise<SecureUser> => {
 
   const conflictCheck = await db.query(`
     SELECT username 
@@ -32,7 +32,7 @@ export const registerUser = async ({ username, password, first_name, surname, un
 }
 
 
-export const logInUser = async ({ username, password }: Credentials) => {
+export const logInUser = async ({ username, password }: Credentials): Promise<Username> => {
 
   const usernameCheck = await db.query(`
     SELECT username 

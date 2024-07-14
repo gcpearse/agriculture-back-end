@@ -1,8 +1,8 @@
 import { db } from "../db"
-import { User } from "../types/user-types"
+import { SecureUser } from "../types/user-types"
 
 
-export const selectUserByUsername = async (authorisedUser: string, username: string) => {
+export const selectUserByUsername = async (authorisedUser: string, username: string): Promise<SecureUser> => {
 
   if (authorisedUser !== username) {
     return Promise.reject({
@@ -29,7 +29,7 @@ export const selectUserByUsername = async (authorisedUser: string, username: str
 }
 
 
-export const updateUserByUsername = async (authorisedUser: string, username: string, user: User) => {
+export const updateUserByUsername = async (authorisedUser: string, username: string, user: SecureUser): Promise<SecureUser> => {
 
   if (authorisedUser !== username) {
     return Promise.reject({
@@ -57,7 +57,7 @@ export const updateUserByUsername = async (authorisedUser: string, username: str
 }
 
 
-export const changePasswordByUsername = async (authorisedUser: string, username: string, password: string) => {
+export const changePasswordByUsername = async (authorisedUser: string, username: string, password: string): Promise<SecureUser> => {
 
   if (authorisedUser !== username) {
     return Promise.reject({
@@ -85,7 +85,7 @@ export const changePasswordByUsername = async (authorisedUser: string, username:
 }
 
 
-export const removeUserByUsername = async (authorisedUser: string, username: string) => {
+export const removeUserByUsername = async (authorisedUser: string, username: string): Promise<undefined> => {
 
   if (authorisedUser !== username) {
     return Promise.reject({

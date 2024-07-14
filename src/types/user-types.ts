@@ -1,12 +1,25 @@
-export type Credentials = {
+export type Username = {
   username: string
+}
+
+export type Password = {
   password: string
 }
 
+export type Credentials = Username & Password
 
-export type User = {
+
+export enum UnitSystem {
+  Metric = "metric",
+  Imperial = "imperial"
+}
+
+
+export type SecureUser = {
   user_id?: number
   first_name: string
   surname: string
-  unit_preference: string
-} & Credentials
+  unit_preference: UnitSystem
+} & Username
+
+export type User = SecureUser & Password
