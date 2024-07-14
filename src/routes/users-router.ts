@@ -12,6 +12,8 @@ usersRouter.route("/users/:username")
  * @swagger
  * /api/users/{username}:
  *  get:
+ *    security:
+ *      - bearerAuth: []
  *    summary: Retrieve a user's details
  *    description: Responds with a user object. Permission is denied when the current user's username does not match the target username.
  *    tags: [Users]
@@ -61,6 +63,8 @@ usersRouter.route("/users/:username")
  * @swagger
  * /api/users/{username}:
  *  patch:
+ *    security:
+ *      - bearerAuth: []
  *    summary: Update a user's details
  *    description: Responds with an updated user object. The server will respond with an error if the value of unit_preference is not a valid enum value. Permission is denied when the current user's username does not match the target username. 
  *    tags: [Users]
@@ -135,6 +139,8 @@ usersRouter.route("/users/:username")
  * @swagger
  * /api/users/{username}:
  *  delete:
+ *    security:
+ *      - bearerAuth: []
  *    summary: Delete a user from the database
  *    description: Removes the user and all associated data from the database. Permission is denied when the current user's username does not match the target username.
  *    tags: [Users]
@@ -164,6 +170,8 @@ usersRouter.route("/users/:username")
  * @swagger
  * /api/users/{username}/password:
  *  patch:
+ *    security:
+ *      - bearerAuth: []
  *    summary: Update a user's password
  *    description: Responds with an updated user object without displaying the password property. Permission is denied when the current user's username does not match the target username.
  *    tags: [Users]
