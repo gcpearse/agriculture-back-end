@@ -4,7 +4,7 @@ import data from "../data/test-data/index"
 import { db } from ".."
 
 
-const runSeed = async () => {
+const runSeed = async (): Promise<void> => {
 
   await seed(data)
 
