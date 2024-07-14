@@ -62,7 +62,7 @@ usersRouter.route("/users/:username")
  * /api/users/{username}:
  *  patch:
  *    summary: Update a user's details
- *    description: Responds with an updated user object. Permission is denied when the current user's username does not match the target username. 
+ *    description: Responds with an updated user object. The server will respond with an error if the value of unit_preference is not a valid enum value. Permission is denied when the current user's username does not match the target username. 
  *    tags: [Users]
  *    parameters:
  *      - name: username
@@ -108,6 +108,16 @@ usersRouter.route("/users/:username")
  *                unit_preference:
  *                  type: string
  *                  example: metric
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Bad request"
  *      403:
  *        description: Forbidden
  *        content:
@@ -125,8 +135,8 @@ usersRouter.route("/users/:username")
  * @swagger
  * /api/users/{username}:
  *  delete:
- *    summary: Delete a user's details
- *    description: Removes the user from the database. Permission is denied when the current user's username does not match the target username.
+ *    summary: Delete a user from the database
+ *    description: Removes the user and all associated data from the database. Permission is denied when the current user's username does not match the target username.
  *    tags: [Users]
  *    parameters:
  *      - name: username
