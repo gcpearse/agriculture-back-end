@@ -17,18 +17,33 @@ export const selectPlotsByOwner = async (authUserId: number, owner_id: number, {
   WHERE owner_id = $1
   `
 
+  const validTypes = await getValidTypes(owner_id)
+
   if (type) {
-    query += format(`AND type = %L`, type)
+    if (validTypes.includes(type as string)) {
+      query += format(`AND type = %L`, type)
+    } else {
+      return Promise.reject({
+        status: 400,
+        message: "Invalid query"
+      })
+    }
   }
 
   const result = await db.query(query, [owner_id])
 
-  if (!result.rowCount) {
-    return Promise.reject({
-      status: 404,
-      message: "No plots found"
-    })
-  }
-
   return result.rows
+}
+
+
+const getValidTypes = async (owner_id: number): Promise<string[]> => {
+
+  const validTypes = await db.query(`
+    SELECT DISTINCT type
+    FROM plots
+    WHERE owner_id = $1
+    `,
+    [owner_id])
+
+  return validTypes.rows.map(row => row.type)
 }
