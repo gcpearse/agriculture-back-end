@@ -19,16 +19,16 @@ export const selectPlotsByOwner = async (authUserId: number, owner_id: number, {
 
   const validTypes = await getValidTypes(owner_id)
 
-  if (type) {
-    if (validTypes.includes(type as string)) {
-      query += format(`AND type = %L`, type)
-    } else {
-      return Promise.reject({
-        status: 400,
-        message: "Invalid query"
-      })
-    }
+  const isValidType = validTypes.includes(type as string)
+
+  if (type && !isValidType) {
+    return Promise.reject({
+      status: 400,
+      message: "Invalid query"
+    })
   }
+
+  if (type) query += format(`AND type = %L`, type)
 
   const result = await db.query(query, [owner_id])
 
