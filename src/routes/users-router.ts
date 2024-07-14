@@ -41,9 +41,9 @@ usersRouter.route("/users/:username")
  *                surname:
  *                  type: string
  *                  example: Smith
- *                uses_metric:
- *                  type: boolean
- *                  example: false
+ *                unit_preference:
+ *                  type: string
+ *                  example: imperial
  *      403:
  *        description: Forbidden
  *        content:
@@ -83,9 +83,9 @@ usersRouter.route("/users/:username")
  *              surname:
  *                type: string
  *                example: Smith-Jones
- *              uses_metric:
- *                type: boolean    
- *                example: true
+ *              unit_preference:
+ *                type: string    
+ *                example: metric
  *    responses:
  *      200:
  *        description: OK
@@ -105,9 +105,9 @@ usersRouter.route("/users/:username")
  *                surname:
  *                  type: string
  *                  example: Smith-Jones
- *                uses_metric:
- *                  type: boolean
- *                  example: true
+ *                unit_preference:
+ *                  type: string
+ *                  example: metric
  *      403:
  *        description: Forbidden
  *        content:
@@ -192,9 +192,9 @@ usersRouter.route("/users/:username")
  *                surname:
  *                  type: string
  *                  example: Smith
- *                uses_metric:
- *                  type: boolean
- *                  example: false
+ *                unit_preference:
+ *                  type: string
+ *                  example: imperial
  *      403:
  *        description: Forbidden
  *        content:

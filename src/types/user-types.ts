@@ -8,5 +8,5 @@ export type User = {
   user_id?: number
   first_name: string
   surname: string
-  uses_metric: boolean
+  unit_preference: string
 } & Credentials

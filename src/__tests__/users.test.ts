@@ -39,7 +39,7 @@ describe("GET /api/users/:username", () => {
       username: "carrot_king",
       first_name: "John",
       surname: "Smith",
-      uses_metric: false
+      unit_preference: "imperial"
     })
   })
 
@@ -62,7 +62,7 @@ describe("PATCH /api/users/:username", () => {
     const newDetails = {
       first_name: "Johnny",
       surname: "Smith-Jones",
-      uses_metric: true
+      unit_preference: "metric"
     }
 
     const { body } = await request(app)
@@ -76,7 +76,7 @@ describe("PATCH /api/users/:username", () => {
       username: "carrot_king",
       first_name: "Johnny",
       surname: "Smith-Jones",
-      uses_metric: true
+      unit_preference: "metric"
     })
   })
 
@@ -85,7 +85,7 @@ describe("PATCH /api/users/:username", () => {
     const newDetails = {
       first_name: "John",
       surname: "Smith",
-      uses_metric: false
+      unit_preference: "imperial"
     }
 
     const { body } = await request(app)
@@ -114,7 +114,7 @@ describe("PATCH /api/users/:username/password", () => {
       username: "carrot_king",
       first_name: "John",
       surname: "Smith",
-      uses_metric: false
+      unit_preference: "imperial"
     })
   })
 

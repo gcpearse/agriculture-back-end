@@ -4,13 +4,13 @@ export default [
     password: "carrots123",
     first_name: "John",
     surname: "Smith",
-    uses_metric: false
+    unit_preference: "imperial"
   },
   {
     username: "peach_princess",
     password: "peaches123",
     first_name: "Olivia",
     surname: "Jones",
-    uses_metric: true
+    unit_preference: "metric"
   }
 ]
