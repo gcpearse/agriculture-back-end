@@ -50,17 +50,7 @@ describe("GET /api/plots/:owner_id", () => {
     })
   })
 
-  test("GET:403 Responds with a warning when the authenticated user attempts to retrieve another user's plot data", async () => {
-
-    const { body } = await request(app)
-      .get("/api/plots/2")
-      .set("Authorization", `Bearer ${token}`)
-      .expect(403)
-
-    expect(body.message).toBe("Access to plot data denied")
-  })
-
-  test("GET:404 Responds with an error message when no plots are associated with the owner_id", async () => {
+  test("GET:200 Responds with an empty array when no plots are associated with the owner_id", async () => {
 
     const auth = await request(app)
       .post("/api/login")
@@ -74,9 +64,20 @@ describe("GET /api/plots/:owner_id", () => {
     const { body } = await request(app)
       .get("/api/plots/3")
       .set("Authorization", `Bearer ${token}`)
-      .expect(404)
+      .expect(200)
 
-    expect(body.message).toBe("No plots found")
+    expect(Array.isArray(body.plots)).toBe(true)
+    expect(body.plots).toHaveLength(0)
+  })
+
+  test("GET:403 Responds with a warning when the authenticated user attempts to retrieve another user's plot data", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body.message).toBe("Access to plot data denied")
   })
 })
 
@@ -95,13 +96,13 @@ describe("GET /api/plots/:owner_id?type=", () => {
     })).toBe(true)
   })
 
-  test("GET:404 Responds with an error message when the query value is invalid", async () => {
+  test("GET:400 Responds with an error message when the query value is invalid", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/1?type=castle")
       .set("Authorization", `Bearer ${token}`)
-      .expect(404)
+      .expect(400)
 
-    expect(body.message).toBe("No plots found")
+    expect(body.message).toBe("Invalid query")
   })
 })
