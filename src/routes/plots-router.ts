@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { getPlotsByOwner } from "../controllers/plot-controllers"
+import { getPlotByPlotId, getPlotsByOwner } from "../controllers/plot-controllers"
 
 
 export const plotsRouter = Router()
@@ -79,3 +79,6 @@ export const plotsRouter = Router()
  *                  example: "Access to plot data denied"
  */
 plotsRouter.get("/plots/:owner_id", verifyToken, getPlotsByOwner)
+
+
+plotsRouter.get("/plots/:owner_id/:plot_id", verifyToken, getPlotByPlotId)
