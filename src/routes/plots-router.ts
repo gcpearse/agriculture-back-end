@@ -68,7 +68,10 @@ export const plotsRouter = Router()
  *              properties:
  *                message:
  *                  type: string
- *                  example: "Access to plot data denied"
+ *                  example: "Forbidden"
+ *                details:
+ *                  type: string
+ *                  example: "Permission to view plot data denied"
  *      404:
  *        description: Not Found
  *        content:
@@ -78,7 +81,10 @@ export const plotsRouter = Router()
  *              properties:
  *                message:
  *                  type: string
- *                  example: "No results found"
+ *                  example: "Not Found"
+ *                details:
+ *                  type: string
+ *                  example: "No results found for that query"
  */
 plotsRouter.get("/plots/:owner_id", verifyToken, getPlotsByOwner)
 
@@ -140,6 +146,9 @@ plotsRouter.get("/plots/:owner_id", verifyToken, getPlotsByOwner)
  *              properties:
  *                message:
  *                  type: string
- *                  example: "Access to plot data denied"
+ *                  example: "Forbidden"
+ *                details:
+ *                  type: string
+ *                  example: "Permission to view plot data denied"
  */
 plotsRouter.get("/plots/:owner_id/:plot_id", verifyToken, getPlotByPlotId)
