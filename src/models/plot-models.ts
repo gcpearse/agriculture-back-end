@@ -3,17 +3,12 @@ import { db } from "../db"
 import format from "pg-format"
 import { Plot } from "../types/plot-types"
 import { getValidPlotTypes } from "../utils/db-query-utils"
+import { verifyPermission } from "../utils/verification-utils"
 
 
 export const selectPlotsByOwner = async (authUserId: number, owner_id: number, { type }: QueryString.ParsedQs): Promise<Plot[]> => {
 
-  if (authUserId !== owner_id) {
-    return Promise.reject({
-      status: 403,
-      message: "Forbidden",
-      details: "Permission to view plot data denied"
-    })
-  }
+  await verifyPermission(authUserId, owner_id, "Permission to view plot data denied")
 
   let query = `
   SELECT * FROM plots
@@ -42,13 +37,7 @@ export const selectPlotsByOwner = async (authUserId: number, owner_id: number, {
 
 export const selectPlotByPlotId = async (authUserId: number, owner_id: number, plot_id: number) => {
 
-  if (authUserId !== owner_id) {
-    return Promise.reject({
-      status: 403,
-      message: "Forbidden",
-      details: "Permission to view plot data denied"
-    })
-  }
+  await verifyPermission(authUserId, owner_id, "Permission to view plot data denied")
 
   const result = await db.query(`
     SELECT * FROM plots

@@ -1,16 +1,11 @@
 import { db } from "../db"
 import { SecureUser } from "../types/user-types"
+import { verifyPermission, verifyResult } from "../utils/verification-utils"
 
 
 export const selectUserByUsername = async (authUsername: string, username: string): Promise<SecureUser> => {
 
-  if (authUsername !== username) {
-    return Promise.reject({
-      status: 403,
-      message: "Forbidden",
-      details: "Permission to view user data denied"
-    })
-  }
+  await verifyPermission(authUsername, username, "Permission to view user data denied")
 
   const result = await db.query(`
     SELECT user_id, username, first_name, surname, unit_preference
@@ -19,13 +14,7 @@ export const selectUserByUsername = async (authUsername: string, username: strin
     `,
     [username])
 
-  if (!result.rowCount) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "User not found"
-    })
-  }
+  await verifyResult(!result.rowCount, "User not found")
 
   return result.rows[0]
 }
@@ -33,13 +22,7 @@ export const selectUserByUsername = async (authUsername: string, username: strin
 
 export const updateUserByUsername = async (authUsername: string, username: string, user: SecureUser): Promise<SecureUser> => {
 
-  if (authUsername !== username) {
-    return Promise.reject({
-      status: 403,
-      message: "Forbidden",
-      details: "Permission to edit user data denied"
-    })
-  }
+  await verifyPermission(authUsername, username, "Permission to edit user data denied")
 
   const result = await db.query(`
     UPDATE users
@@ -49,13 +32,7 @@ export const updateUserByUsername = async (authUsername: string, username: strin
     `,
     [user.first_name, user.surname, user.unit_preference, username])
 
-  if (!result.rowCount) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "User not found"
-    })
-  }
+  await verifyResult(!result.rowCount, "User not found")
 
   return result.rows[0]
 }
@@ -63,13 +40,7 @@ export const updateUserByUsername = async (authUsername: string, username: strin
 
 export const changePasswordByUsername = async (authUsername: string, username: string, password: string): Promise<SecureUser> => {
 
-  if (authUsername !== username) {
-    return Promise.reject({
-      status: 403,
-      message: "Forbidden",
-      details: "Permission to edit password denied"
-    })
-  }
+  await verifyPermission(authUsername, username, "Permission to edit password denied")
 
   const result = await db.query(`
     UPDATE users
@@ -79,13 +50,7 @@ export const changePasswordByUsername = async (authUsername: string, username: s
     `,
     [password, username])
 
-  if (!result.rowCount) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "User not found"
-    })
-  }
+  await verifyResult(!result.rowCount, "User not found")
 
   return result.rows[0]
 }
@@ -93,12 +58,7 @@ export const changePasswordByUsername = async (authUsername: string, username: s
 
 export const removeUserByUsername = async (authUsername: string, username: string): Promise<undefined> => {
 
-  if (authUsername !== username) {
-    return Promise.reject({
-      status: 403,
-      message: "Permission to delete user data denied"
-    })
-  }
+  await verifyPermission(authUsername, username, "Permission to delete user data denied")
 
   const result = await db.query(`
     DELETE FROM users
@@ -107,11 +67,5 @@ export const removeUserByUsername = async (authUsername: string, username: strin
     `,
     [username])
 
-  if (!result.rowCount) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "User not found"
-    })
-  }
+  await verifyResult(!result.rowCount, "User not found")
 }
