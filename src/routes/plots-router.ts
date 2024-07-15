@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { getPlotByPlotId, getPlotsByOwner, patchPlotByPlotId, postPlotByOwner } from "../controllers/plot-controllers"
+import { deletePlotByPlotId, getPlotByPlotId, getPlotsByOwner, patchPlotByPlotId, postPlotByOwner } from "../controllers/plot-controllers"
 
 
 export const plotsRouter = Router()
@@ -404,3 +404,22 @@ plotsRouter.route("/plots/plot/:plot_id")
  *                  example: "Plot name already exists"
  */
   .patch(verifyToken, patchPlotByPlotId)
+
+
+/**
+ * @swagger
+ * /api/plots/plot/{plot_id}:
+ *  delete:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Delete a plot from the database
+ *    description: Removes the plot and all associated data from the database. Permission is denied when the plot does not belong to the current user.
+ *    tags: [Plots]
+ *    parameters:
+ *      - in: path
+ *        name: plot_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ */
+  .delete(verifyToken, deletePlotByPlotId)
