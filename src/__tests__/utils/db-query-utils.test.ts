@@ -1,7 +1,7 @@
 import data from "../../db/data/test-data/data-index"
 import { db } from "../../db"
 import { seed } from "../../db/seeding/seed"
-import { checkPlotNameConflict, getValidPlotTypes, verifyPlotOwner } from "../../utils/db-query-utils"
+import { checkPlotNameConflict, getPlotOwnerId, getValidPlotTypes, verifyPlotOwner } from "../../utils/db-query-utils"
 
 
 beforeEach(() => seed(data))
@@ -41,6 +41,27 @@ describe("checkPlotNameConflict", () => {
   test("When no plot name conflict is found, the promise resolves to be undefined", async () => {
 
     await expect(checkPlotNameConflict(1, "Unique Name")).resolves.toBeUndefined()
+  })
+})
+
+
+describe("getPlotOwnerId", () => {
+
+  test("Returns a the owner_id associated with the plot", async () => {
+
+    const result = await getPlotOwnerId(1)
+
+    expect(result).toBe(1)
+  })
+
+  test("Returns an empty array when no plots are associated with the owner_id", async () => {
+
+    await expect(getPlotOwnerId(10)).rejects.toMatchObject({
+      status: 404,
+      message: "Not Found",
+      details: "Plot not found"
+    })
+
   })
 })
 
