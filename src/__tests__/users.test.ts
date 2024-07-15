@@ -184,6 +184,9 @@ describe("DELETE /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body.message).toBe("Permission to delete user data denied")
+      expect(body).toMatchObject({
+        message: "Forbidden",
+        details: "Permission to delete user data denied"
+      })
   })
 })
