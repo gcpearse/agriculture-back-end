@@ -3,7 +3,7 @@ import { db } from "../db"
 import format from "pg-format"
 import { Plot } from "../types/plot-types"
 import { checkPlotNameConflict, getPlotOwnerId, getValidPlotTypes, verifyPlotOwner } from "../utils/db-query-utils"
-import { verifyPermission } from "../utils/verification-utils"
+import { verifyPermission, verifyResult } from "../utils/verification-utils"
 
 
 export const selectPlotsByOwner = async (authUserId: number, owner_id: number, { type }: QueryString.ParsedQs): Promise<Plot[]> => {
@@ -97,4 +97,23 @@ export const updatePlotByPlotId = async (authUserId: number, plot_id: number, pl
     [plot.name, plot.type.toLowerCase(), plot.description, plot.location, plot.area, plot_id])
 
   return result.rows[0]
+}
+
+
+export const removePlotByPlotId = async (authUserId: number, plot_id: number) => {
+
+  const owner_id = await getPlotOwnerId(plot_id)
+
+  await verifyPermission(authUserId, owner_id, "Permission to delete plot data denied")
+
+  await verifyPlotOwner(plot_id, owner_id, "Permission to delete plot data denied")
+
+  const result = await db.query(`
+    DELETE FROM plots
+    WHERE plot_id = $1
+    RETURNING *;
+    `,
+    [plot_id])
+
+  await verifyResult(!result.rowCount, "Plot not found")
 }
