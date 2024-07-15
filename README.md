@@ -18,7 +18,7 @@ Database management is handled with **PostgreSQL**. The application uses the `pg
 
 ### Authentication
 
-The application uses a **JSON Web Token (JWT)** authentication system.
+Access to routes, services, and resources is handled by a **JSON Web Token (JWT)** authentication system.
 
 ### Testing
 
