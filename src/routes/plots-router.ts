@@ -421,5 +421,21 @@ plotsRouter.route("/plots/plot/:plot_id")
  *        required: true
  *        schema:
  *          type: integer
+ *    responses:
+ *      204:
+ *        description: No Content
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Forbidden"
+ *                details:
+ *                  type: string
+ *                  example: "Permission to delete plot data denied"
  */
   .delete(verifyToken, deletePlotByPlotId)
