@@ -48,7 +48,7 @@ export const insertPlotByOwner = async (authUserId: number, owner_id: number, pl
       ($1, $2, $3, $4, $5, $6)
     RETURNING *;
     `,
-    [plot.owner_id, plot.name, plot.type, plot.description, plot.location, plot.area])
+    [plot.owner_id, plot.name, plot.type.toLowerCase(), plot.description, plot.location, plot.area])
 
   return result.rows[0]
 }
