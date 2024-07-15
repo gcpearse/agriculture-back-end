@@ -33,6 +33,21 @@ export const patchUserByUsername: RequestHandler = async (req, res, next) => {
 }
 
 
+export const deleteUserByUsername: RequestHandler = async (req, res, next) => {
+
+  const authUsername = req.body.user.username
+
+  const { username } = req.params
+
+  try {
+    await removeUserByUsername(authUsername, username)
+    res.status(204).send()
+  } catch (err) {
+    next(err)
+  }
+}
+
+
 export const patchPasswordByUsername: RequestHandler = async (req, res, next) => {
 
   const authUsername: string = req.body.user.username
@@ -44,21 +59,6 @@ export const patchPasswordByUsername: RequestHandler = async (req, res, next) =>
   try {
     const user = await changePasswordByUsername(authUsername, username, password)
     res.status(200).send({ user })
-  } catch (err) {
-    next(err)
-  }
-}
-
-
-export const deleteUserByUsername: RequestHandler = async (req, res, next) => {
-
-  const authUsername = req.body.user.username
-
-  const { username } = req.params
-
-  try {
-    await removeUserByUsername(authUsername, username)
-    res.status(204).send()
   } catch (err) {
     next(err)
   }
