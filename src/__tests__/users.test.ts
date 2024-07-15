@@ -97,7 +97,7 @@ describe("PATCH /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body.message).toBe("Bad request")
+    expect(body.message).toBe("Bad Request")
   })
 
   test("PATCH:403 Responds with a warning when the authenticated user attempts to edit another user's data", async () => {
