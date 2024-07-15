@@ -1,5 +1,5 @@
 import { RequestHandler } from "express"
-import { insertPlotByOwner, selectPlotByPlotId, selectPlotsByOwner, updatePlotByPlotId } from "../models/plot-models"
+import { insertPlotByOwner, removePlotByPlotId, selectPlotByPlotId, selectPlotsByOwner, updatePlotByPlotId } from "../models/plot-models"
 
 
 export const getPlotsByOwner: RequestHandler = async (req, res, next) => {
@@ -58,6 +58,21 @@ export const patchPlotByPlotId: RequestHandler = async (req, res, next) => {
   try {
     const plot = await updatePlotByPlotId(authUserId, +plot_id, req.body)
     res.status(200).send({ plot })
+  } catch (err) {
+    next(err)
+  }
+}
+
+
+export const deletePlotByPlotId: RequestHandler = async (req, res, next) => {
+
+  const authUserId: number = req.body.user.user_id
+
+  const { plot_id } = req.params
+
+  try {
+    await removePlotByPlotId(authUserId, +plot_id)
+    res.status(204).send()
   } catch (err) {
     next(err)
   }

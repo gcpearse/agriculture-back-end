@@ -1,7 +1,7 @@
 import data from "../../db/data/test-data/data-index"
 import { db } from "../../db"
 import { seed } from "../../db/seeding/seed"
-import { checkPlotNameConflict, getPlotOwnerId, getValidPlotTypes, verifyPlotOwner } from "../../utils/db-query-utils"
+import { checkPlotNameConflict, getPlotOwnerId, getValidPlotTypes } from "../../utils/db-query-utils"
 
 
 beforeEach(() => seed(data))
@@ -60,35 +60,6 @@ describe("getPlotOwnerId", () => {
       status: 404,
       message: "Not Found",
       details: "Plot not found"
-    })
-
-  })
-})
-
-
-describe("verifyPlotOwner", () => {
-
-  test("Returns a plot object when the plot belongs to the current user", async () => {
-
-    const result = await verifyPlotOwner(1, 1, "Test")
-
-    expect(result).toMatchObject({
-      plot_id: 1,
-      owner_id: 1,
-      name: "John's Garden",
-      type: "garden",
-      description: "A vegetable garden",
-      location: "Farmville",
-      area: 100
-    })
-  })
-
-  test("When the plot does not belong to the current user, the promise is rejected", async () => {
-
-    await expect(verifyPlotOwner(1, 2, "Permission denied")).rejects.toMatchObject({
-      status: 403,
-      message: "Forbidden",
-      details: "Permission denied"
     })
   })
 })

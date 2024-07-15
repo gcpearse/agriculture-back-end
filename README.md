@@ -80,7 +80,7 @@ In the **Secret** field, enter a JWT secret key.
 
 ## Scripts
 
-The following scripts are included in `package.json`:
+The following scripts are included in the `package.json` file:
 
 ```json
 "scripts": {
