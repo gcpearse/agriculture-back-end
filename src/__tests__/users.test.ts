@@ -122,41 +122,6 @@ describe("PATCH /api/users/:username", () => {
 })
 
 
-describe("PATCH /api/users/:username/password", () => {
-
-  test("PATCH:200 Responds with an updated user object", async () => {
-
-    const { body } = await request(app)
-      .patch("/api/users/carrot_king/password")
-      .send({ password: "onions789" })
-      .set("Authorization", `Bearer ${token}`)
-      .expect(200)
-
-    expect(body.user).toMatchObject({
-      user_id: 1,
-      username: "carrot_king",
-      first_name: "John",
-      surname: "Smith",
-      unit_preference: "imperial"
-    })
-  })
-
-  test("PATCH:403 Responds with a warning when the authenticated user attempts to chanhge another user's password", async () => {
-
-    const { body } = await request(app)
-      .patch("/api/users/peach_princess/password")
-      .send({ password: "onions789" })
-      .set("Authorization", `Bearer ${token}`)
-      .expect(403)
-
-    expect(body).toMatchObject({
-      message: "Forbidden",
-      details: "Permission to edit password denied"
-    })
-  })
-})
-
-
 describe("DELETE /api/users/:username", () => {
 
   test("DELETE:204 Deletes the user with the given username", async () => {
@@ -188,5 +153,40 @@ describe("DELETE /api/users/:username", () => {
         message: "Forbidden",
         details: "Permission to delete user data denied"
       })
+  })
+})
+
+
+describe("PATCH /api/users/:username/password", () => {
+
+  test("PATCH:200 Responds with an updated user object", async () => {
+
+    const { body } = await request(app)
+      .patch("/api/users/carrot_king/password")
+      .send({ password: "onions789" })
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.user).toMatchObject({
+      user_id: 1,
+      username: "carrot_king",
+      first_name: "John",
+      surname: "Smith",
+      unit_preference: "imperial"
+    })
+  })
+
+  test("PATCH:403 Responds with a warning when the authenticated user attempts to chanhge another user's password", async () => {
+
+    const { body } = await request(app)
+      .patch("/api/users/peach_princess/password")
+      .send({ password: "onions789" })
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to edit password denied"
+    })
   })
 })
