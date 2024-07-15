@@ -1,9 +1,12 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { getPlotByPlotId, getPlotsByOwner } from "../controllers/plot-controllers"
+import { getPlotByPlotId, getPlotsByOwner, postPlotByOwner } from "../controllers/plot-controllers"
 
 
 export const plotsRouter = Router()
+
+
+plotsRouter.route("/plots/:owner_id")
 
 
 /**
@@ -86,7 +89,120 @@ export const plotsRouter = Router()
  *                  type: string
  *                  example: "No results found for that query"
  */
-plotsRouter.get("/plots/:owner_id", verifyToken, getPlotsByOwner)
+  .get(verifyToken, getPlotsByOwner)
+
+/**
+ * @swagger
+ * /api/plots/{owner_id}:
+ *  post:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Create a new plot
+ *    description: Responds with a plot object.
+ *    tags: [Plots]
+ *    parameters:
+ *      - in: path
+ *        name: owner_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              owner_id:
+ *                type: integer
+ *                example: 1
+ *              name:
+ *                type: string
+ *                example: John's Field
+ *              type:
+ *                type: string    
+ *                example: field
+ *              description:
+ *                type: string    
+ *                example: A large field
+ *              location:
+ *                type: string    
+ *                example: Wildwood
+ *              area:
+ *                type: integer    
+ *                example: 3000
+ *    responses:
+ *      200:
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                plots:
+ *                  type: array
+ *                  items:
+ *                    type: object
+ *                    properties:
+ *                      plot_id:
+ *                        type: integer
+ *                        example: 5
+ *                      owner_id:
+ *                        type: integer
+ *                        example: 1
+ *                      name:
+ *                        type: string
+ *                        example: John's Field
+ *                      type:
+ *                        type: string    
+ *                        example: field
+ *                      description:
+ *                        type: string    
+ *                        example: A large field
+ *                      location:
+ *                        type: string    
+ *                        example: Wildwood
+ *                      area:
+ *                        type: integer    
+ *                        example: 3000
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Bad request"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Forbidden"
+ *                details:
+ *                  type: string
+ *                  example: "Permission to create plot denied"
+ *      409:
+ *        description: Conflict
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Conflict"
+ *                details:
+ *                  type: string
+ *                  example: "Plot name already exists"
+ */
+  .post(verifyToken, postPlotByOwner)
 
 /**
  * @swagger
