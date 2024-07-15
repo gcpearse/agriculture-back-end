@@ -1,6 +1,6 @@
 import { seed } from "./seed"
 // Change to development data later
-import data from "../data/test-data/index"
+import data from "../data/test-data/data-index"
 import { db } from ".."
 
 
