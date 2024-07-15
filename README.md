@@ -1,6 +1,4 @@
-<p style="font-size: 40px; font-weight: 610;">Agriculture (WIP)</p>
-
-# Back-end Repository
+# Agriculture (WIP) - Back-end Repository
 
 ## Overview
 
