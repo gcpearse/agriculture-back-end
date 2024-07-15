@@ -1,4 +1,5 @@
 import { db } from "../db"
+import { Plot } from "../types/plot-types"
 
 
 export const getValidPlotTypes = async (owner_id: number): Promise<string[]> => {
@@ -35,7 +36,7 @@ export const checkPlotNameConflict = async (owner_id: number, name: string): Pro
 }
 
 
-export const verifyPlotOwner = async (plot_id: number, owner_id: number, details: string) => {
+export const verifyPlotOwner = async (plot_id: number, owner_id: number, details: string): Promise<Plot> => {
 
   const result = await db.query(`
     SELECT * FROM plots
