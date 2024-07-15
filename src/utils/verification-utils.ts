@@ -1,4 +1,4 @@
-export const verifyPermission = (base: string | number, target: string | number, details: string) => {
+export const verifyPermission = (base: string | number, target: string | number, details: string): Promise<never> | undefined => {
 
   if (base !== target) {
     return Promise.reject({
@@ -10,7 +10,7 @@ export const verifyPermission = (base: string | number, target: string | number,
 }
 
 
-export const verifyResult = (bool: boolean, details: string) => {
+export const verifyResult = (bool: boolean, details: string): Promise<never> | undefined => {
 
   if (bool) {
     return Promise.reject({

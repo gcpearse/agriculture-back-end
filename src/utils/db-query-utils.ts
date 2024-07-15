@@ -14,7 +14,7 @@ export const getValidPlotTypes = async (owner_id: number): Promise<string[]> => 
 }
 
 
-export const checkPlotNameConflict = async (owner_id: number, name: string) => {
+export const checkPlotNameConflict = async (owner_id: number, name: string): Promise<undefined> => {
 
   const result = await db.query(`
     SELECT name
