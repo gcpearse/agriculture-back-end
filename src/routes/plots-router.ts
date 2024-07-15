@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { getPlotByPlotId, getPlotsByOwner, postPlotByOwner } from "../controllers/plot-controllers"
+import { getPlotByPlotId, getPlotsByOwner, patchPlotByPlotId, postPlotByOwner } from "../controllers/plot-controllers"
 
 
 export const plotsRouter = Router()
@@ -98,7 +98,7 @@ plotsRouter.route("/plots/:owner_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Create a new plot
- *    description: Responds with a plot object.
+ *    description: Responds with a plot object. If the plot name already exists for the current user, the server responds with an error. Permission is denied when the current user's ID does not match the target owner_id.
  *    tags: [Plots]
  *    parameters:
  *      - in: path
@@ -174,7 +174,7 @@ plotsRouter.route("/plots/:owner_id")
  *              properties:
  *                message:
  *                  type: string
- *                  example: "Bad request"
+ *                  example: "Bad Request"
  *      403:
  *        description: Forbidden
  *        content:
@@ -203,6 +203,10 @@ plotsRouter.route("/plots/:owner_id")
  *                  example: "Plot name already exists"
  */
   .post(verifyToken, postPlotByOwner)
+
+
+plotsRouter.route("/plots/:owner_id/:plot_id")
+
 
 /**
  * @swagger
@@ -267,4 +271,120 @@ plotsRouter.route("/plots/:owner_id")
  *                  type: string
  *                  example: "Permission to view plot data denied"
  */
-plotsRouter.get("/plots/:owner_id/:plot_id", verifyToken, getPlotByPlotId)
+  .get(verifyToken, getPlotByPlotId)
+
+
+/**
+ * @swagger
+ * /api/plots/{owner_id}/{plot_id}:
+ *  patch:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Update a user's plot
+ *    description: Responds with a plot object. If the plot name already exists for one of the current user's other plots, the server responds with an error. Permission is denied when the current user's ID does not match the target owner_id.
+ *    tags: [Plots]
+ *    parameters:
+ *      - in: path
+ *        name: owner_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *      - in: path
+ *        name: plot_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              name:
+ *                type: string
+ *                example: John's Vegetable Patch
+ *              type:
+ *                type: string    
+ *                example: vegetable patch
+ *              description:
+ *                type: string    
+ *                example: A vegetable patch
+ *              location:
+ *                type: string    
+ *                example: Appleby
+ *              area:
+ *                type: integer    
+ *                example: 10
+ *    responses:
+ *      200:
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                plots:
+ *                  type: array
+ *                  items:
+ *                    type: object
+ *                    properties:
+ *                      plot_id:
+ *                        type: integer
+ *                        example: 1
+ *                      owner_id:
+ *                        type: integer
+ *                        example: 1
+ *                      name:
+ *                        type: string
+ *                        example: John's Vegetable Patch
+ *                      type:
+ *                        type: string    
+ *                        example: vegetable patch
+ *                      description:
+ *                        type: string    
+ *                        example: A vegetable patch
+ *                      location:
+ *                        type: string    
+ *                        example: Appleby
+ *                      area:
+ *                        type: integer    
+ *                        example: 10
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Bad Request"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Forbidden"
+ *                details:
+ *                  type: string
+ *                  example: "Permission to edit plot data denied"
+ *      409:
+ *        description: Conflict
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Conflict"
+ *                details:
+ *                  type: string
+ *                  example: "Plot name already exists"
+ */
+  .patch(verifyToken, patchPlotByPlotId)
