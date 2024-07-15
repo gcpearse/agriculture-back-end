@@ -1,5 +1,5 @@
 import { RequestHandler } from "express"
-import { selectPlotByPlotId, selectPlotsByOwner } from "../models/plot-models"
+import { insertPlotByOwner, selectPlotByPlotId, selectPlotsByOwner } from "../models/plot-models"
 
 
 export const getPlotsByOwner: RequestHandler = async (req, res, next) => {
@@ -13,6 +13,21 @@ export const getPlotsByOwner: RequestHandler = async (req, res, next) => {
   try {
     const plots = await selectPlotsByOwner(authUserId, +owner_id, queries)
     res.status(200).send({ plots })
+  } catch (err) {
+    next(err)
+  }
+}
+
+
+export const postPlotByOwner: RequestHandler = async (req, res, next) => {
+
+  const authUserId: number = req.body.user.user_id
+
+  const { owner_id } = req.params
+
+  try {
+    const plot = await insertPlotByOwner(authUserId, +owner_id, req.body)
+    res.status(201).send({ plot })
   } catch (err) {
     next(err)
   }

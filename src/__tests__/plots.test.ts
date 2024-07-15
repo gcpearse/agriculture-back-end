@@ -114,6 +114,160 @@ describe("GET /api/plots/:owner_id?type=", () => {
 })
 
 
+describe("POST /api/plots/:owner_id", () => {
+
+  test("POST:201 Responds with a new plot object", async () => {
+
+    const newPlot = {
+      owner_id: 1,
+      name: "John's Field",
+      type: "field",
+      description: "A large field",
+      location: "Wildwood",
+      area: 3000
+    }
+
+    const { body } = await request(app)
+      .post("/api/plots/1")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(201)
+
+    expect(body.plot).toMatchObject({
+      plot_id: 5,
+      owner_id: 1,
+      name: "John's Field",
+      type: "field",
+      description: "A large field",
+      location: "Wildwood",
+      area: 3000
+    })
+  })
+
+  test("POST:201 Assigns a null value to area when no value is provided", async () => {
+
+    const newPlot = {
+      owner_id: 1,
+      name: "John's Field",
+      type: "field",
+      description: "A large field",
+      location: "Wildwood"
+    }
+
+    const { body } = await request(app)
+      .post("/api/plots/1")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(201)
+
+    expect(body.plot).toMatchObject({
+      plot_id: 5,
+      owner_id: 1,
+      name: "John's Field",
+      type: "field",
+      description: "A large field",
+      location: "Wildwood",
+      area: null
+    })
+  })
+
+  test("POST:201 Ignores any unnecessary properties on the object", async () => {
+
+    const newPlot = {
+      owner_id: 1,
+      name: "John's Field",
+      type: "field",
+      description: "A large field",
+      location: "Wildwood",
+      area: 3000,
+      price: 10000
+    }
+
+    const { body } = await request(app)
+      .post("/api/plots/1")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(201)
+
+    expect(body.plot).toMatchObject({
+      plot_id: 5,
+      owner_id: 1,
+      name: "John's Field",
+      type: "field",
+      description: "A large field",
+      location: "Wildwood",
+      area: 3000
+    })
+  })
+
+  test("POST:400 Responds with an error when provided with an invalid data type for a property", async () => {
+
+    const newPlot = {
+      owner_id: 1,
+      name: "John's Field",
+      type: "field",
+      description: "A large field",
+      location: "Wildwood",
+      area: "three thousand metres"
+    }
+
+    const { body } = await request(app)
+      .post("/api/plots/1")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body.message).toBe("Bad request")
+  })
+
+  test("POST:403 Responds with a warning when the authenticated user's user_id does not match owner_id", async () => {
+
+    const newPlot = {
+      owner_id: 1,
+      name: "John's Field",
+      type: "field",
+      description: "A large field",
+      location: "Wildwood",
+      area: 3000
+    }
+
+    const { body } = await request(app)
+      .post("/api/plots/2")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to create plot denied"
+    })
+  })
+
+  test("POST:409 Responds with an error message when the plot name already exists for one of the given user's plots", async () => {
+
+    const newPlot = {
+      owner_id: 1,
+      name: "John's Garden",
+      type: "garden",
+      description: "The garden at the new house",
+      location: "Applebury",
+      area: 120
+    }
+
+    const { body } = await request(app)
+      .post("/api/plots/1")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(409)
+
+    expect(body).toMatchObject({
+      message: "Conflict",
+      details: "Plot name already exists"
+    })
+  })
+})
+
+
 describe("GET /api/plots/:owner_id/:plot_id", () => {
 
   test("GET:200 Responds with a plot object matching the value of the plot_id parameter", async () => {
