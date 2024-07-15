@@ -8,7 +8,12 @@ export const selectUserByUsername = async (authUsername: string, username: strin
   await verifyPermission(authUsername, username, "Permission to view user data denied")
 
   const result = await db.query(`
-    SELECT user_id, username, first_name, surname, unit_preference
+    SELECT 
+      user_id, 
+      username, 
+      first_name, 
+      surname, 
+      unit_preference
     FROM users
     WHERE username = $1;
     `,
@@ -26,9 +31,17 @@ export const updateUserByUsername = async (authUsername: string, username: strin
 
   const result = await db.query(`
     UPDATE users
-    SET first_name = $1, surname = $2, unit_preference = $3
+    SET 
+      first_name = $1, 
+      surname = $2, 
+      unit_preference = $3
     WHERE username = $4
-    RETURNING user_id, username, first_name, surname, unit_preference;
+    RETURNING 
+      user_id, 
+      username, 
+      first_name, 
+      surname, 
+      unit_preference;
     `,
     [user.first_name, user.surname, user.unit_preference, username])
 
@@ -46,7 +59,12 @@ export const changePasswordByUsername = async (authUsername: string, username: s
     UPDATE users
     SET password = $1
     WHERE username = $2
-    RETURNING user_id, username, first_name, surname, unit_preference;
+    RETURNING 
+      user_id, 
+      username, 
+      first_name, 
+      surname, 
+      unit_preference;
     `,
     [password, username])
 
