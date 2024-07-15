@@ -1,5 +1,4 @@
 import { db } from "../db"
-import { Plot } from "../types/plot-types"
 
 
 export const getValidPlotTypes = async (owner_id: number): Promise<string[]> => {
@@ -54,25 +53,4 @@ export const getPlotOwnerId = async (plot_id: number): Promise<number> => {
   }
 
   return result.rows[0].owner_id
-}
-
-
-export const verifyPlotOwner = async (plot_id: number, owner_id: number, details: string): Promise<Plot> => {
-
-  const result = await db.query(`
-    SELECT * FROM plots
-    WHERE plot_id = $1
-    AND owner_id = $2;
-    `,
-    [plot_id, owner_id])
-
-  if (!result.rowCount) {
-    return Promise.reject({
-      status: 403,
-      message: "Forbidden",
-      details
-    })
-  }
-
-  return result.rows[0]
 }
