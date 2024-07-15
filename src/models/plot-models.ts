@@ -35,7 +35,7 @@ export const selectPlotsByOwner = async (authUserId: number, owner_id: number, {
 }
 
 
-export const addPlotByOwner = async (authUserId: number, owner_id: number, plot: Plot) => {
+export const insertPlotByOwner = async (authUserId: number, owner_id: number, plot: Plot) => {
 
   await verifyPermission(authUserId, owner_id, "Permission to create plot denied")
 
