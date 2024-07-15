@@ -144,6 +144,25 @@ describe("POST /api/plots/:owner_id", () => {
     })
   })
 
+  test("POST:201 Converts the value of field to lower case", async () => {
+
+    const newPlot = {
+      owner_id: 1,
+      name: "John's Field",
+      type: "Field",
+      description: "A large field",
+      location: "Wildwood"
+    }
+
+    const { body } = await request(app)
+      .post("/api/plots/1")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(201)
+
+    expect(body.plot.type).toBe("field")
+  })
+
   test("POST:201 Assigns a null value to area when no value is provided", async () => {
 
     const newPlot = {
@@ -160,15 +179,7 @@ describe("POST /api/plots/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
 
-    expect(body.plot).toMatchObject({
-      plot_id: 5,
-      owner_id: 1,
-      name: "John's Field",
-      type: "field",
-      description: "A large field",
-      location: "Wildwood",
-      area: null
-    })
+    expect(body.plot.area).toBeNull()
   })
 
   test("POST:201 Ignores any unnecessary properties on the object", async () => {
@@ -189,15 +200,7 @@ describe("POST /api/plots/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
 
-    expect(body.plot).toMatchObject({
-      plot_id: 5,
-      owner_id: 1,
-      name: "John's Field",
-      type: "field",
-      description: "A large field",
-      location: "Wildwood",
-      area: 3000
-    })
+    expect(body.plot).not.toHaveProperty("price")
   })
 
   test("POST:400 Responds with an error when provided with an invalid data type for a property", async () => {
