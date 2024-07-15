@@ -39,9 +39,8 @@ jobs:
       - name: Run test suites
         env:
           PGDATABASE: test_ci_db
-          POSTGRES_HOST: localhost
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_PORT: 5432
-          POSTGRES_USER: test_ci_user
+          PGHOST: localhost
+          PGPASSWORD: postgres
+          PGUSER: test_ci_user
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: npm t
