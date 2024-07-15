@@ -1,17 +1,18 @@
 import { db } from "../db"
 import { Credentials, LoggedInUser, SecureUser, User } from "../types/user-types"
+import { verifyResult } from "../utils/verification-utils"
 
 
 export const registerUser = async ({ username, password, first_name, surname, unit_preference }: User): Promise<SecureUser> => {
 
-  const conflictCheck = await db.query(`
+  const dbUsername = await db.query(`
     SELECT username 
     FROM users 
     WHERE username = $1;
     `,
     [username])
 
-  if (conflictCheck.rowCount) {
+  if (dbUsername.rowCount) {
     return Promise.reject({
       status: 409,
       message: "Conflict",
@@ -40,7 +41,7 @@ export const registerUser = async ({ username, password, first_name, surname, un
 
 export const logInUser = async ({ username, password }: Credentials): Promise<LoggedInUser> => {
 
-  const usernameCheck = await db.query(`
+  const result = await db.query(`
     SELECT 
       user_id, 
       username 
@@ -49,15 +50,9 @@ export const logInUser = async ({ username, password }: Credentials): Promise<Lo
     `,
     [username])
 
-  if (!usernameCheck.rowCount) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "Username could not be found"
-    })
-  }
+  await verifyResult(!result.rowCount, "Username could not be found")
 
-  const passwordCheck = await db.query(`
+  const dbPassword = await db.query(`
     SELECT password
     FROM users
     WHERE username = $1
@@ -65,7 +60,7 @@ export const logInUser = async ({ username, password }: Credentials): Promise<Lo
     `,
     [username, password])
 
-  if (!passwordCheck.rowCount) {
+  if (!dbPassword.rowCount) {
     return Promise.reject({
       status: 401,
       message: "Unauthorized",
@@ -73,5 +68,5 @@ export const logInUser = async ({ username, password }: Credentials): Promise<Lo
     })
   }
 
-  return usernameCheck.rows[0]
+  return result.rows[0]
 }
