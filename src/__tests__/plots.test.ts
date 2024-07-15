@@ -28,7 +28,7 @@ afterAll(() => db.end())
 
 describe("GET /api/plots/:owner_id", () => {
 
-  test("GET:200 Responds with an array of plot objects associated with the owner_id", async () => {
+  test("GET:200 Responds with an array of plot objects", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/1")
@@ -144,7 +144,7 @@ describe("POST /api/plots/:owner_id", () => {
     })
   })
 
-  test("POST:201 Converts the value of field to lower case", async () => {
+  test("POST:201 Converts the value of 'type' to lower case", async () => {
 
     const newPlot = {
       owner_id: 1,
@@ -163,7 +163,7 @@ describe("POST /api/plots/:owner_id", () => {
     expect(body.plot.type).toBe("field")
   })
 
-  test("POST:201 Assigns a null value to area when no value is provided", async () => {
+  test("POST:201 Assigns a null value to 'area' when no value is provided", async () => {
 
     const newPlot = {
       owner_id: 1,
@@ -203,7 +203,7 @@ describe("POST /api/plots/:owner_id", () => {
     expect(body.plot).not.toHaveProperty("price")
   })
 
-  test("POST:400 Responds with an error when provided with an invalid data type for a property", async () => {
+  test("POST:400 Responds with an error when passed a property with an invalid data type", async () => {
 
     const newPlot = {
       owner_id: 1,
@@ -220,7 +220,7 @@ describe("POST /api/plots/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body.message).toBe("Bad request")
+    expect(body.message).toBe("Bad Request")
   })
 
   test("POST:403 Responds with a warning when the authenticated user's user_id does not match owner_id", async () => {
@@ -273,7 +273,7 @@ describe("POST /api/plots/:owner_id", () => {
 
 describe("GET /api/plots/:owner_id/:plot_id", () => {
 
-  test("GET:200 Responds with a plot object matching the value of the plot_id parameter", async () => {
+  test("GET:200 Responds with a plot object", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/1/1")
@@ -294,7 +294,7 @@ describe("GET /api/plots/:owner_id/:plot_id", () => {
   test("GET:403 Responds with a warning when the authenticated user's user_id does not match owner_id", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/2/2")
+      .get("/api/plots/2/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
@@ -307,13 +307,177 @@ describe("GET /api/plots/:owner_id/:plot_id", () => {
   test("GET:403 Responds with a warning when the plot_id does not belong to the authenticated user", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/1/99")
+      .get("/api/plots/1/2")
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
     expect(body).toMatchObject({
       message: "Forbidden",
       details: "Permission to view plot data denied"
+    })
+  })
+})
+
+
+describe("PATCH /api/plots/:owner_id/:plot_id", () => {
+
+  test("PATCH:200 Responds with an updated plot object", async () => {
+
+    const newDetails = {
+      name: "John's Vegetable Patch",
+      type: "vegetable patch",
+      description: "A vegetable patch",
+      location: "123, Salsify Street, Farmville",
+      area: 10
+    }
+
+    const { body } = await request(app)
+      .patch("/api/plots/1/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.plot).toMatchObject({
+      plot_id: 1,
+      owner_id: 1,
+      name: "John's Vegetable Patch",
+      type: "vegetable patch",
+      description: "A vegetable patch",
+      location: "123, Salsify Street, Farmville",
+      area: 10
+    })
+  })
+
+  test("PATCH:200 Allows the request when the plot name remains unchanged (plot name conflict should only be raised in cases of duplication)", async () => {
+
+    const newDetails = {
+      name: "John's Garden",
+      type: "garden",
+      description: "A new description",
+      location: "234, Apricot Avenue, Farmville",
+      area: 180
+    }
+
+    const { body } = await request(app)
+      .patch("/api/plots/1/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.plot).toMatchObject({
+      plot_id: 1,
+      owner_id: 1,
+      name: "John's Garden",
+      type: "garden",
+      description: "A new description",
+      location: "234, Apricot Avenue, Farmville",
+      area: 180
+    })
+  })
+
+  test("PATCH:200 Converts the value of 'type' to lower case", async () => {
+
+    const newDetails = {
+      name: "John's Vegetable Patch",
+      type: "Vegetable Patch",
+      description: "A vegetable patch",
+      location: "123, Salsify Street, Farmville",
+      area: 10
+    }
+
+    const { body } = await request(app)
+      .patch("/api/plots/1/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.plot.type).toBe("vegetable patch")
+  })
+
+  test("PATCH:400 Responds with an error when passed a property with an invalid data type", async () => {
+
+    const newDetails = {
+      name: "John's Vegetable Patch",
+      type: "vegetable patch",
+      description: "A vegetable patch",
+      location: "123, Salsify Street, Farmville",
+      area: "ten metres"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/plots/1/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request"
+    })
+  })
+
+  test("PATCH:403 Responds with a warning when the authenticated user's user_id does not match owner_id", async () => {
+
+    const newDetails = {
+      name: "John's Vegetable Patch",
+      type: "vegetable patch",
+      description: "A vegetable patch",
+      location: "123, Salsify Street, Farmville",
+      area: 10
+    }
+
+    const { body } = await request(app)
+      .patch("/api/plots/2/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to edit plot data denied"
+    })
+  })
+
+  test("PATCH:403 Responds with a warning when the plot_id does not belong to the authenticated user", async () => {
+
+    const newDetails = {
+      name: "John's Vegetable Patch",
+      type: "vegetable patch",
+      description: "A vegetable patch",
+      location: "123, Salsify Street, Farmville",
+      area: 10
+    }
+
+    const { body } = await request(app)
+      .patch("/api/plots/1/2")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to edit plot data denied"
+    })
+  })
+
+  test("PATCH:409 Responds with an error message when the plot name already exists for one of the given user's other plots", async () => {
+
+    const newDetails = {
+      name: "John's Allotment",
+      type: "garden",
+      description: "A vegetable garden",
+      location: "Farmville",
+      area: 100
+    }
+
+    const { body } = await request(app)
+      .patch("/api/plots/1/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(409)
+
+    expect(body).toMatchObject({
+      message: "Conflict",
+      details: "Plot name already exists"
     })
   })
 })
