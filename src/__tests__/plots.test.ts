@@ -481,3 +481,38 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
     })
   })
 })
+
+
+describe("DELETE /api/plots/plot/:plot_id", () => {
+
+  test("DELETE:204 Deletes the plot with the given plot_id", async () => {
+
+    await request(app)
+      .delete("/api/plots/plot/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(204)
+
+    const { body } = await request(app)
+      .get("/api/plots/plot/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Plot not found"
+    })
+  })
+
+  test("DELETE:403 Responds with a warning when the authenticated user attempts to delete another user's plot", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/plots/plot/2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to delete plot data denied"
+    })
+  })
+})
