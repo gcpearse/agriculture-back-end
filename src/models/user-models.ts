@@ -51,7 +51,7 @@ export const updateUserByUsername = async (authUsername: string, username: strin
 }
 
 
-export const removeUserByUsername = async (authUsername: string, username: string): Promise<undefined> => {
+export const removeUserByUsername = async (authUsername: string, username: string): Promise<void> => {
 
   await verifyPermission(authUsername, username, "Permission to delete user data denied")
 
