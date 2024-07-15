@@ -271,12 +271,12 @@ describe("POST /api/plots/:owner_id", () => {
 })
 
 
-describe("GET /api/plots/:owner_id/:plot_id", () => {
+describe("GET /api/plots/plot/:plot_id", () => {
 
   test("GET:200 Responds with a plot object", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/1/1")
+      .get("/api/plots/plot/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -291,10 +291,10 @@ describe("GET /api/plots/:owner_id/:plot_id", () => {
     })
   })
 
-  test("GET:403 Responds with a warning when the authenticated user's user_id does not match owner_id", async () => {
+  test("GET:403 Responds with a warning when the plot_id does not belong to the authenticated user", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/2/1")
+      .get("/api/plots/plot/2")
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
@@ -304,22 +304,22 @@ describe("GET /api/plots/:owner_id/:plot_id", () => {
     })
   })
 
-  test("GET:403 Responds with a warning when the plot_id does not belong to the authenticated user", async () => {
+  test("GET:404 Responds with an error message when the plot_id does not exist", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/1/2")
+      .get("/api/plots/plot/999")
       .set("Authorization", `Bearer ${token}`)
-      .expect(403)
+      .expect(404)
 
     expect(body).toMatchObject({
-      message: "Forbidden",
-      details: "Permission to view plot data denied"
+      message: "Not Found",
+      details: "Plot not found"
     })
   })
 })
 
 
-describe("PATCH /api/plots/:owner_id/:plot_id", () => {
+describe("PATCH /api/plots/plot/:plot_id", () => {
 
   test("PATCH:200 Responds with an updated plot object", async () => {
 
@@ -332,7 +332,7 @@ describe("PATCH /api/plots/:owner_id/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/plots/1/1")
+      .patch("/api/plots/plot/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
@@ -359,7 +359,7 @@ describe("PATCH /api/plots/:owner_id/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/plots/1/1")
+      .patch("/api/plots/plot/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
@@ -386,7 +386,7 @@ describe("PATCH /api/plots/:owner_id/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/plots/1/1")
+      .patch("/api/plots/plot/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
@@ -405,35 +405,13 @@ describe("PATCH /api/plots/:owner_id/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/plots/1/1")
+      .patch("/api/plots/plot/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
     expect(body).toMatchObject({
       message: "Bad Request"
-    })
-  })
-
-  test("PATCH:403 Responds with a warning when the authenticated user's user_id does not match owner_id", async () => {
-
-    const newDetails = {
-      name: "John's Vegetable Patch",
-      type: "vegetable patch",
-      description: "A vegetable patch",
-      location: "123, Salsify Street, Farmville",
-      area: 10
-    }
-
-    const { body } = await request(app)
-      .patch("/api/plots/2/1")
-      .send(newDetails)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(403)
-
-    expect(body).toMatchObject({
-      message: "Forbidden",
-      details: "Permission to edit plot data denied"
     })
   })
 
@@ -448,7 +426,7 @@ describe("PATCH /api/plots/:owner_id/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/plots/1/2")
+      .patch("/api/plots/plot/2")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
@@ -456,6 +434,28 @@ describe("PATCH /api/plots/:owner_id/:plot_id", () => {
     expect(body).toMatchObject({
       message: "Forbidden",
       details: "Permission to edit plot data denied"
+    })
+  })
+
+  test("PATCH:404 Responds with an error message when the plot_id does not exist", async () => {
+
+    const newDetails = {
+      name: "John's Vegetable Patch",
+      type: "vegetable patch",
+      description: "A vegetable patch",
+      location: "123, Salsify Street, Farmville",
+      area: 10
+    }
+
+    const { body } = await request(app)
+      .patch("/api/plots/plot/999")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Plot not found"
     })
   })
 
@@ -470,7 +470,7 @@ describe("PATCH /api/plots/:owner_id/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/plots/1/1")
+      .patch("/api/plots/plot/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(409)

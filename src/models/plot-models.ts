@@ -2,7 +2,7 @@ import QueryString from "qs"
 import { db } from "../db"
 import format from "pg-format"
 import { Plot } from "../types/plot-types"
-import { checkPlotNameConflict, getValidPlotTypes, verifyPlotOwner } from "../utils/db-query-utils"
+import { checkPlotNameConflict, getPlotOwnerId, getValidPlotTypes, verifyPlotOwner } from "../utils/db-query-utils"
 import { verifyPermission } from "../utils/verification-utils"
 
 
@@ -54,7 +54,9 @@ export const insertPlotByOwner = async (authUserId: number, owner_id: number, pl
 }
 
 
-export const selectPlotByPlotId = async (authUserId: number, owner_id: number, plot_id: number): Promise<Plot> => {
+export const selectPlotByPlotId = async (authUserId: number, plot_id: number): Promise<Plot> => {
+
+  const owner_id = await getPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to view plot data denied")
 
@@ -62,7 +64,9 @@ export const selectPlotByPlotId = async (authUserId: number, owner_id: number, p
 }
 
 
-export const updatePlotByPlotId = async (authUserId: number, owner_id: number, plot_id: number, plot: Plot): Promise<Plot> => {
+export const updatePlotByPlotId = async (authUserId: number, plot_id: number, plot: Plot): Promise<Plot> => {
+
+  const owner_id = await getPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to edit plot data denied")
 
