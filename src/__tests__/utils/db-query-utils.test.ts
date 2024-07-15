@@ -51,7 +51,6 @@ describe("verifyPlotOwner", () => {
 
     const result = await verifyPlotOwner(1, 1, "Test")
 
-    console.log(result)
     expect(result).toMatchObject({
       plot_id: 1,
       owner_id: 1,
