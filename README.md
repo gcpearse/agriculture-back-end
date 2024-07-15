@@ -22,11 +22,11 @@ The application uses a **JSON Web Token (JWT)** authentication system.
 
 ### Testing
 
-The project contains a full suite of integration tests using **Jest**, **ts-jest**, and **SuperTest**.
+The project contains a full suite of integration tests using **Jest** and **SuperTest** with the `ts-jest` library for TypeScript support.
 
 ## Documentation
 
-Comprehensive API documentation is hosted on **Swagger** using the `swagger-ui-express` and `swagger-jsdoc` to generate and serve up the docs.
+Comprehensive API documentation is hosted on **Swagger** using the `swagger-ui-express` and `swagger-jsdoc` libraries to generate and serve up the docs.
 
 ## Continuous Integration
 
