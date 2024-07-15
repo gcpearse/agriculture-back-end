@@ -44,6 +44,9 @@ export const loginRouter = Router()
  *              properties:
  *                message:
  *                  type: string
+ *                  example: "Unauthorized"
+ *                details:
+ *                  type: string
  *                  example: "Incorrect password"
  *      404:
  *        description: Not Found
@@ -54,6 +57,9 @@ export const loginRouter = Router()
  *              properties:
  *                message:
  *                  type: string
- *                  example: "Username not found"
+ *                  example: "Not Found"
+ *                details:
+ *                  type: string
+ *                  example: "Username could not be found"
  */
 loginRouter.post("/login", postLogin)

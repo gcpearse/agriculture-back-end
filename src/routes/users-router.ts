@@ -55,7 +55,10 @@ usersRouter.route("/users/:username")
  *              properties:
  *                message:
  *                  type: string
- *                  example: "Access to user data denied"
+ *                  example: "Forbidden"
+ *                details:
+ *                  type: string
+ *                  example: "Permission to view user data denied"
  */
   .get(verifyToken, getUserByUsername)
 
@@ -131,6 +134,9 @@ usersRouter.route("/users/:username")
  *              properties:
  *                message:
  *                  type: string
+ *                  example: "Forbidden"
+ *                details:
+ *                  type: string
  *                  example: "Permission to edit user data denied"
  */
   .patch(verifyToken, patchUserByUsername)
@@ -161,6 +167,9 @@ usersRouter.route("/users/:username")
  *              type: object
  *              properties:
  *                message:
+ *                  type: string
+ *                  example: "Forbidden"
+ *                details:
  *                  type: string
  *                  example: "Permission to delete user data denied"
  */
@@ -222,6 +231,9 @@ usersRouter.route("/users/:username")
  *              properties:
  *                message:
  *                  type: string
- *                  example: "Permission to change password denied"
+ *                  example: "Forbidden"
+ *                details:
+ *                  type: string
+ *                  example: "Permission to edit password denied"
  */
 usersRouter.patch("/users/:username/password", verifyToken, patchPasswordByUsername)

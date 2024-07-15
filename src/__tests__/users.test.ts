@@ -1,4 +1,4 @@
-import data from "../db/data/test-data/index"
+import data from "../db/data/test-data/data-index"
 import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
@@ -50,7 +50,10 @@ describe("GET /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body.message).toBe("Access to user data denied")
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to view user data denied"
+    })
   })
 })
 
@@ -111,7 +114,10 @@ describe("PATCH /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body.message).toBe("Permission to edit user data denied")
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to edit user data denied"
+    })
   })
 })
 
@@ -143,7 +149,10 @@ describe("PATCH /api/users/:username/password", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body.message).toBe("Permission to change password denied")
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to edit password denied"
+    })
   })
 })
 
@@ -162,7 +171,10 @@ describe("DELETE /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body.message).toBe("User not found")
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "User not found"
+    })
   })
 
   test("DELETE:403 Responds with a warning when the authenticated user attempts to delete another user's data", async () => {
@@ -172,6 +184,9 @@ describe("DELETE /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body.message).toBe("Permission to delete user data denied")
+      expect(body).toMatchObject({
+        message: "Forbidden",
+        details: "Permission to delete user data denied"
+      })
   })
 })

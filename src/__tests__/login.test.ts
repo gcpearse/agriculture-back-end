@@ -1,4 +1,4 @@
-import data from "../db/data/test-data/index"
+import data from "../db/data/test-data/data-index"
 import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
@@ -6,6 +6,7 @@ import { app } from "../app"
 
 
 beforeEach(() => seed(data))
+
 afterAll(() => db.end())
 
 
@@ -38,7 +39,10 @@ describe("POST /api/login", () => {
       .send(user)
       .expect(401)
 
-    expect(body.message).toBe("Incorrect password")
+    expect(body).toMatchObject({
+      message: "Unauthorized",
+      details: "Incorrect password"
+    })
   })
 
   test("POST:404 Responds with an error message when the username is not found", async () => {
@@ -53,6 +57,9 @@ describe("POST /api/login", () => {
       .send(user)
       .expect(404)
 
-    expect(body.message).toBe("Username not found")
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Username could not be found"
+    })
   })
 })

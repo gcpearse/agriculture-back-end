@@ -1,4 +1,4 @@
-import data from "../db/data/test-data/index"
+import data from "../db/data/test-data/data-index"
 import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
@@ -77,7 +77,10 @@ describe("GET /api/plots/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body.message).toBe("Access to plot data denied")
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to view plot data denied"
+    })
   })
 })
 
@@ -103,7 +106,10 @@ describe("GET /api/plots/:owner_id?type=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body.message).toBe("No results found")
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "No results found for that query"
+    })
   })
 })
 
@@ -135,7 +141,10 @@ describe("GET /api/plots/:owner_id/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body.message).toBe("Access to plot data denied")
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to view plot data denied"
+    })
   })
 
   test("GET:403 Responds with a warning when the plot_id does not belong to the authenticated user", async () => {
@@ -145,6 +154,9 @@ describe("GET /api/plots/:owner_id/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body.message).toBe("Access to plot data denied")
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to view plot data denied"
+    })
   })
 })

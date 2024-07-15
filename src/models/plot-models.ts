@@ -2,16 +2,13 @@ import QueryString from "qs"
 import { db } from "../db"
 import format from "pg-format"
 import { Plot } from "../types/plot-types"
+import { getValidPlotTypes } from "../utils/db-query-utils"
+import { verifyPermission } from "../utils/verification-utils"
 
 
 export const selectPlotsByOwner = async (authUserId: number, owner_id: number, { type }: QueryString.ParsedQs): Promise<Plot[]> => {
 
-  if (authUserId !== owner_id) {
-    return Promise.reject({
-      status: 403,
-      message: "Access to plot data denied"
-    })
-  }
+  await verifyPermission(authUserId, owner_id, "Permission to view plot data denied")
 
   let query = `
   SELECT * FROM plots
@@ -25,7 +22,8 @@ export const selectPlotsByOwner = async (authUserId: number, owner_id: number, {
   if (type && !isValidPlotType) {
     return Promise.reject({
       status: 404,
-      message: "No results found"
+      message: "Not Found",
+      details: "No results found for that query"
     })
   }
 
@@ -37,27 +35,9 @@ export const selectPlotsByOwner = async (authUserId: number, owner_id: number, {
 }
 
 
-const getValidPlotTypes = async (owner_id: number): Promise<string[]> => {
-
-  const validTypes = await db.query(`
-    SELECT DISTINCT type
-    FROM plots
-    WHERE owner_id = $1
-    `,
-    [owner_id])
-
-  return validTypes.rows.map(row => row.type)
-}
-
-
 export const selectPlotByPlotId = async (authUserId: number, owner_id: number, plot_id: number) => {
 
-  if (authUserId !== owner_id) {
-    return Promise.reject({
-      status: 403,
-      message: "Access to plot data denied"
-    })
-  }
+  await verifyPermission(authUserId, owner_id, "Permission to view plot data denied")
 
   const result = await db.query(`
     SELECT * FROM plots
@@ -69,7 +49,8 @@ export const selectPlotByPlotId = async (authUserId: number, owner_id: number, p
   if (!result.rowCount) {
     return Promise.reject({
       status: 403,
-      message: "Access to plot data denied"
+      message: "Forbidden",
+      details: "Permission to view plot data denied"
     })
   }
 

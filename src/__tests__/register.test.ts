@@ -1,4 +1,4 @@
-import data from "../db/data/test-data/index"
+import data from "../db/data/test-data/data-index"
 import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
@@ -6,6 +6,7 @@ import { app } from "../app"
 
 
 beforeEach(() => seed(data))
+
 afterAll(() => db.end())
 
 
@@ -50,6 +51,9 @@ describe("POST /api/register", () => {
       .send(newUser)
       .expect(409)
 
-    expect(body.message).toBe("Username already exists")
+    expect(body).toMatchObject({
+      message: "Conflict",
+      details: "Username already exists"
+    })
   })
 })

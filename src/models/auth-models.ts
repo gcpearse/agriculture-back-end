@@ -14,7 +14,8 @@ export const registerUser = async ({ username, password, first_name, surname, un
   if (conflictCheck.rowCount) {
     return Promise.reject({
       status: 409,
-      message: "Username already exists"
+      message: "Conflict",
+      details: "Username already exists"
     })
   }
 
@@ -23,7 +24,12 @@ export const registerUser = async ({ username, password, first_name, surname, un
       (username, password, first_name, surname, unit_preference)
     VALUES
       ($1, $2, $3, $4, $5)
-    RETURNING user_id, username, first_name, surname, unit_preference;
+    RETURNING 
+      user_id, 
+      username, 
+      first_name, 
+      surname, 
+      unit_preference;
     `,
     [username, password, first_name, surname, unit_preference]
   )
@@ -35,7 +41,9 @@ export const registerUser = async ({ username, password, first_name, surname, un
 export const logInUser = async ({ username, password }: Credentials): Promise<LoggedInUser> => {
 
   const usernameCheck = await db.query(`
-    SELECT user_id, username 
+    SELECT 
+      user_id, 
+      username 
     FROM users 
     WHERE username = $1;
     `,
@@ -44,7 +52,8 @@ export const logInUser = async ({ username, password }: Credentials): Promise<Lo
   if (!usernameCheck.rowCount) {
     return Promise.reject({
       status: 404,
-      message: "Username not found"
+      message: "Not Found",
+      details: "Username could not be found"
     })
   }
 
@@ -59,7 +68,8 @@ export const logInUser = async ({ username, password }: Credentials): Promise<Lo
   if (!passwordCheck.rowCount) {
     return Promise.reject({
       status: 401,
-      message: "Incorrect password"
+      message: "Unauthorized",
+      details: "Incorrect password"
     })
   }
 
