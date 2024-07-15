@@ -38,10 +38,10 @@ export const getPlotByPlotId: RequestHandler = async (req, res, next) => {
 
   const authUserId: number = req.body.user.user_id
 
-  const { owner_id, plot_id } = req.params
+  const { plot_id } = req.params
 
   try {
-    const plot = await selectPlotByPlotId(authUserId, +owner_id, +plot_id)
+    const plot = await selectPlotByPlotId(authUserId, +plot_id)
     res.status(200).send({ plot })
   } catch (err) {
     next(err)
@@ -53,10 +53,10 @@ export const patchPlotByPlotId: RequestHandler = async (req, res, next) => {
 
   const authUserId: number = req.body.user.user_id
 
-  const { owner_id, plot_id } = req.params
+  const { plot_id } = req.params
 
   try {
-    const plot = await updatePlotByPlotId(authUserId, +owner_id, +plot_id, req.body)
+    const plot = await updatePlotByPlotId(authUserId, +plot_id, req.body)
     res.status(200).send({ plot })
   } catch (err) {
     next(err)
