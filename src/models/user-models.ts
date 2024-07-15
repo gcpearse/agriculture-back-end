@@ -51,6 +51,21 @@ export const updateUserByUsername = async (authUsername: string, username: strin
 }
 
 
+export const removeUserByUsername = async (authUsername: string, username: string): Promise<undefined> => {
+
+  await verifyPermission(authUsername, username, "Permission to delete user data denied")
+
+  const result = await db.query(`
+    DELETE FROM users
+    WHERE username = $1
+    RETURNING *;
+    `,
+    [username])
+
+  await verifyResult(!result.rowCount, "User not found")
+}
+
+
 export const changePasswordByUsername = async (authUsername: string, username: string, password: string): Promise<SecureUser> => {
 
   await verifyPermission(authUsername, username, "Permission to edit password denied")
@@ -71,19 +86,4 @@ export const changePasswordByUsername = async (authUsername: string, username: s
   await verifyResult(!result.rowCount, "User not found")
 
   return result.rows[0]
-}
-
-
-export const removeUserByUsername = async (authUsername: string, username: string): Promise<undefined> => {
-
-  await verifyPermission(authUsername, username, "Permission to delete user data denied")
-
-  const result = await db.query(`
-    DELETE FROM users
-    WHERE username = $1
-    RETURNING *;
-    `,
-    [username])
-
-  await verifyResult(!result.rowCount, "User not found")
 }
