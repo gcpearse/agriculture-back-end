@@ -1,19 +1,35 @@
-# Agriculture - Back-end Repository
+<p style="font-size: 40px; font-weight: 610;">Agriculture (WIP)</p>
+
+# Back-end Repository
 
 ## Overview
 
-A full-stack application for gardeners, allotment owners, and other subsistence farmers to keep track of crops and jobs on their plots.
+A full-stack application for gardeners, allotment owners, and subsistence farmers to keep track of the crops, jobs, and issues on their plots.
 
-This is a work in progress.
+> This project is a work in progress.
 
 ## Tech
 
-This is a **Node.js** REST API built in **TypeScript** with the **Express** framework. 
+### Languages and Frameworks
 
-Database management is handled with **PostgreSQL**.
+This is a **Node.js** REST API built in **TypeScript** with the **Express** framework.
 
-The authentication system is implemented with **JSON Web Token (JWT)**.
+### Database
 
-The application is tested with **Jest**, **ts-jest**, and **SuperTest**.
+Database management is handled with **PostgreSQL**. The application uses the `pg` library to interact with the database, and `pg-format` for secure dynamic SQL queries. 
 
-**Swagger** is used for API documentation.
+### Authentication
+
+The application uses a **JSON Web Token (JWT)** authentication system.
+
+### Testing
+
+The project contains a full suite of integration tests using **Jest**, **ts-jest**, and **SuperTest**.
+
+## Documentation
+
+Comprehensive API documentation is hosted on **Swagger** using the `swagger-ui-express` and `swagger-jsdoc` to generate and serve up the docs.
+
+## Continuous Integration
+
+This project includes a CI workflow using **GitHub Actions** for automated testing with a PostgreSQL service container.
