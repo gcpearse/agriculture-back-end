@@ -7,7 +7,7 @@ export const getValidPlotTypes = async (owner_id: number): Promise<string[]> => 
   const result = await db.query(`
     SELECT DISTINCT type
     FROM plots
-    WHERE owner_id = $1
+    WHERE owner_id = $1;
     `,
     [owner_id])
 
@@ -20,7 +20,7 @@ export const checkPlotNameConflict = async (owner_id: number, name: string): Pro
   const result = await db.query(`
     SELECT name
     FROM plots
-    WHERE owner_id = $1
+    WHERE owner_id = $1;
     `,
     [owner_id])
 
@@ -41,7 +41,7 @@ export const getPlotOwnerId = async (plot_id: number): Promise<number> => {
   const result = await db.query(`
     SELECT owner_id
     FROM plots
-    WHERE plot_id = $1
+    WHERE plot_id = $1;
     `,
     [plot_id])
 
