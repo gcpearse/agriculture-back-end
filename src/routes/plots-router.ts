@@ -205,24 +205,19 @@ plotsRouter.route("/plots/:owner_id")
   .post(verifyToken, postPlotByOwner)
 
 
-plotsRouter.route("/plots/:owner_id/:plot_id")
+plotsRouter.route("/plots/plot/:plot_id")
 
 
 /**
  * @swagger
- * /api/plots/{owner_id}/{plot_id}:
+ * /api/plots/plot/{plot_id}:
  *  get:
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve a user's plot
- *    description: Responds with a single plot object. If no plot is found, the server responds with an error. Permission is denied when the current user's ID does not match the target owner_id.
+ *    description: Responds with a plot object. If no plot is found, the server responds with an error. Permission is denied when the plot does not belong to the current user.
  *    tags: [Plots]
  *    parameters:
- *      - in: path
- *        name: owner_id
- *        required: true
- *        schema:
- *          type: integer
  *      - in: path
  *        name: plot_id
  *        required: true
@@ -270,25 +265,33 @@ plotsRouter.route("/plots/:owner_id/:plot_id")
  *                details:
  *                  type: string
  *                  example: "Permission to view plot data denied"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Not Found"
+ *                details:
+ *                  type: string
+ *                  example: "Plot not found"
  */
   .get(verifyToken, getPlotByPlotId)
 
 
 /**
  * @swagger
- * /api/plots/{owner_id}/{plot_id}:
+ * /api/plots/plot/{plot_id}:
  *  patch:
  *    security:
  *      - bearerAuth: []
  *    summary: Update a user's plot
- *    description: Responds with a plot object. If the plot name already exists for one of the current user's other plots, the server responds with an error. Permission is denied when the current user's ID does not match the target owner_id.
+ *    description: Responds with a plot object. If the plot name already exists for one of the current user's other plots, the server responds with an error. Permission is denied when the plot does not belong to the current user.
  *    tags: [Plots]
  *    parameters:
- *      - in: path
- *        name: owner_id
- *        required: true
- *        schema:
- *          type: integer
  *      - in: path
  *        name: plot_id
  *        required: true
@@ -373,6 +376,19 @@ plotsRouter.route("/plots/:owner_id/:plot_id")
  *                details:
  *                  type: string
  *                  example: "Permission to edit plot data denied"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Not Found"
+ *                details:
+ *                  type: string
+ *                  example: "Plot not found"
  *      409:
  *        description: Conflict
  *        content:
