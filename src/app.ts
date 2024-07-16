@@ -2,6 +2,7 @@ import express from "express"
 import cors from "cors"
 import swaggerJSDoc from "swagger-jsdoc"
 import swaggerUi from "swagger-ui-express"
+import { options } from "./swagger/options"
 
 import { handleCustomErrors, handlePsqlErrors, handleServerErrors } from "./middleware/errors"
 import { handleNotFound } from "./controllers/handle-not-found"
@@ -18,27 +19,6 @@ export const app = express()
 
 app.use(cors())
 
-
-const options = {
-  definition: {
-    openapi: "3.1.0",
-    info: {
-      title: "Agriculture API",
-      description: "A full-stack application for gardeners, allotment owners, and other subsistence farmers to keep track of crops and jobs on their plots.",
-      version: "1.0.0"
-    },
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: "http",
-          scheme: "bearer",
-          bearerFormat: "JWT"
-        }
-      }
-    }
-  },
-  apis: ["./dist/routes/*.js"]
-}
 
 const swaggerSpec = swaggerJSDoc(options)
 
