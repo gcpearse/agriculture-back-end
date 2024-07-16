@@ -37,6 +37,7 @@ describe("GET /api/users/:username", () => {
     expect(body.user).toMatchObject({
       user_id: 1,
       username: "carrot_king",
+      email: "john.smith@example.com",
       first_name: "John",
       surname: "Smith",
       unit_preference: "imperial"
@@ -63,6 +64,7 @@ describe("PATCH /api/users/:username", () => {
   test("PATCH:200 Responds with an updated user object", async () => {
 
     const newDetails = {
+      email: "jsj@example.com",
       first_name: "Johnny",
       surname: "Smith-Jones",
       unit_preference: "metric"
@@ -77,6 +79,7 @@ describe("PATCH /api/users/:username", () => {
     expect(body.user).toMatchObject({
       user_id: 1,
       username: "carrot_king",
+      email: "jsj@example.com",
       first_name: "Johnny",
       surname: "Smith-Jones",
       unit_preference: "metric"
@@ -86,6 +89,7 @@ describe("PATCH /api/users/:username", () => {
   test("PATCH:400 Responds with an error when an invalid value is passed for unit_preference", async () => {
 
     const newDetails = {
+      email: "jsj@example.com",
       first_name: "Johnny",
       surname: "Smith-Jones",
       unit_preference: "international"
@@ -106,6 +110,7 @@ describe("PATCH /api/users/:username", () => {
   test("PATCH:403 Responds with a warning when the authenticated user attempts to edit another user's data", async () => {
 
     const newDetails = {
+      email: "john.smith@example.com",
       first_name: "John",
       surname: "Smith",
       unit_preference: "imperial"
@@ -120,6 +125,27 @@ describe("PATCH /api/users/:username", () => {
     expect(body).toMatchObject({
       message: "Forbidden",
       details: "Permission to edit user data denied"
+    })
+  })
+
+  test("PATCH:409 Responds with an error message when the email already exists", async () => {
+
+    const newDetails = {
+      email: "olivia.jones@example.com",
+      first_name: "John",
+      surname: "Smith",
+      unit_preference: "imperial"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/users/carrot_king")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(409)
+
+    expect(body).toMatchObject({
+      message: "Conflict",
+      details: "Email already exists"
     })
   })
 })
@@ -173,6 +199,7 @@ describe("PATCH /api/users/:username/password", () => {
     expect(body.user).toMatchObject({
       user_id: 1,
       username: "carrot_king",
+      email: "john.smith@example.com",
       first_name: "John",
       surname: "Smith",
       unit_preference: "imperial"
