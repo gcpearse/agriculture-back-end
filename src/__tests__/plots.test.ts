@@ -424,6 +424,28 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
     })
   })
 
+  test("PATCH:400 Responds with an error when passed an invalid plot type", async () => {
+
+    const newDetails = {
+      name: "John's Vegetable Patch",
+      type: "garage",
+      description: "A vegetable patch",
+      location: "123, Salsify Street, Farmville",
+      area: 10
+    }
+
+    const { body } = await request(app)
+      .patch("/api/plots/plot/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid text representation"
+    })
+  })
+
   test("PATCH:403 Responds with a warning when the plot_id does not belong to the authenticated user", async () => {
 
     const newDetails = {
