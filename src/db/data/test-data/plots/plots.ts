@@ -1,11 +1,8 @@
-import { PlotType } from "../../../../types/plot-types";
-
-
 export default [
   {
     owner_id: 1,
     name: "John's Garden",
-    type: PlotType.Garden,
+    type: "garden",
     description: "A vegetable garden",
     location: "Farmville",
     area: 100
@@ -13,7 +10,7 @@ export default [
   {
     owner_id: 2,
     name: "Olivia's Field",
-    type: PlotType.Field,
+    type: "field",
     description: "An orchard",
     location: "Lemongrove",
     area: 500
@@ -21,7 +18,7 @@ export default [
   {
     owner_id: 1,
     name: "John's Allotment",
-    type: PlotType.Allotment,
+    type: "allotment",
     description: "An allotment",
     location: "Farmville",
     area: 50
@@ -29,7 +26,7 @@ export default [
   {
     owner_id: 1,
     name: "John's New Allotment",
-    type: PlotType.Allotment,
+    type: "allotment",
     description: "A second allotment",
     location: "Farmville",
     area: 40
