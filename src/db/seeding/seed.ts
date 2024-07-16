@@ -80,8 +80,17 @@ export const seed = async ({
     `)
 
   await db.query(`
-    DROP TYPE IF EXISTS UNIT_SYSTEM;
-    CREATE TYPE UNIT_SYSTEM AS ENUM ('metric', 'imperial');
+    DROP TYPE IF EXISTS unit_system;
+    CREATE TYPE unit_system 
+    AS ENUM 
+      ('metric', 'imperial');
+    `)
+
+  await db.query(`
+    DROP TYPE IF EXISTS plot_type;
+    CREATE TYPE plot_type 
+    AS ENUM 
+      ('allotment', 'field', 'flowerbed', 'garden', 'herb garden', 'homestead', 'orchard', 'vegetable patch');
     `)
 
   await db.query(`
@@ -92,7 +101,7 @@ export const seed = async ({
       email VARCHAR NOT NULL,
       first_name VARCHAR NOT NULL,
       surname VARCHAR NOT NULL,
-      unit_preference UNIT_SYSTEM DEFAULT 'metric'
+      unit_preference unit_system NOT NULL DEFAULT 'metric'
     );
     `)
 
@@ -101,7 +110,7 @@ export const seed = async ({
       plot_id SERIAL PRIMARY KEY,
       owner_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
       name VARCHAR NOT NULL,
-      type VARCHAR NOT NULL,
+      type plot_type NOT NULL,
       description VARCHAR NOT NULL,
       location VARCHAR NOT NULL,
       area INT
