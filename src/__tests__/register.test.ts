@@ -38,6 +38,27 @@ describe("POST /api/register", () => {
     })
   })
 
+  test("POST:400 Responds with an error when a required property is missing from the request body", async () => {
+
+    const newUser = {
+      password: "password123",
+      email: "fred.flint@example.com",
+      first_name: "Fred",
+      surname: "Flint",
+      unit_preference: "metric"
+    }
+
+    const { body } = await request(app)
+      .post("/api/register")
+      .send(newUser)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Not null violation"
+    })
+  })
+
   test("POST:409 Responds with an error message when the username already exists", async () => {
 
     const newUser = {
