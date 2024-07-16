@@ -13,6 +13,7 @@ export const seed = async ({
   userData,
   plotData,
   plotImageData,
+  plotTypeData,
   cropData,
   cropCommentData,
   cropImageData,
@@ -25,6 +26,7 @@ export const seed = async ({
   userData: User[],
   plotData: Plot[],
   plotImageData: PlotImage[],
+  plotTypeData: { type: string }[],
   cropData: Crop[],
   cropCommentData: CropComment[],
   cropImageData: CropImage[],
@@ -68,6 +70,10 @@ export const seed = async ({
     `)
 
   await db.query(`
+    DROP TABLE IF EXISTS plot_types;
+    `)
+
+  await db.query(`
     DROP TABLE IF EXISTS plot_images;
     `)
 
@@ -87,13 +93,6 @@ export const seed = async ({
     `)
 
   await db.query(`
-    DROP TYPE IF EXISTS plot_type;
-    CREATE TYPE plot_type 
-    AS ENUM 
-      ('allotment', 'field', 'flowerbed', 'garden', 'herb garden', 'homestead', 'orchard', 'vegetable patch');
-    `)
-
-  await db.query(`
     CREATE TABLE users (
       user_id SERIAL PRIMARY KEY,
       username VARCHAR NOT NULL,
@@ -110,7 +109,7 @@ export const seed = async ({
       plot_id SERIAL PRIMARY KEY,
       owner_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
       name VARCHAR NOT NULL,
-      type plot_type NOT NULL,
+      type VARCHAR NOT NULL,
       description VARCHAR NOT NULL,
       location VARCHAR NOT NULL,
       area INT
@@ -122,6 +121,13 @@ export const seed = async ({
       image_id SERIAL PRIMARY KEY,
       plot_id INT NOT NULL REFERENCES plots(plot_id) ON DELETE CASCADE,
       image_url TEXT NOT NULL
+    );
+    `)
+
+  await db.query(`
+    CREATE TABLE plot_types (
+      plot_type_id SERIAL PRIMARY KEY,
+      type VARCHAR NOT NULL
     );
     `)
 
@@ -226,6 +232,14 @@ export const seed = async ({
     VALUES %L;
     `,
     plotImageData.map(entry => Object.values(entry))
+  ))
+
+  await db.query(format(`
+    INSERT INTO plot_types 
+      (type)
+    VALUES %L;
+    `,
+    plotTypeData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`
