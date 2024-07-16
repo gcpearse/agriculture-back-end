@@ -57,7 +57,7 @@ app.use("/api", usersRouter)
 app.use("/api", plotsRouter)
 
 
-app.use("/api", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 
 app.use(handleCustomErrors, handlePsqlErrors, handleServerErrors)
