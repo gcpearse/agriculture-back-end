@@ -62,6 +62,19 @@ export const registerRouter = Router()
  *                unit_preference:
  *                  type: string
  *                  example: metric
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Bad Request"
+ *                details:
+ *                  type: string
+ *                  example: "Not null violation"
  *      409:
  *        description: Conflict
  *        content:
