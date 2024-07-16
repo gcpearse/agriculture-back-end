@@ -89,6 +89,7 @@ export const seed = async ({
       user_id SERIAL PRIMARY KEY,
       username VARCHAR NOT NULL,
       password VARCHAR NOT NULL,
+      email VARCHAR NOT NULL,
       first_name VARCHAR NOT NULL,
       surname VARCHAR NOT NULL,
       unit_preference UNIT_SYSTEM DEFAULT 'metric'
@@ -196,7 +197,7 @@ export const seed = async ({
 
   await db.query(format(`
     INSERT INTO users 
-      (username, password, first_name, surname, unit_preference)
+      (username, password, email, first_name, surname, unit_preference)
     VALUES %L;
     `,
     userData.map(entry => Object.values(entry))
