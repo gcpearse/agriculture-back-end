@@ -19,6 +19,9 @@ export const usersRouter = Router()
  *        username:
  *          type: string
  *          example: carrot_king
+ *        email:
+ *          type: string
+ *          example: john.smith@example.com
  *        first_name:
  *          type: string
  *          example: John
@@ -78,7 +81,7 @@ usersRouter.route("/users/:username")
  *    security:
  *      - bearerAuth: []
  *    summary: Update a user's details
- *    description: Responds with an updated user object. The server will respond with an error if the value of unit_preference is not a valid enum value. Permission is denied when the current user's username does not match the target username. 
+ *    description: Responds with an updated user object. The server will respond with an error if the value of unit_preference is not a valid enum value, or if the email already exists for another user. Permission is denied when the current user's username does not match the target username. 
  *    tags: [Users]
  *    parameters:
  *      - in: path
@@ -93,6 +96,9 @@ usersRouter.route("/users/:username")
  *          schema:
  *            type: object
  *            properties:
+ *              email:
+ *                type: string
+ *                example: john.smith@example.com
  *              first_name:
  *                type: string
  *                example: John
@@ -135,6 +141,19 @@ usersRouter.route("/users/:username")
  *                details:
  *                  type: string
  *                  example: "Permission to edit user data denied"
+ *      409:
+ *        description: Conflict
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Conflict"
+ *                details:
+ *                  type: string
+ *                  example: "Email already exists"
  */
   .patch(verifyToken, patchUserByUsername)
 
