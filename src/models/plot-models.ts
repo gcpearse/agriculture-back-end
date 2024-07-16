@@ -1,7 +1,7 @@
 import QueryString from "qs"
 import { db } from "../db"
 import format from "pg-format"
-import { Plot, PlotType } from "../types/plot-types"
+import { Plot } from "../types/plot-types"
 import { checkPlotNameConflict, getPlotOwnerId } from "../utils/db-query-utils"
 import { verifyPermission, verifyResult } from "../utils/verification-utils"
 
@@ -15,7 +15,11 @@ export const selectPlotsByOwner = async (authUserId: number, owner_id: number, {
   WHERE owner_id = $1
   `
 
-  const isValidPlotType = Object.values(PlotType).map(type => String(type)).includes(type as string)
+  const validPlotTypes = await db.query(`
+    SELECT unnest(enum_range(NULL::plot_type));
+    `)
+
+  const isValidPlotType = validPlotTypes.rows.map(row => row.unnest).includes(type as string)
 
   if (type && !isValidPlotType) {
     return Promise.reject({
