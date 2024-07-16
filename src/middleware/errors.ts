@@ -17,7 +17,15 @@ export const handleCustomErrors: ErrorRequestHandler = (err, _req, res, next) =>
 export const handlePsqlErrors: ErrorRequestHandler = (err, _req, res, next) => {
 
   if (err.code === "22P02") {
-    res.status(400).send({ message: "Bad Request" })
+    res.status(400).send({ 
+      message: "Bad Request",
+      details: "Invalid text representation"
+    })
+  } else if (err.code === "23502") {
+    res.status(400).send({ 
+      message: "Bad Request",
+      details: "Not null violation"
+    })
   } else {
     next(err)
   }
