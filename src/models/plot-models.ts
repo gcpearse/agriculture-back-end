@@ -1,8 +1,8 @@
 import QueryString from "qs"
 import { db } from "../db"
 import format from "pg-format"
-import { Plot } from "../types/plot-types"
-import { checkPlotNameConflict, getPlotOwnerId, getValidPlotTypes } from "../utils/db-query-utils"
+import { Plot, PlotType } from "../types/plot-types"
+import { checkPlotNameConflict, getPlotOwnerId } from "../utils/db-query-utils"
 import { verifyPermission, verifyResult } from "../utils/verification-utils"
 
 
@@ -15,9 +15,7 @@ export const selectPlotsByOwner = async (authUserId: number, owner_id: number, {
   WHERE owner_id = $1
   `
 
-  const validPlotTypes = await getValidPlotTypes(owner_id)
-
-  const isValidPlotType = validPlotTypes.includes(type as string)
+  const isValidPlotType = Object.values(PlotType).map(type => String(type)).includes(type as string)
 
   if (type && !isValidPlotType) {
     return Promise.reject({
@@ -48,7 +46,7 @@ export const insertPlotByOwner = async (authUserId: number, owner_id: number, pl
       ($1, $2, $3, $4, $5, $6)
     RETURNING *;
     `,
-    [plot.owner_id, plot.name, plot.type.toLowerCase(), plot.description, plot.location, plot.area])
+    [plot.owner_id, plot.name, plot.type, plot.description, plot.location, plot.area])
 
   await verifyResult(!result.rowCount, "Plot not found")
 
