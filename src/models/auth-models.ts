@@ -1,5 +1,6 @@
 import { db } from "../db"
 import { Credentials, LoggedInUser, SecureUser, User } from "../types/user-types"
+import { checkEmailConflict } from "../utils/db-query-utils"
 import { verifyResult } from "../utils/verification-utils"
 
 
@@ -12,13 +13,6 @@ export const registerUser = async ({ username, password, email, first_name, surn
     `,
     [username])
 
-  const dbEmail = await db.query(`
-    SELECT email 
-    FROM users 
-    WHERE email = $1;
-    `,
-    [email])
-
   if (dbUsername.rowCount) {
     return Promise.reject({
       status: 409,
@@ -27,13 +21,7 @@ export const registerUser = async ({ username, password, email, first_name, surn
     })
   }
 
-  if (dbEmail.rowCount) {
-    return Promise.reject({
-      status: 409,
-      message: "Conflict",
-      details: "Email already exists"
-    })
-  }
+  await checkEmailConflict(email)
 
   const result = await db.query(`
     INSERT INTO users
