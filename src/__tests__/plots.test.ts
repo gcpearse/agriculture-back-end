@@ -3,7 +3,7 @@ import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
-import { Plot } from "../types/plot-types"
+import { Plot, PlotType } from "../types/plot-types"
 
 
 let token: string
@@ -38,6 +38,7 @@ describe("GET /api/plots/:owner_id", () => {
     expect(body.plots).toHaveLength(3)
 
     body.plots.forEach((plot: Plot) => {
+      expect(Object.values(PlotType)).toContain(plot.type)
       expect(plot).toMatchObject({
         plot_id: expect.any(Number),
         owner_id: 1,
@@ -144,25 +145,6 @@ describe("POST /api/plots/:owner_id", () => {
     })
   })
 
-  test("POST:201 Converts the value of 'type' to lower case", async () => {
-
-    const newPlot = {
-      owner_id: 1,
-      name: "John's Field",
-      type: "Field",
-      description: "A large field",
-      location: "Wildwood"
-    }
-
-    const { body } = await request(app)
-      .post("/api/plots/1")
-      .send(newPlot)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(201)
-
-    expect(body.plot.type).toBe("field")
-  })
-
   test("POST:201 Assigns a null value to 'area' when no value is provided", async () => {
 
     const newPlot = {
@@ -212,6 +194,29 @@ describe("POST /api/plots/:owner_id", () => {
       description: "A large field",
       location: "Wildwood",
       area: "three thousand metres"
+    }
+
+    const { body } = await request(app)
+      .post("/api/plots/1")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid text representation"
+    })
+  })
+
+  test("POST:400 Responds with an error when passed an invalid plot type", async () => {
+
+    const newPlot = {
+      owner_id: 1,
+      name: "John's Field",
+      type: "garage",
+      description: "A large field",
+      location: "Wildwood",
+      area: 3000
     }
 
     const { body } = await request(app)
