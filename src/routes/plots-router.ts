@@ -100,6 +100,7 @@ plotsRouter.route("/plots/:owner_id")
  */
   .get(verifyToken, getPlotsByOwner)
 
+
 /**
  * @swagger
  * /api/plots/{owner_id}:
