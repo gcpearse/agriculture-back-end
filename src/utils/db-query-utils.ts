@@ -23,9 +23,7 @@ export const checkPlotNameConflict = async (owner_id: number, name: string): Pro
     `,
     [owner_id])
 
-  const isConflict = result.rows.map(row => row.name).includes(name)
-
-  if (isConflict) {
+  if (result.rows.map(row => row.name).includes(name)) {
     return Promise.reject({
       status: 409,
       message: "Conflict",
@@ -53,4 +51,23 @@ export const getPlotOwnerId = async (plot_id: number): Promise<number> => {
   }
 
   return result.rows[0].owner_id
+}
+
+
+export const checkEmailConflict = async (email: string): Promise<undefined> => {
+
+  const dbEmail = await db.query(`
+    SELECT email 
+    FROM users 
+    WHERE email = $1;
+    `,
+    [email])
+
+  if (dbEmail.rowCount) {
+    return Promise.reject({
+      status: 409,
+      message: "Conflict",
+      details: "Email already exists"
+    })
+  }
 }
