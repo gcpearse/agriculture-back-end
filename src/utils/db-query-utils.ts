@@ -20,6 +20,16 @@ export const checkPlotNameConflict = async (owner_id: number, name: string): Pro
 }
 
 
+export const validatePlotType = async (type: string): Promise<boolean> => {
+
+  const result = await db.query(`
+    SELECT type FROM plot_types;
+    `)
+
+  return result.rows.map(row => row.type).includes(type as string)
+}
+
+
 export const getPlotOwnerId = async (plot_id: number): Promise<number> => {
 
   const result = await db.query(`
