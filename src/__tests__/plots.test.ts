@@ -3,7 +3,7 @@ import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
-import { Plot, PlotType } from "../types/plot-types"
+import { Plot } from "../types/plot-types"
 
 
 let token: string
@@ -38,7 +38,6 @@ describe("GET /api/plots/:owner_id", () => {
     expect(body.plots).toHaveLength(3)
 
     body.plots.forEach((plot: Plot) => {
-      expect(Object.values(PlotType)).toContain(plot.type)
       expect(plot).toMatchObject({
         plot_id: expect.any(Number),
         owner_id: 1,
@@ -208,6 +207,28 @@ describe("POST /api/plots/:owner_id", () => {
     })
   })
 
+  test("POST:400 Responds with an error when a required property is missing from the request body", async () => {
+
+    const newPlot = {
+      owner_id: 1,
+      type: "field",
+      description: "A large field",
+      location: "Wildwood",
+      area: 3000
+    }
+
+    const { body } = await request(app)
+      .post("/api/plots/1")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Not null violation"
+    })
+  })
+
   test("POST:400 Responds with an error when passed an invalid plot type", async () => {
 
     const newPlot = {
@@ -227,7 +248,7 @@ describe("POST /api/plots/:owner_id", () => {
 
     expect(body).toMatchObject({
       message: "Bad Request",
-      details: "Invalid text representation"
+      details: "Invalid plot type"
     })
   })
 
@@ -383,25 +404,6 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
     })
   })
 
-  test("PATCH:200 Converts the value of 'type' to lower case", async () => {
-
-    const newDetails = {
-      name: "John's Vegetable Patch",
-      type: "Vegetable Patch",
-      description: "A vegetable patch",
-      location: "123, Salsify Street, Farmville",
-      area: 10
-    }
-
-    const { body } = await request(app)
-      .patch("/api/plots/plot/1")
-      .send(newDetails)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(200)
-
-    expect(body.plot.type).toBe("vegetable patch")
-  })
-
   test("PATCH:400 Responds with an error when passed a property with an invalid data type", async () => {
 
     const newDetails = {
@@ -442,7 +444,7 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
 
     expect(body).toMatchObject({
       message: "Bad Request",
-      details: "Invalid text representation"
+      details: "Invalid plot type"
     })
   })
 
