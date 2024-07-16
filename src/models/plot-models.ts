@@ -2,7 +2,7 @@ import QueryString from "qs"
 import { db } from "../db"
 import format from "pg-format"
 import { Plot } from "../types/plot-types"
-import { checkPlotNameConflict, getPlotOwnerId } from "../utils/db-query-utils"
+import { checkPlotNameConflict, getPlotOwnerId, validatePlotType } from "../utils/db-query-utils"
 import { verifyPermission, verifyResult } from "../utils/verification-utils"
 
 
@@ -15,11 +15,7 @@ export const selectPlotsByOwner = async (authUserId: number, owner_id: number, {
   WHERE owner_id = $1
   `
 
-  const validPlotTypes = await db.query(`
-    SELECT unnest(enum_range(NULL::plot_type));
-    `)
-
-  const isValidPlotType = validPlotTypes.rows.map(row => row.unnest).includes(type as string)
+  const isValidPlotType = await validatePlotType(type as string)
 
   if (type && !isValidPlotType) {
     return Promise.reject({
@@ -42,6 +38,16 @@ export const insertPlotByOwner = async (authUserId: number, owner_id: number, pl
   await verifyPermission(authUserId, owner_id, "Permission to create plot denied")
 
   await checkPlotNameConflict(owner_id, plot.name)
+
+  const isValidPlotType = await validatePlotType(plot.type as string)
+
+  if (!isValidPlotType) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid plot type"
+    })
+  }
 
   const result = await db.query(`
     INSERT INTO plots
@@ -94,6 +100,16 @@ export const updatePlotByPlotId = async (authUserId: number, plot_id: number, pl
     await checkPlotNameConflict(owner_id, plot.name)
   }
 
+  const isValidPlotType = await validatePlotType(plot.type as string)
+
+  if (!isValidPlotType) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid plot type"
+    })
+  }
+
   const result = await db.query(`
     UPDATE plots
     SET
@@ -105,7 +121,7 @@ export const updatePlotByPlotId = async (authUserId: number, plot_id: number, pl
     WHERE plot_id = $6
     RETURNING *;
     `,
-    [plot.name, plot.type.toLowerCase(), plot.description, plot.location, plot.area, plot_id])
+    [plot.name, plot.type, plot.description, plot.location, plot.area, plot_id])
 
   await verifyResult(!result.rowCount, "Plot not found")
 
