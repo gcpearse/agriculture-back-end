@@ -1,8 +1,8 @@
-# Agriculture (WIP) - Back-end Repository
+# Agriculture API - (WIP)
 
 ## Overview
 
-A full-stack application for gardeners, allotment owners, and subsistence farmers to keep track of the crops, jobs, and issues on their plots.
+This API serves as the back end for a full-stack application allowing gardeners, allotment owners, and subsistence farmers to keep track of the crops, jobs, and issues on their plots.
 
 > This project is a work in progress.
 
@@ -92,13 +92,13 @@ The following scripts are included in the `package.json` file:
 ```
 
 `npm run db-setup`\
-Drops and creates the test and development databases.
+> Drops and creates the test and development databases.
 
 `npm run seed`\
-Runs the TypeScript compiler and seeds the databases.
+> Runs the TypeScript compiler and seeds the databases.
 
 `npm run start`\
-Runs the TypeScript compiler and starts the server locally on port 9090.
+> Runs the TypeScript compiler and starts the server locally on port 9090.
 
 `npm t`\
-Runs all tests in the `src` directory serially.
+> Runs all tests in the `src` directory serially.
