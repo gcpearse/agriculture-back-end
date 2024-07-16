@@ -158,6 +158,9 @@ plotsRouter.route("/plots/:owner_id")
  *                message:
  *                  type: string
  *                  example: "Bad Request"
+ *                details:
+ *                  type: string
+ *                  example: "Invalid text representation"
  *      403:
  *        description: Forbidden
  *        content:
@@ -297,6 +300,9 @@ plotsRouter.route("/plots/plot/:plot_id")
  *                message:
  *                  type: string
  *                  example: "Bad Request"
+ *                details:
+ *                  type: string
+ *                  example: "Invalid text representation"
  *      403:
  *        description: Forbidden
  *        content:

@@ -119,6 +119,9 @@ usersRouter.route("/users/:username")
  *                message:
  *                  type: string
  *                  example: "Bad Request"
+ *                details:
+ *                  type: string
+ *                  example: "Invalid text representation"
  *      403:
  *        description: Forbidden
  *        content:
