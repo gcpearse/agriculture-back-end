@@ -171,6 +171,24 @@ describe("DELETE /api/users/:username", () => {
     })
   })
 
+  test("DELETE:204 When a user is deleted, all associated plots are deleted", async () => {
+
+    await request(app)
+      .delete("/api/users/carrot_king")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(204)
+
+    const { body } = await request(app)
+      .get("/api/plots/carrot_king")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to view plot data denied"
+    })
+  })
+
   test("DELETE:403 Responds with a warning when the authenticated user attempts to delete another user's data", async () => {
 
     const { body } = await request(app)
