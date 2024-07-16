@@ -1,19 +1,6 @@
 import { db } from "../db"
 
 
-export const getValidPlotTypes = async (owner_id: number): Promise<string[]> => {
-
-  const result = await db.query(`
-    SELECT DISTINCT type
-    FROM plots
-    WHERE owner_id = $1;
-    `,
-    [owner_id])
-
-  return result.rows.map(row => row.type)
-}
-
-
 export const checkPlotNameConflict = async (owner_id: number, name: string): Promise<undefined> => {
 
   const result = await db.query(`
