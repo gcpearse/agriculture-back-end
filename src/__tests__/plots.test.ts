@@ -220,7 +220,10 @@ describe("POST /api/plots/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body.message).toBe("Bad Request")
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid text representation"
+    })
   })
 
   test("POST:403 Responds with a warning when the authenticated user's user_id does not match owner_id", async () => {
@@ -411,7 +414,8 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
       .expect(400)
 
     expect(body).toMatchObject({
-      message: "Bad Request"
+      message: "Bad Request",
+      details: "Invalid text representation"
     })
   })
 

@@ -97,7 +97,10 @@ describe("PATCH /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body.message).toBe("Bad Request")
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid text representation"
+    })
   })
 
   test("PATCH:403 Responds with a warning when the authenticated user attempts to edit another user's data", async () => {
@@ -149,10 +152,10 @@ describe("DELETE /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-      expect(body).toMatchObject({
-        message: "Forbidden",
-        details: "Permission to delete user data denied"
-      })
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to delete user data denied"
+    })
   })
 })
 
