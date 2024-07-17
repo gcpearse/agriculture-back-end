@@ -21,7 +21,7 @@ export const subdivisionData: Subdivision[] = [
     name: "Woody Herbs",
     type: "herb garden",
     description: "Rosemary and thyme",
-    area: 2
+    area: null
   },
   {
     plot_id: 2,
