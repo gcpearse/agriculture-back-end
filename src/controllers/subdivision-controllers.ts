@@ -8,8 +8,10 @@ export const getSubdivisionsByPlotId: RequestHandler = async (req, res, next) =>
 
   const { plot_id } = req.params
 
+  const queries = req.query
+
   try {
-    const subdivisions = await selectSubdivisionsByPlotId(authUserId, +plot_id)
+    const subdivisions = await selectSubdivisionsByPlotId(authUserId, +plot_id, queries)
     res.status(200).send({ subdivisions })
   } catch (err) {
     next(err)
