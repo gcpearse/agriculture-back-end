@@ -56,6 +56,19 @@ describe("GET /api/users/:username", () => {
       details: "Permission to view user data denied"
     })
   })
+
+  test("GET:404 Responds with an error message when the username does not exist", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users/non_existent_user")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "User not found"
+    })
+  })
 })
 
 
@@ -125,6 +138,27 @@ describe("PATCH /api/users/:username", () => {
     expect(body).toMatchObject({
       message: "Forbidden",
       details: "Permission to edit user data denied"
+    })
+  })
+
+  test("PATCH:404 Responds with an error message when the username does not exist", async () => {
+
+    const newDetails = {
+      email: "john.smith@example.com",
+      first_name: "John",
+      surname: "Smith",
+      unit_preference: "imperial"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/users/non_existent_user")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "User not found"
     })
   })
 
@@ -201,6 +235,19 @@ describe("DELETE /api/users/:username", () => {
       details: "Permission to delete user data denied"
     })
   })
+
+  test("DELETE:404 Responds with an error message when the username does not exist", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/users/non_existent_user")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "User not found"
+    })
+  })
 })
 
 
@@ -224,7 +271,7 @@ describe("PATCH /api/users/:username/password", () => {
     })
   })
 
-  test("PATCH:403 Responds with a warning when the authenticated user attempts to chanhge another user's password", async () => {
+  test("PATCH:403 Responds with a warning when the authenticated user attempts to change another user's password", async () => {
 
     const { body } = await request(app)
       .patch("/api/users/peach_princess/password")
@@ -235,6 +282,20 @@ describe("PATCH /api/users/:username/password", () => {
     expect(body).toMatchObject({
       message: "Forbidden",
       details: "Permission to edit password denied"
+    })
+  })
+
+  test("PATCH:404 Responds with an error message when the username does not exist", async () => {
+
+    const { body } = await request(app)
+      .patch("/api/users/non_existent_user/password")
+      .send({ password: "onions789" })
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "User not found"
     })
   })
 })
