@@ -402,11 +402,11 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
   test("PATCH:200 Responds with an updated plot object", async () => {
 
     const newDetails = {
-      name: "John's Vegetable Patch",
-      type: "vegetable patch",
-      description: "A vegetable patch",
-      location: "123, Salsify Street, Farmville",
-      area: 10
+      name: "John's Homestead",
+      type: "homestead",
+      description: "A homestead",
+      location: "Farmville",
+      area: 1200
     }
 
     const { body } = await request(app)
@@ -418,11 +418,11 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
     expect(body.plot).toMatchObject({
       plot_id: 1,
       owner_id: 1,
-      name: "John's Vegetable Patch",
-      type: "vegetable patch",
-      description: "A vegetable patch",
-      location: "123, Salsify Street, Farmville",
-      area: 10
+      name: "John's Homestead",
+      type: "homestead",
+      description: "A homestead",
+      location: "Farmville",
+      area: 1200
     })
   })
 
@@ -456,10 +456,10 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
   test("PATCH:400 Responds with an error when passed a property with an invalid data type", async () => {
 
     const newDetails = {
-      name: "John's Vegetable Patch",
-      type: "vegetable patch",
-      description: "A vegetable patch",
-      location: "123, Salsify Street, Farmville",
+      name: "John's Homestead",
+      type: "homestead",
+      description: "A homestead",
+      location: "Farmville",
       area: "ten metres"
     }
 
