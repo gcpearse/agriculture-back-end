@@ -196,6 +196,7 @@ export const seed = async ({
     CREATE TABLE issues (
       issue_id SERIAL PRIMARY KEY,
       plot_id INT NOT NULL REFERENCES plots(plot_id) ON DELETE CASCADE,
+      subdivision_id INT REFERENCES subdivisions(subdivision_id) ON DELETE CASCADE,
       title VARCHAR NOT NULL,
       description VARCHAR NOT NULL,
       is_resolved BOOLEAN DEFAULT FALSE
@@ -317,7 +318,7 @@ export const seed = async ({
 
   await db.query(format(`
     INSERT INTO issues 
-      (plot_id, title, description, is_resolved)
+      (plot_id, subdivision_id, title, description, is_resolved)
     VALUES %L;
     `,
     issueData.map(entry => Object.values(entry))
