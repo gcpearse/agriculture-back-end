@@ -166,6 +166,7 @@ export const seed = async ({
     CREATE TABLE crops (
       crop_id SERIAL PRIMARY KEY,
       plot_id INT NOT NULL REFERENCES plots(plot_id) ON DELETE CASCADE,
+      subdivision_id INT REFERENCES subdivisions(subdivision_id) ON DELETE CASCADE,
       name VARCHAR NOT NULL,
       variety VARCHAR,
       quantity INT,
@@ -292,7 +293,7 @@ export const seed = async ({
 
   await db.query(format(`
     INSERT INTO crops 
-      (plot_id, name, variety, quantity, date_planted, harvest_date)
+      (plot_id, subdivision_id, name, variety, quantity, date_planted, harvest_date)
     VALUES %L;
     `,
     cropData.map(entry => Object.values(entry))
