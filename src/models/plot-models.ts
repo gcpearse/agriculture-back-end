@@ -27,7 +27,7 @@ export const selectPlotsByOwner = async (authUserId: number, owner_id: number, {
     })
   }
 
-  if (type) query += format(`AND type = %L`, type)
+  if (type) query += format(`AND type = %L;`, type)
 
   const result = await db.query(query, [owner_id])
 
@@ -108,7 +108,7 @@ export const updatePlotByPlotId = async (authUserId: number, plot_id: number, pl
   const currentPlotName = await db.query(`
     SELECT name
     FROM plots
-    WHERE plot_id = $1
+    WHERE plot_id = $1;
     `,
     [plot_id])
 
