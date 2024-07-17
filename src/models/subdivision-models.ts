@@ -5,6 +5,14 @@ import { verifyPermission } from "../utils/verification-utils"
 
 export const selectSubdivisionsByPlotId = async (authUserId: number, plot_id: number) => {
 
+  if (isNaN(plot_id)) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+      details: "Plot not found"
+    })
+  }
+
   const owner_id = await getPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to view plot subdivision data denied")
