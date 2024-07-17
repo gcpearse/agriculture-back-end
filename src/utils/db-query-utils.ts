@@ -79,6 +79,27 @@ export const getPlotOwnerId = async (plot_id: number): Promise<number> => {
 }
 
 
+export const getSubdivisionPlotId = async(subdivision_id: number): Promise<number> => {
+
+  const result = await db.query(`
+    SELECT plot_id
+    FROM subdivisions
+    WHERE subdivision_id = $1;
+    `,
+    [subdivision_id])
+
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+      details: "Subdivision not found"
+    })
+  }
+
+  return result.rows[0].plot_id
+}
+
+
 export const searchForUserId = async (owner_id: number): Promise<undefined> => {
 
   const result = await db.query(`
