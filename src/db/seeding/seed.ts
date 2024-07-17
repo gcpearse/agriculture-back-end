@@ -7,6 +7,7 @@ import { Issue } from "../../types/issue-types"
 import { Job } from "../../types/job-types"
 import { CropImage, IssueImage, JobImage, PlotImage } from "../../types/image-types"
 import { CropComment, IssueComment } from "../../types/comment-types"
+import { Subdivision } from "../../types/subdivision-types"
 
 
 export const seed = async ({
@@ -14,6 +15,7 @@ export const seed = async ({
   plotData,
   plotImageData,
   plotTypeData,
+  subdivisionData,
   cropData,
   cropCommentData,
   cropImageData,
@@ -27,6 +29,7 @@ export const seed = async ({
   plotData: Plot[],
   plotImageData: PlotImage[],
   plotTypeData: { type: string }[],
+  subdivisionData: Subdivision[],
   cropData: Crop[],
   cropCommentData: CropComment[],
   cropImageData: CropImage[],
@@ -67,6 +70,10 @@ export const seed = async ({
 
   await db.query(`
     DROP TABLE IF EXISTS crops;
+    `)
+
+  await db.query(`
+    DROP TABLE IF EXISTS subdivisions;
     `)
 
   await db.query(`
@@ -128,6 +135,17 @@ export const seed = async ({
     CREATE TABLE plot_types (
       plot_type_id SERIAL PRIMARY KEY,
       type VARCHAR NOT NULL
+    );
+    `)
+  
+  await db.query(`
+    CREATE TABLE subdivisions (
+      subdivision_id SERIAL PRIMARY KEY,
+      plot_id INT NOT NULL REFERENCES plots(plot_id) ON DELETE CASCADE,
+      name VARCHAR NOT NULL,
+      type VARCHAR NOT NULL,
+      description VARCHAR NOT NULL,
+      area INT
     );
     `)
 
@@ -240,6 +258,14 @@ export const seed = async ({
     VALUES %L;
     `,
     plotTypeData.map(entry => Object.values(entry))
+  ))
+
+  await db.query(format(`
+    INSERT INTO subdivisions
+      (plot_id, name, type, description, area)
+    VALUES %L;
+    `,
+    subdivisionData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`
