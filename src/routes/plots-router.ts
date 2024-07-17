@@ -174,6 +174,19 @@ plotsRouter.route("/plots/:owner_id")
  *                details:
  *                  type: string
  *                  example: "Permission to create plot denied"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Not Found"
+ *                details:
+ *                  type: string
+ *                  example: "User not found"
  *      409:
  *        description: Conflict
  *        content:
