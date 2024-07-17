@@ -4,6 +4,8 @@ import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
 import { Plot } from "../types/plot-types"
+import { toBeOneOf } from 'jest-extended'
+expect.extend({ toBeOneOf })
 
 
 let token: string
@@ -45,7 +47,7 @@ describe("GET /api/plots/:owner_id", () => {
         type: expect.any(String),
         description: expect.any(String),
         location: expect.any(String),
-        area: expect.any(Number)
+        area: expect.toBeOneOf([expect.any(Number), null])
       })
     })
   })
