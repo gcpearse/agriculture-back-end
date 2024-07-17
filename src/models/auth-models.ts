@@ -1,7 +1,6 @@
 import { db } from "../db"
 import { Credentials, LoggedInUser, SecureUser, User } from "../types/user-types"
 import { checkEmailConflict } from "../utils/db-query-utils"
-import { verifyResult } from "../utils/verification-utils"
 
 
 export const registerUser = async ({ username, password, email, first_name, surname, unit_preference }: User): Promise<SecureUser> => {
@@ -54,7 +53,13 @@ export const logInUser = async ({ username, password }: Credentials): Promise<Lo
     `,
     [username])
 
-  await verifyResult(!result.rowCount, "Username could not be found")
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+      details: "Username could not be found"
+    })
+  }
 
   const dbPassword = await db.query(`
     SELECT password
