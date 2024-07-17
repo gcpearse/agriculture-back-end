@@ -373,3 +373,63 @@ describe("POST /api/subdivisions/:plot_id", () => {
     })
   })
 })
+
+
+describe("GET /api/subdivisions/subdivision/:subdivision_id", () => {
+
+  test("GET:200 Responds with a subdivision object", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/subdivision/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.subdivision).toMatchObject({
+      subdivision_id: 1,
+      plot_id: 1,
+      name: "Root Vegetable Bed",
+      type: "bed",
+      description: "Carrots, beetroots, and parsnips",
+      area: 10
+    })
+  })
+
+  test("GET:403 Responds with a warning when the subdivision does not belong to the authenticated user", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/subdivision/4")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to view subdivision data denied"
+    })
+  })
+
+  test("GET:404 Responds with an error message when the subdivision does not exist", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/subdivision/999")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Subdivision not found"
+    })
+  })
+
+  test("GET:404 Responds with an error message when the subdivision is not a number", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/subdivision/example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Subdivision not found"
+    })
+  })
+})
