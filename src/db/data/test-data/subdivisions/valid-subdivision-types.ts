@@ -1,4 +1,4 @@
-export default [
+export const subdivisionTypeData: { type: string }[] = [
   {
     type: "bed"
   },
@@ -14,4 +14,4 @@ export default [
   {
     type: "vegetable patch"
   }
-] as { type: string }[]
+]

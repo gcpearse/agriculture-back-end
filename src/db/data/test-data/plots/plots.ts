@@ -1,7 +1,7 @@
 import { Plot } from "../../../../types/plot-types";
 
 
-export default [
+export const plotData = [
   {
     owner_id: 1,
     name: "John's Garden",

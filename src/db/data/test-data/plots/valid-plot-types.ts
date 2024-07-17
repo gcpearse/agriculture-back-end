@@ -1,4 +1,4 @@
-export default [
+export const plotTypeData: {type: string}[] = [
   {
     type: "allotment"
   },
@@ -14,4 +14,4 @@ export default [
   {
     type: "orchard"
   }
-] as { type: string }[]
+]

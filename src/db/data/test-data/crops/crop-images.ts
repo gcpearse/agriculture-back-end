@@ -1,7 +1,7 @@
 import { CropImage } from "../../../../types/image-types";
 
 
-export default [
+export const cropImageData: CropImage[] = [
   {
     crop_id: 1,
     image_url: "https://images.pexels.com/photos/143133/pexels-photo-143133.jpeg?auto=compress&cs=tinysrgb&w=800"
@@ -22,4 +22,4 @@ export default [
     crop_id: 4,
     image_url: "https://images.pexels.com/photos/10067663/pexels-photo-10067663.jpeg?auto=compress&cs=tinysrgb&w=800"
   }
-] as CropImage[]
+]

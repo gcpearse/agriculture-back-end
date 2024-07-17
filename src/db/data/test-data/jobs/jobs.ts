@@ -1,7 +1,7 @@
 import { Job } from "../../../../types/job-types";
 
 
-export default [
+export const jobData: Job[] = [
   {
     plot_id: 1,
     subdivision_id: null,
@@ -50,4 +50,4 @@ export default [
     is_started: true,
     is_completed: true
   },
-] as Job[]
+]

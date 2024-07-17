@@ -1,7 +1,7 @@
 import { Issue } from "../../../../types/issue-types";
 
 
-export default [
+export const issueData: Issue[] = [
   {
     plot_id: 1,
     subdivision_id: null,
@@ -30,4 +30,4 @@ export default [
     description: "Some of the fence posts are rotting and need replacing",
     is_resolved: false
   }
-] as Issue[]
+]

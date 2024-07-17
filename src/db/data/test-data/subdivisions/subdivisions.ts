@@ -1,7 +1,7 @@
 import { Subdivision } from "../../../../types/subdivision-types";
 
 
-export default [
+export const subdivisionData: Subdivision[] = [
   {
     plot_id: 1,
     name: "Root Vegetable Bed",
@@ -30,4 +30,4 @@ export default [
     description: "Bramley and Lord Derby apple trees",
     area: 20
   }
-] as Subdivision[]
+]

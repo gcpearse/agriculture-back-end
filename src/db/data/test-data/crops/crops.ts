@@ -1,7 +1,7 @@
 import { Crop } from "../../../../types/crop-types";
 
 
-export default [
+export const cropData: Crop[] = [
   {
     plot_id: 1,
     subdivision_id: 1,
@@ -38,4 +38,4 @@ export default [
     date_planted: new Date("2022-08-30"),
     harvest_date: new Date("2024-07-14")
   }
-] as Crop[]
+]
