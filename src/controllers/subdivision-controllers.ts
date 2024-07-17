@@ -1,5 +1,5 @@
 import { RequestHandler } from "express"
-import { selectSubdivisionsByPlotId } from "../models/subdivision-models"
+import { insertSubdivisionByPlotId, selectSubdivisionsByPlotId } from "../models/subdivision-models"
 
 
 export const getSubdivisionsByPlotId: RequestHandler = async (req, res, next) => {
@@ -13,6 +13,21 @@ export const getSubdivisionsByPlotId: RequestHandler = async (req, res, next) =>
   try {
     const subdivisions = await selectSubdivisionsByPlotId(authUserId, +plot_id, queries)
     res.status(200).send({ subdivisions })
+  } catch (err) {
+    next(err)
+  }
+}
+
+
+export const postSubdivisionByPlotId: RequestHandler = async (req, res, next) => {
+
+  const authUserId: number = req.body.user.user_id
+
+  const { plot_id } = req.params
+
+  try {
+    const subdivision = await insertSubdivisionByPlotId(authUserId, +plot_id, req.body)
+    res.status(201).send({ subdivision })
   } catch (err) {
     next(err)
   }
