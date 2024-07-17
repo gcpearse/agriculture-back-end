@@ -39,6 +39,25 @@ export const checkPlotNameConflict = async (owner_id: number, name: string): Pro
 }
 
 
+export const checkSubdivisionNameConflict = async (plot_id: number, name: string): Promise<undefined> => {
+
+  const result = await db.query(`
+    SELECT name
+    FROM subdivisions
+    WHERE plot_id = $1;
+    `,
+    [plot_id])
+
+  if (result.rows.map(row => row.name).includes(name)) {
+    return Promise.reject({
+      status: 409,
+      message: "Conflict",
+      details: "Subdivision name already exists"
+    })
+  }
+}
+
+
 export const getPlotOwnerId = async (plot_id: number): Promise<number> => {
 
   const result = await db.query(`
