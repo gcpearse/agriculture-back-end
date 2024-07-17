@@ -5,7 +5,7 @@ export const checkEmailConflict = async (email: string): Promise<undefined> => {
 
   const dbEmail = await db.query(`
     SELECT email 
-    FROM users 
+    FROM users ß
     WHERE email = $1;
     `,
     [email])
@@ -60,7 +60,7 @@ export const getPlotOwnerId = async (plot_id: number): Promise<number> => {
 }
 
 
-export const searchForUserId = async (owner_id: number) => {
+export const searchForUserId = async (owner_id: number): Promise<undefined> => {
 
   const result = await db.query(`
     SELECT user_id
@@ -77,7 +77,7 @@ export const searchForUserId = async (owner_id: number) => {
 }
 
 
-export const searchForUsername = async (username: string) => {
+export const searchForUsername = async (username: string): Promise<undefined> => {
 
   const result = await db.query(`
     SELECT username
