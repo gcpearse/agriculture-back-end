@@ -13,6 +13,7 @@ export const seed = async ({
   userData,
   plotData,
   plotImageData,
+  plotTypeData,
   cropData,
   cropCommentData,
   cropImageData,
@@ -25,6 +26,7 @@ export const seed = async ({
   userData: User[],
   plotData: Plot[],
   plotImageData: PlotImage[],
+  plotTypeData: { type: string }[],
   cropData: Crop[],
   cropCommentData: CropComment[],
   cropImageData: CropImage[],
@@ -68,6 +70,10 @@ export const seed = async ({
     `)
 
   await db.query(`
+    DROP TABLE IF EXISTS plot_types;
+    `)
+
+  await db.query(`
     DROP TABLE IF EXISTS plot_images;
     `)
 
@@ -80,8 +86,10 @@ export const seed = async ({
     `)
 
   await db.query(`
-    DROP TYPE IF EXISTS UNIT_SYSTEM;
-    CREATE TYPE UNIT_SYSTEM AS ENUM ('metric', 'imperial');
+    DROP TYPE IF EXISTS unit_system;
+    CREATE TYPE unit_system 
+    AS ENUM 
+      ('metric', 'imperial');
     `)
 
   await db.query(`
@@ -89,9 +97,10 @@ export const seed = async ({
       user_id SERIAL PRIMARY KEY,
       username VARCHAR NOT NULL,
       password VARCHAR NOT NULL,
+      email VARCHAR NOT NULL,
       first_name VARCHAR NOT NULL,
       surname VARCHAR NOT NULL,
-      unit_preference UNIT_SYSTEM DEFAULT 'metric'
+      unit_preference unit_system NOT NULL DEFAULT 'metric'
     );
     `)
 
@@ -112,6 +121,13 @@ export const seed = async ({
       image_id SERIAL PRIMARY KEY,
       plot_id INT NOT NULL REFERENCES plots(plot_id) ON DELETE CASCADE,
       image_url TEXT NOT NULL
+    );
+    `)
+
+  await db.query(`
+    CREATE TABLE plot_types (
+      plot_type_id SERIAL PRIMARY KEY,
+      type VARCHAR NOT NULL
     );
     `)
 
@@ -196,7 +212,7 @@ export const seed = async ({
 
   await db.query(format(`
     INSERT INTO users 
-      (username, password, first_name, surname, unit_preference)
+      (username, password, email, first_name, surname, unit_preference)
     VALUES %L;
     `,
     userData.map(entry => Object.values(entry))
@@ -216,6 +232,14 @@ export const seed = async ({
     VALUES %L;
     `,
     plotImageData.map(entry => Object.values(entry))
+  ))
+
+  await db.query(format(`
+    INSERT INTO plot_types 
+      (type)
+    VALUES %L;
+    `,
+    plotTypeData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`

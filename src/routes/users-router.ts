@@ -6,6 +6,34 @@ import { deleteUserByUsername, getUserByUsername, patchPasswordByUsername, patch
 export const usersRouter = Router()
 
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    User:
+ *      type: object
+ *      properties:
+ *        user_id:
+ *          type: integer
+ *          example: 1
+ *        username:
+ *          type: string
+ *          example: carrot_king
+ *        email:
+ *          type: string
+ *          example: john.smith@example.com
+ *        first_name:
+ *          type: string
+ *          example: John
+ *        surname:
+ *          type: string
+ *          example: Smith
+ *        unit_preference:
+ *          type: string
+ *          example: imperial
+ */
+
+
 usersRouter.route("/users/:username")
 
 /**
@@ -29,23 +57,7 @@ usersRouter.route("/users/:username")
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                user_id:
- *                  type: integer
- *                  example: 1
- *                username:
- *                  type: string
- *                  example: carrot_king
- *                first_name:
- *                  type: string
- *                  example: John
- *                surname:
- *                  type: string
- *                  example: Smith
- *                unit_preference:
- *                  type: string
- *                  example: imperial
+ *              $ref: "#/components/schemas/User"
  *      403:
  *        description: Forbidden
  *        content:
@@ -59,6 +71,19 @@ usersRouter.route("/users/:username")
  *                details:
  *                  type: string
  *                  example: "Permission to view user data denied"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Not Found"
+ *                details:
+ *                  type: string
+ *                  example: "User not found"
  */
   .get(verifyToken, getUserByUsername)
 
@@ -69,7 +94,7 @@ usersRouter.route("/users/:username")
  *    security:
  *      - bearerAuth: []
  *    summary: Update a user's details
- *    description: Responds with an updated user object. The server will respond with an error if the value of unit_preference is not a valid enum value. Permission is denied when the current user's username does not match the target username. 
+ *    description: Responds with an updated user object. The server will respond with an error if the value of unit_preference is not a valid enum value, or if the email already exists for another user. Permission is denied when the current user's username does not match the target username. 
  *    tags: [Users]
  *    parameters:
  *      - in: path
@@ -84,37 +109,25 @@ usersRouter.route("/users/:username")
  *          schema:
  *            type: object
  *            properties:
+ *              email:
+ *                type: string
+ *                example: john.smith@example.com
  *              first_name:
  *                type: string
- *                example: Johnny
+ *                example: John
  *              surname:
  *                type: string
- *                example: Smith-Jones
+ *                example: Smith
  *              unit_preference:
  *                type: string    
- *                example: metric
+ *                example: imperial
  *    responses:
  *      200:
  *        description: OK
  *        content:
  *          application/json:
  *            schema:
- *              properties:
- *                user_id:
- *                  type: integer
- *                  example: 1
- *                username:
- *                  type: string
- *                  example: carrot_king
- *                first_name:
- *                  type: string
- *                  example: Johnny
- *                surname:
- *                  type: string
- *                  example: Smith-Jones
- *                unit_preference:
- *                  type: string
- *                  example: metric
+ *              $ref: "#/components/schemas/User"
  *      400:
  *        description: Bad Request
  *        content:
@@ -125,6 +138,9 @@ usersRouter.route("/users/:username")
  *                message:
  *                  type: string
  *                  example: "Bad Request"
+ *                details:
+ *                  type: string
+ *                  example: "Invalid text representation"
  *      403:
  *        description: Forbidden
  *        content:
@@ -138,6 +154,32 @@ usersRouter.route("/users/:username")
  *                details:
  *                  type: string
  *                  example: "Permission to edit user data denied"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Not Found"
+ *                details:
+ *                  type: string
+ *                  example: "User not found"
+ *      409:
+ *        description: Conflict
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Conflict"
+ *                details:
+ *                  type: string
+ *                  example: "Email already exists"
  */
   .patch(verifyToken, patchUserByUsername)
 
@@ -172,6 +214,19 @@ usersRouter.route("/users/:username")
  *                details:
  *                  type: string
  *                  example: "Permission to delete user data denied"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Not Found"
+ *                details:
+ *                  type: string
+ *                  example: "User not found"
  */
   .delete(verifyToken, deleteUserByUsername)
 
@@ -206,22 +261,7 @@ usersRouter.route("/users/:username")
  *        content:
  *          application/json:
  *            schema:
- *              properties:
- *                user_id:
- *                  type: integer
- *                  example: 1
- *                username:
- *                  type: string
- *                  example: carrot_king
- *                first_name:
- *                  type: string
- *                  example: John
- *                surname:
- *                  type: string
- *                  example: Smith
- *                unit_preference:
- *                  type: string
- *                  example: imperial
+ *              $ref: "#/components/schemas/User"
  *      403:
  *        description: Forbidden
  *        content:
@@ -235,5 +275,18 @@ usersRouter.route("/users/:username")
  *                details:
  *                  type: string
  *                  example: "Permission to edit password denied"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Not Found"
+ *                details:
+ *                  type: string
+ *                  example: "User not found"
  */
 usersRouter.patch("/users/:username/password", verifyToken, patchPasswordByUsername)

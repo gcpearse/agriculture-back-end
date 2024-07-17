@@ -1,30 +1,12 @@
 import data from "../../db/data/test-data/data-index"
 import { db } from "../../db"
 import { seed } from "../../db/seeding/seed"
-import { checkPlotNameConflict, getPlotOwnerId, getValidPlotTypes } from "../../utils/db-query-utils"
+import { checkPlotNameConflict, getPlotOwnerId } from "../../utils/db-query-utils"
 
 
 beforeEach(() => seed(data))
 
 afterAll(() => db.end())
-
-
-describe("getValidPlotTypes", () => {
-
-  test("Returns a string array of plot types associated with the given user", async () => {
-
-    const result = await getValidPlotTypes(1)
-
-    expect(result).toEqual(["allotment", "garden"])
-  })
-
-  test("Returns an empty array when no plots are associated with the owner_id", async () => {
-
-    const result = await getValidPlotTypes(3)
-
-    expect(result).toEqual([])
-  })
-})
 
 
 describe("checkPlotNameConflict", () => {

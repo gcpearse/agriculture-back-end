@@ -6,6 +6,37 @@ import { deletePlotByPlotId, getPlotByPlotId, getPlotsByOwner, patchPlotByPlotId
 export const plotsRouter = Router()
 
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    Plot:
+ *      type: object
+ *      properties:
+ *        plot_id:
+ *          type: integer
+ *          example: 1
+ *        owner_id:
+ *          type: integer
+ *          example: 1
+ *        name:
+ *          type: string
+ *          example: John's Garden
+ *        type:
+ *          type: string
+ *          example: garden
+ *        description:
+ *          type: string
+ *          example: A vegetable garden
+ *        location:
+ *          type: string
+ *          example: Farmville
+ *        area:
+ *          type: integer
+ *          example: 100
+ */
+
+
 plotsRouter.route("/plots/:owner_id")
 
 
@@ -39,29 +70,7 @@ plotsRouter.route("/plots/:owner_id")
  *                plots:
  *                  type: array
  *                  items:
- *                    type: object
- *                    properties:
- *                      plot_id:
- *                        type: integer
- *                        example: 1
- *                      owner_id:
- *                        type: integer
- *                        example: 1
- *                      name:
- *                        type: string
- *                        example: John's Garden
- *                      type:
- *                        type: string
- *                        example: garden
- *                      description:
- *                        type: string
- *                        example: A vegetable garden
- *                      location:
- *                        type: integer
- *                        example: 1
- *                      area:
- *                        type: integer
- *                        example: 100
+ *                    $ref: "#/components/schemas/Plot"
  *      403:
  *        description: Forbidden
  *        content:
@@ -91,6 +100,7 @@ plotsRouter.route("/plots/:owner_id")
  */
   .get(verifyToken, getPlotsByOwner)
 
+
 /**
  * @swagger
  * /api/plots/{owner_id}:
@@ -118,53 +128,26 @@ plotsRouter.route("/plots/:owner_id")
  *                example: 1
  *              name:
  *                type: string
- *                example: John's Field
+ *                example: John's Garden
  *              type:
  *                type: string    
- *                example: field
+ *                example: garden
  *              description:
  *                type: string    
- *                example: A large field
+ *                example: A vegetable garden
  *              location:
  *                type: string    
- *                example: Wildwood
+ *                example: Farmville
  *              area:
  *                type: integer    
- *                example: 3000
+ *                example: 100
  *    responses:
  *      200:
  *        description: OK
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                plots:
- *                  type: array
- *                  items:
- *                    type: object
- *                    properties:
- *                      plot_id:
- *                        type: integer
- *                        example: 5
- *                      owner_id:
- *                        type: integer
- *                        example: 1
- *                      name:
- *                        type: string
- *                        example: John's Field
- *                      type:
- *                        type: string    
- *                        example: field
- *                      description:
- *                        type: string    
- *                        example: A large field
- *                      location:
- *                        type: string    
- *                        example: Wildwood
- *                      area:
- *                        type: integer    
- *                        example: 3000
+ *              $ref: "#/components/schemas/Plot"
  *      400:
  *        description: Bad Request
  *        content:
@@ -175,6 +158,9 @@ plotsRouter.route("/plots/:owner_id")
  *                message:
  *                  type: string
  *                  example: "Bad Request"
+ *                details:
+ *                  type: string
+ *                  example: "Invalid text representation"
  *      403:
  *        description: Forbidden
  *        content:
@@ -188,6 +174,19 @@ plotsRouter.route("/plots/:owner_id")
  *                details:
  *                  type: string
  *                  example: "Permission to create plot denied"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Not Found"
+ *                details:
+ *                  type: string
+ *                  example: "User not found"
  *      409:
  *        description: Conflict
  *        content:
@@ -229,29 +228,7 @@ plotsRouter.route("/plots/plot/:plot_id")
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                plot_id:
- *                  type: integer
- *                  example: 1
- *                owner_id:
- *                  type: integer
- *                  example: 1
- *                name:
- *                  type: string
- *                  example: John's Garden
- *                type:
- *                  type: string
- *                  example: garden
- *                description:
- *                  type: string
- *                  example: A vegetable garden
- *                location:
- *                  type: integer
- *                  example: 1
- *                area:
- *                  type: integer
- *                  example: 100
+ *              $ref: "#/components/schemas/Plot"
  *      403:
  *        description: Forbidden
  *        content:
@@ -306,53 +283,26 @@ plotsRouter.route("/plots/plot/:plot_id")
  *            properties:
  *              name:
  *                type: string
- *                example: John's Vegetable Patch
+ *                example: John's Garden
  *              type:
  *                type: string    
- *                example: vegetable patch
+ *                example: garden
  *              description:
  *                type: string    
- *                example: A vegetable patch
+ *                example: A vegetable garden
  *              location:
  *                type: string    
- *                example: Appleby
+ *                example: Farmville
  *              area:
  *                type: integer    
- *                example: 10
+ *                example: 100
  *    responses:
  *      200:
  *        description: OK
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                plots:
- *                  type: array
- *                  items:
- *                    type: object
- *                    properties:
- *                      plot_id:
- *                        type: integer
- *                        example: 1
- *                      owner_id:
- *                        type: integer
- *                        example: 1
- *                      name:
- *                        type: string
- *                        example: John's Vegetable Patch
- *                      type:
- *                        type: string    
- *                        example: vegetable patch
- *                      description:
- *                        type: string    
- *                        example: A vegetable patch
- *                      location:
- *                        type: string    
- *                        example: Appleby
- *                      area:
- *                        type: integer    
- *                        example: 10
+ *              $ref: "#/components/schemas/Plot"
  *      400:
  *        description: Bad Request
  *        content:
@@ -363,6 +313,9 @@ plotsRouter.route("/plots/plot/:plot_id")
  *                message:
  *                  type: string
  *                  example: "Bad Request"
+ *                details:
+ *                  type: string
+ *                  example: "Invalid text representation"
  *      403:
  *        description: Forbidden
  *        content:

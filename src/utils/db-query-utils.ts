@@ -1,16 +1,37 @@
 import { db } from "../db"
 
 
-export const getValidPlotTypes = async (owner_id: number): Promise<string[]> => {
+export const searchForUserId = async (owner_id: number) => {
 
   const result = await db.query(`
-    SELECT DISTINCT type
-    FROM plots
-    WHERE owner_id = $1;
-    `,
-    [owner_id])
+    SELECT user_id
+    FROM users;
+    `)
 
-  return result.rows.map(row => row.type)
+  if (!result.rows.map(row => row.user_id).includes(owner_id)) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+      details: "User not found"
+    })
+  }
+}
+
+
+export const searchForUsername = async (username: string) => {
+
+  const result = await db.query(`
+    SELECT username
+    FROM users;
+    `)
+
+  if (!result.rows.map(row => row.username).includes(username)) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+      details: "User not found"
+    })
+  }
 }
 
 
@@ -23,15 +44,24 @@ export const checkPlotNameConflict = async (owner_id: number, name: string): Pro
     `,
     [owner_id])
 
-  const isConflict = result.rows.map(row => row.name).includes(name)
-
-  if (isConflict) {
+  if (result.rows.map(row => row.name).includes(name)) {
     return Promise.reject({
       status: 409,
       message: "Conflict",
       details: "Plot name already exists"
     })
   }
+}
+
+
+export const validatePlotType = async (type: string): Promise<boolean> => {
+
+  const result = await db.query(`
+    SELECT type 
+    FROM plot_types;
+    `)
+
+  return result.rows.map(row => row.type).includes(type as string)
 }
 
 
@@ -53,4 +83,23 @@ export const getPlotOwnerId = async (plot_id: number): Promise<number> => {
   }
 
   return result.rows[0].owner_id
+}
+
+
+export const checkEmailConflict = async (email: string): Promise<undefined> => {
+
+  const dbEmail = await db.query(`
+    SELECT email 
+    FROM users 
+    WHERE email = $1;
+    `,
+    [email])
+
+  if (dbEmail.rowCount) {
+    return Promise.reject({
+      status: 409,
+      message: "Conflict",
+      details: "Email already exists"
+    })
+  }
 }

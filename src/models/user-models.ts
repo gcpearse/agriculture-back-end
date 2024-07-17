@@ -1,9 +1,12 @@
 import { db } from "../db"
 import { SecureUser } from "../types/user-types"
-import { verifyPermission, verifyResult } from "../utils/verification-utils"
+import { checkEmailConflict, searchForUsername } from "../utils/db-query-utils"
+import { verifyPermission } from "../utils/verification-utils"
 
 
 export const selectUserByUsername = async (authUsername: string, username: string): Promise<SecureUser> => {
+
+  await searchForUsername(username)
 
   await verifyPermission(authUsername, username, "Permission to view user data denied")
 
@@ -11,6 +14,7 @@ export const selectUserByUsername = async (authUsername: string, username: strin
     SELECT 
       user_id, 
       username, 
+      email,
       first_name, 
       surname, 
       unit_preference
@@ -19,33 +23,35 @@ export const selectUserByUsername = async (authUsername: string, username: strin
     `,
     [username])
 
-  await verifyResult(!result.rowCount, "User not found")
-
   return result.rows[0]
 }
 
 
 export const updateUserByUsername = async (authUsername: string, username: string, user: SecureUser): Promise<SecureUser> => {
 
+  await searchForUsername(username)
+
   await verifyPermission(authUsername, username, "Permission to edit user data denied")
+
+  await checkEmailConflict(user.email)
 
   const result = await db.query(`
     UPDATE users
     SET 
-      first_name = $1, 
-      surname = $2, 
-      unit_preference = $3
-    WHERE username = $4
+      email = $1,
+      first_name = $2, 
+      surname = $3, 
+      unit_preference = $4
+    WHERE username = $5
     RETURNING 
       user_id, 
       username, 
+      email,
       first_name, 
       surname, 
       unit_preference;
     `,
-    [user.first_name, user.surname, user.unit_preference, username])
-
-  await verifyResult(!result.rowCount, "User not found")
+    [user.email, user.first_name, user.surname, user.unit_preference, username])
 
   return result.rows[0]
 }
@@ -53,20 +59,22 @@ export const updateUserByUsername = async (authUsername: string, username: strin
 
 export const removeUserByUsername = async (authUsername: string, username: string): Promise<void> => {
 
+  await searchForUsername(username)
+
   await verifyPermission(authUsername, username, "Permission to delete user data denied")
 
-  const result = await db.query(`
+  await db.query(`
     DELETE FROM users
     WHERE username = $1
     RETURNING *;
     `,
     [username])
-
-  await verifyResult(!result.rowCount, "User not found")
 }
 
 
 export const changePasswordByUsername = async (authUsername: string, username: string, password: string): Promise<SecureUser> => {
+
+  await searchForUsername(username)
 
   await verifyPermission(authUsername, username, "Permission to edit password denied")
 
@@ -77,13 +85,12 @@ export const changePasswordByUsername = async (authUsername: string, username: s
     RETURNING 
       user_id, 
       username, 
+      email,
       first_name, 
       surname, 
       unit_preference;
     `,
     [password, username])
-
-  await verifyResult(!result.rowCount, "User not found")
 
   return result.rows[0]
 }

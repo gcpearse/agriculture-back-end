@@ -82,6 +82,32 @@ describe("GET /api/plots/:owner_id", () => {
       details: "Permission to view plot data denied"
     })
   })
+
+  test("GET:404 Responds with an error message when the owner_id does not exist", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/999")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "User not found"
+    })
+  })
+
+  test("GET:404 Responds with an error message when the owner_id is not a number", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/plot")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "User not found"
+    })
+  })
 })
 
 
@@ -144,25 +170,6 @@ describe("POST /api/plots/:owner_id", () => {
     })
   })
 
-  test("POST:201 Converts the value of 'type' to lower case", async () => {
-
-    const newPlot = {
-      owner_id: 1,
-      name: "John's Field",
-      type: "Field",
-      description: "A large field",
-      location: "Wildwood"
-    }
-
-    const { body } = await request(app)
-      .post("/api/plots/1")
-      .send(newPlot)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(201)
-
-    expect(body.plot.type).toBe("field")
-  })
-
   test("POST:201 Assigns a null value to 'area' when no value is provided", async () => {
 
     const newPlot = {
@@ -220,10 +227,58 @@ describe("POST /api/plots/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body.message).toBe("Bad Request")
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid text representation"
+    })
   })
 
-  test("POST:403 Responds with a warning when the authenticated user's user_id does not match owner_id", async () => {
+  test("POST:400 Responds with an error when a required property is missing from the request body", async () => {
+
+    const newPlot = {
+      owner_id: 1,
+      type: "field",
+      description: "A large field",
+      location: "Wildwood",
+      area: 3000
+    }
+
+    const { body } = await request(app)
+      .post("/api/plots/1")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Not null violation"
+    })
+  })
+
+  test("POST:400 Responds with an error when passed an invalid plot type", async () => {
+
+    const newPlot = {
+      owner_id: 1,
+      name: "John's Field",
+      type: "garage",
+      description: "A large field",
+      location: "Wildwood",
+      area: 3000
+    }
+
+    const { body } = await request(app)
+      .post("/api/plots/1")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid plot type"
+    })
+  })
+
+  test("POST:403 Responds with a warning when the authenticated user attempts to create a plot for another user", async () => {
 
     const newPlot = {
       owner_id: 1,
@@ -243,6 +298,29 @@ describe("POST /api/plots/:owner_id", () => {
     expect(body).toMatchObject({
       message: "Forbidden",
       details: "Permission to create plot denied"
+    })
+  })
+
+  test("POST:404 Responds with an error message when the owner_id does not exist", async () => {
+
+    const newPlot = {
+      owner_id: 1,
+      name: "John's Field",
+      type: "field",
+      description: "A large field",
+      location: "Wildwood",
+      area: 3000
+    }
+
+    const { body } = await request(app)
+      .post("/api/plots/999")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "User not found"
     })
   })
 
@@ -375,25 +453,6 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
     })
   })
 
-  test("PATCH:200 Converts the value of 'type' to lower case", async () => {
-
-    const newDetails = {
-      name: "John's Vegetable Patch",
-      type: "Vegetable Patch",
-      description: "A vegetable patch",
-      location: "123, Salsify Street, Farmville",
-      area: 10
-    }
-
-    const { body } = await request(app)
-      .patch("/api/plots/plot/1")
-      .send(newDetails)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(200)
-
-    expect(body.plot.type).toBe("vegetable patch")
-  })
-
   test("PATCH:400 Responds with an error when passed a property with an invalid data type", async () => {
 
     const newDetails = {
@@ -411,7 +470,30 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
       .expect(400)
 
     expect(body).toMatchObject({
-      message: "Bad Request"
+      message: "Bad Request",
+      details: "Invalid text representation"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when passed an invalid plot type", async () => {
+
+    const newDetails = {
+      name: "John's Vegetable Patch",
+      type: "garage",
+      description: "A vegetable patch",
+      location: "123, Salsify Street, Farmville",
+      area: 10
+    }
+
+    const { body } = await request(app)
+      .patch("/api/plots/plot/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid plot type"
     })
   })
 
@@ -513,6 +595,32 @@ describe("DELETE /api/plots/plot/:plot_id", () => {
     expect(body).toMatchObject({
       message: "Forbidden",
       details: "Permission to delete plot data denied"
+    })
+  })
+
+  test("DELETE:404 Responds with an error message when the plot_id does not exist", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/plots/plot/999")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Plot not found"
+    })
+  })
+
+  test("DELETE:404 Responds with an error message when the plot_id is not a number", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/plots/plot/example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Plot not found"
     })
   })
 })

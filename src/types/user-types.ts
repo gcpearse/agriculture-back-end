@@ -21,6 +21,7 @@ export enum UnitSystem {
 
 export type SecureUser = {
   user_id?: number
+  email: string
   first_name: string
   surname: string
   unit_preference: UnitSystem

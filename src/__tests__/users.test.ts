@@ -37,6 +37,7 @@ describe("GET /api/users/:username", () => {
     expect(body.user).toMatchObject({
       user_id: 1,
       username: "carrot_king",
+      email: "john.smith@example.com",
       first_name: "John",
       surname: "Smith",
       unit_preference: "imperial"
@@ -55,6 +56,19 @@ describe("GET /api/users/:username", () => {
       details: "Permission to view user data denied"
     })
   })
+
+  test("GET:404 Responds with an error message when the username does not exist", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users/non_existent_user")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "User not found"
+    })
+  })
 })
 
 
@@ -63,6 +77,7 @@ describe("PATCH /api/users/:username", () => {
   test("PATCH:200 Responds with an updated user object", async () => {
 
     const newDetails = {
+      email: "jsj@example.com",
       first_name: "Johnny",
       surname: "Smith-Jones",
       unit_preference: "metric"
@@ -77,6 +92,7 @@ describe("PATCH /api/users/:username", () => {
     expect(body.user).toMatchObject({
       user_id: 1,
       username: "carrot_king",
+      email: "jsj@example.com",
       first_name: "Johnny",
       surname: "Smith-Jones",
       unit_preference: "metric"
@@ -86,6 +102,7 @@ describe("PATCH /api/users/:username", () => {
   test("PATCH:400 Responds with an error when an invalid value is passed for unit_preference", async () => {
 
     const newDetails = {
+      email: "jsj@example.com",
       first_name: "Johnny",
       surname: "Smith-Jones",
       unit_preference: "international"
@@ -97,12 +114,16 @@ describe("PATCH /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body.message).toBe("Bad Request")
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid text representation"
+    })
   })
 
   test("PATCH:403 Responds with a warning when the authenticated user attempts to edit another user's data", async () => {
 
     const newDetails = {
+      email: "john.smith@example.com",
       first_name: "John",
       surname: "Smith",
       unit_preference: "imperial"
@@ -117,6 +138,48 @@ describe("PATCH /api/users/:username", () => {
     expect(body).toMatchObject({
       message: "Forbidden",
       details: "Permission to edit user data denied"
+    })
+  })
+
+  test("PATCH:404 Responds with an error message when the username does not exist", async () => {
+
+    const newDetails = {
+      email: "john.smith@example.com",
+      first_name: "John",
+      surname: "Smith",
+      unit_preference: "imperial"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/users/non_existent_user")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "User not found"
+    })
+  })
+
+  test("PATCH:409 Responds with an error message when the email already exists", async () => {
+
+    const newDetails = {
+      email: "olivia.jones@example.com",
+      first_name: "John",
+      surname: "Smith",
+      unit_preference: "imperial"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/users/carrot_king")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(409)
+
+    expect(body).toMatchObject({
+      message: "Conflict",
+      details: "Email already exists"
     })
   })
 })
@@ -142,6 +205,24 @@ describe("DELETE /api/users/:username", () => {
     })
   })
 
+  test("DELETE:204 When a user is deleted, all associated plots are deleted", async () => {
+
+    await request(app)
+      .delete("/api/users/carrot_king")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(204)
+
+    const { body } = await request(app)
+      .get("/api/plots/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "User not found"
+    })
+  })
+
   test("DELETE:403 Responds with a warning when the authenticated user attempts to delete another user's data", async () => {
 
     const { body } = await request(app)
@@ -149,10 +230,23 @@ describe("DELETE /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-      expect(body).toMatchObject({
-        message: "Forbidden",
-        details: "Permission to delete user data denied"
-      })
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to delete user data denied"
+    })
+  })
+
+  test("DELETE:404 Responds with an error message when the username does not exist", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/users/non_existent_user")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "User not found"
+    })
   })
 })
 
@@ -170,13 +264,14 @@ describe("PATCH /api/users/:username/password", () => {
     expect(body.user).toMatchObject({
       user_id: 1,
       username: "carrot_king",
+      email: "john.smith@example.com",
       first_name: "John",
       surname: "Smith",
       unit_preference: "imperial"
     })
   })
 
-  test("PATCH:403 Responds with a warning when the authenticated user attempts to chanhge another user's password", async () => {
+  test("PATCH:403 Responds with a warning when the authenticated user attempts to change another user's password", async () => {
 
     const { body } = await request(app)
       .patch("/api/users/peach_princess/password")
@@ -187,6 +282,20 @@ describe("PATCH /api/users/:username/password", () => {
     expect(body).toMatchObject({
       message: "Forbidden",
       details: "Permission to edit password denied"
+    })
+  })
+
+  test("PATCH:404 Responds with an error message when the username does not exist", async () => {
+
+    const { body } = await request(app)
+      .patch("/api/users/non_existent_user/password")
+      .send({ password: "onions789" })
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "User not found"
     })
   })
 })

@@ -8,15 +8,3 @@ export const verifyPermission = (base: string | number, target: string | number,
     })
   }
 }
-
-
-export const verifyResult = (bool: boolean, details: string): Promise<never> | undefined => {
-
-  if (bool) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details
-    })
-  }
-}
