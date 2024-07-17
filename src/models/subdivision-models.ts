@@ -1,6 +1,6 @@
 import QueryString from "qs"
 import { db } from "../db"
-import { getPlotOwnerId, validateSubdivisionType } from "../utils/db-query-utils"
+import { checkSubdivisionNameConflict, getPlotOwnerId, validateSubdivisionType } from "../utils/db-query-utils"
 import { verifyPermission } from "../utils/verification-utils"
 import { Subdivision } from "../types/subdivision-types"
 import format from "pg-format"
@@ -60,6 +60,8 @@ export const insertSubdivisionByPlotId = async (authUserId: number, plot_id: num
   owner_id = await getPlotOwnerId(subdivision.plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to create subdivision denied")
+
+  await checkSubdivisionNameConflict(plot_id, subdivision.name)
 
   const isValidSubdivisionType = await validateSubdivisionType(subdivision.type as string)
 
