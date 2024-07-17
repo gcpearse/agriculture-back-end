@@ -65,12 +65,9 @@ plotsRouter.route("/plots/:owner_id")
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                plots:
- *                  type: array
- *                  items:
- *                    $ref: "#/components/schemas/Plot"
+ *              type: array
+ *              items:
+ *                $ref: "#/components/schemas/Plot"
  *      403:
  *        description: Forbidden
  *        content:
