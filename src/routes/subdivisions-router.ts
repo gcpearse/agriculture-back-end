@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { getSubdivisionsByPlotId, postSubdivisionByPlotId } from "../controllers/subdivision-controllers"
+import { getSubdivisionBySubdivisionId, getSubdivisionsByPlotId, postSubdivisionByPlotId } from "../controllers/subdivision-controllers"
 
 
 export const subdivisionsRouter = Router()
@@ -193,3 +193,58 @@ subdivisionsRouter.route("/subdivisions/:plot_id")
  *                  example: "Subdivision name already exists"
  */
   .post(verifyToken, postSubdivisionByPlotId)
+
+
+subdivisionsRouter.route("/subdivisions/subdivision/:subdivision_id")
+
+
+/**
+ * @swagger
+ * /api/subdivisions/subdivision/{subdivision_id}:
+ *  get:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Retrieve a subdivision of a plot.
+ *    description: Responds with a subdivision object. If no subdivision is found, the server responds with an error. Permission is denied when the subdivision does not belong to the current user.
+ *    tags: [Subdivisions]
+ *    parameters:
+ *      - in: path
+ *        name: subdivision_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *    responses:
+ *      200:
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Subdivision"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Forbidden"
+ *                details:
+ *                  type: string
+ *                  example: "Permission to view subdivision data denied"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Not Found"
+ *                details:
+ *                  type: string
+ *                  example: "Subdivision not found"
+ */
+  .get(verifyToken, getSubdivisionBySubdivisionId)

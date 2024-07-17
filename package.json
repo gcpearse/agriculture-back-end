@@ -7,7 +7,14 @@
     "db-setup": "psql -f src/db/setup.sql",
     "seed": "tsc && node dist/db/seeding/run-seed.js",
     "start": "tsc && node dist/listen.js",
-    "test": "jest src/ --runInBand"
+    "test": "jest src/ --runInBand",
+    "test-auth": "jest src/__tests__/auth.test.ts",
+    "test-login": "jest src/__tests__/login.test.ts",
+    "test-plots": "jest src/__tests__/plots.test.ts",
+    "test-register": "jest src/__tests__/register.test.ts",
+    "test-subdivisions": "jest src/__tests__/subdivisions.test.ts",
+    "test-users": "jest src/__tests__/users.test.ts",
+    "test-utils": "jest src/__tests__/utils/"
   },
   "keywords": [],
   "author": "",
