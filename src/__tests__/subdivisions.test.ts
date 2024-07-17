@@ -101,3 +101,32 @@ describe("GET /api/subdivisions/:plot_id", () => {
     })
   })
 })
+
+
+describe("GET /api/subdivisions/:plot_id?type=", () => {
+
+  test("GET:200 Responds with an array of subdivision objects filtered by type", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/1?type=bed")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.subdivisions.every((subdivision: Subdivision) => {
+      return subdivision.type === "bed"
+    })).toBe(true)
+  })
+
+  test("GET:404 Responds with an error message when the query value is invalid", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/1?type=castle")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  })
+})
