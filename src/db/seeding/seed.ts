@@ -2,12 +2,12 @@ import { db } from ".."
 import format from "pg-format"
 import { User } from "../../types/user-types"
 import { Plot } from "../../types/plot-types"
+import { Subdivision } from "../../types/subdivision-types"
 import { Crop } from "../../types/crop-types"
 import { Issue } from "../../types/issue-types"
 import { Job } from "../../types/job-types"
 import { CropImage, IssueImage, JobImage, PlotImage } from "../../types/image-types"
-import { CropComment, IssueComment } from "../../types/comment-types"
-import { Subdivision } from "../../types/subdivision-types"
+import { CropNote, IssueNote } from "../../types/note-types"
 
 
 export const seed = async ({
@@ -18,10 +18,10 @@ export const seed = async ({
   subdivisionData,
   subdivisionTypeData,
   cropData,
-  cropCommentData,
+  cropNoteData,
   cropImageData,
   issueData,
-  issueCommentData,
+  issueNoteData,
   issueImageData,
   jobData,
   jobImageData
@@ -33,10 +33,10 @@ export const seed = async ({
   subdivisionData: Subdivision[],
   subdivisionTypeData: { type: string }[],
   cropData: Crop[],
-  cropCommentData: CropComment[],
+  cropNoteData: CropNote[],
   cropImageData: CropImage[],
   issueData: Issue[],
-  issueCommentData: IssueComment[],
+  issueNoteData: IssueNote[],
   issueImageData: IssueImage[],
   jobData: Job[],
   jobImageData: JobImage[]
@@ -55,7 +55,7 @@ export const seed = async ({
     `)
 
   await db.query(`
-    DROP TABLE IF EXISTS issue_comments;
+    DROP TABLE IF EXISTS issue_notes;
     `)
 
   await db.query(`
@@ -67,7 +67,7 @@ export const seed = async ({
     `)
 
   await db.query(`
-    DROP TABLE IF EXISTS crop_comments;
+    DROP TABLE IF EXISTS crop_notes;
     `)
 
   await db.query(`
@@ -176,8 +176,8 @@ export const seed = async ({
     `)
 
   await db.query(`
-    CREATE TABLE crop_comments (
-      comment_id SERIAL PRIMARY KEY,
+    CREATE TABLE crop_notes (
+      note_id SERIAL PRIMARY KEY,
       crop_id INT NOT NULL REFERENCES crops(crop_id) ON DELETE CASCADE,
       body TEXT NOT NULL,
       created_at TIMESTAMP DEFAULT NOW()
@@ -204,8 +204,8 @@ export const seed = async ({
     `)
 
   await db.query(`
-    CREATE TABLE issue_comments (
-      comment_id SERIAL PRIMARY KEY,
+    CREATE TABLE issue_notes (
+      note_id SERIAL PRIMARY KEY,
       issue_id INT NOT NULL REFERENCES issues(issue_id) ON DELETE CASCADE,
       body TEXT NOT NULL,
       created_at TIMESTAMP DEFAULT NOW()
@@ -301,11 +301,11 @@ export const seed = async ({
   ))
 
   await db.query(format(`
-    INSERT INTO crop_comments 
+    INSERT INTO crop_notes 
       (crop_id, body, created_at)
     VALUES %L;
     `,
-    cropCommentData.map(entry => Object.values(entry))
+    cropNoteData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`
@@ -325,11 +325,11 @@ export const seed = async ({
   ))
 
   await db.query(format(`
-    INSERT INTO issue_comments 
+    INSERT INTO issue_notes 
       (issue_id, body, created_at)
     VALUES %L;
     `,
-    issueCommentData.map(entry => Object.values(entry))
+    issueNoteData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`
