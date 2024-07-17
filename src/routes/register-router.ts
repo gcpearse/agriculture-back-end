@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { postRegistration } from "../controllers/auth-controllers"
+import { postRegistration } from "../controllers/register-controllers"
 
 
 export const registerRouter = Router()
