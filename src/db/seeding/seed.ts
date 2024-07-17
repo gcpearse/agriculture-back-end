@@ -222,8 +222,9 @@ export const seed = async ({
     CREATE TABLE jobs (
       job_id SERIAL PRIMARY KEY,
       plot_id INT NOT NULL REFERENCES plots(plot_id) ON DELETE CASCADE,
-      crop_id INT REFERENCES crops(crop_id),
-      issue_id INT REFERENCES issues(issue_id),
+      subdivision_id INT REFERENCES subdivisions(subdivision_id) ON DELETE CASCADE,
+      crop_id INT REFERENCES crops(crop_id) ON DELETE CASCADE,
+      issue_id INT REFERENCES issues(issue_id) ON DELETE CASCADE,
       title VARCHAR NOT NULL,
       description VARCHAR NOT NULL,
       date_added DATE DEFAULT NOW(),
@@ -339,7 +340,7 @@ export const seed = async ({
 
   await db.query(format(`
     INSERT INTO jobs 
-      (plot_id, crop_id, issue_id, title, description, date_added, deadline, is_started, is_completed)
+      (plot_id, subdivision_id, crop_id, issue_id, title, description, date_added, deadline, is_started, is_completed)
     VALUES %L;
     `,
     jobData.map(entry => Object.values(entry))
