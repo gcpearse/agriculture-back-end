@@ -52,7 +52,7 @@ describe("GET /api/plots/:owner_id", () => {
     })
   })
 
-  test("GET:200 Responds with an empty array when no plots are associated with the owner_id", async () => {
+  test("GET:200 Responds with an empty array when no plots are associated with the authenticated user", async () => {
 
     const auth = await request(app)
       .post("/api/login")
@@ -394,7 +394,7 @@ describe("GET /api/plots/plot/:plot_id", () => {
     })
   })
 
-  test("GET:403 Responds with a warning when the plot_id does not belong to the authenticated user", async () => {
+  test("GET:403 Responds with a warning when the plot does not belong to the authenticated user", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/plot/2")
@@ -407,7 +407,7 @@ describe("GET /api/plots/plot/:plot_id", () => {
     })
   })
 
-  test("GET:404 Responds with an error message when the plot_id does not exist", async () => {
+  test("GET:404 Responds with an error message when the plot does not exist", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/plot/999")
