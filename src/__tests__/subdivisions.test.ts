@@ -350,4 +350,26 @@ describe("POST /api/subdivisions/:plot_id", () => {
       details: "Plot not found"
     })
   })
+
+  test("POST:409 Responds with an error message when the subdivision name already exists for one of the given user's subdivisions of that plot", async () => {
+
+    const newSubdivision = {
+      plot_id: 1,
+      name: "Onion Bed",
+      type: "flowerbed",
+      description: "Foxgloves and bluebells",
+      area: 2
+    }
+
+    const { body } = await request(app)
+      .post("/api/subdivisions/1")
+      .send(newSubdivision)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(409)
+
+    expect(body).toMatchObject({
+      message: "Conflict",
+      details: "Subdivision name already exists"
+    })
+  })
 })
