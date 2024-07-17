@@ -303,6 +303,29 @@ describe("POST /api/plots/:owner_id", () => {
     })
   })
 
+  test("POST:403 Responds with a warning when the authenticated user attempts to create a plot for another user (forbidden owner_id on request body)", async () => {
+
+    const newPlot = {
+      owner_id: 2,
+      name: "John's Field",
+      type: "field",
+      description: "A large field",
+      location: "Wildwood",
+      area: 3000
+    }
+
+    const { body } = await request(app)
+      .post("/api/plots/1")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to create plot denied"
+    })
+  })
+
   test("POST:404 Responds with an error message when the owner_id does not exist", async () => {
 
     const newPlot = {

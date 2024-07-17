@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { getSubdivisionsByPlotId } from "../controllers/subdivision-controllers"
+import { getSubdivisionsByPlotId, postSubdivisionByPlotId } from "../controllers/subdivision-controllers"
 
 
 export const subdivisionsRouter = Router()
@@ -93,3 +93,103 @@ subdivisionsRouter.route("/subdivisions/:plot_id")
  *                  example: "No results found for that query"
  */
   .get(verifyToken, getSubdivisionsByPlotId)
+
+
+/**
+ * @swagger
+ * /api/subdivisions/{plot_id}:
+ *  post:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Create a new subdivision of a plot
+ *    description: Responds with a subdivision object. If the subdivision name already exists for the given plot, the server responds with an error. Permission is denied when the plot does not belong to the current user.
+ *    tags: [Subdivisions]
+ *    parameters:
+ *      - in: path
+ *        name: plot_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              plot_id:
+ *                type: integer
+ *                example: 1
+ *              name:
+ *                type: string
+ *                example: Root Vegetable Bed
+ *              type:
+ *                type: string
+ *                example: bed
+ *              description:
+ *                type: string
+ *                example: Carrots, beetroots, and parsnips
+ *              area:
+ *                type: integer
+ *                example: 10
+ *    responses:
+ *      200:
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Subdivision"
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Bad Request"
+ *                details:
+ *                  type: string
+ *                  example: "Invalid text representation"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Forbidden"
+ *                details:
+ *                  type: string
+ *                  example: "Permission to create subdivision denied"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Not Found"
+ *                details:
+ *                  type: string
+ *                  example: "Plot not found"
+ *      409:
+ *        description: Conflict
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Conflict"
+ *                details:
+ *                  type: string
+ *                  example: "Subdivision name already exists"
+ */
+  .post(verifyToken, postSubdivisionByPlotId)
