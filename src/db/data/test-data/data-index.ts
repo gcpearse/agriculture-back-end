@@ -2,6 +2,8 @@ import userData from "./users/users"
 import plotData from "./plots/plots"
 import plotImageData from "./plots/plot-images"
 import plotTypeData from "./plots/valid-plot-types"
+import subdivisionData from "./subdivisions/subdivisions"
+import subdivisionTypeData from "./subdivisions/valid-subdivision-types"
 import cropData from "./crops/crops"
 import cropCommentData from "./crops/crop-comments"
 import cropImageData from "./crops/crop-images"
@@ -17,6 +19,8 @@ export default {
   plotData,
   plotImageData,
   plotTypeData,
+  subdivisionData,
+  subdivisionTypeData,
   cropData,
   cropCommentData,
   cropImageData,
