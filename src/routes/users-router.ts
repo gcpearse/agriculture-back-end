@@ -71,6 +71,19 @@ usersRouter.route("/users/:username")
  *                details:
  *                  type: string
  *                  example: "Permission to view user data denied"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Not Found"
+ *                details:
+ *                  type: string
+ *                  example: "User not found"
  */
   .get(verifyToken, getUserByUsername)
 
@@ -141,6 +154,19 @@ usersRouter.route("/users/:username")
  *                details:
  *                  type: string
  *                  example: "Permission to edit user data denied"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Not Found"
+ *                details:
+ *                  type: string
+ *                  example: "User not found"
  *      409:
  *        description: Conflict
  *        content:
@@ -188,6 +214,19 @@ usersRouter.route("/users/:username")
  *                details:
  *                  type: string
  *                  example: "Permission to delete user data denied"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Not Found"
+ *                details:
+ *                  type: string
+ *                  example: "User not found"
  */
   .delete(verifyToken, deleteUserByUsername)
 
@@ -236,5 +275,18 @@ usersRouter.route("/users/:username")
  *                details:
  *                  type: string
  *                  example: "Permission to edit password denied"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Not Found"
+ *                details:
+ *                  type: string
+ *                  example: "User not found"
  */
 usersRouter.patch("/users/:username/password", verifyToken, patchPasswordByUsername)
