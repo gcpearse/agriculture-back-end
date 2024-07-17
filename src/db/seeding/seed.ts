@@ -16,6 +16,7 @@ export const seed = async ({
   plotImageData,
   plotTypeData,
   subdivisionData,
+  subdivisionTypeData,
   cropData,
   cropCommentData,
   cropImageData,
@@ -30,6 +31,7 @@ export const seed = async ({
   plotImageData: PlotImage[],
   plotTypeData: { type: string }[],
   subdivisionData: Subdivision[],
+  subdivisionTypeData: { type: string }[],
   cropData: Crop[],
   cropCommentData: CropComment[],
   cropImageData: CropImage[],
@@ -70,6 +72,10 @@ export const seed = async ({
 
   await db.query(`
     DROP TABLE IF EXISTS crops;
+    `)
+
+  await db.query(`
+    DROP TABLE IF EXISTS subdivision_types;
     `)
 
   await db.query(`
@@ -137,7 +143,7 @@ export const seed = async ({
       type VARCHAR NOT NULL
     );
     `)
-  
+
   await db.query(`
     CREATE TABLE subdivisions (
       subdivision_id SERIAL PRIMARY KEY,
@@ -146,6 +152,13 @@ export const seed = async ({
       type VARCHAR NOT NULL,
       description VARCHAR NOT NULL,
       area INT
+    );
+    `)
+
+  await db.query(`
+    CREATE TABLE subdivision_types (
+      subdivision_type_id SERIAL PRIMARY KEY,
+      type VARCHAR NOT NULL
     );
     `)
 
@@ -266,6 +279,14 @@ export const seed = async ({
     VALUES %L;
     `,
     subdivisionData.map(entry => Object.values(entry))
+  ))
+
+  await db.query(format(`
+    INSERT INTO subdivision_types 
+      (type)
+    VALUES %L;
+    `,
+    subdivisionTypeData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`
