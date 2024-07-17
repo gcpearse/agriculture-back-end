@@ -44,7 +44,7 @@ subdivisionsRouter.route("/subdivisions/:plot_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve subdivisions of a plot
- *    description: Responds with an array of subdivision objects. If no plots are found, the server responds with an error. Permission is denied when the plot does not belong to the current user.
+ *    description: Responds with an array of subdivision objects. If the query parameter is invalid or the plot_id does not exist, the server responds with an error. Permission is denied when the plot does not belong to the current user.
  *    tags: [Subdivisions]
  *    parameters:
  *      - in: path
@@ -52,6 +52,10 @@ subdivisionsRouter.route("/subdivisions/:plot_id")
  *        required: true
  *        schema:
  *          type: integer
+ *      - in: query
+ *        name: type
+ *        schema:
+ *          type: string
  *    responses:
  *      200:
  *        description: OK
@@ -86,6 +90,6 @@ subdivisionsRouter.route("/subdivisions/:plot_id")
  *                  example: "Not Found"
  *                details:
  *                  type: string
- *                  example: "Plot not found"
+ *                  example: "No results found for that query"
  */
   .get(verifyToken, getSubdivisionsByPlotId)

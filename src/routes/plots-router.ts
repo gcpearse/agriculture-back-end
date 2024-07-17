@@ -47,7 +47,7 @@ plotsRouter.route("/plots/:owner_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve a user's plots
- *    description: Responds with an array of plot objects. If no plots are found, the server responds with an error. Permission is denied when the current user's ID does not match the target owner_id.
+ *    description: Responds with an array of plot objects. If the query parameter is invalid or the owner_id does not exist, the server responds with an error. Permission is denied when the current user's ID does not match the target owner_id.
  *    tags: [Plots]
  *    parameters:
  *      - in: path
