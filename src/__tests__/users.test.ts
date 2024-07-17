@@ -179,13 +179,13 @@ describe("DELETE /api/users/:username", () => {
       .expect(204)
 
     const { body } = await request(app)
-      .get("/api/plots/carrot_king")
+      .get("/api/plots/1")
       .set("Authorization", `Bearer ${token}`)
-      .expect(403)
+      .expect(404)
 
     expect(body).toMatchObject({
-      message: "Forbidden",
-      details: "Permission to view plot data denied"
+      message: "Not Found",
+      details: "User not found"
     })
   })
 
