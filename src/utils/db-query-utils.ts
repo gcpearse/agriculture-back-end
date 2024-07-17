@@ -3,12 +3,29 @@ import { db } from "../db"
 
 export const searchForUserId = async (owner_id: number) => {
 
-  const userIds = await db.query(`
+  const result = await db.query(`
     SELECT user_id
     FROM users;
     `)
 
-  if (!userIds.rows.map(row => row.user_id).includes(owner_id)) {
+  if (!result.rows.map(row => row.user_id).includes(owner_id)) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+      details: "User not found"
+    })
+  }
+}
+
+
+export const searchForUsername = async (username: string) => {
+
+  const result = await db.query(`
+    SELECT username
+    FROM users;
+    `)
+
+  if (!result.rows.map(row => row.username).includes(username)) {
     return Promise.reject({
       status: 404,
       message: "Not Found",
