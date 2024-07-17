@@ -1,6 +1,6 @@
 import QueryString from "qs"
 import { db } from "../db"
-import { checkSubdivisionNameConflict, getPlotOwnerId, validateSubdivisionType } from "../utils/db-query-utils"
+import { checkSubdivisionNameConflict, getPlotOwnerId, getSubdivisionPlotId, validateSubdivisionType } from "../utils/db-query-utils"
 import { verifyPermission } from "../utils/verification-utils"
 import { Subdivision } from "../types/subdivision-types"
 import format from "pg-format"
@@ -43,7 +43,7 @@ export const selectSubdivisionsByPlotId = async (authUserId: number, plot_id: nu
 }
 
 
-export const insertSubdivisionByPlotId = async (authUserId: number, plot_id: number, subdivision: Subdivision) => {
+export const insertSubdivisionByPlotId = async (authUserId: number, plot_id: number, subdivision: Subdivision): Promise<Subdivision> => {
 
   if (isNaN(plot_id)) {
     return Promise.reject({
@@ -81,6 +81,32 @@ export const insertSubdivisionByPlotId = async (authUserId: number, plot_id: num
     RETURNING *;
     `,
     [subdivision.plot_id, subdivision.name, subdivision.type, subdivision.description, subdivision.area])
+
+  return result.rows[0]
+}
+
+
+export const selectSubdivisionBySubdivisionId = async (authUserId: number, subdivision_id: number): Promise<Subdivision> => {
+
+  if (isNaN(subdivision_id)) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+      details: "Subdivision not found"
+    })
+  }
+
+  const plotId = await getSubdivisionPlotId(subdivision_id)
+
+  const owner_id = await getPlotOwnerId(plotId)
+
+  await verifyPermission(authUserId, owner_id, "Permission to view subdivision data denied")
+
+  const result = await db.query(`
+    SELECT * FROM subdivisions
+    WHERE subdivision_id = $1;
+    `,
+    [subdivision_id])
 
   return result.rows[0]
 }
