@@ -419,6 +419,19 @@ describe("GET /api/plots/plot/:plot_id", () => {
       details: "Plot not found"
     })
   })
+
+  test("GET:404 Responds with an error message when the plot_id is not a number", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/plot/example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Plot not found"
+    })
+  })
 })
 
 
@@ -503,11 +516,11 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
   test("PATCH:400 Responds with an error when passed an invalid plot type", async () => {
 
     const newDetails = {
-      name: "John's Vegetable Patch",
+      name: "John's Homestead",
       type: "garage",
-      description: "A vegetable patch",
-      location: "123, Salsify Street, Farmville",
-      area: 10
+      description: "A homestead",
+      location: "Farmville",
+      area: 1200
     }
 
     const { body } = await request(app)
@@ -525,11 +538,11 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
   test("PATCH:403 Responds with a warning when the plot_id does not belong to the authenticated user", async () => {
 
     const newDetails = {
-      name: "John's Vegetable Patch",
-      type: "vegetable patch",
-      description: "A vegetable patch",
-      location: "123, Salsify Street, Farmville",
-      area: 10
+      name: "John's Homestead",
+      type: "homestead",
+      description: "A homestead",
+      location: "Farmville",
+      area: 1200
     }
 
     const { body } = await request(app)
@@ -547,11 +560,11 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
   test("PATCH:404 Responds with an error message when the plot_id does not exist", async () => {
 
     const newDetails = {
-      name: "John's Vegetable Patch",
-      type: "vegetable patch",
-      description: "A vegetable patch",
-      location: "123, Salsify Street, Farmville",
-      area: 10
+      name: "John's Homestead",
+      type: "homestead",
+      description: "A homestead",
+      location: "Farmville",
+      area: 1200
     }
 
     const { body } = await request(app)
@@ -566,14 +579,36 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
     })
   })
 
+  test("PATCH:404 Responds with an error message when the plot_id is not a number", async () => {
+
+    const newDetails = {
+      name: "John's Homestead",
+      type: "homestead",
+      description: "A homestead",
+      location: "Farmville",
+      area: 1200
+    }
+
+    const { body } = await request(app)
+      .patch("/api/plots/plot/example")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Plot not found"
+    })
+  })
+
   test("PATCH:409 Responds with an error message when the plot name already exists for one of the given user's other plots", async () => {
 
     const newDetails = {
       name: "John's Allotment",
-      type: "garden",
-      description: "A vegetable garden",
+      type: "homestead",
+      description: "A homestead",
       location: "Farmville",
-      area: 100
+      area: 1200
     }
 
     const { body } = await request(app)
