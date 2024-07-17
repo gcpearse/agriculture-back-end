@@ -1,4 +1,7 @@
-export default [
+import { CropComment } from "../../../../types/comment-types";
+
+
+export const cropCommentData: CropComment[] = [
   {
     crop_id: 1,
     body: "These will need more water in future.",

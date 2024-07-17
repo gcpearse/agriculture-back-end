@@ -1,4 +1,7 @@
-export default [
+import { IssueComment } from "../../../../types/comment-types";
+
+
+export const issueCommentData: IssueComment[] = [
   {
     issue_id: 1,
     body: "Ordered new hinges.",

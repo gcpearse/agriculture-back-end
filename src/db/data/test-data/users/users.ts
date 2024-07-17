@@ -1,7 +1,7 @@
-import { UnitSystem } from "../../../../types/user-types";
+import { UnitSystem, User } from "../../../../types/user-types";
 
 
-export default [
+export const userData: User[] = [
   {
     username: "carrot_king",
     password: "carrots123",

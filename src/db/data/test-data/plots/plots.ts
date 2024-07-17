@@ -1,4 +1,7 @@
-export default [
+import { Plot } from "../../../../types/plot-types";
+
+
+export const plotData = [
   {
     owner_id: 1,
     name: "John's Garden",
@@ -31,4 +34,4 @@ export default [
     location: "Farmville",
     area: 40
   }
-]
+] as Plot[]

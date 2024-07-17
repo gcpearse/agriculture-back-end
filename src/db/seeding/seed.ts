@@ -7,6 +7,7 @@ import { Issue } from "../../types/issue-types"
 import { Job } from "../../types/job-types"
 import { CropImage, IssueImage, JobImage, PlotImage } from "../../types/image-types"
 import { CropComment, IssueComment } from "../../types/comment-types"
+import { Subdivision } from "../../types/subdivision-types"
 
 
 export const seed = async ({
@@ -14,6 +15,8 @@ export const seed = async ({
   plotData,
   plotImageData,
   plotTypeData,
+  subdivisionData,
+  subdivisionTypeData,
   cropData,
   cropCommentData,
   cropImageData,
@@ -27,6 +30,8 @@ export const seed = async ({
   plotData: Plot[],
   plotImageData: PlotImage[],
   plotTypeData: { type: string }[],
+  subdivisionData: Subdivision[],
+  subdivisionTypeData: { type: string }[],
   cropData: Crop[],
   cropCommentData: CropComment[],
   cropImageData: CropImage[],
@@ -67,6 +72,14 @@ export const seed = async ({
 
   await db.query(`
     DROP TABLE IF EXISTS crops;
+    `)
+
+  await db.query(`
+    DROP TABLE IF EXISTS subdivision_types;
+    `)
+
+  await db.query(`
+    DROP TABLE IF EXISTS subdivisions;
     `)
 
   await db.query(`
@@ -132,9 +145,28 @@ export const seed = async ({
     `)
 
   await db.query(`
+    CREATE TABLE subdivisions (
+      subdivision_id SERIAL PRIMARY KEY,
+      plot_id INT NOT NULL REFERENCES plots(plot_id) ON DELETE CASCADE,
+      name VARCHAR NOT NULL,
+      type VARCHAR NOT NULL,
+      description VARCHAR NOT NULL,
+      area INT
+    );
+    `)
+
+  await db.query(`
+    CREATE TABLE subdivision_types (
+      subdivision_type_id SERIAL PRIMARY KEY,
+      type VARCHAR NOT NULL
+    );
+    `)
+
+  await db.query(`
     CREATE TABLE crops (
       crop_id SERIAL PRIMARY KEY,
       plot_id INT NOT NULL REFERENCES plots(plot_id) ON DELETE CASCADE,
+      subdivision_id INT REFERENCES subdivisions(subdivision_id) ON DELETE CASCADE,
       name VARCHAR NOT NULL,
       variety VARCHAR,
       quantity INT,
@@ -164,6 +196,7 @@ export const seed = async ({
     CREATE TABLE issues (
       issue_id SERIAL PRIMARY KEY,
       plot_id INT NOT NULL REFERENCES plots(plot_id) ON DELETE CASCADE,
+      subdivision_id INT REFERENCES subdivisions(subdivision_id) ON DELETE CASCADE,
       title VARCHAR NOT NULL,
       description VARCHAR NOT NULL,
       is_resolved BOOLEAN DEFAULT FALSE
@@ -191,8 +224,9 @@ export const seed = async ({
     CREATE TABLE jobs (
       job_id SERIAL PRIMARY KEY,
       plot_id INT NOT NULL REFERENCES plots(plot_id) ON DELETE CASCADE,
-      crop_id INT REFERENCES crops(crop_id),
-      issue_id INT REFERENCES issues(issue_id),
+      subdivision_id INT REFERENCES subdivisions(subdivision_id) ON DELETE CASCADE,
+      crop_id INT REFERENCES crops(crop_id) ON DELETE CASCADE,
+      issue_id INT REFERENCES issues(issue_id) ON DELETE CASCADE,
       title VARCHAR NOT NULL,
       description VARCHAR NOT NULL,
       date_added DATE DEFAULT NOW(),
@@ -243,8 +277,24 @@ export const seed = async ({
   ))
 
   await db.query(format(`
+    INSERT INTO subdivisions
+      (plot_id, name, type, description, area)
+    VALUES %L;
+    `,
+    subdivisionData.map(entry => Object.values(entry))
+  ))
+
+  await db.query(format(`
+    INSERT INTO subdivision_types 
+      (type)
+    VALUES %L;
+    `,
+    subdivisionTypeData.map(entry => Object.values(entry))
+  ))
+
+  await db.query(format(`
     INSERT INTO crops 
-      (plot_id, name, variety, quantity, date_planted, harvest_date)
+      (plot_id, subdivision_id, name, variety, quantity, date_planted, harvest_date)
     VALUES %L;
     `,
     cropData.map(entry => Object.values(entry))
@@ -268,7 +318,7 @@ export const seed = async ({
 
   await db.query(format(`
     INSERT INTO issues 
-      (plot_id, title, description, is_resolved)
+      (plot_id, subdivision_id, title, description, is_resolved)
     VALUES %L;
     `,
     issueData.map(entry => Object.values(entry))
@@ -292,7 +342,7 @@ export const seed = async ({
 
   await db.query(format(`
     INSERT INTO jobs 
-      (plot_id, crop_id, issue_id, title, description, date_added, deadline, is_started, is_completed)
+      (plot_id, subdivision_id, crop_id, issue_id, title, description, date_added, deadline, is_started, is_completed)
     VALUES %L;
     `,
     jobData.map(entry => Object.values(entry))

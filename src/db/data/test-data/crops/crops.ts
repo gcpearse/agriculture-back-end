@@ -1,6 +1,10 @@
-export default [
+import { Crop } from "../../../../types/crop-types";
+
+
+export const cropData: Crop[] = [
   {
     plot_id: 1,
+    subdivision_id: 1,
     name: "carrot",
     variety: null,
     quantity: 20,
@@ -9,6 +13,7 @@ export default [
   },
   {
     plot_id: 1,
+    subdivision_id: null,
     name: "apple",
     variety: "lord derby",
     quantity: 1,
@@ -17,6 +22,7 @@ export default [
   },
   {
     plot_id: 2,
+    subdivision_id: null,
     name: "peach",
     variety: null,
     quantity: 2,
@@ -25,6 +31,7 @@ export default [
   },
   {
     plot_id: 2,
+    subdivision_id: null,
     name: "blackcurrant",
     variety: null,
     quantity: null,
