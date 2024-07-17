@@ -1,4 +1,4 @@
-import { UnitSystem } from "../../../../types/user-types";
+import { UnitSystem, User } from "../../../../types/user-types";
 
 
 export default [
@@ -26,4 +26,4 @@ export default [
     surname: "Perez",
     unit_preference: UnitSystem.Metric
   }
-]
+] as User[]

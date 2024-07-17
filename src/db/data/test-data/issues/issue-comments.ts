@@ -1,3 +1,6 @@
+import { IssueComment } from "../../../../types/comment-types";
+
+
 export default [
   {
     issue_id: 1,
@@ -19,4 +22,4 @@ export default [
     body: "Spoke to the lumberjack about replacement posts.",
     created_at: "2024-07-12 09:33:12.232434"
   }
-]
+] as IssueComment[]

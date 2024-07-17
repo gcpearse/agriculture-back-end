@@ -14,4 +14,4 @@ export default [
   {
     type: "vegetable patch"
   }
-]
+] as { type: string }[]

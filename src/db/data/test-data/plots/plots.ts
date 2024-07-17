@@ -1,3 +1,6 @@
+import { Plot } from "../../../../types/plot-types";
+
+
 export default [
   {
     owner_id: 1,
@@ -31,4 +34,4 @@ export default [
     location: "Farmville",
     area: 40
   }
-]
+] as Plot[]

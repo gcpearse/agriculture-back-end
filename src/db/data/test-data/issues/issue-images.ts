@@ -1,3 +1,6 @@
+import { IssueImage } from "../../../../types/image-types";
+
+
 export default [
   {
     issue_id: 1,
@@ -11,4 +14,4 @@ export default [
     issue_id: 3,
     image_url: "https://images.pexels.com/photos/168292/pexels-photo-168292.jpeg?auto=compress&cs=tinysrgb&w=800"
   }
-]
+] as IssueImage[]

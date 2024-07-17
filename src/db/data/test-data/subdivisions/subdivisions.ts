@@ -1,3 +1,6 @@
+import { Subdivision } from "../../../../types/subdivision-types";
+
+
 export default [
   {
     plot_id: 1,
@@ -27,4 +30,4 @@ export default [
     description: "Bramley and Lord Derby apple trees",
     area: 20
   }
-]
+] as Subdivision[]

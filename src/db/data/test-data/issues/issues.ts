@@ -1,3 +1,6 @@
+import { Issue } from "../../../../types/issue-types";
+
+
 export default [
   {
     plot_id: 1,
@@ -17,4 +20,4 @@ export default [
     description: "Some of the fence posts are rotting and need replacing",
     is_resolved: false
   }
-]
+] as Issue[]

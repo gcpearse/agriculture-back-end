@@ -1,3 +1,6 @@
+import { Job } from "../../../../types/job-types";
+
+
 export default [
   {
     plot_id: 1,
@@ -47,4 +50,4 @@ export default [
     is_started: true,
     is_completed: true
   },
-]
+] as Job[]

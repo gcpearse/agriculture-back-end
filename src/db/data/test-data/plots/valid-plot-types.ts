@@ -14,4 +14,4 @@ export default [
   {
     type: "orchard"
   }
-]
+] as { type: string }[]

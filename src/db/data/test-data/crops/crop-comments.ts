@@ -1,3 +1,6 @@
+import { CropComment } from "../../../../types/comment-types";
+
+
 export default [
   {
     crop_id: 1,
@@ -19,4 +22,4 @@ export default [
     body: "Too many for one person to harvest.",
     created_at: "2024-07-12 09:33:12.232434"
   }
-]
+] as CropComment[]
