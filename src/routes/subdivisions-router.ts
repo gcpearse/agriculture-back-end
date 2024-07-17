@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { getSubdivisionsByPlotId } from "../controllers/subdivision-controllers"
+import { getSubdivisionsByPlotId, postSubdivisionByPlotId } from "../controllers/subdivision-controllers"
 
 
 export const subdivisionsRouter = Router()
@@ -93,3 +93,22 @@ subdivisionsRouter.route("/subdivisions/:plot_id")
  *                  example: "No results found for that query"
  */
   .get(verifyToken, getSubdivisionsByPlotId)
+
+
+/**
+ * @swagger
+ * /api/subdivisions/{plot_id}:
+ *  post:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Create a new subdivision of a plot
+ *    description: Responds with a subdivision object. Permission is denied when the plot does not belong to the current user.
+ *    tags: [Subdivisions]
+ *    parameters:
+ *      - in: path
+ *        name: plot_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ */
+  .post(verifyToken, postSubdivisionByPlotId)
