@@ -84,10 +84,9 @@ export const selectPlotByPlotId = async (authUserId: number, plot_id: number): P
 
   const result = await db.query(`
     SELECT * FROM plots
-    WHERE plot_id = $1
-    AND owner_id = $2;
+    WHERE plot_id = $1;
     `,
-    [plot_id, owner_id])
+    [plot_id])
 
   return result.rows[0]
 }
