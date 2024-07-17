@@ -82,6 +82,32 @@ describe("GET /api/plots/:owner_id", () => {
       details: "Permission to view plot data denied"
     })
   })
+
+  test("GET:404 Responds with an error message when the owner_id does not exist", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/999")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "User not found"
+    })
+  })
+
+  test("GET:404 Responds with an error message when the owner_id is not a number", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/plot")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "User not found"
+    })
+  })
 })
 
 
@@ -252,7 +278,7 @@ describe("POST /api/plots/:owner_id", () => {
     })
   })
 
-  test("POST:403 Responds with a warning when the authenticated user's user_id does not match owner_id", async () => {
+  test("POST:403 Responds with a warning when the authenticated user attempts to create a plot for another user", async () => {
 
     const newPlot = {
       owner_id: 1,
@@ -272,6 +298,29 @@ describe("POST /api/plots/:owner_id", () => {
     expect(body).toMatchObject({
       message: "Forbidden",
       details: "Permission to create plot denied"
+    })
+  })
+
+  test("POST:404 Responds with an error message when the owner_id does not exist", async () => {
+
+    const newPlot = {
+      owner_id: 1,
+      name: "John's Field",
+      type: "field",
+      description: "A large field",
+      location: "Wildwood",
+      area: 3000
+    }
+
+    const { body } = await request(app)
+      .post("/api/plots/999")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "User not found"
     })
   })
 
@@ -546,6 +595,32 @@ describe("DELETE /api/plots/plot/:plot_id", () => {
     expect(body).toMatchObject({
       message: "Forbidden",
       details: "Permission to delete plot data denied"
+    })
+  })
+
+  test("DELETE:404 Responds with an error message when the plot_id does not exist", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/plots/plot/999")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Plot not found"
+    })
+  })
+
+  test("DELETE:404 Responds with an error message when the plot_id is not a number", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/plots/plot/example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Plot not found"
     })
   })
 })
