@@ -1,7 +1,7 @@
-import { IssueComment } from "../../../../types/comment-types";
+import { IssueNote } from "../../../../types/note-types";
 
 
-export const issueCommentData: IssueComment[] = [
+export const issueNoteData: IssueNote[] = [
   {
     issue_id: 1,
     body: "Ordered new hinges.",

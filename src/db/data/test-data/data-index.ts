@@ -5,10 +5,10 @@ import { plotTypeData } from "./plots/valid-plot-types"
 import { subdivisionData } from "./subdivisions/subdivisions"
 import { subdivisionTypeData } from "./subdivisions/valid-subdivision-types"
 import { cropData } from "./crops/crops"
-import { cropCommentData } from "./crops/crop-comments"
+import { cropNoteData } from "./crops/crop-notes"
 import { cropImageData } from "./crops/crop-images"
 import { issueData } from "./issues/issues"
-import { issueCommentData } from "./issues/issue-comments"
+import { issueNoteData } from "./issues/issue-notes"
 import { issueImageData } from "./issues/issue-images"
 import { jobData } from "./jobs/jobs"
 import { jobImageData } from "./jobs/job-images"
@@ -22,10 +22,10 @@ export default {
   subdivisionData,
   subdivisionTypeData,
   cropData,
-  cropCommentData,
+  cropNoteData,
   cropImageData,
   issueData,
-  issueCommentData,
+  issueNoteData,
   issueImageData,
   jobData,
   jobImageData

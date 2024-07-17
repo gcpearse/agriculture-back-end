@@ -1,7 +1,7 @@
-import { CropComment } from "../../../../types/comment-types";
+import { CropNote } from "../../../../types/note-types";
 
 
-export const cropCommentData: CropComment[] = [
+export const cropNoteData: CropNote[] = [
   {
     crop_id: 1,
     body: "These will need more water in future.",
