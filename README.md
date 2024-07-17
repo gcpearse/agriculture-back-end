@@ -58,7 +58,7 @@ Add the following environment variables to each file:
 `PGDATABASE=` followed by the relevant database name.\
 `JWT_SECRET=` followed by a JWT secret key.
 
-A random string can be generated to serve as a JWT secret key with the following JavaScript code:
+> A random string can be generated to serve as a JWT secret key with the following JavaScript code:
 
 ```js
 console.log(require("crypto").randomBytes(64).toString("hex"))
@@ -77,6 +77,7 @@ Under **Repository secrets**, select **New repository secret**.
 In the **Name** field, enter `JWT_SECRET`.
 
 In the **Secret** field, enter a JWT secret key.
+> See the previous section for JavaScript code to generate a random string.
 
 ## Scripts
 
@@ -91,14 +92,14 @@ The following scripts are included in the `package.json` file:
 }
 ```
 
-`npm run db-setup`\
+`npm run db-setup`
 > Drops and creates the test and development databases.
 
-`npm run seed`\
+`npm run seed`
 > Runs the TypeScript compiler and seeds the databases.
 
-`npm run start`\
+`npm run start`
 > Runs the TypeScript compiler and starts the server locally on port 9090.
 
-`npm t`\
+`npm t`
 > Runs all tests in the `src` directory serially.
