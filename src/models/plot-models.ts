@@ -41,6 +41,8 @@ export const insertPlotByOwner = async (authUserId: number, owner_id: number, pl
 
   await verifyPermission(authUserId, owner_id, "Permission to create plot denied")
 
+  await verifyPermission(authUserId, plot.owner_id, "Permission to create plot denied")
+
   await checkPlotNameConflict(owner_id, plot.name)
 
   const isValidPlotType = await validatePlotType(plot.type as string)
