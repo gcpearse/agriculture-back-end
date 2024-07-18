@@ -102,7 +102,7 @@ subdivisionsRouter.route("/subdivisions/:plot_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Create a new subdivision of a plot
- *    description: Responds with a subdivision object. If the subdivision name already exists for the given plot, the server responds with an error. Permission is denied when the plot does not belong to the current user.
+ *    description: Responds with a new subdivision object. If the subdivision name already exists for the given plot or the plot_id does not exist, the server responds with an error. Permission is denied when the plot does not belong to the current user.
  *    tags: [Subdivisions]
  *    parameters:
  *      - in: path
@@ -257,7 +257,7 @@ subdivisionsRouter.route("/subdivisions/subdivision/:subdivision_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Update a subdivision of a plot
- *    description: Responds with a subdivision object. If the subdivision name already exists for another subdivision of a plot, the server responds with an error. Permission is denied when the subdivision does not belong to the current user.
+ *    description: Responds with an updated subdivision object. If the subdivision name already exists for another subdivision of a plot or the subdivision_id does not exist, the server responds with an error. Permission is denied when the subdivision does not belong to the current user.
  *    tags: [Subdivisions]
  *    parameters:
  *      - in: path
@@ -354,7 +354,7 @@ subdivisionsRouter.route("/subdivisions/subdivision/:subdivision_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Delete a subdivision of a plot from the database
- *    description: Removes the plot subdivision and all associated data from the database. Permission is denied when the subdivision does not belong to the current user.
+ *    description: Removes the plot subdivision and all associated data from the database. If the subdivision_id does not exist, the server responds with an error Permission is denied when the subdivision does not belong to the current user.
  *    tags: [Subdivisions]
  *    parameters:
  *      - in: path

@@ -10,7 +10,7 @@ export const registerRouter = Router()
  * /api/register:
  *  post:
  *    summary: Register a new user
- *    description: Responds with a new user object without revealing the password property. If the username or email already exists, the server responds with a 409 Conflict error.
+ *    description: Responds with a new user object without revealing the password property. If the username or email already exists, the server responds with an error.
  *    tags: [Register]
  *    requestBody:
  *      required: true
