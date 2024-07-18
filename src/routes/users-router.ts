@@ -179,6 +179,12 @@ usersRouter.route("/users/:username")
  *          application/json:
  *            schema:
  *              $ref: "#/components/schemas/User"
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/BadRequest"
  *      401:
  *        description: Unauthorized
  *        content:
