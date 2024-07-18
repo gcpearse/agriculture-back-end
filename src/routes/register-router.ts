@@ -71,10 +71,10 @@ export const registerRouter = Router()
  *              properties:
  *                message:
  *                  type: string
- *                  example: "Bad Request"
+ *                  example: Bad Request
  *                details:
  *                  type: string
- *                  example: "Not null violation"
+ *                  example: Not null violation
  *      409:
  *        description: Conflict
  *        content:
@@ -84,9 +84,9 @@ export const registerRouter = Router()
  *              properties:
  *                message:
  *                  type: string
- *                  example: "Conflict"
+ *                  example: Conflict
  *                details:
  *                  type: string
- *                  example: "Username already exists"
+ *                  example: Username already exists
  */
 registerRouter.post("/register", postRegistration)
