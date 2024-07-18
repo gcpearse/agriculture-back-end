@@ -179,6 +179,12 @@ usersRouter.route("/users/:username")
  *          application/json:
  *            schema:
  *              $ref: "#/components/schemas/User"
+ *      401:
+ *        description: Unauthorized
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Unauthorized"
  *      403:
  *        description: Forbidden
  *        content:
