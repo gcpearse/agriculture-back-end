@@ -48,7 +48,7 @@ This project was developed using the following versions:
 
 ### Environment variables
 
-Create the following `.env` files in the root directory.
+Create the following `.env` files in the root directory:
 
 `.env.test`\
 `.env.development`
@@ -61,7 +61,7 @@ Add the following environment variables to `.env.test`:
 Add the following environment variables to `.env.development`:
 
 `PGDATABASE=` followed by the name of the development database.\
-`JWT_SECRET=` followed by a JWT secret key.
+`JWT_SECRET=` followed by a JWT secret key.\
 `ADMIN_PASSWORD=` followed by an admin password.
 
 > A random string can be generated to serve as a JWT secret key with the following JavaScript code:
@@ -73,6 +73,8 @@ console.log(require("crypto").randomBytes(64).toString("hex"))
 ### Continuous integration workflow
 
 The `test.yml` YAML file in `.github/workflows` requires a repository secret to run the **Run tests** workflow.
+
+> A repository secret can be added by following these steps:
 
 On GitHub, select the repository and go to **Settings**.
 
