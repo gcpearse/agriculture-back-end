@@ -62,6 +62,19 @@ describe("GET /api/subdivisions/:plot_id", () => {
     expect(body.subdivisions).toHaveLength(0)
   })
 
+  test("GET:400 Responds with an error message when the plot_id is not a number", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
   test("GET:403 Responds with a warning when the authenticated user attempts to retrieve another user's subdivision data", async () => {
 
     const { body } = await request(app)
@@ -79,19 +92,6 @@ describe("GET /api/subdivisions/:plot_id", () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/999")
-      .set("Authorization", `Bearer ${token}`)
-      .expect(404)
-
-    expect(body).toMatchObject({
-      message: "Not Found",
-      details: "Plot not found"
-    })
-  })
-
-  test("GET:404 Responds with an error message when the plot_id is not a number", async () => {
-
-    const { body } = await request(app)
-      .get("/api/subdivisions/example")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -299,6 +299,28 @@ describe("POST /api/subdivisions/:plot_id", () => {
     })
   })
 
+  test("POST:400 Responds with an error message when the plot_id is not a number", async () => {
+
+    const newSubdivision = {
+      plot_id: 1,
+      name: "Wildflowers",
+      type: "flowerbed",
+      description: "Foxgloves and bluebells",
+      area: 2
+    }
+
+    const { body } = await request(app)
+      .post("/api/subdivisions/example")
+      .send(newSubdivision)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
   test("POST:403 Responds with a warning when the authenticated user attempts to create a subdivision for another user", async () => {
 
     const newSubdivision = {
@@ -365,28 +387,6 @@ describe("POST /api/subdivisions/:plot_id", () => {
     })
   })
 
-  test("POST:404 Responds with an error message when the plot_id is not a number", async () => {
-
-    const newSubdivision = {
-      plot_id: 1,
-      name: "Wildflowers",
-      type: "flowerbed",
-      description: "Foxgloves and bluebells",
-      area: 2
-    }
-
-    const { body } = await request(app)
-      .post("/api/subdivisions/example")
-      .send(newSubdivision)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(404)
-
-    expect(body).toMatchObject({
-      message: "Not Found",
-      details: "Plot not found"
-    })
-  })
-
   test("POST:409 Responds with an error message when the subdivision name already exists for one of the given user's subdivisions of that plot", async () => {
 
     const newSubdivision = {
@@ -430,6 +430,19 @@ describe("GET /api/subdivisions/subdivision/:subdivision_id", () => {
     })
   })
 
+  test("GET:400 Responds with an error message when the subdivision is not a number", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/subdivision/example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
   test("GET:403 Responds with a warning when the subdivision does not belong to the authenticated user", async () => {
 
     const { body } = await request(app)
@@ -447,19 +460,6 @@ describe("GET /api/subdivisions/subdivision/:subdivision_id", () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/subdivision/999")
-      .set("Authorization", `Bearer ${token}`)
-      .expect(404)
-
-    expect(body).toMatchObject({
-      message: "Not Found",
-      details: "Subdivision not found"
-    })
-  })
-
-  test("GET:404 Responds with an error message when the subdivision is not a number", async () => {
-
-    const { body } = await request(app)
-      .get("/api/subdivisions/subdivision/example")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -565,6 +565,27 @@ describe("PATCH /api/subdivisions/subdivision/:subdivision_id", () => {
     })
   })
 
+  test("PATCH:400 Responds with an error message when the subdivision_id is not a number", async () => {
+
+    const newDetails = {
+      name: "Root Vegetable Patch",
+      type: "vegetable patch",
+      description: "Turnips and radishes",
+      area: 20
+    }
+
+    const { body } = await request(app)
+      .patch("/api/subdivisions/subdivision/example")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
   test("PATCH:403 Responds with a warning when the plot_id does not belong to the authenticated user", async () => {
 
     const newDetails = {
@@ -597,27 +618,6 @@ describe("PATCH /api/subdivisions/subdivision/:subdivision_id", () => {
 
     const { body } = await request(app)
       .patch("/api/subdivisions/subdivision/999")
-      .send(newDetails)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(404)
-
-    expect(body).toMatchObject({
-      message: "Not Found",
-      details: "Subdivision not found"
-    })
-  })
-
-  test("PATCH:404 Responds with an error message when the subdivision_id is not a number", async () => {
-
-    const newDetails = {
-      name: "Root Vegetable Patch",
-      type: "vegetable patch",
-      description: "Turnips and radishes",
-      area: 20
-    }
-
-    const { body } = await request(app)
-      .patch("/api/subdivisions/subdivision/example")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
@@ -671,6 +671,19 @@ describe("DELETE /api/subdivisions/subdivision/:subdivision_id", () => {
     })
   })
 
+  test("DELETE:400 Responds with an error message when the subdivision_id is not a number", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/subdivisions/subdivision/example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
   test("DELETE:403 esponds with a warning when the authenticated user attempts to delete another user's subdivision", async () => {
 
     const { body } = await request(app)
@@ -688,19 +701,6 @@ describe("DELETE /api/subdivisions/subdivision/:subdivision_id", () => {
 
     const { body } = await request(app)
       .delete("/api/subdivisions/subdivision/999")
-      .set("Authorization", `Bearer ${token}`)
-      .expect(404)
-
-    expect(body).toMatchObject({
-      message: "Not Found",
-      details: "Subdivision not found"
-    })
-  })
-
-  test("DELETE:404 Responds with an error message when the subdivision_id is not a number", async () => {
-
-    const { body } = await request(app)
-      .delete("/api/subdivisions/subdivision/example")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 

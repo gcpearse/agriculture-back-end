@@ -8,7 +8,7 @@ import format from "pg-format"
 
 export const selectSubdivisionsByPlotId = async (authUserId: number, plot_id: number, { type }: QueryString.ParsedQs): Promise<Subdivision[]> => {
 
-  await verifyParamIsNumber(plot_id, "Plot not found")
+  await verifyParamIsNumber(plot_id)
 
   const owner_id = await getPlotOwnerId(plot_id)
 
@@ -39,7 +39,7 @@ export const selectSubdivisionsByPlotId = async (authUserId: number, plot_id: nu
 
 export const insertSubdivisionByPlotId = async (authUserId: number, plot_id: number, subdivision: Subdivision): Promise<Subdivision> => {
 
-  await verifyParamIsNumber(plot_id, "Plot not found")
+  await verifyParamIsNumber(plot_id)
 
   let owner_id = await getPlotOwnerId(plot_id)
 
@@ -76,7 +76,7 @@ export const insertSubdivisionByPlotId = async (authUserId: number, plot_id: num
 
 export const selectSubdivisionBySubdivisionId = async (authUserId: number, subdivision_id: number): Promise<Subdivision> => {
 
-  await verifyParamIsNumber(subdivision_id, "Subdivision not found")
+  await verifyParamIsNumber(subdivision_id)
 
   const plotId = await getSubdivisionPlotId(subdivision_id)
 
@@ -96,7 +96,7 @@ export const selectSubdivisionBySubdivisionId = async (authUserId: number, subdi
 
 export const updateSubdivisionBySubdivisionId = async (authUserId: number, subdivision_id: number, subdivision: Subdivision): Promise<Subdivision> => {
 
-  await verifyParamIsNumber(subdivision_id, "Subdivision not found")
+  await verifyParamIsNumber(subdivision_id)
 
   const plotId = await getSubdivisionPlotId(subdivision_id)
 
@@ -143,7 +143,7 @@ export const updateSubdivisionBySubdivisionId = async (authUserId: number, subdi
 
 export const removeSubdivisionBySubdivisionId = async (authUserId: number, subdivision_id: number): Promise<void> => {
 
-  await verifyParamIsNumber(subdivision_id, "Subdivision not found")
+  await verifyParamIsNumber(subdivision_id)
 
   const plotId = await getSubdivisionPlotId(subdivision_id)
 
