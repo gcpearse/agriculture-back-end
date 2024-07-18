@@ -257,14 +257,14 @@ describe("PATCH /api/users/:username/password", () => {
 
   test("PATCH:200 Responds with a status object confirming success", async () => {
 
-    const passwordReset = {
+    const passwordUpdate = {
       oldPassword: "carrots123",
       newPassword: "onions789"
     }
 
     const { body } = await request(app)
       .patch("/api/users/carrot_king/password")
-      .send(passwordReset)
+      .send(passwordUpdate)
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -275,13 +275,13 @@ describe("PATCH /api/users/:username/password", () => {
 
   test("PATCH:400 Responds with an error when a property is missing from the request body", async () => {
 
-    const passwordReset = {
+    const passwordUpdate = {
       oldPassword: "carrots123"
     }
 
     const { body } = await request(app)
       .patch("/api/users/carrot_king/password")
-      .send(passwordReset)
+      .send(passwordUpdate)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -293,14 +293,14 @@ describe("PATCH /api/users/:username/password", () => {
 
   test("PATCH:401 Responds with an error when the old password does not match the current password", async () => {
 
-    const passwordReset = {
+    const passwordUpdate = {
       oldPassword: "apples567",
       newPassword: "onions789"
     }
 
     const { body } = await request(app)
       .patch("/api/users/carrot_king/password")
-      .send(passwordReset)
+      .send(passwordUpdate)
       .set("Authorization", `Bearer ${token}`)
       .expect(401)
 
@@ -312,14 +312,14 @@ describe("PATCH /api/users/:username/password", () => {
 
   test("PATCH:403 Responds with a warning when the authenticated user attempts to change another user's password", async () => {
 
-    const passwordReset = {
+    const passwordUpdate = {
       oldPassword: "peaches123",
       newPassword: "onions789"
     }
 
     const { body } = await request(app)
       .patch("/api/users/peach_princess/password")
-      .send(passwordReset)
+      .send(passwordUpdate)
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
@@ -331,14 +331,14 @@ describe("PATCH /api/users/:username/password", () => {
 
   test("PATCH:404 Responds with an error message when the username does not exist", async () => {
 
-    const passwordReset = {
+    const passwordUpdate = {
       oldPassword: "carrots123",
       newPassword: "onions789"
     }
 
     const { body } = await request(app)
       .patch("/api/users/non_existent_user/password")
-      .send(passwordReset)
+      .send(passwordUpdate)
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
