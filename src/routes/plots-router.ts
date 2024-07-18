@@ -105,7 +105,7 @@ plotsRouter.route("/plots/:owner_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Create a new plot
- *    description: Responds with a plot object. If the plot name already exists for the current user, the server responds with an error. Permission is denied when the current user's ID does not match the target owner_id.
+ *    description: Responds with a new plot object. If the plot name already exists for the current user or the owner_id does not exist, the server responds with an error. Permission is denied when the current user's ID does not match the target owner_id.
  *    tags: [Plots]
  *    parameters:
  *      - in: path
@@ -263,7 +263,7 @@ plotsRouter.route("/plots/plot/:plot_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Update a user's plot
- *    description: Responds with a plot object. If the plot name already exists for one of the current user's other plots, the server responds with an error. Permission is denied when the plot does not belong to the current user.
+ *    description: Responds with an updated plot object. If the plot name already exists for one of the current user's other plots or the plot_id does not exist, the server responds with an error. Permission is denied when the plot does not belong to the current user.
  *    tags: [Plots]
  *    parameters:
  *      - in: path
@@ -363,7 +363,7 @@ plotsRouter.route("/plots/plot/:plot_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Delete a plot from the database
- *    description: Removes the plot and all associated data from the database. Permission is denied when the plot does not belong to the current user.
+ *    description: Removes the plot and all associated data from the database. If the plot_id does not exist, the server responds with an error. Permission is denied when the plot does not belong to the current user.
  *    tags: [Plots]
  *    parameters:
  *      - in: path

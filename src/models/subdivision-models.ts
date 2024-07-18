@@ -139,3 +139,22 @@ export const updateSubdivisionBySubdivisionId = async (authUserId: number, subdi
 
   return result.rows[0]
 }
+
+
+export const removeSubdivisionBySubdivisionId = async (authUserId: number, subdivision_id: number): Promise<void> => {
+
+  await verifyQueryParamIsNumber(subdivision_id, "Subdivision not found")
+
+  const plotId = await getSubdivisionPlotId(subdivision_id)
+
+  const owner_id = await getPlotOwnerId(plotId)
+
+  await verifyPermission(authUserId, owner_id, "Permission to delete subdivision data denied")
+
+  await db.query(`
+    DELETE FROM subdivisions
+    WHERE subdivision_id = $1
+    RETURNING *;
+    `,
+    [subdivision_id])
+}

@@ -75,7 +75,7 @@ describe("GET /api/subdivisions/:plot_id", () => {
     })
   })
 
-  test("GET:Responds with an error message when the plot_id does not exist", async () => {
+  test("GET:404 Responds with an error message when the plot_id does not exist", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/999")
@@ -88,10 +88,46 @@ describe("GET /api/subdivisions/:plot_id", () => {
     })
   })
 
-  test("GET:Responds with an error message when the plot_id is not a number", async () => {
+  test("GET:404 Responds with an error message when the plot_id is not a number", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Plot not found"
+    })
+  })
+
+  test("GET:404 When the parent plot is deleted, all child subdivisions are also deleted", async () => {
+
+    await request(app)
+      .delete("/api/plots/plot/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(204)
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Plot not found"
+    })
+  })
+
+  test("GET:404 When the parent user is deleted, all child subdivisions are also deleted", async () => {
+
+    await request(app)
+      .delete("/api/users/carrot_king")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(204)
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -610,6 +646,67 @@ describe("PATCH /api/subdivisions/subdivision/:subdivision_id", () => {
     expect(body).toMatchObject({
       message: "Conflict",
       details: "Subdivision name already exists"
+    })
+  })
+})
+
+
+describe("DELETE /api/subdivisions/subdivision/:subdivision_id", () => {
+
+  test("DELETE:204 Deletes the subdivision with the given subdivision_id", async () => {
+
+    await request(app)
+      .delete("/api/subdivisions/subdivision/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(204)
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/subdivision/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Subdivision not found"
+    })
+  })
+
+  test("DELETE:403 esponds with a warning when the authenticated user attempts to delete another user's subdivision", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/subdivisions/subdivision/4")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to delete subdivision data denied"
+    })
+  })
+
+  test("DELETE:404 Responds with an error message when the subdivision does not exist", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/subdivisions/subdivision/999")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Subdivision not found"
+    })
+  })
+
+  test("DELETE:404 Responds with an error message when the subdivision_id is not a number", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/subdivisions/subdivision/example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Subdivision not found"
     })
   })
 })

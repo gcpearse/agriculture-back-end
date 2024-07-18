@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { getSubdivisionBySubdivisionId, getSubdivisionsByPlotId, patchSubdivisionBySubdivisionId, postSubdivisionByPlotId } from "../controllers/subdivision-controllers"
+import { deleteSubdivisionBySubdivisionId, getSubdivisionBySubdivisionId, getSubdivisionsByPlotId, patchSubdivisionBySubdivisionId, postSubdivisionByPlotId } from "../controllers/subdivision-controllers"
 
 
 export const subdivisionsRouter = Router()
@@ -102,7 +102,7 @@ subdivisionsRouter.route("/subdivisions/:plot_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Create a new subdivision of a plot
- *    description: Responds with a subdivision object. If the subdivision name already exists for the given plot, the server responds with an error. Permission is denied when the plot does not belong to the current user.
+ *    description: Responds with a new subdivision object. If the subdivision name already exists for the given plot or the plot_id does not exist, the server responds with an error. Permission is denied when the plot does not belong to the current user.
  *    tags: [Subdivisions]
  *    parameters:
  *      - in: path
@@ -257,7 +257,7 @@ subdivisionsRouter.route("/subdivisions/subdivision/:subdivision_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Update a subdivision of a plot
- *    description: Responds with a subdivision object. If the subdivision name already exists for another subdivision of a plot, the server responds with an error. Permission is denied when the subdivision does not belong to the current user.
+ *    description: Responds with an updated subdivision object. If the subdivision name already exists for another subdivision of a plot or the subdivision_id does not exist, the server responds with an error. Permission is denied when the subdivision does not belong to the current user.
  *    tags: [Subdivisions]
  *    parameters:
  *      - in: path
@@ -345,3 +345,51 @@ subdivisionsRouter.route("/subdivisions/subdivision/:subdivision_id")
  *                  example: "Subdivision name already exists"
  */
   .patch(verifyToken, patchSubdivisionBySubdivisionId)
+
+
+/**
+ * @swagger
+ * /api/subdivisions/subdivision/{subdivision_id}:
+ *  delete:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Delete a subdivision of a plot from the database
+ *    description: Removes the plot subdivision and all associated data from the database. If the subdivision_id does not exist, the server responds with an error Permission is denied when the subdivision does not belong to the current user.
+ *    tags: [Subdivisions]
+ *    parameters:
+ *      - in: path
+ *        name: subdivision_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *    responses:
+ *      204:
+ *        description: No Content
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Forbidden"
+ *                details:
+ *                  type: string
+ *                  example: "Permission to delete subdivision data denied"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Not Found"
+ *                details:
+ *                  type: string
+ *                  example: "Subdivision not found"
+ */
+  .delete(verifyToken, deleteSubdivisionBySubdivisionId)

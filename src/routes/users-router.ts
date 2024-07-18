@@ -43,7 +43,7 @@ usersRouter.route("/users/:username")
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve a user's details
- *    description: Responds with a user object. Permission is denied when the current user's username does not match the target username.
+ *    description: Responds with a user object. If no user is found, the server responds with an error. Permission is denied when the username does not belong to the current user.
  *    tags: [Users]
  *    parameters:
  *      - name: username
@@ -94,7 +94,7 @@ usersRouter.route("/users/:username")
  *    security:
  *      - bearerAuth: []
  *    summary: Update a user's details
- *    description: Responds with an updated user object. The server will respond with an error if the value of unit_preference is not a valid enum value, or if the email already exists for another user. Permission is denied when the current user's username does not match the target username. 
+ *    description: Responds with an updated user object. If the value of unit_preference is not valid, the email already exists for another user, or the username does not exist, the server responds with an error. Permission is denied when the username does not belong to the current user. 
  *    tags: [Users]
  *    parameters:
  *      - in: path
@@ -190,7 +190,7 @@ usersRouter.route("/users/:username")
  *    security:
  *      - bearerAuth: []
  *    summary: Delete a user from the database
- *    description: Removes the user and all associated data from the database. Permission is denied when the current user's username does not match the target username.
+ *    description: Removes the user and all associated data from the database. If the username does not exist, the server responds with an error. Permission is denied when the username does not belong to the current user.
  *    tags: [Users]
  *    parameters:
  *      - in: path
@@ -237,7 +237,7 @@ usersRouter.route("/users/:username")
  *    security:
  *      - bearerAuth: []
  *    summary: Update a user's password
- *    description: Responds with an updated user object without displaying the password property. Permission is denied when the current user's username does not match the target username.
+ *    description: Responds with an updated user object without revealing the password property. If the username does not exist, the server responds with an error. Permission is denied when the username does not belong to the current user.
  *    tags: [Users]
  *    parameters:
  *      - in: path
