@@ -68,6 +68,19 @@ plotsRouter.route("/plots/:owner_id")
  *              type: array
  *              items:
  *                $ref: "#/components/schemas/Plot"
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Bad Request"
+ *                details:
+ *                  type: string
+ *                  example: "Invalid parameter"
  *      403:
  *        description: Forbidden
  *        content:
@@ -226,6 +239,19 @@ plotsRouter.route("/plots/plot/:plot_id")
  *          application/json:
  *            schema:
  *              $ref: "#/components/schemas/Plot"
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Bad Request"
+ *                details:
+ *                  type: string
+ *                  example: "Invalid parameter"
  *      403:
  *        description: Forbidden
  *        content:
@@ -374,6 +400,19 @@ plotsRouter.route("/plots/plot/:plot_id")
  *    responses:
  *      204:
  *        description: No Content
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Bad Request"
+ *                details:
+ *                  type: string
+ *                  example: "Invalid parameter"
  *      403:
  *        description: Forbidden
  *        content:
