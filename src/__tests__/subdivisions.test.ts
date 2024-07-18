@@ -608,6 +608,8 @@ describe("PATCH /api/subdivisions/subdivision/:subdivision_id", () => {
       .expect(409)
 
     expect(body).toMatchObject({
+      message: "Conflict",
+      details: "Subdivision name already exists"
     })
   })
 })
