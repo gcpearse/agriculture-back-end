@@ -1,20 +1,14 @@
 import QueryString from "qs"
 import { db } from "../db"
 import { checkSubdivisionNameConflict, getPlotOwnerId, getSubdivisionPlotId, validateSubdivisionType } from "../utils/db-query-utils"
-import { verifyPermission } from "../utils/verification-utils"
+import { verifyPermission, verifyQueryParamIsNumber } from "../utils/verification-utils"
 import { Subdivision } from "../types/subdivision-types"
 import format from "pg-format"
 
 
 export const selectSubdivisionsByPlotId = async (authUserId: number, plot_id: number, { type }: QueryString.ParsedQs): Promise<Subdivision[]> => {
 
-  if (isNaN(plot_id)) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "Plot not found"
-    })
-  }
+  await verifyQueryParamIsNumber(plot_id, "Plot not found")
 
   const owner_id = await getPlotOwnerId(plot_id)
 
@@ -45,13 +39,7 @@ export const selectSubdivisionsByPlotId = async (authUserId: number, plot_id: nu
 
 export const insertSubdivisionByPlotId = async (authUserId: number, plot_id: number, subdivision: Subdivision): Promise<Subdivision> => {
 
-  if (isNaN(plot_id)) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "Plot not found"
-    })
-  }
+  await verifyQueryParamIsNumber(plot_id, "Plot not found")
 
   let owner_id = await getPlotOwnerId(plot_id)
 
@@ -88,13 +76,7 @@ export const insertSubdivisionByPlotId = async (authUserId: number, plot_id: num
 
 export const selectSubdivisionBySubdivisionId = async (authUserId: number, subdivision_id: number): Promise<Subdivision> => {
 
-  if (isNaN(subdivision_id)) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "Subdivision not found"
-    })
-  }
+  await verifyQueryParamIsNumber(subdivision_id, "Subdivision not found")
 
   const plotId = await getSubdivisionPlotId(subdivision_id)
 
@@ -112,15 +94,9 @@ export const selectSubdivisionBySubdivisionId = async (authUserId: number, subdi
 }
 
 
-export const updateSubdivisionBySubdivisionId = async (authUserId: number, subdivision_id: number, subdivision: Subdivision) => {
+export const updateSubdivisionBySubdivisionId = async (authUserId: number, subdivision_id: number, subdivision: Subdivision): Promise<Subdivision> => {
 
-  if (isNaN(subdivision_id)) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "Subdivision not found"
-    })
-  }
+  await verifyQueryParamIsNumber(subdivision_id, "Subdivision not found")
 
   const plotId = await getSubdivisionPlotId(subdivision_id)
 

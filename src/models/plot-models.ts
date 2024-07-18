@@ -3,7 +3,7 @@ import { db } from "../db"
 import format from "pg-format"
 import { Plot } from "../types/plot-types"
 import { checkPlotNameConflict, getPlotOwnerId, searchForUserId, validatePlotType } from "../utils/db-query-utils"
-import { verifyPermission } from "../utils/verification-utils"
+import { verifyPermission, verifyQueryParamIsNumber } from "../utils/verification-utils"
 
 
 export const selectPlotsByOwner = async (authUserId: number, owner_id: number, { type }: QueryString.ParsedQs): Promise<Plot[]> => {
@@ -70,13 +70,7 @@ export const insertPlotByOwner = async (authUserId: number, owner_id: number, pl
 
 export const selectPlotByPlotId = async (authUserId: number, plot_id: number): Promise<Plot> => {
 
-  if (isNaN(plot_id)) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "Plot not found"
-    })
-  }
+  await verifyQueryParamIsNumber(plot_id, "Plot not found")
 
   const owner_id = await getPlotOwnerId(plot_id)
 
@@ -94,13 +88,7 @@ export const selectPlotByPlotId = async (authUserId: number, plot_id: number): P
 
 export const updatePlotByPlotId = async (authUserId: number, plot_id: number, plot: Plot): Promise<Plot> => {
 
-  if (isNaN(plot_id)) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "Plot not found"
-    })
-  }
+  await verifyQueryParamIsNumber(plot_id, "Plot not found")
 
   const owner_id = await getPlotOwnerId(plot_id)
 
@@ -146,13 +134,7 @@ export const updatePlotByPlotId = async (authUserId: number, plot_id: number, pl
 
 export const removePlotByPlotId = async (authUserId: number, plot_id: number): Promise<void> => {
 
-  if (isNaN(plot_id)) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "Plot not found"
-    })
-  }
+  await verifyQueryParamIsNumber(plot_id, "Plot not found")
 
   const owner_id = await getPlotOwnerId(plot_id)
 
