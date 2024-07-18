@@ -21,17 +21,17 @@ describe("verifyPermission", () => {
 
 describe("verifyParamIsNumber", () => {
 
-  test("When the query parameter is not a number (NaN), the promise is rejected", () => {
+  test("When the value of the parameter is not a number (NaN), the promise is rejected", () => {
 
-    expect(verifyParamIsNumber(NaN, "Test")).rejects.toMatchObject({
-      status: 404,
-      message: "Not Found",
-      details: "Test"
+    expect(verifyParamIsNumber(NaN)).rejects.toMatchObject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid parameter"
     })
   })
 
-  test("Returns undefined when the base value matches the target value", () => {
+  test("Returns undefined when the value of the parameter is a number", () => {
 
-    expect(verifyParamIsNumber(1, "Test")).toBeUndefined()
+    expect(verifyParamIsNumber(1)).toBeUndefined()
   })
 })
