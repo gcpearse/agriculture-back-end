@@ -10,9 +10,9 @@ export const verifyPermission = (base: string | number, target: string | number,
 }
 
 
-export const verifyQueryParamIsNumber = (queryParams: number, details: string): Promise<never> | undefined => {
+export const verifyQueryParamIsNumber = (queryParam: number, details: string): Promise<never> | undefined => {
 
-  if (isNaN(queryParams)) {
+  if (isNaN(queryParam)) {
     return Promise.reject({
       status: 404,
       message: "Not Found",
