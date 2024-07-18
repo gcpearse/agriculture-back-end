@@ -433,3 +433,183 @@ describe("GET /api/subdivisions/subdivision/:subdivision_id", () => {
     })
   })
 })
+
+
+describe("PATCH /api/subdivisions/subdivision/:subdivision_id", () => {
+
+  test("PATCH:200 Responds with an updated subdivision object", async () => {
+
+    const newDetails = {
+      name: "Root Vegetable Patch",
+      type: "vegetable patch",
+      description: "Turnips and radishes",
+      area: 20
+    }
+
+    const { body } = await request(app)
+      .patch("/api/subdivisions/subdivision/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.subdivision).toMatchObject({
+      subdivision_id: 1,
+      plot_id: 1,
+      name: 'Root Vegetable Patch',
+      type: 'vegetable patch',
+      description: 'Turnips and radishes',
+      area: 20
+    })
+  })
+
+  test("PATCH:200 Allows the request when the subdivision name remains unchanged (subdivision name conflict should only be raised in cases of duplication)", async () => {
+
+    const newDetails = {
+      name: "Root Vegetable Bed",
+      type: "vegetable patch",
+      description: "Turnips and radishes",
+      area: 20
+    }
+
+    const { body } = await request(app)
+      .patch("/api/subdivisions/subdivision/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.subdivision).toMatchObject({
+      subdivision_id: 1,
+      plot_id: 1,
+      name: 'Root Vegetable Bed',
+      type: 'vegetable patch',
+      description: 'Turnips and radishes',
+      area: 20
+    })
+  })
+
+  test("PATCH:400 Responds with an error when passed a property with an invalid data type", async () => {
+
+    const newDetails = {
+      name: "Root Vegetable Patch",
+      type: "vegetable patch",
+      description: "Turnips and radishes",
+      area: "twenty"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/subdivisions/subdivision/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid text representation"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when passed an invalid subdivision type", async () => {
+
+    const newDetails = {
+      name: "Root Vegetable Patch",
+      type: "garage",
+      description: "Turnips and radishes",
+      area: 20
+    }
+
+    const { body } = await request(app)
+      .patch("/api/subdivisions/subdivision/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid subdivision type"
+    })
+  })
+
+  test("PATCH:403 Responds with a warning when the plot_id does not belong to the authenticated user", async () => {
+
+    const newDetails = {
+      name: "Root Vegetable Patch",
+      type: "vegetable patch",
+      description: "Turnips and radishes",
+      area: 20
+    }
+
+    const { body } = await request(app)
+      .patch("/api/subdivisions/subdivision/4")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to edit subdivision data denied"
+    })
+  })
+
+  test("PATCH:404 Responds with an error message when the subdivision_id does not exist", async () => {
+
+    const newDetails = {
+      name: "Root Vegetable Patch",
+      type: "vegetable patch",
+      description: "Turnips and radishes",
+      area: 20
+    }
+
+    const { body } = await request(app)
+      .patch("/api/subdivisions/subdivision/999")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Subdivision not found"
+    })
+  })
+
+  test("PATCH:404 Responds with an error message when the subdivision_id is not a number", async () => {
+
+    const newDetails = {
+      name: "Root Vegetable Patch",
+      type: "vegetable patch",
+      description: "Turnips and radishes",
+      area: 20
+    }
+
+    const { body } = await request(app)
+      .patch("/api/subdivisions/subdivision/example")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Subdivision not found"
+    })
+  })
+
+  test("PATCH:409 Responds with an error message when the subdivision name already exists for one of the subdivisions of the current plot", async () => {
+
+    const newDetails = {
+      name: "Onion Bed",
+      type: "bed",
+      description: "Yellow and white onions",
+      area: 20
+    }
+
+    const { body } = await request(app)
+      .patch("/api/subdivisions/subdivision/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(409)
+
+    expect(body).toMatchObject({
+      message: "Conflict",
+      details: "Subdivision name already exists"
+    })
+  })
+})

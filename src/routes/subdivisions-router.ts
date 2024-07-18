@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { getSubdivisionBySubdivisionId, getSubdivisionsByPlotId, postSubdivisionByPlotId } from "../controllers/subdivision-controllers"
+import { getSubdivisionBySubdivisionId, getSubdivisionsByPlotId, patchSubdivisionBySubdivisionId, postSubdivisionByPlotId } from "../controllers/subdivision-controllers"
 
 
 export const subdivisionsRouter = Router()
@@ -204,7 +204,7 @@ subdivisionsRouter.route("/subdivisions/subdivision/:subdivision_id")
  *  get:
  *    security:
  *      - bearerAuth: []
- *    summary: Retrieve a subdivision of a plot.
+ *    summary: Retrieve a subdivision of a plot
  *    description: Responds with a subdivision object. If no subdivision is found, the server responds with an error. Permission is denied when the subdivision does not belong to the current user.
  *    tags: [Subdivisions]
  *    parameters:
@@ -248,3 +248,100 @@ subdivisionsRouter.route("/subdivisions/subdivision/:subdivision_id")
  *                  example: "Subdivision not found"
  */
   .get(verifyToken, getSubdivisionBySubdivisionId)
+
+
+/**
+ * @swagger
+ * /api/subdivisions/subdivision/{subdivision_id}:
+ *  patch:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Update a subdivision of a plot
+ *    description: Responds with a subdivision object. If the subdivision name already exists for another subdivision of a plot, the server responds with an error. Permission is denied when the subdivision does not belong to the current user.
+ *    tags: [Subdivisions]
+ *    parameters:
+ *      - in: path
+ *        name: subdivision_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              name:
+ *                type: string
+ *                example: Root Vegetable Bed
+ *              type:
+ *                type: string
+ *                example: bed
+ *              description:
+ *                type: string
+ *                example: Carrots, beetroots, and parsnips
+ *              area:
+ *                type: integer
+ *                example: 10
+ *    responses:
+ *      200:
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Subdivision"
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Bad Request"
+ *                details:
+ *                  type: string
+ *                  example: "Invalid text representation"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Forbidden"
+ *                details:
+ *                  type: string
+ *                  example: "Permission to edit subdivision data denied"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Not Found"
+ *                details:
+ *                  type: string
+ *                  example: "Subdivision not found"
+ *      409:
+ *        description: Conflict
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Conflict"
+ *                details:
+ *                  type: string
+ *                  example: "Subdivision name already exists"
+ */
+  .patch(verifyToken, patchSubdivisionBySubdivisionId)
