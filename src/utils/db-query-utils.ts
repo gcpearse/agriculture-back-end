@@ -5,7 +5,7 @@ export const checkEmailConflict = async (email: string): Promise<undefined> => {
 
   const dbEmail = await db.query(`
     SELECT email 
-    FROM users ß
+    FROM users
     WHERE email = $1;
     `,
     [email])
