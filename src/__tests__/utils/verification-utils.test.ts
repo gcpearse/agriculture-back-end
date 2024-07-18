@@ -1,4 +1,4 @@
-import { verifyPermission, verifyQueryParamIsNumber } from "../../utils/verification-utils"
+import { verifyPermission, verifyParamIsNumber } from "../../utils/verification-utils"
 
 
 describe("verifyPermission", () => {
@@ -19,11 +19,11 @@ describe("verifyPermission", () => {
 })
 
 
-describe("verifyQueryParamIsNumber", () => {
+describe("verifyParamIsNumber", () => {
 
   test("When the query parameter is not a number (NaN), the promise is rejected", () => {
 
-    expect(verifyQueryParamIsNumber(NaN, "Test")).rejects.toMatchObject({
+    expect(verifyParamIsNumber(NaN, "Test")).rejects.toMatchObject({
       status: 404,
       message: "Not Found",
       details: "Test"
@@ -32,6 +32,6 @@ describe("verifyQueryParamIsNumber", () => {
 
   test("Returns undefined when the base value matches the target value", () => {
 
-    expect(verifyQueryParamIsNumber(1, "Test")).toBeUndefined()
+    expect(verifyParamIsNumber(1, "Test")).toBeUndefined()
   })
 })
