@@ -45,7 +45,7 @@ export const insertPlotByOwner = async (authUserId: number, owner_id: number, pl
 
   await checkPlotNameConflict(owner_id, plot.name)
 
-  const isValidPlotType = await validatePlotType(plot.type as string)
+  const isValidPlotType = await validatePlotType(plot.type)
 
   if (!isValidPlotType) {
     return Promise.reject({
@@ -117,7 +117,7 @@ export const updatePlotByPlotId = async (authUserId: number, plot_id: number, pl
     await checkPlotNameConflict(owner_id, plot.name)
   }
 
-  const isValidPlotType = await validatePlotType(plot.type as string)
+  const isValidPlotType = await validatePlotType(plot.type)
 
   if (!isValidPlotType) {
     return Promise.reject({
