@@ -205,24 +205,6 @@ describe("DELETE /api/users/:username", () => {
     })
   })
 
-  test("DELETE:204 When a user is deleted, all associated plots are deleted", async () => {
-
-    await request(app)
-      .delete("/api/users/carrot_king")
-      .set("Authorization", `Bearer ${token}`)
-      .expect(204)
-
-    const { body } = await request(app)
-      .get("/api/plots/1")
-      .set("Authorization", `Bearer ${token}`)
-      .expect(404)
-
-    expect(body).toMatchObject({
-      message: "Not Found",
-      details: "User not found"
-    })
-  })
-
   test("DELETE:403 Responds with a warning when the authenticated user attempts to delete another user's data", async () => {
 
     const { body } = await request(app)

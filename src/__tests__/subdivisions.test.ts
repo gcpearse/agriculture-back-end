@@ -75,7 +75,7 @@ describe("GET /api/subdivisions/:plot_id", () => {
     })
   })
 
-  test("GET:Responds with an error message when the plot_id does not exist", async () => {
+  test("GET:404 Responds with an error message when the plot_id does not exist", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/999")
@@ -88,10 +88,46 @@ describe("GET /api/subdivisions/:plot_id", () => {
     })
   })
 
-  test("GET:Responds with an error message when the plot_id is not a number", async () => {
+  test("GET:404 Responds with an error message when the plot_id is not a number", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Plot not found"
+    })
+  })
+
+  test("GET:404 When the parent plot is deleted, all child subdivisions are also deleted", async () => {
+
+    await request(app)
+      .delete("/api/plots/plot/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(204)
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Plot not found"
+    })
+  })
+
+  test("GET:404 When the parent user is deleted, all child subdivisions are also deleted", async () => {
+
+    await request(app)
+      .delete("/api/users/carrot_king")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(204)
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 

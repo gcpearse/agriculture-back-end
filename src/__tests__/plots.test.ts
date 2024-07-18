@@ -110,6 +110,24 @@ describe("GET /api/plots/:owner_id", () => {
       details: "User not found"
     })
   })
+
+  test("GET:404 When the parent user is deleted, all child plots are also deleted", async () => {
+
+    await request(app)
+      .delete("/api/users/carrot_king")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(204)
+
+    const { body } = await request(app)
+      .get("/api/plots/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "User not found"
+    })
+  })
 })
 
 
