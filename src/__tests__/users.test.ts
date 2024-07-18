@@ -99,6 +99,26 @@ describe("PATCH /api/users/:username", () => {
     })
   })
 
+  test("PATCH:400 Responds with an error when a property is missing from the request body", async () => {
+
+    const newDetails = {
+      email: "jsj@example.com",
+      surname: "Smith-Jones",
+      unit_preference: "metric"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/users/carrot_king")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Not null violation"
+    })
+  })
+
   test("PATCH:400 Responds with an error when an invalid value is passed for unit_preference", async () => {
 
     const newDetails = {
@@ -235,29 +255,71 @@ describe("DELETE /api/users/:username", () => {
 
 describe("PATCH /api/users/:username/password", () => {
 
-  test("PATCH:200 Responds with an updated user object", async () => {
+  test("PATCH:200 Responds with a status object confirming success", async () => {
+
+    const passwordUpdate = {
+      oldPassword: "carrots123",
+      newPassword: "onions789"
+    }
 
     const { body } = await request(app)
       .patch("/api/users/carrot_king/password")
-      .send({ password: "onions789" })
+      .send(passwordUpdate)
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.user).toMatchObject({
-      user_id: 1,
-      username: "carrot_king",
-      email: "john.smith@example.com",
-      first_name: "John",
-      surname: "Smith",
-      unit_preference: "imperial"
+    expect(body.message).toMatchObject({
+      message: "Password changed successfully"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when a property is missing from the request body", async () => {
+
+    const passwordUpdate = {
+      oldPassword: "carrots123"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/users/carrot_king/password")
+      .send(passwordUpdate)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Not null violation"
+    })
+  })
+
+  test("PATCH:401 Responds with an error when the old password does not match the current password", async () => {
+
+    const passwordUpdate = {
+      oldPassword: "apples567",
+      newPassword: "onions789"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/users/carrot_king/password")
+      .send(passwordUpdate)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(401)
+
+    expect(body).toMatchObject({
+      message: "Unauthorized",
+      details: "Incorrect password"
     })
   })
 
   test("PATCH:403 Responds with a warning when the authenticated user attempts to change another user's password", async () => {
 
+    const passwordUpdate = {
+      oldPassword: "peaches123",
+      newPassword: "onions789"
+    }
+
     const { body } = await request(app)
       .patch("/api/users/peach_princess/password")
-      .send({ password: "onions789" })
+      .send(passwordUpdate)
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
@@ -269,9 +331,14 @@ describe("PATCH /api/users/:username/password", () => {
 
   test("PATCH:404 Responds with an error message when the username does not exist", async () => {
 
+    const passwordUpdate = {
+      oldPassword: "carrots123",
+      newPassword: "onions789"
+    }
+
     const { body } = await request(app)
       .patch("/api/users/non_existent_user/password")
-      .send({ password: "onions789" })
+      .send(passwordUpdate)
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 

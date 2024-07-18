@@ -40,14 +40,7 @@ export const loginRouter = Router()
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Unauthorized"
- *                details:
- *                  type: string
- *                  example: "Incorrect password"
+ *              $ref: "#/components/schemas/Unauthorized"
  *      404:
  *        description: Not Found
  *        content:
@@ -57,9 +50,9 @@ export const loginRouter = Router()
  *              properties:
  *                message:
  *                  type: string
- *                  example: "Not Found"
+ *                  example: Not Found
  *                details:
  *                  type: string
- *                  example: "Username could not be found"
+ *                  example: Username could not be found
  */
 loginRouter.post("/login", postLogin)

@@ -2,11 +2,14 @@ export type Username = {
   username: string
 }
 
+
 export type Password = {
   password: string
 }
 
+
 export type Credentials = Username & Password
+
 
 export type LoggedInUser = {
   user_id: number
@@ -26,5 +29,6 @@ export type SecureUser = {
   surname: string
   unit_preference: UnitSystem
 } & Username
+
 
 export type User = SecureUser & Password
