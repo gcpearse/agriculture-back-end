@@ -72,13 +72,28 @@ export const removeUserByUsername = async (authUsername: string, username: strin
 }
 
 
-export const changePasswordByUsername = async (authUsername: string, username: string, password: string): Promise<SecureUser> => {
+export const changePasswordByUsername = async (authUsername: string, username: string, { oldPassword, newPassword }: { oldPassword: string, newPassword: string }): Promise<{ message: string }> => {
 
   await searchForUsername(username)
 
   await verifyPermission(authUsername, username, "Permission to edit password denied")
 
-  const result = await db.query(`
+  const currentPassword = await db.query(`
+    SELECT password
+    FROM users
+    WHERE username = $1;
+    `,
+    [username])
+
+  if (oldPassword !== currentPassword.rows[0].password) {
+    return Promise.reject({
+      status: 401,
+      message: "Unauthorized",
+      details: "Incorrect password"
+    })
+  }
+
+  await db.query(`
     UPDATE users
     SET password = $1
     WHERE username = $2
@@ -90,7 +105,9 @@ export const changePasswordByUsername = async (authUsername: string, username: s
       surname, 
       unit_preference;
     `,
-    [password, username])
+    [newPassword, username])
 
-  return result.rows[0]
+  return {
+    message: "Password changed successfully"
+  }
 }
