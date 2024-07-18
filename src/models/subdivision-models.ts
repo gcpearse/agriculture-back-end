@@ -110,3 +110,56 @@ export const selectSubdivisionBySubdivisionId = async (authUserId: number, subdi
 
   return result.rows[0]
 }
+
+
+export const updateSubdivisionBySubdivisionId = async (authUserId: number, subdivision_id: number, subdivision: Subdivision) => {
+
+  if (isNaN(subdivision_id)) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+      details: "Subdivision not found"
+    })
+  }
+
+  const plotId = await getSubdivisionPlotId(subdivision_id)
+
+  const owner_id = await getPlotOwnerId(plotId)
+
+  await verifyPermission(authUserId, owner_id, "Permission to edit subdivision data denied")
+
+  const currentSubdivisionName = await db.query(`
+    SELECT name
+    FROM subdivisions
+    WHERE subdivision_id = $1;
+    `,
+    [subdivision_id])
+
+  if (currentSubdivisionName.rows[0].name !== subdivision.name) {
+    await checkSubdivisionNameConflict(plotId, subdivision.name)
+  }
+
+  const isValidSubdivisionType = await validateSubdivisionType(subdivision.type)
+
+  if (!isValidSubdivisionType) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid subdivision type"
+    })
+  }
+
+  const result = await db.query(`
+    UPDATE subdivisions
+    SET
+      name = $1,
+      type = $2,
+      description = $3,
+      area = $4
+    WHERE subdivision_id = $5
+    RETURNING *;
+    `,
+    [subdivision.name, subdivision.type, subdivision.description, subdivision.area, subdivision_id])
+
+  return result.rows[0]
+}
