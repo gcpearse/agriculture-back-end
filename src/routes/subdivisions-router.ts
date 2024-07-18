@@ -133,7 +133,7 @@ subdivisionsRouter.route("/subdivisions/:plot_id")
  *                type: integer
  *                example: 10
  *    responses:
- *      200:
+ *      201:
  *        description: OK
  *        content:
  *          application/json:

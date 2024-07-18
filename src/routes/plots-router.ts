@@ -139,7 +139,7 @@ plotsRouter.route("/plots/:owner_id")
  *                type: integer    
  *                example: 100
  *    responses:
- *      200:
+ *      201:
  *        description: OK
  *        content:
  *          application/json:
@@ -387,5 +387,18 @@ plotsRouter.route("/plots/plot/:plot_id")
  *                details:
  *                  type: string
  *                  example: "Permission to delete plot data denied"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Not Found"
+ *                details:
+ *                  type: string
+ *                  example: "Plot not found"
  */
   .delete(verifyToken, deletePlotByPlotId)
