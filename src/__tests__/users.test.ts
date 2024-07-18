@@ -99,6 +99,26 @@ describe("PATCH /api/users/:username", () => {
     })
   })
 
+  test("PATCH:400 Responds with an error when a property is missing from the request body", async () => {
+
+    const newDetails = {
+      email: "jsj@example.com",
+      surname: "Smith-Jones",
+      unit_preference: "metric"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/users/carrot_king")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Not null violation"
+    })
+  })
+
   test("PATCH:400 Responds with an error when an invalid value is passed for unit_preference", async () => {
 
     const newDetails = {
@@ -250,6 +270,24 @@ describe("PATCH /api/users/:username/password", () => {
 
     expect(body.message).toMatchObject({
       message: "Password changed successfully"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when a property is missing from the request body", async () => {
+
+    const passwordReset = {
+      oldPassword: "carrots123"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/users/carrot_king/password")
+      .send(passwordReset)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Not null violation"
     })
   })
 
