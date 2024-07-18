@@ -13,37 +13,37 @@ export const schemaRouter = Router()
  *      properties:
  *        message:
  *          type: string
- *          example: "Bad Request"
+ *          example: Bad Request
  *        details:
  *          type: string
- *          example: "Invalid request"
+ *          example: Invalid request
  *    Conflict:
  *      type: object
  *      properties:
  *        message:
  *          type: string
- *          example: "Conflict"
+ *          example: Conflict
  *        details:
  *          type: string
- *          example: "Content already exists"
+ *          example: Content already exists
  *    Forbidden:
  *      type: object
  *      properties:
  *        message:
  *          type: string
- *          example: "Forbidden"
+ *          example: Forbidden
  *        details:
  *          type: string
- *          example: "Permission denied"
+ *          example: Permission denied
  *    NotFound:
  *      type: object
  *      properties:
  *        message:
  *          type: string
- *          example: "Not Found"
+ *          example: Not Found
  *        details:
  *          type: string
- *          example: "Result not found"
+ *          example: Result not found
  *    Plot:
  *      type: object
  *      properties:
@@ -110,4 +110,13 @@ export const schemaRouter = Router()
  *        unit_preference:
  *          type: string
  *          example: imperial
+ *    Unauthorized:
+ *      type: object
+ *      properties:
+ *        message:
+ *          type: string
+ *          example: Unauthorized
+ *        details:
+ *          type: string
+ *          example: Incorrect password
  */
