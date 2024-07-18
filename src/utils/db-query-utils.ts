@@ -141,7 +141,7 @@ export const validatePlotType = async (type: string): Promise<boolean> => {
     FROM plot_types;
     `)
 
-  return result.rows.map(row => row.type).includes(type as string)
+  return result.rows.map(row => row.type).includes(type)
 }
 
 
@@ -152,5 +152,5 @@ export const validateSubdivisionType = async (type: string): Promise<boolean> =>
     FROM subdivision_types;
     `)
 
-  return result.rows.map(row => row.type).includes(type as string)
+  return result.rows.map(row => row.type).includes(type)
 }
