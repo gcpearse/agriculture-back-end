@@ -523,6 +523,26 @@ describe("PATCH /api/subdivisions/subdivision/:subdivision_id", () => {
     })
   })
 
+  test("PATCH:400 Responds with an error when a property is missing from the request body", async () => {
+
+    const newDetails = {
+      type: "vegetable patch",
+      description: "Turnips and radishes",
+      area: 20
+    }
+
+    const { body } = await request(app)
+      .patch("/api/subdivisions/subdivision/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Not null violation"
+    })
+  })
+
   test("PATCH:400 Responds with an error when passed a property with an invalid data type", async () => {
 
     const newDetails = {
