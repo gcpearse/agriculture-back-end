@@ -53,10 +53,16 @@ Create the following `.env` files in the root directory.
 `.env.test`\
 `.env.development`
 
-Add the following environment variables to each file:
+Add the following environment variables to `.env.test`:
 
-`PGDATABASE=` followed by the relevant database name.\
+`PGDATABASE=` followed by the name of the test database.\
 `JWT_SECRET=` followed by a JWT secret key.
+
+Add the following environment variables to `.env.development`:
+
+`PGDATABASE=` followed by the name of the development database.\
+`JWT_SECRET=` followed by a JWT secret key.
+`ADMIN_PASSWORD=` followed by an admin password.
 
 > A random string can be generated to serve as a JWT secret key with the following JavaScript code:
 
