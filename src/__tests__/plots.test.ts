@@ -532,6 +532,27 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
     })
   })
 
+  test("PATCH:400 Responds with an error when a property is missing from the request body", async () => {
+
+    const newDetails = {
+      type: "homestead",
+      description: "A homestead",
+      location: "Farmville",
+      area: 1200
+    }
+
+    const { body } = await request(app)
+      .patch("/api/plots/plot/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Not null violation"
+    })
+  })
+
   test("PATCH:400 Responds with an error when passed a property with an invalid data type", async () => {
 
     const newDetails = {
