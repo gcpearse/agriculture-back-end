@@ -6,34 +6,6 @@ import { deleteSubdivisionBySubdivisionId, getSubdivisionBySubdivisionId, getSub
 export const subdivisionsRouter = Router()
 
 
-/**
- * @swagger
- * components:
- *  schemas:
- *    Subdivision:
- *      type: object
- *      properties:
- *        subdivision_id:
- *          type: integer
- *          example: 1
- *        plot_id:
- *          type: integer
- *          example: 1
- *        name:
- *          type: string
- *          example: Root Vegetable Bed
- *        type:
- *          type: string
- *          example: bed
- *        description:
- *          type: string
- *          example: Carrots, beetroots, and parsnips
- *        area:
- *          type: integer
- *          example: 10
- */
-
-
 subdivisionsRouter.route("/subdivisions/:plot_id")
 
 
@@ -70,40 +42,19 @@ subdivisionsRouter.route("/subdivisions/:plot_id")
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Bad Request"
- *                details:
- *                  type: string
- *                  example: "Invalid parameter"
+ *              $ref: "#/components/schemas/BadRequest"
  *      403:
  *        description: Forbidden
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Forbidden"
- *                details:
- *                  type: string
- *                  example: "Permission to view plot subdivision data denied"
+ *              $ref: "#/components/schemas/Forbidden"
  *      404:
  *        description: Not Found
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Not Found"
- *                details:
- *                  type: string
- *                  example: "No results found for that query"
+ *              $ref: "#/components/schemas/NotFound"
  */
   .get(verifyToken, getSubdivisionsByPlotId)
 
@@ -157,53 +108,25 @@ subdivisionsRouter.route("/subdivisions/:plot_id")
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Bad Request"
- *                details:
- *                  type: string
- *                  example: "Invalid text representation"
+ *              $ref: "#/components/schemas/BadRequest"
  *      403:
  *        description: Forbidden
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Forbidden"
- *                details:
- *                  type: string
- *                  example: "Permission to create subdivision denied"
+ *              $ref: "#/components/schemas/Forbidden"
  *      404:
  *        description: Not Found
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Not Found"
- *                details:
- *                  type: string
- *                  example: "Plot not found"
+ *              $ref: "#/components/schemas/NotFound"
  *      409:
  *        description: Conflict
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Conflict"
- *                details:
- *                  type: string
- *                  example: "Subdivision name already exists"
+ *              $ref: "#/components/schemas/Conflict"
  */
   .post(verifyToken, postSubdivisionByPlotId)
 
@@ -238,40 +161,19 @@ subdivisionsRouter.route("/subdivisions/subdivision/:subdivision_id")
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Bad Request"
- *                details:
- *                  type: string
- *                  example: "Invalid parameter"
+ *              $ref: "#/components/schemas/BadRequest"
  *      403:
  *        description: Forbidden
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Forbidden"
- *                details:
- *                  type: string
- *                  example: "Permission to view subdivision data denied"
+ *              $ref: "#/components/schemas/Forbidden"
  *      404:
  *        description: Not Found
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Not Found"
- *                details:
- *                  type: string
- *                  example: "Subdivision not found"
+ *              $ref: "#/components/schemas/NotFound"
  */
   .get(verifyToken, getSubdivisionBySubdivisionId)
 
@@ -322,53 +224,25 @@ subdivisionsRouter.route("/subdivisions/subdivision/:subdivision_id")
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Bad Request"
- *                details:
- *                  type: string
- *                  example: "Invalid text representation"
+ *              $ref: "#/components/schemas/BadRequest"
  *      403:
  *        description: Forbidden
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Forbidden"
- *                details:
- *                  type: string
- *                  example: "Permission to edit subdivision data denied"
+ *              $ref: "#/components/schemas/Forbidden"
  *      404:
  *        description: Not Found
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Not Found"
- *                details:
- *                  type: string
- *                  example: "Subdivision not found"
+ *              $ref: "#/components/schemas/NotFound"
  *      409:
  *        description: Conflict
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Conflict"
- *                details:
- *                  type: string
- *                  example: "Subdivision name already exists"
+ *              $ref: "#/components/schemas/Conflict"
  */
   .patch(verifyToken, patchSubdivisionBySubdivisionId)
 
@@ -396,39 +270,18 @@ subdivisionsRouter.route("/subdivisions/subdivision/:subdivision_id")
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Bad Request"
- *                details:
- *                  type: string
- *                  example: "Invalid parameter"
+ *              $ref: "#/components/schemas/BadRequest"
  *      403:
  *        description: Forbidden
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Forbidden"
- *                details:
- *                  type: string
- *                  example: "Permission to delete subdivision data denied"
+ *              $ref: "#/components/schemas/Forbidden"
  *      404:
  *        description: Not Found
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Not Found"
- *                details:
- *                  type: string
- *                  example: "Subdivision not found"
+ *              $ref: "#/components/schemas/NotFound"
  */
   .delete(verifyToken, deleteSubdivisionBySubdivisionId)

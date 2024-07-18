@@ -6,35 +6,8 @@ import { deleteUserByUsername, getUserByUsername, patchPasswordByUsername, patch
 export const usersRouter = Router()
 
 
-/**
- * @swagger
- * components:
- *  schemas:
- *    User:
- *      type: object
- *      properties:
- *        user_id:
- *          type: integer
- *          example: 1
- *        username:
- *          type: string
- *          example: carrot_king
- *        email:
- *          type: string
- *          example: john.smith@example.com
- *        first_name:
- *          type: string
- *          example: John
- *        surname:
- *          type: string
- *          example: Smith
- *        unit_preference:
- *          type: string
- *          example: imperial
- */
-
-
 usersRouter.route("/users/:username")
+
 
 /**
  * @swagger
@@ -63,27 +36,13 @@ usersRouter.route("/users/:username")
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Forbidden"
- *                details:
- *                  type: string
- *                  example: "Permission to view user data denied"
+ *              $ref: "#/components/schemas/Forbidden"
  *      404:
  *        description: Not Found
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Not Found"
- *                details:
- *                  type: string
- *                  example: "User not found"
+ *              $ref: "#/components/schemas/NotFound"
  */
   .get(verifyToken, getUserByUsername)
 
@@ -133,53 +92,25 @@ usersRouter.route("/users/:username")
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Bad Request"
- *                details:
- *                  type: string
- *                  example: "Invalid text representation"
+ *              $ref: "#/components/schemas/BadRequest"
  *      403:
  *        description: Forbidden
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Forbidden"
- *                details:
- *                  type: string
- *                  example: "Permission to edit user data denied"
+ *              $ref: "#/components/schemas/Forbidden"
  *      404:
  *        description: Not Found
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Not Found"
- *                details:
- *                  type: string
- *                  example: "User not found"
+ *              $ref: "#/components/schemas/NotFound"
  *      409:
  *        description: Conflict
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Conflict"
- *                details:
- *                  type: string
- *                  example: "Email already exists"
+ *              $ref: "#/components/schemas/Conflict"
  */
   .patch(verifyToken, patchUserByUsername)
 
@@ -206,27 +137,13 @@ usersRouter.route("/users/:username")
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Forbidden"
- *                details:
- *                  type: string
- *                  example: "Permission to delete user data denied"
+ *              $ref: "#/components/schemas/Forbidden"
  *      404:
  *        description: Not Found
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Not Found"
- *                details:
- *                  type: string
- *                  example: "User not found"
+ *              $ref: "#/components/schemas/NotFound"
  */
   .delete(verifyToken, deleteUserByUsername)
 
@@ -267,26 +184,12 @@ usersRouter.route("/users/:username")
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Forbidden"
- *                details:
- *                  type: string
- *                  example: "Permission to edit password denied"
+ *              $ref: "#/components/schemas/Forbidden"
  *      404:
  *        description: Not Found
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Not Found"
- *                details:
- *                  type: string
- *                  example: "User not found"
+ *              $ref: "#/components/schemas/NotFound"
  */
 usersRouter.patch("/users/:username/password", verifyToken, patchPasswordByUsername)

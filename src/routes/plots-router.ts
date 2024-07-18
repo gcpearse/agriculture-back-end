@@ -6,37 +6,6 @@ import { deletePlotByPlotId, getPlotByPlotId, getPlotsByOwner, patchPlotByPlotId
 export const plotsRouter = Router()
 
 
-/**
- * @swagger
- * components:
- *  schemas:
- *    Plot:
- *      type: object
- *      properties:
- *        plot_id:
- *          type: integer
- *          example: 1
- *        owner_id:
- *          type: integer
- *          example: 1
- *        name:
- *          type: string
- *          example: John's Garden
- *        type:
- *          type: string
- *          example: garden
- *        description:
- *          type: string
- *          example: A vegetable garden
- *        location:
- *          type: string
- *          example: Farmville
- *        area:
- *          type: integer
- *          example: 100
- */
-
-
 plotsRouter.route("/plots/:owner_id")
 
 
@@ -73,40 +42,19 @@ plotsRouter.route("/plots/:owner_id")
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Bad Request"
- *                details:
- *                  type: string
- *                  example: "Invalid parameter"
+ *              $ref: "#/components/schemas/BadRequest"
  *      403:
  *        description: Forbidden
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Forbidden"
- *                details:
- *                  type: string
- *                  example: "Permission to view plot data denied"
+ *              $ref: "#/components/schemas/Forbidden"
  *      404:
  *        description: Not Found
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Not Found"
- *                details:
- *                  type: string
- *                  example: "No results found for that query"
+ *              $ref: "#/components/schemas/NotFound"
  */
   .get(verifyToken, getPlotsByOwner)
 
@@ -163,53 +111,25 @@ plotsRouter.route("/plots/:owner_id")
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Bad Request"
- *                details:
- *                  type: string
- *                  example: "Invalid text representation"
+ *              $ref: "#/components/schemas/BadRequest"
  *      403:
  *        description: Forbidden
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Forbidden"
- *                details:
- *                  type: string
- *                  example: "Permission to create plot denied"
+ *              $ref: "#/components/schemas/Forbidden"
  *      404:
  *        description: Not Found
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Not Found"
- *                details:
- *                  type: string
- *                  example: "User not found"
+ *              $ref: "#/components/schemas/NotFound"
  *      409:
  *        description: Conflict
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Conflict"
- *                details:
- *                  type: string
- *                  example: "Plot name already exists"
+ *              $ref: "#/components/schemas/Conflict"
  */
   .post(verifyToken, postPlotByOwner)
 
@@ -244,40 +164,19 @@ plotsRouter.route("/plots/plot/:plot_id")
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Bad Request"
- *                details:
- *                  type: string
- *                  example: "Invalid parameter"
+ *              $ref: "#/components/schemas/BadRequest"
  *      403:
  *        description: Forbidden
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Forbidden"
- *                details:
- *                  type: string
- *                  example: "Permission to view plot data denied"
+ *              $ref: "#/components/schemas/Forbidden"
  *      404:
  *        description: Not Found
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Not Found"
- *                details:
- *                  type: string
- *                  example: "Plot not found"
+ *              $ref: "#/components/schemas/NotFound"
  */
   .get(verifyToken, getPlotByPlotId)
 
@@ -331,53 +230,25 @@ plotsRouter.route("/plots/plot/:plot_id")
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Bad Request"
- *                details:
- *                  type: string
- *                  example: "Invalid text representation"
+ *              $ref: "#/components/schemas/BadRequest"
  *      403:
  *        description: Forbidden
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Forbidden"
- *                details:
- *                  type: string
- *                  example: "Permission to edit plot data denied"
+ *              $ref: "#/components/schemas/Forbidden"
  *      404:
  *        description: Not Found
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Not Found"
- *                details:
- *                  type: string
- *                  example: "Plot not found"
+ *              $ref: "#/components/schemas/NotFound"
  *      409:
  *        description: Conflict
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Conflict"
- *                details:
- *                  type: string
- *                  example: "Plot name already exists"
+ *              $ref: "#/components/schemas/Conflict"
  */
   .patch(verifyToken, patchPlotByPlotId)
 
@@ -405,39 +276,18 @@ plotsRouter.route("/plots/plot/:plot_id")
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Bad Request"
- *                details:
- *                  type: string
- *                  example: "Invalid parameter"
+ *              $ref: "#/components/schemas/BadRequest"
  *      403:
  *        description: Forbidden
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Forbidden"
- *                details:
- *                  type: string
- *                  example: "Permission to delete plot data denied"
+ *              $ref: "#/components/schemas/Forbidden"
  *      404:
  *        description: Not Found
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  example: "Not Found"
- *                details:
- *                  type: string
- *                  example: "Plot not found"
+ *              $ref: "#/components/schemas/NotFound"
  */
   .delete(verifyToken, deletePlotByPlotId)
