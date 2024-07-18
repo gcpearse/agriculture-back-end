@@ -1,4 +1,4 @@
-import data from "../../db/data/test-data/data-index"
+import data from "../../db/data/test-data/test-index"
 import { db } from "../../db"
 import { seed } from "../../db/seeding/seed"
 import { checkPlotNameConflict, getPlotOwnerId } from "../../utils/db-query-utils"

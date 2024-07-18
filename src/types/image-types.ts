@@ -9,6 +9,11 @@ export type PlotImage = {
 } & Image
 
 
+export type SubdivisionImage = {
+  subdivision_id: number
+} & Image
+
+
 export type CropImage = {
   crop_id: number
 } & Image

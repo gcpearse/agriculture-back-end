@@ -3,6 +3,7 @@ import { plotData } from "./plots/plots"
 import { plotImageData } from "./plots/plot-images"
 import { plotTypeData } from "./plots/valid-plot-types"
 import { subdivisionData } from "./subdivisions/subdivisions"
+import { subdivisionImageData } from "./subdivisions/subdivision-images"
 import { subdivisionTypeData } from "./subdivisions/valid-subdivision-types"
 import { cropData } from "./crops/crops"
 import { cropNoteData } from "./crops/crop-notes"
@@ -20,6 +21,7 @@ export default {
   plotImageData,
   plotTypeData,
   subdivisionData,
+  subdivisionImageData,
   subdivisionTypeData,
   cropData,
   cropNoteData,
