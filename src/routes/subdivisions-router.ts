@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { getSubdivisionBySubdivisionId, getSubdivisionsByPlotId, patchSubdivisionBySubdivisionId, postSubdivisionByPlotId } from "../controllers/subdivision-controllers"
+import { deleteSubdivisionBySubdivisionId, getSubdivisionBySubdivisionId, getSubdivisionsByPlotId, patchSubdivisionBySubdivisionId, postSubdivisionByPlotId } from "../controllers/subdivision-controllers"
 
 
 export const subdivisionsRouter = Router()
@@ -345,3 +345,51 @@ subdivisionsRouter.route("/subdivisions/subdivision/:subdivision_id")
  *                  example: "Subdivision name already exists"
  */
   .patch(verifyToken, patchSubdivisionBySubdivisionId)
+
+
+/**
+ * @swagger
+ * /api/subdivisions/subdivision/{subdivision_id}:
+ *  delete:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Delete a subdivision of a plot from the database
+ *    description: Removes the plot subdivision and all associated data from the database. Permission is denied when the subdivision does not belong to the current user.
+ *    tags: [Subdivisions]
+ *    parameters:
+ *      - in: path
+ *        name: subdivision_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *    responses:
+ *      204:
+ *        description: No Content
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Forbidden"
+ *                details:
+ *                  type: string
+ *                  example: "Permission to delete subdivision data denied"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: "Not Found"
+ *                details:
+ *                  type: string
+ *                  example: "Subdivision not found"
+ */
+  .delete(verifyToken, deleteSubdivisionBySubdivisionId)
