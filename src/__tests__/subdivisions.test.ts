@@ -704,7 +704,7 @@ describe("DELETE /api/subdivisions/subdivision/:subdivision_id", () => {
     })
   })
 
-  test("DELETE:403 esponds with a warning when the authenticated user attempts to delete another user's subdivision", async () => {
+  test("DELETE:403 Responds with a warning when the authenticated user attempts to delete another user's subdivision", async () => {
 
     const { body } = await request(app)
       .delete("/api/subdivisions/subdivision/4")
