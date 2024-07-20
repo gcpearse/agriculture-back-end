@@ -25,8 +25,8 @@ beforeEach(async () => {
   token = auth.body.token
 })
 
-afterAll(() => {
-  seed(data)
+afterAll(async () => {
+  await seed(data)
   db.end()
 })
 
@@ -73,7 +73,7 @@ describe("GET /api/crops/:plot_id", () => {
     expect(body.crops).toHaveLength(0)
   })
 
-  test("GET:400 Responds with an error message when the plot_id is not a number", async () => {
+  test("GET:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/example")
@@ -315,6 +315,96 @@ describe("GET /api/crops/:plot_id?order=", () => {
     expect(body).toMatchObject({
       message: "Not Found",
       details: "No results found for that query"
+    })
+  })
+})
+
+
+describe("GET /api/crops/:plot_id?name=&limit=", () => {
+
+  test("GET:200 Responds with a limited array of crop objects associated with the plot", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/1?limit=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.crops).toHaveLength(2)
+  })
+
+  test("GET:200 Responds with an array of all crops associated with the plot when the limit exceeds the total number of results", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/1?limit=20")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.crops).toHaveLength(4)
+  })
+
+  test("GET:400 Responds with an error message when the value of limit is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/1?limit=two")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+})
+
+
+describe("GET /api/crops/:plot_id?name=&page=", () => {
+
+  test("GET:200 Responds with an array of crop objects associated starting from the value of page", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/1?limit=2&page=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.crops.map((crop: Crop) => {
+      return crop.crop_id
+    })).toEqual([3, 4])
+  })
+
+  test("GET:200 Page defaults to page one", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/1?limit=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.crops.map((crop: Crop) => {
+      return crop.crop_id
+    })).toEqual([1, 2])
+  })
+
+  test("GET:200 When there are fewer results on the final page, the response contains those results", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/1?limit=3&page=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.crops.map((crop: Crop) => {
+      return crop.crop_id
+    })).toEqual([4])
+  })
+
+  test("GET:404 Responds with an error when the value of page exceeds the page limit", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/1?limit=2&page=3")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Page not found"
     })
   })
 })
