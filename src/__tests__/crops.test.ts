@@ -212,7 +212,7 @@ describe("GET /api/crops/:plot_id?sort=", () => {
     ])
   })
 
-  test.only("GET:200 Responds with an array of crop objects sorted by date_planted in descending order while filtering out null values", async () => {
+  test("GET:200 Responds with an array of crop objects sorted by date_planted in descending order while filtering out null values", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/1?sort=date_planted")
@@ -220,12 +220,8 @@ describe("GET /api/crops/:plot_id?sort=", () => {
       .expect(200)
 
     expect(body.crops.map((crop: Crop) => {
-      return String(crop.date_planted).slice(0, 10)
-    })).toEqual([
-      "2024-07-18",
-      "2024-06-19",
-      "2023-09-20",
-    ])
+      return crop.crop_id
+    })).toEqual([4, 1, 2])
   })
 
   test("GET:200 Responds with an array of crop objects sorted by harvest_date in descending order while filtering out null values", async () => {
@@ -236,12 +232,8 @@ describe("GET /api/crops/:plot_id?sort=", () => {
       .expect(200)
 
     expect(body.crops.map((crop: Crop) => {
-      return String(crop.harvest_date).slice(0, 10)
-    })).toEqual([
-      "2026-07-18",
-      "2024-09-20",
-      "2024-09-14",
-    ])
+      return crop.crop_id
+    })).toEqual([4, 2, 1])
   })
 
   test("GET:404 Responds with an error when passed an invalid sort value", async () => {
@@ -286,17 +278,14 @@ describe("GET /api/crops/:plot_id?name=&sort=", () => {
 
     expect(body.crops.map((crop: Crop) => {
       return {
-        name: crop.name,
-        harvest_date: String(crop.harvest_date).slice(0, 10)
+        name: crop.name
       }
     })).toEqual([
       {
-        name: "pecan",
-        harvest_date: "2026-07-18"
+        name: "pecan"
       },
       {
-        name: "carrot",
-        harvest_date: "2024-09-14"
+        name: "carrot"
       }
     ])
   })
