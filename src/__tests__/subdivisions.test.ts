@@ -25,7 +25,10 @@ beforeEach(async () => {
   token = auth.body.token
 })
 
-afterAll(() => db.end())
+afterAll(async () => {
+  await seed(data)
+  db.end()
+})
 
 
 describe("GET /api/subdivisions/:plot_id", () => {
@@ -62,7 +65,7 @@ describe("GET /api/subdivisions/:plot_id", () => {
     expect(body.subdivisions).toHaveLength(0)
   })
 
-  test("GET:400 Responds with an error message when the plot_id is not a number", async () => {
+  test("GET:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/example")
@@ -147,6 +150,8 @@ describe("GET /api/subdivisions/:plot_id?type=", () => {
       .get("/api/subdivisions/1?type=bed")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
+
+    expect(body.subdivisions).toHaveLength(2)
 
     expect(body.subdivisions.every((subdivision: Subdivision) => {
       return subdivision.type === "bed"
@@ -299,7 +304,7 @@ describe("POST /api/subdivisions/:plot_id", () => {
     })
   })
 
-  test("POST:400 Responds with an error message when the plot_id is not a number", async () => {
+  test("POST:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const newSubdivision = {
       plot_id: 1,
@@ -430,7 +435,7 @@ describe("GET /api/subdivisions/subdivision/:subdivision_id", () => {
     })
   })
 
-  test("GET:400 Responds with an error message when the subdivision is not a number", async () => {
+  test("GET:400 Responds with an error message when the subdivision is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/subdivision/example")
@@ -585,7 +590,7 @@ describe("PATCH /api/subdivisions/subdivision/:subdivision_id", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error message when the subdivision_id is not a number", async () => {
+  test("PATCH:400 Responds with an error message when the subdivision_id is not a positive integer", async () => {
 
     const newDetails = {
       name: "Root Vegetable Patch",
@@ -691,7 +696,7 @@ describe("DELETE /api/subdivisions/subdivision/:subdivision_id", () => {
     })
   })
 
-  test("DELETE:400 Responds with an error message when the subdivision_id is not a number", async () => {
+  test("DELETE:400 Responds with an error message when the subdivision_id is not a positive integer", async () => {
 
     const { body } = await request(app)
       .delete("/api/subdivisions/subdivision/example")
@@ -704,7 +709,7 @@ describe("DELETE /api/subdivisions/subdivision/:subdivision_id", () => {
     })
   })
 
-  test("DELETE:403 esponds with a warning when the authenticated user attempts to delete another user's subdivision", async () => {
+  test("DELETE:403 Responds with a warning when the authenticated user attempts to delete another user's subdivision", async () => {
 
     const { body } = await request(app)
       .delete("/api/subdivisions/subdivision/4")

@@ -22,7 +22,10 @@ beforeEach(async () => {
   token = auth.body.token
 })
 
-afterAll(() => db.end())
+afterAll(async () => {
+  await seed(data)
+  db.end()
+})
 
 
 describe("GET /api/users/:username", () => {

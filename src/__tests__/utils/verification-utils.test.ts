@@ -1,4 +1,4 @@
-import { verifyPermission, verifyParamIsNumber } from "../../utils/verification-utils"
+import { verifyPermission, verifyParamIsPositiveInt, verifyPagination } from "../../utils/verification-utils"
 
 
 describe("verifyPermission", () => {
@@ -19,11 +19,47 @@ describe("verifyPermission", () => {
 })
 
 
-describe("verifyParamIsNumber", () => {
+describe("verifyPagination", () => {
+
+  test("When the page exceeds the possible range, the promise is rejected", () => {
+
+    expect(verifyPagination(3, 5, 10)).rejects.toMatchObject({
+      status: 404,
+      message: "Not Found",
+      details: "Page not found"
+    })
+  })
+
+  test("Returns undefined when the page falls with the possible range", () => {
+
+    expect(verifyPagination(2, 5, 10)).toBeUndefined()
+  })
+})
+
+
+describe("verifyParamIsPositiveInt", () => {
 
   test("When the value of the parameter is not a number (NaN), the promise is rejected", () => {
 
-    expect(verifyParamIsNumber(NaN)).rejects.toMatchObject({
+    expect(verifyParamIsPositiveInt(NaN)).rejects.toMatchObject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
+  test("When the value of the parameter is a negative number, the promise is rejected", () => {
+
+    expect(verifyParamIsPositiveInt(-1)).rejects.toMatchObject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
+  test("When the value of the parameter is not an integer, the promise is rejected", () => {
+
+    expect(verifyParamIsPositiveInt(1.1)).rejects.toMatchObject({
       status: 400,
       message: "Bad Request",
       details: "Invalid parameter"
@@ -32,6 +68,6 @@ describe("verifyParamIsNumber", () => {
 
   test("Returns undefined when the value of the parameter is a number", () => {
 
-    expect(verifyParamIsNumber(1)).toBeUndefined()
+    expect(verifyParamIsPositiveInt(1)).toBeUndefined()
   })
 })

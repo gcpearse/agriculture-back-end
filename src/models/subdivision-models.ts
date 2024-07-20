@@ -1,14 +1,14 @@
 import QueryString from "qs"
 import { db } from "../db"
 import { checkSubdivisionNameConflict, getPlotOwnerId, getSubdivisionPlotId, validateSubdivisionType } from "../utils/db-query-utils"
-import { verifyPermission, verifyParamIsNumber } from "../utils/verification-utils"
+import { verifyPermission, verifyParamIsPositiveInt } from "../utils/verification-utils"
 import { Subdivision } from "../types/subdivision-types"
 import format from "pg-format"
 
 
 export const selectSubdivisionsByPlotId = async (authUserId: number, plot_id: number, { type }: QueryString.ParsedQs): Promise<Subdivision[]> => {
 
-  await verifyParamIsNumber(plot_id)
+  await verifyParamIsPositiveInt(plot_id)
 
   const owner_id = await getPlotOwnerId(plot_id)
 
@@ -29,9 +29,13 @@ export const selectSubdivisionsByPlotId = async (authUserId: number, plot_id: nu
     })
   }
 
-  if (type) query += format(`AND type = %L;`, type)
+  if (type) {
+    query += format(`
+      AND type = %L
+      `, type)
+  }
 
-  const result = await db.query(query, [plot_id])
+  const result = await db.query(`${query};`, [plot_id])
 
   return result.rows
 }
@@ -39,7 +43,7 @@ export const selectSubdivisionsByPlotId = async (authUserId: number, plot_id: nu
 
 export const insertSubdivisionByPlotId = async (authUserId: number, plot_id: number, subdivision: Subdivision): Promise<Subdivision> => {
 
-  await verifyParamIsNumber(plot_id)
+  await verifyParamIsPositiveInt(plot_id)
 
   let owner_id = await getPlotOwnerId(plot_id)
 
@@ -61,14 +65,15 @@ export const insertSubdivisionByPlotId = async (authUserId: number, plot_id: num
     })
   }
 
-  const result = await db.query(`
+  const result = await db.query(format(`
     INSERT INTO subdivisions
       (plot_id, name, type, description, area)
     VALUES
-      ($1, $2, $3, $4, $5)
+      %L
     RETURNING *;
     `,
-    [subdivision.plot_id, subdivision.name, subdivision.type, subdivision.description, subdivision.area])
+    [[subdivision.plot_id, subdivision.name, subdivision.type, subdivision.description, subdivision.area]]
+  ))
 
   return result.rows[0]
 }
@@ -76,7 +81,7 @@ export const insertSubdivisionByPlotId = async (authUserId: number, plot_id: num
 
 export const selectSubdivisionBySubdivisionId = async (authUserId: number, subdivision_id: number): Promise<Subdivision> => {
 
-  await verifyParamIsNumber(subdivision_id)
+  await verifyParamIsPositiveInt(subdivision_id)
 
   const plotId = await getSubdivisionPlotId(subdivision_id)
 
@@ -96,7 +101,7 @@ export const selectSubdivisionBySubdivisionId = async (authUserId: number, subdi
 
 export const updateSubdivisionBySubdivisionId = async (authUserId: number, subdivision_id: number, subdivision: Subdivision): Promise<Subdivision> => {
 
-  await verifyParamIsNumber(subdivision_id)
+  await verifyParamIsPositiveInt(subdivision_id)
 
   const plotId = await getSubdivisionPlotId(subdivision_id)
 
@@ -143,7 +148,7 @@ export const updateSubdivisionBySubdivisionId = async (authUserId: number, subdi
 
 export const removeSubdivisionBySubdivisionId = async (authUserId: number, subdivision_id: number): Promise<void> => {
 
-  await verifyParamIsNumber(subdivision_id)
+  await verifyParamIsPositiveInt(subdivision_id)
 
   const plotId = await getSubdivisionPlotId(subdivision_id)
 

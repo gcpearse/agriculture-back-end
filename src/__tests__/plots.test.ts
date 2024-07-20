@@ -25,7 +25,10 @@ beforeEach(async () => {
   token = auth.body.token
 })
 
-afterAll(() => db.end())
+afterAll(async () => {
+  await seed(data)
+  db.end()
+})
 
 
 describe("GET /api/plots/:owner_id", () => {
@@ -72,7 +75,7 @@ describe("GET /api/plots/:owner_id", () => {
     expect(body.plots).toHaveLength(0)
   })
 
-  test("GET:400 Responds with an error message when the owner_id is not a number", async () => {
+  test("GET:400 Responds with an error message when the owner_id is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/example")
@@ -136,12 +139,14 @@ describe("GET /api/plots/:owner_id?type=", () => {
   test("GET:200 Responds with an array of plot objects filtered by type", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/1?type=garden")
+      .get("/api/plots/1?type=allotment")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
+    expect(body.plots).toHaveLength(2)
+
     expect(body.plots.every((plot: Plot) => {
-      return plot.type === "garden"
+      return plot.type === "allotment"
     })).toBe(true)
   })
 
@@ -298,7 +303,7 @@ describe("POST /api/plots/:owner_id", () => {
     })
   })
 
-  test("POST:400 Responds with an error message when the owner_id is not a number", async () => {
+  test("POST:400 Responds with an error message when the owner_id is not a positive integer", async () => {
 
     const newPlot = {
       owner_id: 1,
@@ -435,7 +440,7 @@ describe("GET /api/plots/plot/:plot_id", () => {
     })
   })
 
-  test("GET:400 Responds with an error message when the plot_id is not a number", async () => {
+  test("GET:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/plot/example")
@@ -597,7 +602,7 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error message when the plot_id is not a number", async () => {
+  test("PATCH:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const newDetails = {
       name: "John's Homestead",
@@ -707,7 +712,7 @@ describe("DELETE /api/plots/plot/:plot_id", () => {
     })
   })
 
-  test("DELETE:400 Responds with an error message when the plot_id is not a number", async () => {
+  test("DELETE:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const { body } = await request(app)
       .delete("/api/plots/plot/example")
