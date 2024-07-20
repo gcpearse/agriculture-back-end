@@ -33,14 +33,16 @@ afterAll(() => {
 
 describe("GET /api/crops/:plot_id", () => {
 
-  test("GET:200 Responds with an array of crop objects", async () => {
+  test("GET:200 Responds with an array of crop objects sorted by crop_id in ascending order", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.crops).toHaveLength(3)
+    expect(body.crops.map((crop: Crop) => {
+      return crop.crop_id
+    })).toEqual([1, 2, 3, 4])
 
     const regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
 
@@ -157,7 +159,7 @@ describe("GET /api/crops/:plot_id?name=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.crops).toHaveLength(2)
+    expect(body.crops).toHaveLength(3)
 
     expect(body.crops.every((crop: Crop) => {
       return /ca/i.test(crop.name)
@@ -171,14 +173,14 @@ describe("GET /api/crops/:plot_id?name=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.crops).toHaveLength(2)
+    expect(body.crops).toHaveLength(3)
 
     expect(body.crops.every((crop: Crop) => {
       return /ca/i.test(crop.name)
     })).toBe(true)
   })
 
-  test("GET:200 Returns an empty array when the value of 'name' matches no results", async () => {
+  test("GET:200 Returns an empty array when the value of name matches no results", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/1?name=example")
@@ -187,5 +189,132 @@ describe("GET /api/crops/:plot_id?name=", () => {
 
     expect(Array.isArray(body.crops)).toBe(true)
     expect(body.crops).toHaveLength(0)
+  })
+})
+
+
+describe("GET /api/crops/:plot_id?sort=", () => {
+
+  test("GET:200 Responds with an array of crop objects sorted by name in ascending order", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/1?sort=name")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.crops.map((crop: Crop) => {
+      return crop.name
+    })).toEqual([
+      "apple",
+      "cabbage",
+      "carrot",
+      "pecan"
+    ])
+  })
+
+  test("GET:200 Responds with an array of crop objects sorted by date_planted in descending order while filtering out null values", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/1?sort=date_planted")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.crops.map((crop: Crop) => {
+      return crop.date_planted
+    })).toEqual([
+      "2024-07-18T23:00:00.000Z",
+      "2024-06-19T23:00:00.000Z",
+      "2023-09-20T23:00:00.000Z",
+    ])
+  })
+
+  test("GET:200 Responds with an array of crop objects sorted by harvest_date in descending order while filtering out null values", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/1?sort=harvest_date")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.crops.map((crop: Crop) => {
+      return crop.harvest_date
+    })).toEqual([
+      "2026-07-18T23:00:00.000Z",
+      "2024-09-20T23:00:00.000Z",
+      "2024-09-14T23:00:00.000Z",
+    ])
+  })
+
+  test("GET:404 Responds with an error when passed an invalid sort value", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/1?sort=variety")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  })
+})
+
+
+describe("GET /api/crops/:plot_id?name=&sort=", () => {
+
+  test("GET:200 Responds with an array of crop objects filtered by name and sorted by name in ascending order", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/1?name=ca&sort=name")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.crops.map((crop: Crop) => {
+      return crop.name
+    })).toEqual([
+      "cabbage",
+      "carrot",
+      "pecan"
+    ])
+  })
+
+  test("GET:200 Responds with an array of crop objects filtered by name and sorted by harvest_date in descending order while filtering out null values", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/1?name=ca&sort=harvest_date")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.crops.map((crop: Crop) => {
+      return {
+        name: crop.name,
+        harvest_date: crop.harvest_date
+      }
+    })).toEqual([
+      {
+        name: "pecan",
+        harvest_date: "2026-07-18T23:00:00.000Z"
+      },
+      {
+        name: "carrot",
+        harvest_date: "2024-09-14T23:00:00.000Z"
+      }
+    ])
+  })
+})
+
+
+describe("GET /api/crops/:plot_id?order=", () => {
+
+  test("GET:404 Responds with an error when passed an invalid order value", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/1?order=example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "No results found for that query"
+    })
   })
 })
