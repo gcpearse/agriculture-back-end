@@ -31,11 +31,11 @@ export const selectPlotsByOwner = async (authUserId: number, owner_id: number, {
 
   if (type) {
     query += format(`
-      AND type = %L;
+      AND type = %L
       `, type)
   }
 
-  const result = await db.query(query, [owner_id])
+  const result = await db.query(`${query};`, [owner_id])
 
   return result.rows
 }

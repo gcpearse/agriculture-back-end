@@ -31,11 +31,11 @@ export const selectSubdivisionsByPlotId = async (authUserId: number, plot_id: nu
 
   if (type) {
     query += format(`
-      AND type = %L;
+      AND type = %L
       `, type)
   }
 
-  const result = await db.query(query, [plot_id])
+  const result = await db.query(`${query};`, [plot_id])
 
   return result.rows
 }
