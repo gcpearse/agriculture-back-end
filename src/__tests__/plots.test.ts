@@ -25,8 +25,8 @@ beforeEach(async () => {
   token = auth.body.token
 })
 
-afterAll(() => {
-  seed(data)
+afterAll(async () => {
+  await seed(data)
   db.end()
 })
 

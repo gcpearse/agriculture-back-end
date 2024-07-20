@@ -7,8 +7,8 @@ import { app } from "../app"
 
 beforeEach(() => seed(data))
 
-afterAll(() => {
-  seed(data)
+afterAll(async () => {
+  await seed(data)
   db.end()
 })
 
