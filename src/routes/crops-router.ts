@@ -16,7 +16,7 @@ cropsRouter.route("/crops/:plot_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve a plot's crops
- *    description: Responds with an array of crop objects.
+ *    description: Responds with an array of crop objects. If a query parameter is invalid or the plot_id does not exist, the server responds with an error. Permission is denied when the plot does not belong to the current user.
  *    tags: [Crops]
  *    parameters:
  *      - in: path
