@@ -59,14 +59,15 @@ export const insertPlotByOwner = async (authUserId: number, owner_id: number, pl
     })
   }
 
-  const result = await db.query(`
+  const result = await db.query(format(`
     INSERT INTO plots
       (owner_id, name, type, description, location, area)
     VALUES
-      ($1, $2, $3, $4, $5, $6)
+      %L
     RETURNING *;
     `,
-    [plot.owner_id, plot.name, plot.type, plot.description, plot.location, plot.area])
+    [[plot.owner_id, plot.name, plot.type, plot.description, plot.location, plot.area]]
+  ))
 
   return result.rows[0]
 }

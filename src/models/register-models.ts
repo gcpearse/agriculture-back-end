@@ -1,3 +1,4 @@
+import format from "pg-format"
 import { db } from "../db"
 import { SecureUser, User } from "../types/user-types"
 import { checkEmailConflict } from "../utils/db-query-utils"
@@ -22,11 +23,11 @@ export const registerUser = async ({ username, password, email, first_name, surn
 
   await checkEmailConflict(email)
 
-  const result = await db.query(`
+  const result = await db.query(format(`
     INSERT INTO users
       (username, password, email, first_name, surname, unit_preference)
     VALUES
-      ($1, $2, $3, $4, $5, $6)
+      %L
     RETURNING 
       user_id, 
       username,
@@ -35,8 +36,8 @@ export const registerUser = async ({ username, password, email, first_name, surn
       surname, 
       unit_preference;
     `,
-    [username, password, email, first_name, surname, unit_preference]
-  )
+    [[username, password, email, first_name, surname, unit_preference]]
+  ))
 
   return result.rows[0]
 }
