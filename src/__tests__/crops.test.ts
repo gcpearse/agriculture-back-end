@@ -25,7 +25,10 @@ beforeEach(async () => {
   token = auth.body.token
 })
 
-afterAll(() => db.end())
+afterAll(() => {
+  seed(data)
+  db.end()
+})
 
 
 describe("GET /api/crops/:plot_id", () => {

@@ -7,7 +7,10 @@ import { app } from "../app"
 
 beforeEach(() => seed(data))
 
-afterAll(() => db.end())
+afterAll(() => {
+  seed(data)
+  db.end()
+})
 
 
 describe("POST /api/register", () => {
