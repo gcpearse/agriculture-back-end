@@ -6,13 +6,26 @@ import { verifyParamIsNumber, verifyPermission } from "../utils/verification-uti
 import format from "pg-format"
 
 
-export const selectCropsByPlotId = async (authUserId: number, plot_id: number, { name }: QueryString.ParsedQs): Promise<Crop[]> => {
+export const selectCropsByPlotId = async (authUserId: number, plot_id: number, { name, sort = "crop_id", order = "asc" }: QueryString.ParsedQs): Promise<Crop[]> => {
 
   await verifyParamIsNumber(plot_id)
 
   const owner_id = await getPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to view crop data denied")
+
+  const validValues = {
+    sort: ["crop_id", "name", "date_planted", "harvest_date"],
+    order: ["asc", "desc"]
+  }
+
+  if (!validValues.sort.includes(sort as string) || !validValues.order.includes(order as string)) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  }
 
   let query = `
   SELECT
@@ -31,11 +44,29 @@ export const selectCropsByPlotId = async (authUserId: number, plot_id: number, {
   WHERE crops.plot_id = $1
   `
 
-  if (name) query += format(`AND crops.name ILIKE %L`, `%${name}%`)
+  if (name) query += format(`
+    AND crops.name ILIKE %L
+    `, `%${name}%`)
 
-  query += `GROUP BY crops.crop_id;`
+  if (sort === "date_planted" || sort === "harvest_date") {
+    query += `
+    AND crops.${sort} IS NOT NULL
+    `
+  }
 
-  const result = await db.query(query, [plot_id])
+  query += `
+  GROUP BY crops.crop_id
+  `
+
+  if (sort === "date_planted" || sort === "harvest_date") {
+    order = "desc"
+  }
+
+  query += `
+  ORDER BY ${sort} ${order}
+  `
+
+  const result = await db.query(`${query};`, [plot_id])
 
   return result.rows
 }
