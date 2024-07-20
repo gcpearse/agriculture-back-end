@@ -2,13 +2,17 @@ import QueryString from "qs"
 import { db } from "../db"
 import { Crop } from "../types/crop-types"
 import { getPlotOwnerId } from "../utils/db-query-utils"
-import { verifyParamIsNumber, verifyPermission } from "../utils/verification-utils"
+import { verifyParamIsPositiveInt, verifyPermission } from "../utils/verification-utils"
 import format from "pg-format"
 
 
-export const selectCropsByPlotId = async (authUserId: number, plot_id: number, { name, sort = "crop_id", order = "asc" }: QueryString.ParsedQs): Promise<Crop[]> => {
+export const selectCropsByPlotId = async (authUserId: number, plot_id: number, { name, sort = "crop_id", order = "asc", limit = "10", page = "1" }: QueryString.ParsedQs): Promise<Crop[]> => {
 
-  await verifyParamIsNumber(plot_id)
+  await verifyParamIsPositiveInt(plot_id)
+
+  await verifyParamIsPositiveInt(+limit)
+
+  await verifyParamIsPositiveInt(+page)
 
   const owner_id = await getPlotOwnerId(plot_id)
 
@@ -64,9 +68,25 @@ export const selectCropsByPlotId = async (authUserId: number, plot_id: number, {
 
   query += `
   ORDER BY ${sort} ${order}
+  LIMIT ${limit}
+  OFFSET ${(+page - 1) * +limit}
   `
 
   const result = await db.query(`${query};`, [plot_id])
+
+  const cropCount = await db.query(`
+    SELECT COUNT(crop_id)
+    FROM crops
+    WHERE plot_id = $1;
+    `, [plot_id])
+
+  if (+page > 1 && (+limit * +page - +limit) >= cropCount.rows[0].count) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+      details: "Page not found"
+    })
+  }
 
   return result.rows
 }
