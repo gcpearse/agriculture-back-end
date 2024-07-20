@@ -3,12 +3,12 @@ import { db } from "../db"
 import format from "pg-format"
 import { Plot } from "../types/plot-types"
 import { checkPlotNameConflict, getPlotOwnerId, searchForUserId, validatePlotType } from "../utils/db-query-utils"
-import { verifyPermission, verifyParamIsNumber } from "../utils/verification-utils"
+import { verifyPermission, verifyParamIsPositiveInt } from "../utils/verification-utils"
 
 
 export const selectPlotsByOwner = async (authUserId: number, owner_id: number, { type }: QueryString.ParsedQs): Promise<Plot[]> => {
 
-  await verifyParamIsNumber(owner_id)
+  await verifyParamIsPositiveInt(owner_id)
 
   await searchForUserId(owner_id)
 
@@ -43,7 +43,7 @@ export const selectPlotsByOwner = async (authUserId: number, owner_id: number, {
 
 export const insertPlotByOwner = async (authUserId: number, owner_id: number, plot: Plot): Promise<Plot> => {
 
-  await verifyParamIsNumber(owner_id)
+  await verifyParamIsPositiveInt(owner_id)
 
   await searchForUserId(owner_id)
 
@@ -79,7 +79,7 @@ export const insertPlotByOwner = async (authUserId: number, owner_id: number, pl
 
 export const selectPlotByPlotId = async (authUserId: number, plot_id: number): Promise<Plot> => {
 
-  await verifyParamIsNumber(plot_id)
+  await verifyParamIsPositiveInt(plot_id)
 
   const owner_id = await getPlotOwnerId(plot_id)
 
@@ -97,7 +97,7 @@ export const selectPlotByPlotId = async (authUserId: number, plot_id: number): P
 
 export const updatePlotByPlotId = async (authUserId: number, plot_id: number, plot: Plot): Promise<Plot> => {
 
-  await verifyParamIsNumber(plot_id)
+  await verifyParamIsPositiveInt(plot_id)
 
   const owner_id = await getPlotOwnerId(plot_id)
 
@@ -143,7 +143,7 @@ export const updatePlotByPlotId = async (authUserId: number, plot_id: number, pl
 
 export const removePlotByPlotId = async (authUserId: number, plot_id: number): Promise<void> => {
 
-  await verifyParamIsNumber(plot_id)
+  await verifyParamIsPositiveInt(plot_id)
 
   const owner_id = await getPlotOwnerId(plot_id)
 
