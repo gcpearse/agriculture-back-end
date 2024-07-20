@@ -13,6 +13,7 @@ import { authRouter } from "./routes/auth-router"
 import { usersRouter } from "./routes/users-router"
 import { plotsRouter } from "./routes/plots-router"
 import { subdivisionsRouter } from "./routes/subdivisions-router"
+import { cropsRouter } from "./routes/crops-router"
 
 
 export const app = express()
@@ -38,6 +39,8 @@ app.use("/api", usersRouter)
 app.use("/api", plotsRouter)
 
 app.use("/api", subdivisionsRouter)
+
+app.use("/api", cropsRouter)
 
 
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
