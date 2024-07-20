@@ -1,4 +1,4 @@
-import { verifyPermission, verifyParamIsPositiveInt } from "../../utils/verification-utils"
+import { verifyPermission, verifyParamIsPositiveInt, verifyPagination } from "../../utils/verification-utils"
 
 
 describe("verifyPermission", () => {
@@ -15,6 +15,24 @@ describe("verifyPermission", () => {
   test("Returns undefined when the base value matches the target value", () => {
 
     expect(verifyPermission(1, 1, "Test")).toBeUndefined()
+  })
+})
+
+
+describe("verifyPagination", () => {
+
+  test("When the page exceeds the possible range, the promise is rejected", () => {
+
+    expect(verifyPagination(3, 5, 10)).rejects.toMatchObject({
+      status: 404,
+      message: "Not Found",
+      details: "Page not found"
+    })
+  })
+
+  test("Returns undefined when the page falls with the possible range", () => {
+
+    expect(verifyPagination(2, 5, 10)).toBeUndefined()
   })
 })
 
