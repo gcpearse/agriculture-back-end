@@ -21,6 +21,15 @@ export const cropData: Crop[] = [
     harvest_date: new Date("2024-09-21")
   },
   {
+    plot_id: 1,
+    subdivision_id: null,
+    name: "cabbage",
+    variety: null,
+    quantity: null,
+    date_planted:  null,
+    harvest_date: null
+  },
+  {
     plot_id: 2,
     subdivision_id: null,
     name: "peach",
