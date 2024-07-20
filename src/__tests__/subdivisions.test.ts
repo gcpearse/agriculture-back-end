@@ -65,7 +65,7 @@ describe("GET /api/subdivisions/:plot_id", () => {
     expect(body.subdivisions).toHaveLength(0)
   })
 
-  test("GET:400 Responds with an error message when the plot_id is not a number", async () => {
+  test("GET:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/example")
@@ -304,7 +304,7 @@ describe("POST /api/subdivisions/:plot_id", () => {
     })
   })
 
-  test("POST:400 Responds with an error message when the plot_id is not a number", async () => {
+  test("POST:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const newSubdivision = {
       plot_id: 1,
@@ -435,7 +435,7 @@ describe("GET /api/subdivisions/subdivision/:subdivision_id", () => {
     })
   })
 
-  test("GET:400 Responds with an error message when the subdivision is not a number", async () => {
+  test("GET:400 Responds with an error message when the subdivision is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/subdivision/example")
@@ -590,7 +590,7 @@ describe("PATCH /api/subdivisions/subdivision/:subdivision_id", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error message when the subdivision_id is not a number", async () => {
+  test("PATCH:400 Responds with an error message when the subdivision_id is not a positive integer", async () => {
 
     const newDetails = {
       name: "Root Vegetable Patch",
@@ -696,7 +696,7 @@ describe("DELETE /api/subdivisions/subdivision/:subdivision_id", () => {
     })
   })
 
-  test("DELETE:400 Responds with an error message when the subdivision_id is not a number", async () => {
+  test("DELETE:400 Responds with an error message when the subdivision_id is not a positive integer", async () => {
 
     const { body } = await request(app)
       .delete("/api/subdivisions/subdivision/example")

@@ -1,4 +1,4 @@
-import { verifyPermission, verifyParamIsNumber } from "../../utils/verification-utils"
+import { verifyPermission, verifyParamIsPositiveInt } from "../../utils/verification-utils"
 
 
 describe("verifyPermission", () => {
@@ -19,11 +19,29 @@ describe("verifyPermission", () => {
 })
 
 
-describe("verifyParamIsNumber", () => {
+describe("verifyParamIsPositiveInt", () => {
 
   test("When the value of the parameter is not a number (NaN), the promise is rejected", () => {
 
-    expect(verifyParamIsNumber(NaN)).rejects.toMatchObject({
+    expect(verifyParamIsPositiveInt(NaN)).rejects.toMatchObject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
+  test("When the value of the parameter is a negative number, the promise is rejected", () => {
+
+    expect(verifyParamIsPositiveInt(-1)).rejects.toMatchObject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
+  test("When the value of the parameter is not an integer, the promise is rejected", () => {
+
+    expect(verifyParamIsPositiveInt(1.1)).rejects.toMatchObject({
       status: 400,
       message: "Bad Request",
       details: "Invalid parameter"
@@ -32,6 +50,6 @@ describe("verifyParamIsNumber", () => {
 
   test("Returns undefined when the value of the parameter is a number", () => {
 
-    expect(verifyParamIsNumber(1)).toBeUndefined()
+    expect(verifyParamIsPositiveInt(1)).toBeUndefined()
   })
 })
