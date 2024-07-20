@@ -5,6 +5,6 @@ export type Crop = {
   name: string
   variety: string | null
   quantity: number | null
-  date_planted: Date
-  harvest_date: Date
+  date_planted: Date | null
+  harvest_date: Date | null
 }
