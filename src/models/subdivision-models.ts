@@ -29,7 +29,9 @@ export const selectSubdivisionsByPlotId = async (authUserId: number, plot_id: nu
     })
   }
 
-  if (type) query += format(`AND type = %L;`, type)
+  if (type) query += format(`
+    AND type = %L;
+    `, type)
 
   const result = await db.query(query, [plot_id])
 
