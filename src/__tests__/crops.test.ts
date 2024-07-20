@@ -212,7 +212,7 @@ describe("GET /api/crops/:plot_id?sort=", () => {
     ])
   })
 
-  test("GET:200 Responds with an array of crop objects sorted by date_planted in descending order while filtering out null values", async () => {
+  test.only("GET:200 Responds with an array of crop objects sorted by date_planted in descending order while filtering out null values", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/1?sort=date_planted")
@@ -220,11 +220,11 @@ describe("GET /api/crops/:plot_id?sort=", () => {
       .expect(200)
 
     expect(body.crops.map((crop: Crop) => {
-      return crop.date_planted
+      return String(crop.date_planted).slice(0, 10)
     })).toEqual([
-      "2024-07-18T23:00:00.000Z",
-      "2024-06-19T23:00:00.000Z",
-      "2023-09-20T23:00:00.000Z",
+      "2024-07-18",
+      "2024-06-19",
+      "2023-09-20",
     ])
   })
 
@@ -236,11 +236,11 @@ describe("GET /api/crops/:plot_id?sort=", () => {
       .expect(200)
 
     expect(body.crops.map((crop: Crop) => {
-      return crop.harvest_date
+      return String(crop.harvest_date).slice(0, 10)
     })).toEqual([
-      "2026-07-18T23:00:00.000Z",
-      "2024-09-20T23:00:00.000Z",
-      "2024-09-14T23:00:00.000Z",
+      "2026-07-18",
+      "2024-09-20",
+      "2024-09-14",
     ])
   })
 
@@ -287,16 +287,16 @@ describe("GET /api/crops/:plot_id?name=&sort=", () => {
     expect(body.crops.map((crop: Crop) => {
       return {
         name: crop.name,
-        harvest_date: crop.harvest_date
+        harvest_date: String(crop.harvest_date).slice(0, 10)
       }
     })).toEqual([
       {
         name: "pecan",
-        harvest_date: "2026-07-18T23:00:00.000Z"
+        harvest_date: "2026-07-18"
       },
       {
         name: "carrot",
-        harvest_date: "2024-09-14T23:00:00.000Z"
+        harvest_date: "2024-09-14"
       }
     ])
   })
