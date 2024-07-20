@@ -146,3 +146,46 @@ describe("GET /api/crops/:plot_id", () => {
     })
   })
 })
+
+
+describe("GET /api/crops/:plot_id?name=", () => {
+
+  test("GET:200 Responds with an array of crop objects filtered by name", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/1?name=ca")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.crops).toHaveLength(2)
+
+    expect(body.crops.every((crop: Crop) => {
+      return /ca/i.test(crop.name)
+    })).toBe(true)
+  })
+
+  test("GET:200 Filtered results are case-insensitive", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/1?name=CA")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.crops).toHaveLength(2)
+
+    expect(body.crops.every((crop: Crop) => {
+      return /ca/i.test(crop.name)
+    })).toBe(true)
+  })
+
+  test("GET:200 Returns an empty array when the value of 'name' matches no results", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/1?name=example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(Array.isArray(body.crops)).toBe(true)
+    expect(body.crops).toHaveLength(0)
+  })
+})
