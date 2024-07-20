@@ -139,12 +139,14 @@ describe("GET /api/plots/:owner_id?type=", () => {
   test("GET:200 Responds with an array of plot objects filtered by type", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/1?type=garden")
+      .get("/api/plots/1?type=allotment")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
+    expect(body.plots).toHaveLength(2)
+
     expect(body.plots.every((plot: Plot) => {
-      return plot.type === "garden"
+      return plot.type === "allotment"
     })).toBe(true)
   })
 

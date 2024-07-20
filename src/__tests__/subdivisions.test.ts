@@ -151,6 +151,8 @@ describe("GET /api/subdivisions/:plot_id?type=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
+    expect(body.subdivisions).toHaveLength(2)
+
     expect(body.subdivisions.every((subdivision: Subdivision) => {
       return subdivision.type === "bed"
     })).toBe(true)
