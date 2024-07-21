@@ -30,12 +30,12 @@ afterAll(async () => {
 })
 
 
-describe("GET /api/plots/:owner_id", () => {
+describe("GET /api/plots/user/:owner_id", () => {
 
   test("GET:200 Responds with an array of plot objects", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/1")
+      .get("/api/plots/user/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -66,7 +66,7 @@ describe("GET /api/plots/:owner_id", () => {
     token = auth.body.token
 
     const { body } = await request(app)
-      .get("/api/plots/3")
+      .get("/api/plots/user/3")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -77,7 +77,7 @@ describe("GET /api/plots/:owner_id", () => {
   test("GET:400 Responds with an error message when the owner_id is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/example")
+      .get("/api/plots/user/example")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -90,7 +90,7 @@ describe("GET /api/plots/:owner_id", () => {
   test("GET:403 Responds with a warning when the authenticated user attempts to retrieve another user's plot data", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/2")
+      .get("/api/plots/user/2")
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
@@ -103,7 +103,7 @@ describe("GET /api/plots/:owner_id", () => {
   test("GET:404 Responds with an error message when the owner_id does not exist", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/999")
+      .get("/api/plots/user/999")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -121,7 +121,7 @@ describe("GET /api/plots/:owner_id", () => {
       .expect(204)
 
     const { body } = await request(app)
-      .get("/api/plots/1")
+      .get("/api/plots/user/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -133,12 +133,12 @@ describe("GET /api/plots/:owner_id", () => {
 })
 
 
-describe("GET /api/plots/:owner_id?type=", () => {
+describe("GET /api/plots/user/:owner_id?type=", () => {
 
   test("GET:200 Responds with an array of plot objects filtered by type", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/1?type=allotment")
+      .get("/api/plots/user/1?type=allotment")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -152,7 +152,7 @@ describe("GET /api/plots/:owner_id?type=", () => {
   test("GET:404 Responds with an error message when the query value is invalid", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/1?type=castle")
+      .get("/api/plots/user/1?type=castle")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -164,7 +164,7 @@ describe("GET /api/plots/:owner_id?type=", () => {
 })
 
 
-describe("POST /api/plots/:owner_id", () => {
+describe("POST /api/plots/user/:owner_id", () => {
 
   test("POST:201 Responds with a new plot object", async () => {
 
@@ -178,7 +178,7 @@ describe("POST /api/plots/:owner_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/plots/1")
+      .post("/api/plots/user/1")
       .send(newPlot)
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
@@ -205,7 +205,7 @@ describe("POST /api/plots/:owner_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/plots/1")
+      .post("/api/plots/user/1")
       .send(newPlot)
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
@@ -226,7 +226,7 @@ describe("POST /api/plots/:owner_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/plots/1")
+      .post("/api/plots/user/1")
       .send(newPlot)
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
@@ -246,7 +246,7 @@ describe("POST /api/plots/:owner_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/plots/1")
+      .post("/api/plots/user/1")
       .send(newPlot)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -268,7 +268,7 @@ describe("POST /api/plots/:owner_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/plots/1")
+      .post("/api/plots/user/1")
       .send(newPlot)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -291,7 +291,7 @@ describe("POST /api/plots/:owner_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/plots/1")
+      .post("/api/plots/user/1")
       .send(newPlot)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -314,7 +314,7 @@ describe("POST /api/plots/:owner_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/plots/example")
+      .post("/api/plots/user/example")
       .send(newPlot)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -337,7 +337,7 @@ describe("POST /api/plots/:owner_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/plots/2")
+      .post("/api/plots/user/2")
       .send(newPlot)
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
@@ -360,7 +360,7 @@ describe("POST /api/plots/:owner_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/plots/1")
+      .post("/api/plots/user/1")
       .send(newPlot)
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
@@ -383,7 +383,7 @@ describe("POST /api/plots/:owner_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/plots/999")
+      .post("/api/plots/user/999")
       .send(newPlot)
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
@@ -406,7 +406,7 @@ describe("POST /api/plots/:owner_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/plots/1")
+      .post("/api/plots/user/1")
       .send(newPlot)
       .set("Authorization", `Bearer ${token}`)
       .expect(409)
