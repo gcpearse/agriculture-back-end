@@ -134,16 +134,16 @@ plotsRouter.route("/plots/user/:owner_id")
   .post(verifyToken, postPlotByOwner)
 
 
-plotsRouter.route("/plots/plot/:plot_id")
+plotsRouter.route("/plots/:plot_id")
 
 
 /**
  * @swagger
- * /api/plots/plot/{plot_id}:
+ * /api/plots/{plot_id}:
  *  get:
  *    security:
  *      - bearerAuth: []
- *    summary: Retrieve a user's plot
+ *    summary: Retrieve a plot
  *    description: Responds with a plot object. If no plot is found, the server responds with an error. Permission is denied when the plot does not belong to the current user.
  *    tags: [Plots]
  *    parameters:
@@ -183,11 +183,11 @@ plotsRouter.route("/plots/plot/:plot_id")
 
 /**
  * @swagger
- * /api/plots/plot/{plot_id}:
+ * /api/plots/{plot_id}:
  *  patch:
  *    security:
  *      - bearerAuth: []
- *    summary: Update a user's plot
+ *    summary: Update a plot
  *    description: Responds with an updated plot object. If the plot name already exists for one of the current user's other plots or the plot_id does not exist, the server responds with an error. Permission is denied when the plot does not belong to the current user.
  *    tags: [Plots]
  *    parameters:
@@ -255,7 +255,7 @@ plotsRouter.route("/plots/plot/:plot_id")
 
 /**
  * @swagger
- * /api/plots/plot/{plot_id}:
+ * /api/plots/{plot_id}:
  *  delete:
  *    security:
  *      - bearerAuth: []
