@@ -97,7 +97,8 @@ plotsRouter.route("/plots/user/:owner_id")
  *                type: string    
  *                example: Farmville
  *              area:
- *                type: integer    
+ *                type: integer
+ *                nullable: true    
  *                example: 100
  *    responses:
  *      201:
@@ -217,6 +218,7 @@ plotsRouter.route("/plots/:plot_id")
  *                example: Farmville
  *              area:
  *                type: integer    
+ *                nullable: true
  *                example: 100
  *    responses:
  *      200:

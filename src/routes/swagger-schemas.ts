@@ -44,15 +44,19 @@ export const schemaRouter = Router()
  *          example: carrot
  *        variety:
  *          type: string
+ *          nullable: true
  *          example: chantenay
  *        quantity:
  *          type: integer
+ *          nullable: true
  *          example: 20
  *        date_planted:
  *          type: string
+ *          nullable: true
  *          example: 2024-06-19T23:00:00.000Z
  *        harvest_date:
  *          type: string
+ *          nullable: true
  *          example: 2024-09-14T23:00:00.000Z
  *    Forbidden:
  *      type: object
@@ -95,6 +99,7 @@ export const schemaRouter = Router()
  *          example: Farmville
  *        area:
  *          type: integer
+ *          nullable: true
  *          example: 100
  *    Subdivision:
  *      type: object
@@ -116,6 +121,7 @@ export const schemaRouter = Router()
  *          example: Carrots, beetroots, and parsnips
  *        area:
  *          type: integer
+ *          nullable: true
  *          example: 10
  *    User:
  *      type: object

@@ -95,6 +95,7 @@ subdivisionsRouter.route("/subdivisions/plot/:plot_id")
  *                example: Carrots, beetroots, and parsnips
  *              area:
  *                type: integer
+ *                nullable: true
  *                example: 10
  *    responses:
  *      201:
@@ -211,6 +212,7 @@ subdivisionsRouter.route("/subdivisions/:subdivision_id")
  *                example: Carrots, beetroots, and parsnips
  *              area:
  *                type: integer
+ *                nullable: true
  *                example: 10
  *    responses:
  *      200:
