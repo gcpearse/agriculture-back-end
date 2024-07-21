@@ -42,7 +42,7 @@ describe("GET /api/plots/:owner_id", () => {
 
     expect(body.plots).toHaveLength(3)
 
-    body.plots.forEach((plot: Plot) => {
+    for (const plot of body.plots) {
       expect(plot).toMatchObject({
         plot_id: expect.any(Number),
         owner_id: 1,
@@ -52,7 +52,7 @@ describe("GET /api/plots/:owner_id", () => {
         location: expect.any(String),
         area: expect.toBeOneOf([expect.any(Number), null])
       })
-    })
+    }
   })
 
   test("GET:200 Responds with an empty array when no plots are associated with the authenticated user", async () => {

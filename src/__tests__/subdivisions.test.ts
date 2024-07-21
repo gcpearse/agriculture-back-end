@@ -42,7 +42,7 @@ describe("GET /api/subdivisions/:plot_id", () => {
 
     expect(body.subdivisions).toHaveLength(3)
 
-    body.subdivisions.forEach((subdivision: Subdivision) => {
+    for (const subdivision of body.subdivisions) {
       expect(subdivision).toMatchObject({
         subdivision_id: expect.any(Number),
         plot_id: 1,
@@ -51,7 +51,7 @@ describe("GET /api/subdivisions/:plot_id", () => {
         description: expect.any(String),
         area: expect.toBeOneOf([expect.any(Number), null])
       })
-    })
+    }
   })
 
   test("GET:200 Responds with an empty array when no subdivisions are associated with the plot_id", async () => {
