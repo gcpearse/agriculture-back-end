@@ -6,12 +6,12 @@ import { deletePlotByPlotId, getPlotByPlotId, getPlotsByOwner, patchPlotByPlotId
 export const plotsRouter = Router()
 
 
-plotsRouter.route("/plots/:owner_id")
+plotsRouter.route("/plots/user/:owner_id")
 
 
 /**
  * @swagger
- * /api/plots/{owner_id}:
+ * /api/plots/user/{owner_id}:
  *  get:
  *    security:
  *      - bearerAuth: []
@@ -61,7 +61,7 @@ plotsRouter.route("/plots/:owner_id")
 
 /**
  * @swagger
- * /api/plots/{owner_id}:
+ * /api/plots/user/{owner_id}:
  *  post:
  *    security:
  *      - bearerAuth: []

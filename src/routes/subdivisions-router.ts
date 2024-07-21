@@ -6,12 +6,12 @@ import { deleteSubdivisionBySubdivisionId, getSubdivisionBySubdivisionId, getSub
 export const subdivisionsRouter = Router()
 
 
-subdivisionsRouter.route("/subdivisions/:plot_id")
+subdivisionsRouter.route("/subdivisions/plot/:plot_id")
 
 
 /**
  * @swagger
- * /api/subdivisions/{plot_id}:
+ * /api/subdivisions/plot/{plot_id}:
  *  get:
  *    security:
  *      - bearerAuth: []
@@ -61,7 +61,7 @@ subdivisionsRouter.route("/subdivisions/:plot_id")
 
 /**
  * @swagger
- * /api/subdivisions/{plot_id}:
+ * /api/subdivisions/plot/{plot_id}:
  *  post:
  *    security:
  *      - bearerAuth: []
