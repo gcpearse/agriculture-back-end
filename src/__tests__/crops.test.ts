@@ -447,7 +447,7 @@ describe("GET /api/crops/plot/:plot_id?name=&page=", () => {
     })
   })
 
-  test("GET:404 Responds with an error when the page cannot be found", async () => {
+  test("GET:404 Responds with an error when the page cannot be found (multiple queries affecting total query result rows)", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/plot/1?name=ca&sort=harvest_date&limit=2&page=2")
