@@ -6,7 +6,11 @@ import { Subdivision } from "../types/subdivision-types"
 import format from "pg-format"
 
 
-export const selectSubdivisionsByPlotId = async (authUserId: number, plot_id: number, { type }: QueryString.ParsedQs): Promise<Subdivision[]> => {
+export const selectSubdivisionsByPlotId = async (
+  authUserId: number,
+  plot_id: number,
+  { type }: QueryString.ParsedQs
+): Promise<Subdivision[]> => {
 
   await verifyParamIsPositiveInt(plot_id)
 
@@ -15,7 +19,8 @@ export const selectSubdivisionsByPlotId = async (authUserId: number, plot_id: nu
   await verifyPermission(authUserId, owner_id, "Permission to view plot subdivision data denied")
 
   let query = `
-  SELECT * FROM subdivisions
+  SELECT * 
+  FROM subdivisions
   WHERE plot_id = $1
   `
 
@@ -41,7 +46,11 @@ export const selectSubdivisionsByPlotId = async (authUserId: number, plot_id: nu
 }
 
 
-export const insertSubdivisionByPlotId = async (authUserId: number, plot_id: number, subdivision: Subdivision): Promise<Subdivision> => {
+export const insertSubdivisionByPlotId = async (
+  authUserId: number,
+  plot_id: number,
+  subdivision: Subdivision
+): Promise<Subdivision> => {
 
   await verifyParamIsPositiveInt(plot_id)
 
@@ -79,7 +88,10 @@ export const insertSubdivisionByPlotId = async (authUserId: number, plot_id: num
 }
 
 
-export const selectSubdivisionBySubdivisionId = async (authUserId: number, subdivision_id: number): Promise<Subdivision> => {
+export const selectSubdivisionBySubdivisionId = async (
+  authUserId: number,
+  subdivision_id: number
+): Promise<Subdivision> => {
 
   await verifyParamIsPositiveInt(subdivision_id)
 
@@ -90,7 +102,8 @@ export const selectSubdivisionBySubdivisionId = async (authUserId: number, subdi
   await verifyPermission(authUserId, owner_id, "Permission to view subdivision data denied")
 
   const result = await db.query(`
-    SELECT * FROM subdivisions
+    SELECT * 
+    FROM subdivisions
     WHERE subdivision_id = $1;
     `,
     [subdivision_id])
@@ -99,7 +112,11 @@ export const selectSubdivisionBySubdivisionId = async (authUserId: number, subdi
 }
 
 
-export const updateSubdivisionBySubdivisionId = async (authUserId: number, subdivision_id: number, subdivision: Subdivision): Promise<Subdivision> => {
+export const updateSubdivisionBySubdivisionId = async (
+  authUserId: number,
+  subdivision_id: number,
+  subdivision: Subdivision
+): Promise<Subdivision> => {
 
   await verifyParamIsPositiveInt(subdivision_id)
 
@@ -146,7 +163,10 @@ export const updateSubdivisionBySubdivisionId = async (authUserId: number, subdi
 }
 
 
-export const removeSubdivisionBySubdivisionId = async (authUserId: number, subdivision_id: number): Promise<void> => {
+export const removeSubdivisionBySubdivisionId = async (
+  authUserId: number,
+  subdivision_id: number
+): Promise<void> => {
 
   await verifyParamIsPositiveInt(subdivision_id)
 

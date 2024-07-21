@@ -4,7 +4,16 @@ import { SecureUser, User } from "../types/user-types"
 import { checkEmailConflict } from "../utils/db-query-utils"
 
 
-export const registerUser = async ({ username, password, email, first_name, surname, unit_preference }: User): Promise<SecureUser> => {
+export const registerUser = async (
+  {
+    username,
+    password,
+    email,
+    first_name,
+    surname,
+    unit_preference
+  }: User
+): Promise<SecureUser> => {
 
   const dbUsername = await db.query(`
     SELECT username 

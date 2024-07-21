@@ -6,7 +6,17 @@ import { verifyPagination, verifyParamIsPositiveInt, verifyPermission } from "..
 import format from "pg-format"
 
 
-export const selectCropsByPlotId = async (authUserId: number, plot_id: number, { name, sort = "crop_id", order = "asc", limit = "10", page = "1" }: QueryString.ParsedQs): Promise<[Crop[], number]> => {
+export const selectCropsByPlotId = async (
+  authUserId: number,
+  plot_id: number,
+  {
+    name,
+    sort = "crop_id",
+    order = "asc",
+    limit = "10",
+    page = "1"
+  }: QueryString.ParsedQs
+): Promise<[Crop[], number]> => {
 
   await verifyParamIsPositiveInt(plot_id)
 

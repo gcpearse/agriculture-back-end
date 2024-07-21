@@ -6,7 +6,11 @@ import { checkPlotNameConflict, getPlotOwnerId, searchForUserId, validatePlotTyp
 import { verifyPermission, verifyParamIsPositiveInt } from "../utils/verification-utils"
 
 
-export const selectPlotsByOwner = async (authUserId: number, owner_id: number, { type }: QueryString.ParsedQs): Promise<Plot[]> => {
+export const selectPlotsByOwner = async (
+  authUserId: number,
+  owner_id: number,
+  { type }: QueryString.ParsedQs
+): Promise<Plot[]> => {
 
   await verifyParamIsPositiveInt(owner_id)
 
@@ -15,7 +19,8 @@ export const selectPlotsByOwner = async (authUserId: number, owner_id: number, {
   await verifyPermission(authUserId, owner_id, "Permission to view plot data denied")
 
   let query = `
-  SELECT * FROM plots
+  SELECT * 
+  FROM plots
   WHERE owner_id = $1
   `
 
@@ -41,7 +46,11 @@ export const selectPlotsByOwner = async (authUserId: number, owner_id: number, {
 }
 
 
-export const insertPlotByOwner = async (authUserId: number, owner_id: number, plot: Plot): Promise<Plot> => {
+export const insertPlotByOwner = async (
+  authUserId: number,
+  owner_id: number,
+  plot: Plot
+): Promise<Plot> => {
 
   await verifyParamIsPositiveInt(owner_id)
 
@@ -77,7 +86,10 @@ export const insertPlotByOwner = async (authUserId: number, owner_id: number, pl
 }
 
 
-export const selectPlotByPlotId = async (authUserId: number, plot_id: number): Promise<Plot> => {
+export const selectPlotByPlotId = async (
+  authUserId: number,
+  plot_id: number
+): Promise<Plot> => {
 
   await verifyParamIsPositiveInt(plot_id)
 
@@ -86,7 +98,8 @@ export const selectPlotByPlotId = async (authUserId: number, plot_id: number): P
   await verifyPermission(authUserId, owner_id, "Permission to view plot data denied")
 
   const result = await db.query(`
-    SELECT * FROM plots
+    SELECT * 
+    FROM plots
     WHERE plot_id = $1;
     `,
     [plot_id])
@@ -95,7 +108,11 @@ export const selectPlotByPlotId = async (authUserId: number, plot_id: number): P
 }
 
 
-export const updatePlotByPlotId = async (authUserId: number, plot_id: number, plot: Plot): Promise<Plot> => {
+export const updatePlotByPlotId = async (
+  authUserId: number,
+  plot_id: number,
+  plot: Plot
+): Promise<Plot> => {
 
   await verifyParamIsPositiveInt(plot_id)
 
@@ -141,7 +158,10 @@ export const updatePlotByPlotId = async (authUserId: number, plot_id: number, pl
 }
 
 
-export const removePlotByPlotId = async (authUserId: number, plot_id: number): Promise<void> => {
+export const removePlotByPlotId = async (
+  authUserId: number,
+  plot_id: number
+): Promise<void> => {
 
   await verifyParamIsPositiveInt(plot_id)
 

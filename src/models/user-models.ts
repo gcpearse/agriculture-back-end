@@ -1,10 +1,13 @@
 import { db } from "../db"
-import { SecureUser } from "../types/user-types"
+import { PasswordUpdate, SecureUser } from "../types/user-types"
 import { checkEmailConflict, searchForUsername } from "../utils/db-query-utils"
 import { verifyPermission } from "../utils/verification-utils"
 
 
-export const selectUserByUsername = async (authUsername: string, username: string): Promise<SecureUser> => {
+export const selectUserByUsername = async (
+  authUsername: string, 
+  username: string
+): Promise<SecureUser> => {
 
   await searchForUsername(username)
 
@@ -27,7 +30,11 @@ export const selectUserByUsername = async (authUsername: string, username: strin
 }
 
 
-export const updateUserByUsername = async (authUsername: string, username: string, user: SecureUser): Promise<SecureUser> => {
+export const updateUserByUsername = async (
+  authUsername: string, 
+  username: string, 
+  user: SecureUser
+): Promise<SecureUser> => {
 
   await searchForUsername(username)
 
@@ -57,7 +64,10 @@ export const updateUserByUsername = async (authUsername: string, username: strin
 }
 
 
-export const removeUserByUsername = async (authUsername: string, username: string): Promise<void> => {
+export const removeUserByUsername = async (
+  authUsername: string, 
+  username: string
+): Promise<void> => {
 
   await searchForUsername(username)
 
@@ -72,7 +82,14 @@ export const removeUserByUsername = async (authUsername: string, username: strin
 }
 
 
-export const changePasswordByUsername = async (authUsername: string, username: string, { oldPassword, newPassword }: { oldPassword: string, newPassword: string }): Promise<{ message: string }> => {
+export const changePasswordByUsername = async (
+  authUsername: string, 
+  username: string, 
+  { 
+    oldPassword, 
+    newPassword 
+  }: PasswordUpdate
+): Promise<{ message: string }> => {
 
   await searchForUsername(username)
 

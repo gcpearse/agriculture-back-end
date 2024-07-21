@@ -2,7 +2,9 @@ import { db } from "../db"
 import { Credentials, LoggedInUser } from "../types/user-types"
 
 
-export const logInUser = async ({ username, password }: Credentials): Promise<LoggedInUser> => {
+export const logInUser = async (
+  { username, password }: Credentials
+): Promise<LoggedInUser> => {
 
   const result = await db.query(`
     SELECT 
