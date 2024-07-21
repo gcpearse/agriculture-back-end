@@ -88,9 +88,9 @@ export const selectCropsByPlotId = async (authUserId: number, plot_id: number, {
 
   const result = await db.query(`${query};`, [plot_id])
 
-  const count = await db.query(`${countQuery};`, [plot_id])
-
   await verifyPagination(+page, result.rows.length)
 
-  return Promise.all([result.rows, +count.rows[0].count])
+  const countResult = await db.query(`${countQuery};`, [plot_id])
+
+  return Promise.all([result.rows, +countResult.rows[0].count])
 }
