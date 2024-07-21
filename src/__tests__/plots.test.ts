@@ -419,12 +419,12 @@ describe("POST /api/plots/user/:owner_id", () => {
 })
 
 
-describe("GET /api/plots/plot/:plot_id", () => {
+describe("GET /api/plots/:plot_id", () => {
 
   test("GET:200 Responds with a plot object", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/plot/1")
+      .get("/api/plots/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -442,7 +442,7 @@ describe("GET /api/plots/plot/:plot_id", () => {
   test("GET:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/plot/example")
+      .get("/api/plots/example")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -455,7 +455,7 @@ describe("GET /api/plots/plot/:plot_id", () => {
   test("GET:403 Responds with a warning when the plot does not belong to the authenticated user", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/plot/2")
+      .get("/api/plots/2")
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
@@ -468,7 +468,7 @@ describe("GET /api/plots/plot/:plot_id", () => {
   test("GET:404 Responds with an error message when the plot does not exist", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/plot/999")
+      .get("/api/plots/999")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -480,7 +480,7 @@ describe("GET /api/plots/plot/:plot_id", () => {
 })
 
 
-describe("PATCH /api/plots/plot/:plot_id", () => {
+describe("PATCH /api/plots/:plot_id", () => {
 
   test("PATCH:200 Responds with an updated plot object", async () => {
 
@@ -493,7 +493,7 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/plots/plot/1")
+      .patch("/api/plots/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
@@ -520,7 +520,7 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/plots/plot/1")
+      .patch("/api/plots/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
@@ -546,7 +546,7 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/plots/plot/1")
+      .patch("/api/plots/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -568,7 +568,7 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/plots/plot/1")
+      .patch("/api/plots/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -590,7 +590,7 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/plots/plot/1")
+      .patch("/api/plots/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -612,7 +612,7 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/plots/plot/example")
+      .patch("/api/plots/example")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -634,7 +634,7 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/plots/plot/2")
+      .patch("/api/plots/2")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
@@ -656,7 +656,7 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/plots/plot/999")
+      .patch("/api/plots/999")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
@@ -678,7 +678,7 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/plots/plot/1")
+      .patch("/api/plots/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(409)
@@ -691,17 +691,17 @@ describe("PATCH /api/plots/plot/:plot_id", () => {
 })
 
 
-describe("DELETE /api/plots/plot/:plot_id", () => {
+describe("DELETE /api/plots/:plot_id", () => {
 
   test("DELETE:204 Deletes the plot with the given plot_id", async () => {
 
     await request(app)
-      .delete("/api/plots/plot/1")
+      .delete("/api/plots/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(204)
 
     const { body } = await request(app)
-      .get("/api/plots/plot/1")
+      .get("/api/plots/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -714,7 +714,7 @@ describe("DELETE /api/plots/plot/:plot_id", () => {
   test("DELETE:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .delete("/api/plots/plot/example")
+      .delete("/api/plots/example")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -727,7 +727,7 @@ describe("DELETE /api/plots/plot/:plot_id", () => {
   test("DELETE:403 Responds with a warning when the authenticated user attempts to delete another user's plot", async () => {
 
     const { body } = await request(app)
-      .delete("/api/plots/plot/2")
+      .delete("/api/plots/2")
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
@@ -740,7 +740,7 @@ describe("DELETE /api/plots/plot/:plot_id", () => {
   test("DELETE:404 Responds with an error message when the plot_id does not exist", async () => {
 
     const { body } = await request(app)
-      .delete("/api/plots/plot/999")
+      .delete("/api/plots/999")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 

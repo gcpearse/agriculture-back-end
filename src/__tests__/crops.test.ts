@@ -119,7 +119,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
   test("GET:404 When the parent plot is deleted, all child crops are also deleted", async () => {
 
     await request(app)
-      .delete("/api/plots/plot/1")
+      .delete("/api/plots/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(204)
 
