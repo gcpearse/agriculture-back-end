@@ -1,6 +1,6 @@
 export const verifyPagination = (page: number, limit: number, count: number): Promise<never> | undefined => {
 
-  if (page > 1 && (+limit * +page - +limit) >= count) {
+  if (page > 1 && (limit * page - limit) >= count) {
     return Promise.reject({
       status: 404,
       message: "Not Found",
