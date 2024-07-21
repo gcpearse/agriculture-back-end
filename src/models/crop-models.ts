@@ -6,7 +6,7 @@ import { verifyPagination, verifyParamIsPositiveInt, verifyPermission } from "..
 import format from "pg-format"
 
 
-export const selectCropsByPlotId = async (authUserId: number, plot_id: number, { name, sort = "crop_id", order = "asc", limit = "10", page = "1" }: QueryString.ParsedQs): Promise<Crop[]> => {
+export const selectCropsByPlotId = async (authUserId: number, plot_id: number, { name, sort = "crop_id", order = "asc", limit = "10", page = "1" }: QueryString.ParsedQs): Promise<[Crop[], number]> => {
 
   await verifyParamIsPositiveInt(plot_id)
 
@@ -31,14 +31,6 @@ export const selectCropsByPlotId = async (authUserId: number, plot_id: number, {
     })
   }
 
-  const cropCount = await db.query(`
-    SELECT COUNT(crop_id)
-    FROM crops
-    WHERE plot_id = $1;
-    `, [plot_id])
-
-  await verifyPagination(+page, +limit, cropCount.rows[0].count)
-
   let query = `
   SELECT
     crops.*,
@@ -56,14 +48,26 @@ export const selectCropsByPlotId = async (authUserId: number, plot_id: number, {
   WHERE crops.plot_id = $1
   `
 
+  let countQuery = `
+  SELECT COUNT(crop_id)
+  FROM crops
+  WHERE plot_id = $1
+  `
+
   if (name) {
     query += format(`
+      AND crops.name ILIKE %L
+      `, `%${name}%`)
+    countQuery += format(`
       AND crops.name ILIKE %L
       `, `%${name}%`)
   }
 
   if (sort === "date_planted" || sort === "harvest_date") {
     query += `
+    AND crops.${sort} IS NOT NULL
+    `
+    countQuery += `
     AND crops.${sort} IS NOT NULL
     `
   }
@@ -84,5 +88,9 @@ export const selectCropsByPlotId = async (authUserId: number, plot_id: number, {
 
   const result = await db.query(`${query};`, [plot_id])
 
-  return result.rows
+  const count = await db.query(`${countQuery};`, [plot_id])
+
+  await verifyPagination(+page, result.rows.length)
+
+  return Promise.all([result.rows, +count.rows[0].count])
 }

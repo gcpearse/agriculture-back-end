@@ -1,6 +1,6 @@
-export const verifyPagination = (page: number, limit: number, count: number): Promise<never> | undefined => {
+export const verifyPagination = (page: number, queryResultRowsLength: number): Promise<never> | undefined => {
 
-  if (page > 1 && (limit * page - limit) >= count) {
+  if (page > 1 && !queryResultRowsLength) {
     return Promise.reject({
       status: 404,
       message: "Not Found",

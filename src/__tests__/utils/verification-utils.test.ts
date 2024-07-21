@@ -21,18 +21,23 @@ describe("verifyPermission", () => {
 
 describe("verifyPagination", () => {
 
-  test("When the page exceeds the possible range, the promise is rejected", () => {
+  test("When the page number is greater than one and the query result returns no rows, the promise is rejects", () => {
 
-    expect(verifyPagination(3, 5, 10)).rejects.toMatchObject({
+    expect(verifyPagination(2, 0)).rejects.toMatchObject({
       status: 404,
       message: "Not Found",
       details: "Page not found"
     })
   })
 
-  test("Returns undefined when the page falls with the possible range", () => {
+  test("Returns undefined when the page number is one", () => {
 
-    expect(verifyPagination(2, 5, 10)).toBeUndefined()
+    expect(verifyPagination(1, 0)).toBeUndefined()
+  })
+
+  test("Returns undefined when the query result returns at least one row", () => {
+
+    expect(verifyPagination(2, 1)).toBeUndefined()
   })
 })
 

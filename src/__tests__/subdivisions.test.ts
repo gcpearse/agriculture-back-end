@@ -61,6 +61,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
       .expect(200)
 
     expect(Array.isArray(body.subdivisions)).toBe(true)
+
     expect(body.subdivisions).toHaveLength(0)
   })
 
