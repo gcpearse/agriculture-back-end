@@ -34,9 +34,12 @@ plotsRouter.route("/plots/user/:owner_id")
  *        content:
  *          application/json:
  *            schema:
- *              type: array
- *              items:
- *                $ref: "#/components/schemas/Plot"
+ *              type: object
+ *              properties:
+ *                plots:
+ *                  type: array
+ *                  items:
+ *                    $ref: "#/components/schemas/Plot"
  *      400:
  *        description: Bad Request
  *        content:
@@ -106,7 +109,10 @@ plotsRouter.route("/plots/user/:owner_id")
  *        content:
  *          application/json:
  *            schema:
- *              $ref: "#/components/schemas/Plot"
+ *              type: object
+ *              properties:
+ *                plot:
+ *                  $ref: "#/components/schemas/Plot"
  *      400:
  *        description: Bad Request
  *        content:
@@ -159,7 +165,10 @@ plotsRouter.route("/plots/:plot_id")
  *        content:
  *          application/json:
  *            schema:
- *              $ref: "#/components/schemas/Plot"
+ *              type: object
+ *              properties:
+ *                plot:
+ *                  $ref: "#/components/schemas/Plot"
  *      400:
  *        description: Bad Request
  *        content:
@@ -226,7 +235,10 @@ plotsRouter.route("/plots/:plot_id")
  *        content:
  *          application/json:
  *            schema:
- *              $ref: "#/components/schemas/Plot"
+ *              type: object
+ *              properties:
+ *                plot:
+ *                  $ref: "#/components/schemas/Plot"
  *      400:
  *        description: Bad Request
  *        content:

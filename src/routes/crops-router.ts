@@ -54,9 +54,15 @@ cropsRouter.route("/crops/plot/:plot_id")
  *        content:
  *          application/json:
  *            schema:
- *              type: array
- *              items:
- *                $ref: "#/components/schemas/Crop"
+ *              type: object
+ *              properties:
+ *                crops:
+ *                  type: array
+ *                  items:
+ *                    $ref: "#/components/schemas/Crop"
+ *                count:
+ *                  type: integer
+ *                  example: 1
  *      400:
  *        description: Bad Request
  *        content:
@@ -110,11 +116,11 @@ cropsRouter.route("/crops/plot/:plot_id")
  *                example: null
  *              name:
  *                type: string
- *                example: Root Vegetable Bed
+ *                example: pear
  *              variety:
  *                type: string
  *                nullable: true
- *                example: bed
+ *                example: conference
  *              quantity:
  *                type: integer
  *                nullable: true
@@ -133,7 +139,10 @@ cropsRouter.route("/crops/plot/:plot_id")
  *        content:
  *          application/json:
  *            schema:
- *              $ref: "#/components/schemas/Crop"
+ *              type: object
+ *              properties:
+ *                crop:
+ *                  $ref: "#/components/schemas/Crop"
  *      400:
  *        description: Bad Request
  *        content:

@@ -34,9 +34,12 @@ subdivisionsRouter.route("/subdivisions/plot/:plot_id")
  *        content:
  *          application/json:
  *            schema:
- *              type: array
- *              items:
- *                $ref: "#/components/schemas/Subdivision"
+ *              type: object
+ *              properties:
+ *                subdivisions:
+ *                  type: array
+ *                  items:
+ *                    $ref: "#/components/schemas/Subdivision"
  *      400:
  *        description: Bad Request
  *        content:
@@ -103,7 +106,10 @@ subdivisionsRouter.route("/subdivisions/plot/:plot_id")
  *        content:
  *          application/json:
  *            schema:
- *              $ref: "#/components/schemas/Subdivision"
+ *              type: object
+ *              properties:
+ *                subdivision:
+ *                  $ref: "#/components/schemas/Subdivision"
  *      400:
  *        description: Bad Request
  *        content:
@@ -156,7 +162,10 @@ subdivisionsRouter.route("/subdivisions/:subdivision_id")
  *        content:
  *          application/json:
  *            schema:
- *              $ref: "#/components/schemas/Subdivision"
+ *              type: object
+ *              properties:
+ *                subdivision:
+ *                  $ref: "#/components/schemas/Subdivision"
  *      400:
  *        description: Bad Request
  *        content:
@@ -220,7 +229,10 @@ subdivisionsRouter.route("/subdivisions/:subdivision_id")
  *        content:
  *          application/json:
  *            schema:
- *              $ref: "#/components/schemas/Subdivision"
+ *              type: object
+ *              properties:
+ *                subdivision:
+ *                  $ref: "#/components/schemas/Subdivision"
  *      400:
  *        description: Bad Request
  *        content:
