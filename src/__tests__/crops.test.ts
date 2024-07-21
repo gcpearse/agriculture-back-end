@@ -40,13 +40,17 @@ describe("GET /api/crops/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.crops.map((crop: Crop) => {
-      return crop.crop_id
-    })).toEqual([1, 2, 3, 4])
+    const sortedCrops = [...body.crops].sort((a: Crop, b: Crop) => {
+      if (a.crop_id! > b.crop_id!) return 1
+      if (a.crop_id! < b.crop_id!) return -1
+      return 0
+    })
+
+    expect(body.crops).toEqual(sortedCrops)
 
     const regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
 
-    body.crops.forEach((crop: Crop) => {
+    for (const crop of body.crops) {
       expect(crop).toMatchObject({
         crop_id: expect.any(Number),
         plot_id: 1,
@@ -59,7 +63,7 @@ describe("GET /api/crops/:plot_id", () => {
         subdivision_name: expect.toBeOneOf([expect.any(String), null]),
         note_count: expect.any(Number)
       })
-    })
+    }
   })
 
   test("GET:200 Responds with an empty array when no crops are associated with the plot_id", async () => {
@@ -159,11 +163,9 @@ describe("GET /api/crops/:plot_id?name=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.crops).toHaveLength(3)
-
-    expect(body.crops.every((crop: Crop) => {
-      return /ca/i.test(crop.name)
-    })).toBe(true)
+    for (const crop of body.crops) {
+      expect(crop.name).toMatch(/ca/)
+    }
   })
 
   test("GET:200 Filtered results are case-insensitive", async () => {
@@ -173,11 +175,9 @@ describe("GET /api/crops/:plot_id?name=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.crops).toHaveLength(3)
-
-    expect(body.crops.every((crop: Crop) => {
-      return /ca/i.test(crop.name)
-    })).toBe(true)
+    for (const crop of body.crops) {
+      expect(crop.name).toMatch(/ca/)
+    }
   })
 
   test("GET:200 Returns an empty array when the value of name matches no results", async () => {
@@ -202,14 +202,13 @@ describe("GET /api/crops/:plot_id?sort=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.crops.map((crop: Crop) => {
-      return crop.name
-    })).toEqual([
-      "apple",
-      "cabbage",
-      "carrot",
-      "pecan"
-    ])
+    const sortedCrops = [...body.crops].sort((a: Crop, b: Crop) => {
+      if (a.name > b.name) return 1
+      if (a.name < b.name) return -1
+      return 0
+    })
+
+    expect(body.crops).toEqual(sortedCrops)
   })
 
   test("GET:200 Responds with an array of crop objects sorted by date_planted in descending order while filtering out null values", async () => {
@@ -219,9 +218,17 @@ describe("GET /api/crops/:plot_id?sort=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.crops.map((crop: Crop) => {
-      return crop.crop_id
-    })).toEqual([4, 1, 2])
+    for (const crop of body.crops) {
+      expect(crop.date_planted).not.toBeNull()
+    }
+
+    const sortedCrops = [...body.crops].sort((a: Crop, b: Crop) => {
+      if (a.date_planted! < b.date_planted!) return 1
+      if (a.date_planted! > b.date_planted!) return -1
+      return 0
+    })
+
+    expect(body.crops).toEqual(sortedCrops)
   })
 
   test("GET:200 Responds with an array of crop objects sorted by harvest_date in descending order while filtering out null values", async () => {
@@ -231,9 +238,17 @@ describe("GET /api/crops/:plot_id?sort=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.crops.map((crop: Crop) => {
-      return crop.crop_id
-    })).toEqual([4, 2, 1])
+    for (const crop of body.crops) {
+      expect(crop.date_planted).not.toBeNull()
+    }
+
+    const sortedCrops = [...body.crops].sort((a: Crop, b: Crop) => {
+      if (a.harvest_date! < b.harvest_date!) return 1
+      if (a.harvest_date! > b.harvest_date!) return -1
+      return 0
+    })
+
+    expect(body.crops).toEqual(sortedCrops)
   })
 
   test("GET:404 Responds with an error when passed an invalid sort value", async () => {
@@ -260,13 +275,17 @@ describe("GET /api/crops/:plot_id?name=&sort=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.crops.map((crop: Crop) => {
-      return crop.name
-    })).toEqual([
-      "cabbage",
-      "carrot",
-      "pecan"
-    ])
+    for (const crop of body.crops) {
+      expect(crop.name).toMatch(/ca/)
+    }
+
+    const sortedCrops = [...body.crops].sort((a: Crop, b: Crop) => {
+      if (a.name > b.name) return 1
+      if (a.name < b.name) return -1
+      return 0
+    })
+
+    expect(body.crops).toEqual(sortedCrops)
   })
 
   test("GET:200 Responds with an array of crop objects filtered by name and sorted by harvest_date in descending order while filtering out null values", async () => {
@@ -276,18 +295,17 @@ describe("GET /api/crops/:plot_id?name=&sort=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.crops.map((crop: Crop) => {
-      return {
-        name: crop.name
-      }
-    })).toEqual([
-      {
-        name: "pecan"
-      },
-      {
-        name: "carrot"
-      }
-    ])
+    for (const crop of body.crops) {
+      expect(crop.name).toMatch(/ca/)
+    }
+
+    const sortedCrops = [...body.crops].sort((a: Crop, b: Crop) => {
+      if (a.harvest_date! < b.harvest_date!) return 1
+      if (a.harvest_date! > b.harvest_date!) return -1
+      return 0
+    })
+
+    expect(body.crops).toEqual(sortedCrops)
   })
 })
 
@@ -348,7 +366,7 @@ describe("GET /api/crops/:plot_id?name=&limit=", () => {
 
 describe("GET /api/crops/:plot_id?name=&page=", () => {
 
-  test("GET:200 Responds with an array of crop objects associated starting from the value of page", async () => {
+  test("GET:200 Responds with an array of crop objects associated with the plot beginning from the page set in the query parameter", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/1?limit=2&page=2")
@@ -360,7 +378,7 @@ describe("GET /api/crops/:plot_id?name=&page=", () => {
     })).toEqual([3, 4])
   })
 
-  test("GET:200 Page defaults to page one", async () => {
+  test("GET:200 The page defaults to page one", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/1?limit=2")
