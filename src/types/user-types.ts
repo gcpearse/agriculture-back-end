@@ -32,3 +32,9 @@ export type SecureUser = {
 
 
 export type User = SecureUser & Password
+
+
+export type PasswordUpdate = {
+  oldPassword: string,
+  newPassword: string
+}
