@@ -71,6 +71,7 @@ describe("GET /api/plots/user/:owner_id", () => {
       .expect(200)
 
     expect(Array.isArray(body.plots)).toBe(true)
+
     expect(body.plots).toHaveLength(0)
   })
 
