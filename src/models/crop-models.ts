@@ -56,9 +56,11 @@ export const selectCropsByPlotId = async (authUserId: number, plot_id: number, {
   WHERE crops.plot_id = $1
   `
 
-  if (name) query += format(`
-    AND crops.name ILIKE %L
-    `, `%${name}%`)
+  if (name) {
+    query += format(`
+      AND crops.name ILIKE %L
+      `, `%${name}%`)
+  }
 
   if (sort === "date_planted" || sort === "harvest_date") {
     query += `
