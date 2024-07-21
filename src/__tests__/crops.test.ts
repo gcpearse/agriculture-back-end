@@ -64,6 +64,8 @@ describe("GET /api/crops/plot/:plot_id", () => {
         note_count: expect.any(Number)
       })
     }
+
+    expect(body.count).toBe(4)
   })
 
   test("GET:200 Responds with an empty array when no crops are associated with the plot_id", async () => {
@@ -74,7 +76,10 @@ describe("GET /api/crops/plot/:plot_id", () => {
       .expect(200)
 
     expect(Array.isArray(body.crops)).toBe(true)
+
     expect(body.crops).toHaveLength(0)
+
+    expect(body.count).toBe(0)
   })
 
   test("GET:400 Responds with an error message when the plot_id is not a positive integer", async () => {
@@ -166,6 +171,8 @@ describe("GET /api/crops/plot/:plot_id?name=", () => {
     for (const crop of body.crops) {
       expect(crop.name).toMatch(/ca/)
     }
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:200 Filtered results are case-insensitive", async () => {
@@ -178,6 +185,8 @@ describe("GET /api/crops/plot/:plot_id?name=", () => {
     for (const crop of body.crops) {
       expect(crop.name).toMatch(/ca/)
     }
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:200 Returns an empty array when the value of name matches no results", async () => {
@@ -188,7 +197,10 @@ describe("GET /api/crops/plot/:plot_id?name=", () => {
       .expect(200)
 
     expect(Array.isArray(body.crops)).toBe(true)
+
     expect(body.crops).toHaveLength(0)
+
+    expect(body.count).toBe(0)
   })
 })
 
@@ -209,6 +221,8 @@ describe("GET /api/crops/plot/:plot_id?sort=", () => {
     })
 
     expect(body.crops).toEqual(sortedCrops)
+
+    expect(body.count).toBe(4)
   })
 
   test("GET:200 Responds with an array of crop objects sorted by date_planted in descending order while filtering out null values", async () => {
@@ -229,6 +243,8 @@ describe("GET /api/crops/plot/:plot_id?sort=", () => {
     })
 
     expect(body.crops).toEqual(sortedCrops)
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:200 Responds with an array of crop objects sorted by harvest_date in descending order while filtering out null values", async () => {
@@ -249,6 +265,8 @@ describe("GET /api/crops/plot/:plot_id?sort=", () => {
     })
 
     expect(body.crops).toEqual(sortedCrops)
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:404 Responds with an error when passed an invalid sort value", async () => {
@@ -286,6 +304,8 @@ describe("GET /api/crops/plot/:plot_id?name=&sort=", () => {
     })
 
     expect(body.crops).toEqual(sortedCrops)
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:200 Responds with an array of crop objects filtered by name and sorted by harvest_date in descending order while filtering out null values", async () => {
@@ -306,6 +326,8 @@ describe("GET /api/crops/plot/:plot_id?name=&sort=", () => {
     })
 
     expect(body.crops).toEqual(sortedCrops)
+
+    expect(body.count).toBe(2)
   })
 })
 
@@ -337,6 +359,8 @@ describe("GET /api/crops/plot/:plot_id?name=&limit=", () => {
       .expect(200)
 
     expect(body.crops).toHaveLength(2)
+
+    expect(body.count).toBe(4)
   })
 
   test("GET:200 Responds with an array of all crops associated with the plot when the limit exceeds the total number of results", async () => {
@@ -347,6 +371,8 @@ describe("GET /api/crops/plot/:plot_id?name=&limit=", () => {
       .expect(200)
 
     expect(body.crops).toHaveLength(4)
+
+    expect(body.count).toBe(4)
   })
 
   test("GET:400 Responds with an error message when the value of limit is not a positive integer", async () => {
@@ -376,6 +402,8 @@ describe("GET /api/crops/plot/:plot_id?name=&page=", () => {
     expect(body.crops.map((crop: Crop) => {
       return crop.crop_id
     })).toEqual([3, 4])
+
+    expect(body.count).toBe(4)
   })
 
   test("GET:200 The page defaults to page one", async () => {
@@ -388,6 +416,8 @@ describe("GET /api/crops/plot/:plot_id?name=&page=", () => {
     expect(body.crops.map((crop: Crop) => {
       return crop.crop_id
     })).toEqual([1, 2])
+
+    expect(body.count).toBe(4)
   })
 
   test("GET:200 When there are fewer results on the final page, the response contains those results", async () => {
@@ -400,12 +430,27 @@ describe("GET /api/crops/plot/:plot_id?name=&page=", () => {
     expect(body.crops.map((crop: Crop) => {
       return crop.crop_id
     })).toEqual([4])
+
+    expect(body.count).toBe(4)
   })
 
-  test("GET:404 Responds with an error when the value of page exceeds the page limit", async () => {
+  test("GET:404 Responds with an error when the page cannot be found", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/plot/1?limit=2&page=3")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Page not found"
+    })
+  })
+
+  test("GET:404 Responds with an error when the page cannot be found", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/plot/1?name=ca&sort=harvest_date&limit=2&page=2")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
