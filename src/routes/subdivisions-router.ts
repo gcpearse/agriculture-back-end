@@ -6,12 +6,12 @@ import { deleteSubdivisionBySubdivisionId, getSubdivisionBySubdivisionId, getSub
 export const subdivisionsRouter = Router()
 
 
-subdivisionsRouter.route("/subdivisions/:plot_id")
+subdivisionsRouter.route("/subdivisions/plot/:plot_id")
 
 
 /**
  * @swagger
- * /api/subdivisions/{plot_id}:
+ * /api/subdivisions/plot/{plot_id}:
  *  get:
  *    security:
  *      - bearerAuth: []
@@ -61,7 +61,7 @@ subdivisionsRouter.route("/subdivisions/:plot_id")
 
 /**
  * @swagger
- * /api/subdivisions/{plot_id}:
+ * /api/subdivisions/plot/{plot_id}:
  *  post:
  *    security:
  *      - bearerAuth: []
@@ -131,16 +131,16 @@ subdivisionsRouter.route("/subdivisions/:plot_id")
   .post(verifyToken, postSubdivisionByPlotId)
 
 
-subdivisionsRouter.route("/subdivisions/subdivision/:subdivision_id")
+subdivisionsRouter.route("/subdivisions/:subdivision_id")
 
 
 /**
  * @swagger
- * /api/subdivisions/subdivision/{subdivision_id}:
+ * /api/subdivisions/{subdivision_id}:
  *  get:
  *    security:
  *      - bearerAuth: []
- *    summary: Retrieve a subdivision of a plot
+ *    summary: Retrieve a subdivision
  *    description: Responds with a subdivision object. If no subdivision is found, the server responds with an error. Permission is denied when the subdivision does not belong to the current user.
  *    tags: [Subdivisions]
  *    parameters:
@@ -180,11 +180,11 @@ subdivisionsRouter.route("/subdivisions/subdivision/:subdivision_id")
 
 /**
  * @swagger
- * /api/subdivisions/subdivision/{subdivision_id}:
+ * /api/subdivisions/{subdivision_id}:
  *  patch:
  *    security:
  *      - bearerAuth: []
- *    summary: Update a subdivision of a plot
+ *    summary: Update a subdivision
  *    description: Responds with an updated subdivision object. If the subdivision name already exists for another subdivision of a plot or the subdivision_id does not exist, the server responds with an error. Permission is denied when the subdivision does not belong to the current user.
  *    tags: [Subdivisions]
  *    parameters:
@@ -249,11 +249,11 @@ subdivisionsRouter.route("/subdivisions/subdivision/:subdivision_id")
 
 /**
  * @swagger
- * /api/subdivisions/subdivision/{subdivision_id}:
+ * /api/subdivisions/{subdivision_id}:
  *  delete:
  *    security:
  *      - bearerAuth: []
- *    summary: Delete a subdivision of a plot from the database
+ *    summary: Delete a subdivision from the database
  *    description: Removes the plot subdivision and all associated data from the database. If the subdivision_id does not exist, the server responds with an error Permission is denied when the subdivision does not belong to the current user.
  *    tags: [Subdivisions]
  *    parameters:

@@ -30,12 +30,12 @@ afterAll(async () => {
 })
 
 
-describe("GET /api/subdivisions/:plot_id", () => {
+describe("GET /api/subdivisions/plot/:plot_id", () => {
 
   test("GET:200 Responds with an array of subdivision objects", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/1")
+      .get("/api/subdivisions/plot/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -56,7 +56,7 @@ describe("GET /api/subdivisions/:plot_id", () => {
   test("GET:200 Responds with an empty array when no subdivisions are associated with the plot_id", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/3")
+      .get("/api/subdivisions/plot/3")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -67,7 +67,7 @@ describe("GET /api/subdivisions/:plot_id", () => {
   test("GET:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/example")
+      .get("/api/subdivisions/plot/example")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -80,7 +80,7 @@ describe("GET /api/subdivisions/:plot_id", () => {
   test("GET:403 Responds with a warning when the authenticated user attempts to retrieve another user's subdivision data", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/2")
+      .get("/api/subdivisions/plot/2")
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
@@ -93,7 +93,7 @@ describe("GET /api/subdivisions/:plot_id", () => {
   test("GET:404 Responds with an error message when the plot_id does not exist", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/999")
+      .get("/api/subdivisions/plot/999")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -106,12 +106,12 @@ describe("GET /api/subdivisions/:plot_id", () => {
   test("GET:404 When the parent plot is deleted, all child subdivisions are also deleted", async () => {
 
     await request(app)
-      .delete("/api/plots/plot/1")
+      .delete("/api/plots/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(204)
 
     const { body } = await request(app)
-      .get("/api/subdivisions/1")
+      .get("/api/subdivisions/plot/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -129,7 +129,7 @@ describe("GET /api/subdivisions/:plot_id", () => {
       .expect(204)
 
     const { body } = await request(app)
-      .get("/api/subdivisions/1")
+      .get("/api/subdivisions/plot/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -141,12 +141,12 @@ describe("GET /api/subdivisions/:plot_id", () => {
 })
 
 
-describe("GET /api/subdivisions/:plot_id?type=", () => {
+describe("GET /api/subdivisions/plot/:plot_id?type=", () => {
 
   test("GET:200 Responds with an array of subdivision objects filtered by type", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/1?type=bed")
+      .get("/api/subdivisions/plot/1?type=bed")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -160,7 +160,7 @@ describe("GET /api/subdivisions/:plot_id?type=", () => {
   test("GET:404 Responds with an error message when the query value is invalid", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/1?type=castle")
+      .get("/api/subdivisions/plot/1?type=castle")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -172,7 +172,7 @@ describe("GET /api/subdivisions/:plot_id?type=", () => {
 })
 
 
-describe("POST /api/subdivisions/:plot_id", () => {
+describe("POST /api/subdivisions/plot/:plot_id", () => {
 
   test("POST:201 Responds with a new subdivision object", async () => {
 
@@ -185,7 +185,7 @@ describe("POST /api/subdivisions/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/1")
+      .post("/api/subdivisions/plot/1")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
@@ -210,7 +210,7 @@ describe("POST /api/subdivisions/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/1")
+      .post("/api/subdivisions/plot/1")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
@@ -230,7 +230,7 @@ describe("POST /api/subdivisions/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/1")
+      .post("/api/subdivisions/plot/1")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
@@ -249,7 +249,7 @@ describe("POST /api/subdivisions/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/1")
+      .post("/api/subdivisions/plot/1")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -270,7 +270,7 @@ describe("POST /api/subdivisions/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/1")
+      .post("/api/subdivisions/plot/1")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -292,7 +292,7 @@ describe("POST /api/subdivisions/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/1")
+      .post("/api/subdivisions/plot/1")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -314,7 +314,7 @@ describe("POST /api/subdivisions/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/example")
+      .post("/api/subdivisions/plot/example")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -336,7 +336,7 @@ describe("POST /api/subdivisions/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/2")
+      .post("/api/subdivisions/plot/2")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
@@ -358,7 +358,7 @@ describe("POST /api/subdivisions/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/1")
+      .post("/api/subdivisions/plot/1")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
@@ -380,7 +380,7 @@ describe("POST /api/subdivisions/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/999")
+      .post("/api/subdivisions/plot/999")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
@@ -402,7 +402,7 @@ describe("POST /api/subdivisions/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/1")
+      .post("/api/subdivisions/plot/1")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(409)
@@ -415,12 +415,12 @@ describe("POST /api/subdivisions/:plot_id", () => {
 })
 
 
-describe("GET /api/subdivisions/subdivision/:subdivision_id", () => {
+describe("GET /api/subdivisions/:subdivision_id", () => {
 
   test("GET:200 Responds with a subdivision object", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/subdivision/1")
+      .get("/api/subdivisions/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -437,7 +437,7 @@ describe("GET /api/subdivisions/subdivision/:subdivision_id", () => {
   test("GET:400 Responds with an error message when the subdivision is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/subdivision/example")
+      .get("/api/subdivisions/example")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -450,7 +450,7 @@ describe("GET /api/subdivisions/subdivision/:subdivision_id", () => {
   test("GET:403 Responds with a warning when the subdivision does not belong to the authenticated user", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/subdivision/4")
+      .get("/api/subdivisions/4")
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
@@ -463,7 +463,7 @@ describe("GET /api/subdivisions/subdivision/:subdivision_id", () => {
   test("GET:404 Responds with an error message when the subdivision does not exist", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/subdivision/999")
+      .get("/api/subdivisions/999")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -475,7 +475,7 @@ describe("GET /api/subdivisions/subdivision/:subdivision_id", () => {
 })
 
 
-describe("PATCH /api/subdivisions/subdivision/:subdivision_id", () => {
+describe("PATCH /api/subdivisions/:subdivision_id", () => {
 
   test("PATCH:200 Responds with an updated subdivision object", async () => {
 
@@ -487,7 +487,7 @@ describe("PATCH /api/subdivisions/subdivision/:subdivision_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/subdivisions/subdivision/1")
+      .patch("/api/subdivisions/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
@@ -512,7 +512,7 @@ describe("PATCH /api/subdivisions/subdivision/:subdivision_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/subdivisions/subdivision/1")
+      .patch("/api/subdivisions/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
@@ -536,7 +536,7 @@ describe("PATCH /api/subdivisions/subdivision/:subdivision_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/subdivisions/subdivision/1")
+      .patch("/api/subdivisions/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -557,7 +557,7 @@ describe("PATCH /api/subdivisions/subdivision/:subdivision_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/subdivisions/subdivision/1")
+      .patch("/api/subdivisions/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -578,7 +578,7 @@ describe("PATCH /api/subdivisions/subdivision/:subdivision_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/subdivisions/subdivision/1")
+      .patch("/api/subdivisions/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -599,7 +599,7 @@ describe("PATCH /api/subdivisions/subdivision/:subdivision_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/subdivisions/subdivision/example")
+      .patch("/api/subdivisions/example")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -620,7 +620,7 @@ describe("PATCH /api/subdivisions/subdivision/:subdivision_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/subdivisions/subdivision/4")
+      .patch("/api/subdivisions/4")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
@@ -641,7 +641,7 @@ describe("PATCH /api/subdivisions/subdivision/:subdivision_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/subdivisions/subdivision/999")
+      .patch("/api/subdivisions/999")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
@@ -662,7 +662,7 @@ describe("PATCH /api/subdivisions/subdivision/:subdivision_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/subdivisions/subdivision/1")
+      .patch("/api/subdivisions/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(409)
@@ -675,17 +675,17 @@ describe("PATCH /api/subdivisions/subdivision/:subdivision_id", () => {
 })
 
 
-describe("DELETE /api/subdivisions/subdivision/:subdivision_id", () => {
+describe("DELETE /api/subdivisions/:subdivision_id", () => {
 
   test("DELETE:204 Deletes the subdivision with the given subdivision_id", async () => {
 
     await request(app)
-      .delete("/api/subdivisions/subdivision/1")
+      .delete("/api/subdivisions/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(204)
 
     const { body } = await request(app)
-      .get("/api/subdivisions/subdivision/1")
+      .get("/api/subdivisions/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -698,7 +698,7 @@ describe("DELETE /api/subdivisions/subdivision/:subdivision_id", () => {
   test("DELETE:400 Responds with an error message when the subdivision_id is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .delete("/api/subdivisions/subdivision/example")
+      .delete("/api/subdivisions/example")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -711,7 +711,7 @@ describe("DELETE /api/subdivisions/subdivision/:subdivision_id", () => {
   test("DELETE:403 Responds with a warning when the authenticated user attempts to delete another user's subdivision", async () => {
 
     const { body } = await request(app)
-      .delete("/api/subdivisions/subdivision/4")
+      .delete("/api/subdivisions/4")
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
@@ -724,7 +724,7 @@ describe("DELETE /api/subdivisions/subdivision/:subdivision_id", () => {
   test("DELETE:404 Responds with an error message when the subdivision does not exist", async () => {
 
     const { body } = await request(app)
-      .delete("/api/subdivisions/subdivision/999")
+      .delete("/api/subdivisions/999")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 

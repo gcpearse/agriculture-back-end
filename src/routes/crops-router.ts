@@ -6,12 +6,12 @@ import { getCropsByPlotId } from "../controllers/crop-controllers"
 export const cropsRouter = Router()
 
 
-cropsRouter.route("/crops/:plot_id")
+cropsRouter.route("/crops/plot/:plot_id")
 
 
 /**
  * @swagger
- * /api/crops/{plot_id}:
+ * /api/crops/plot/{plot_id}:
  *  get:
  *    security:
  *      - bearerAuth: []
