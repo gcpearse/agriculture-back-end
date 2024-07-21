@@ -3,7 +3,6 @@ import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
-import { Plot } from "../types/plot-types"
 import { toBeOneOf } from 'jest-extended'
 expect.extend({ toBeOneOf })
 
@@ -145,9 +144,9 @@ describe("GET /api/plots/:owner_id?type=", () => {
 
     expect(body.plots).toHaveLength(2)
 
-    expect(body.plots.every((plot: Plot) => {
-      return plot.type === "allotment"
-    })).toBe(true)
+    for (const plot of body.plots) {
+      expect(plot.type).toBe("allotment")
+    }
   })
 
   test("GET:404 Responds with an error message when the query value is invalid", async () => {

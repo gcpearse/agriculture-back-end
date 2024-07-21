@@ -3,7 +3,6 @@ import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
-import { Subdivision } from "../types/subdivision-types"
 import { toBeOneOf } from 'jest-extended'
 expect.extend({ toBeOneOf })
 
@@ -153,9 +152,9 @@ describe("GET /api/subdivisions/:plot_id?type=", () => {
 
     expect(body.subdivisions).toHaveLength(2)
 
-    expect(body.subdivisions.every((subdivision: Subdivision) => {
-      return subdivision.type === "bed"
-    })).toBe(true)
+    for (const subdivision of body.subdivisions) {
+      expect(subdivision.type).toBe("bed")
+    }
   })
 
   test("GET:404 Responds with an error message when the query value is invalid", async () => {
