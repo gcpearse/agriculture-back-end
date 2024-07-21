@@ -104,7 +104,7 @@ The following scripts are included in the `package.json` file:
 > Drops and creates the test and development databases.
 
 `npm run seed`
-> Runs the TypeScript compiler and seeds the databases.
+> Runs the TypeScript compiler and seeds the database.
 
 `npm run start`
 > Runs the TypeScript compiler and starts the server locally on port 9090.
