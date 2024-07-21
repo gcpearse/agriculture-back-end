@@ -1,7 +1,9 @@
 import { db } from "../db"
 
 
-export const checkEmailConflict = async (email: string): Promise<undefined> => {
+export const checkEmailConflict = async (
+  email: string
+): Promise<undefined> => {
 
   const dbEmail = await db.query(`
     SELECT email 
@@ -20,7 +22,10 @@ export const checkEmailConflict = async (email: string): Promise<undefined> => {
 }
 
 
-export const checkPlotNameConflict = async (owner_id: number, name: string): Promise<undefined> => {
+export const checkPlotNameConflict = async (
+  owner_id: number,
+  name: string
+): Promise<undefined> => {
 
   const result = await db.query(`
     SELECT name
@@ -39,7 +44,10 @@ export const checkPlotNameConflict = async (owner_id: number, name: string): Pro
 }
 
 
-export const checkSubdivisionNameConflict = async (plot_id: number, name: string): Promise<undefined> => {
+export const checkSubdivisionNameConflict = async (
+  plot_id: number,
+  name: string
+): Promise<undefined> => {
 
   const result = await db.query(`
     SELECT name
@@ -58,7 +66,9 @@ export const checkSubdivisionNameConflict = async (plot_id: number, name: string
 }
 
 
-export const getPlotOwnerId = async (plot_id: number): Promise<number> => {
+export const getPlotOwnerId = async (
+  plot_id: number
+): Promise<number> => {
 
   const result = await db.query(`
     SELECT owner_id
@@ -79,7 +89,9 @@ export const getPlotOwnerId = async (plot_id: number): Promise<number> => {
 }
 
 
-export const getSubdivisionPlotId = async(subdivision_id: number): Promise<number> => {
+export const getSubdivisionPlotId = async (
+  subdivision_id: number
+): Promise<number> => {
 
   const result = await db.query(`
     SELECT plot_id
@@ -100,7 +112,9 @@ export const getSubdivisionPlotId = async(subdivision_id: number): Promise<numbe
 }
 
 
-export const searchForUserId = async (owner_id: number): Promise<undefined> => {
+export const searchForUserId = async (
+  owner_id: number
+): Promise<undefined> => {
 
   const result = await db.query(`
     SELECT user_id
@@ -117,7 +131,9 @@ export const searchForUserId = async (owner_id: number): Promise<undefined> => {
 }
 
 
-export const searchForUsername = async (username: string): Promise<undefined> => {
+export const searchForUsername = async (
+  username: string
+): Promise<undefined> => {
 
   const result = await db.query(`
     SELECT username
@@ -134,7 +150,9 @@ export const searchForUsername = async (username: string): Promise<undefined> =>
 }
 
 
-export const validatePlotType = async (type: string): Promise<boolean> => {
+export const validatePlotType = async (
+  type: string
+): Promise<boolean> => {
 
   const result = await db.query(`
     SELECT type 
@@ -145,7 +163,9 @@ export const validatePlotType = async (type: string): Promise<boolean> => {
 }
 
 
-export const validateSubdivisionType = async (type: string): Promise<boolean> => {
+export const validateSubdivisionType = async (
+  type: string
+): Promise<boolean> => {
 
   const result = await db.query(`
     SELECT type 

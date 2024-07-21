@@ -1,48 +1,27 @@
 import { db } from ".."
 import format from "pg-format"
-import { User } from "../../types/user-types"
-import { Plot } from "../../types/plot-types"
-import { Subdivision } from "../../types/subdivision-types"
-import { Crop } from "../../types/crop-types"
-import { Issue } from "../../types/issue-types"
-import { Job } from "../../types/job-types"
-import { CropImage, IssueImage, JobImage, PlotImage, SubdivisionImage } from "../../types/image-types"
-import { CropNote, IssueNote } from "../../types/note-types"
+import { SeedData } from "../../types/seed-types"
 
 
-export const seed = async ({
-  userData,
-  plotData,
-  plotImageData,
-  plotTypeData,
-  subdivisionData,
-  subdivisionImageData,
-  subdivisionTypeData,
-  cropData,
-  cropNoteData,
-  cropImageData,
-  issueData,
-  issueNoteData,
-  issueImageData,
-  jobData,
-  jobImageData
-}: {
-  userData: User[],
-  plotData: Plot[],
-  plotImageData: PlotImage[],
-  plotTypeData: { type: string }[],
-  subdivisionData: Subdivision[],
-  subdivisionImageData: SubdivisionImage[],
-  subdivisionTypeData: { type: string }[],
-  cropData: Crop[],
-  cropNoteData: CropNote[],
-  cropImageData: CropImage[],
-  issueData: Issue[],
-  issueNoteData: IssueNote[],
-  issueImageData: IssueImage[],
-  jobData: Job[],
-  jobImageData: JobImage[]
-}) => {
+export const seed = async (
+  {
+    userData,
+    plotData,
+    plotImageData,
+    plotTypeData,
+    subdivisionData,
+    subdivisionImageData,
+    subdivisionTypeData,
+    cropData,
+    cropNoteData,
+    cropImageData,
+    issueData,
+    issueNoteData,
+    issueImageData,
+    jobData,
+    jobImageData
+  }: SeedData
+) => {
 
   await db.query(`
     DROP TABLE IF EXISTS job_images;
