@@ -9,8 +9,8 @@ export const getCropsByPlotId: RequestHandler = async (req, res, next) => {
   const { plot_id } = req.params
 
   try {
-    const crops = await selectCropsByPlotId(authUserId, +plot_id, req.query)
-    res.status(200).send({ crops })
+    const [crops, count] = await selectCropsByPlotId(authUserId, +plot_id, req.query)
+    res.status(200).send({ crops, count })
   } catch (err) {
     next(err)
   }
