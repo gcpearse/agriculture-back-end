@@ -167,10 +167,9 @@ describe("GET /api/plots/user/:owner_id?type=", () => {
 
 describe("POST /api/plots/user/:owner_id", () => {
 
-  test("POST:201 Responds with a new plot object", async () => {
+  test("POST:201 Responds with a new plot object, assigning plot_id automatically", async () => {
 
     const newPlot = {
-      owner_id: 1,
       name: "John's Field",
       type: "field",
       description: "A large field",
@@ -198,7 +197,6 @@ describe("POST /api/plots/user/:owner_id", () => {
   test("POST:201 Assigns a null value to 'area' when no value is provided", async () => {
 
     const newPlot = {
-      owner_id: 1,
       name: "John's Field",
       type: "field",
       description: "A large field",
@@ -217,7 +215,6 @@ describe("POST /api/plots/user/:owner_id", () => {
   test("POST:201 Ignores any unnecessary properties on the object", async () => {
 
     const newPlot = {
-      owner_id: 1,
       name: "John's Field",
       type: "field",
       description: "A large field",
@@ -238,7 +235,6 @@ describe("POST /api/plots/user/:owner_id", () => {
   test("POST:400 Responds with an error when passed a property with an invalid data type", async () => {
 
     const newPlot = {
-      owner_id: 1,
       name: "John's Field",
       type: "field",
       description: "A large field",
@@ -261,7 +257,6 @@ describe("POST /api/plots/user/:owner_id", () => {
   test("POST:400 Responds with an error when a required property is missing from the request body", async () => {
 
     const newPlot = {
-      owner_id: 1,
       type: "field",
       description: "A large field",
       location: "Wildwood",
@@ -283,7 +278,6 @@ describe("POST /api/plots/user/:owner_id", () => {
   test("POST:400 Responds with an error when passed an invalid plot type", async () => {
 
     const newPlot = {
-      owner_id: 1,
       name: "John's Field",
       type: "garage",
       description: "A large field",
@@ -306,7 +300,6 @@ describe("POST /api/plots/user/:owner_id", () => {
   test("POST:400 Responds with an error message when the owner_id is not a positive integer", async () => {
 
     const newPlot = {
-      owner_id: 1,
       name: "John's Field",
       type: "field",
       description: "A large field",
@@ -329,7 +322,6 @@ describe("POST /api/plots/user/:owner_id", () => {
   test("POST:403 Responds with a warning when the authenticated user attempts to create a plot for another user", async () => {
 
     const newPlot = {
-      owner_id: 1,
       name: "John's Field",
       type: "field",
       description: "A large field",
@@ -349,33 +341,9 @@ describe("POST /api/plots/user/:owner_id", () => {
     })
   })
 
-  test("POST:403 Responds with a warning when the authenticated user attempts to create a plot for another user (forbidden owner_id on request body)", async () => {
-
-    const newPlot = {
-      owner_id: 2,
-      name: "John's Field",
-      type: "field",
-      description: "A large field",
-      location: "Wildwood",
-      area: 3000
-    }
-
-    const { body } = await request(app)
-      .post("/api/plots/user/1")
-      .send(newPlot)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(403)
-
-    expect(body).toMatchObject({
-      message: "Forbidden",
-      details: "Permission to create plot denied"
-    })
-  })
-
   test("POST:404 Responds with an error message when the owner_id does not exist", async () => {
 
     const newPlot = {
-      owner_id: 1,
       name: "John's Field",
       type: "field",
       description: "A large field",
@@ -398,7 +366,6 @@ describe("POST /api/plots/user/:owner_id", () => {
   test("POST:409 Responds with an error message when the plot name already exists for one of the given user's plots", async () => {
 
     const newPlot = {
-      owner_id: 1,
       name: "John's Garden",
       type: "garden",
       description: "The garden at the new house",
