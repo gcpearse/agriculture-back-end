@@ -1,10 +1,11 @@
-import { RequestHandler } from "express"
+import { NextFunction, Response } from "express"
 import { insertSubdivisionByPlotId, removeSubdivisionBySubdivisionId, selectSubdivisionBySubdivisionId, selectSubdivisionsByPlotId, updateSubdivisionBySubdivisionId } from "../models/subdivision-models"
+import { ExtendedRequest } from "../types/auth-types"
 
 
-export const getSubdivisionsByPlotId: RequestHandler = async (req, res, next) => {
+export const getSubdivisionsByPlotId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.body.user.user_id
+  const authUserId: number = req.user!.user_id
 
   const { plot_id } = req.params
 
@@ -17,9 +18,9 @@ export const getSubdivisionsByPlotId: RequestHandler = async (req, res, next) =>
 }
 
 
-export const postSubdivisionByPlotId: RequestHandler = async (req, res, next) => {
+export const postSubdivisionByPlotId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.body.user.user_id
+  const authUserId: number = req.user!.user_id
 
   const { plot_id } = req.params
 
@@ -32,9 +33,9 @@ export const postSubdivisionByPlotId: RequestHandler = async (req, res, next) =>
 }
 
 
-export const getSubdivisionBySubdivisionId: RequestHandler = async (req, res, next) => {
+export const getSubdivisionBySubdivisionId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.body.user.user_id
+  const authUserId: number = req.user!.user_id
 
   const { subdivision_id } = req.params
 
@@ -47,9 +48,9 @@ export const getSubdivisionBySubdivisionId: RequestHandler = async (req, res, ne
 }
 
 
-export const patchSubdivisionBySubdivisionId: RequestHandler = async (req, res, next) => {
+export const patchSubdivisionBySubdivisionId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.body.user.user_id
+  const authUserId: number = req.user!.user_id
 
   const { subdivision_id } = req.params
 
@@ -62,9 +63,9 @@ export const patchSubdivisionBySubdivisionId: RequestHandler = async (req, res, 
 }
 
 
-export const deleteSubdivisionBySubdivisionId: RequestHandler = async (req, res, next) => {
+export const deleteSubdivisionBySubdivisionId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.body.user.user_id
+  const authUserId: number = req.user!.user_id
 
   const { subdivision_id } = req.params
 

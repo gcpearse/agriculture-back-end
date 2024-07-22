@@ -32,7 +32,7 @@ describe("GET /api/auth", () => {
     })
   })
 
-  test("GET:401 Responds with an authorisation warning when valid credentials have not been provided", async () => {
+  test("GET:401 Responds with a warning when valid credentials have not been provided", async () => {
 
     const { body } = await request(app)
       .get("/api/auth")
@@ -40,20 +40,20 @@ describe("GET /api/auth", () => {
 
     expect(body).toMatchObject({
       message: "Unauthorized",
-      details: "Invalid credentials provided"
+      details: "Login required"
     })
   })
 
-  test("GET:403 Responds with a warning when the token cannot be verified", async () => {
+  test("GET:401 Responds with a warning when the token cannot be verified", async () => {
 
     const { body } = await request(app)
       .get("/api/auth")
       .set("Authorization", `Bearer invalidToken`)
-      .expect(403)
+      .expect(401)
 
     expect(body).toMatchObject({
-      message: "Forbidden",
-      details: "Token could not be verified"
+      message: "Unauthorized",
+      details: "Invalid or expired token"
     })
   })
 })

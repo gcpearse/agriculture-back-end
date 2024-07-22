@@ -1,6 +1,7 @@
-import { RequestHandler } from "express"
+import { NextFunction, Response } from "express"
 import jwt from "jsonwebtoken"
 import { LoggedInUser } from "../types/user-types"
+import { ExtendedRequest } from "../types/auth-types"
 
 
 export const generateToken = (user: LoggedInUser): string => {
@@ -9,7 +10,7 @@ export const generateToken = (user: LoggedInUser): string => {
 }
 
 
-export const verifyToken: RequestHandler = (req, res, next) => {
+export const verifyToken = (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
   const bearer = req.headers.authorization
 
@@ -18,20 +19,20 @@ export const verifyToken: RequestHandler = (req, res, next) => {
   if (!token) {
     return res.status(401).send({
       message: "Unauthorized",
-      details: "Invalid credentials provided"
+      details: "Login required"
     })
   }
 
   jwt.verify(token!, process.env.JWT_SECRET!, (err: any, user: any) => {
 
     if (err) {
-      return res.status(403).send({
-        message: "Forbidden",
-        details: "Token could not be verified"
+      return res.status(401).send({
+        message: "Unauthorized",
+        details: "Invalid or expired token"
       })
     }
 
-    req.body.user = user
+    req.user = user
 
     next()
   })

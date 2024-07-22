@@ -1,10 +1,11 @@
-import { RequestHandler } from "express"
+import { NextFunction, Response } from "express"
 import { changePasswordByUsername, removeUserByUsername, selectUserByUsername, updateUserByUsername } from "../models/user-models"
+import { ExtendedRequest } from "../types/auth-types"
 
 
-export const getUserByUsername: RequestHandler = async (req, res, next) => {
+export const getUserByUsername = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUsername: string = req.body.user.username
+  const authUsername: string = req.user!.username
 
   const { username } = req.params
 
@@ -17,9 +18,9 @@ export const getUserByUsername: RequestHandler = async (req, res, next) => {
 }
 
 
-export const patchUserByUsername: RequestHandler = async (req, res, next) => {
+export const patchUserByUsername = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUsername: string = req.body.user.username
+  const authUsername: string = req.user!.username
 
   const { username } = req.params
 
@@ -32,9 +33,9 @@ export const patchUserByUsername: RequestHandler = async (req, res, next) => {
 }
 
 
-export const deleteUserByUsername: RequestHandler = async (req, res, next) => {
+export const deleteUserByUsername = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUsername = req.body.user.username
+  const authUsername = req.user!.username
 
   const { username } = req.params
 
@@ -47,9 +48,9 @@ export const deleteUserByUsername: RequestHandler = async (req, res, next) => {
 }
 
 
-export const patchPasswordByUsername: RequestHandler = async (req, res, next) => {
+export const patchPasswordByUsername = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUsername: string = req.body.user.username
+  const authUsername: string = req.user!.username
 
   const { username } = req.params
 
