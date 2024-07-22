@@ -277,7 +277,7 @@ cropsRouter.route("/crops/subdivision/:subdivision_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Add a new crop to a subdivision
- *    description: Responds with a crop object. If the subdivision_id does not exist, the server responds with an error. Permission is denied when the plot does not belong to the current user.
+ *    description: Responds with a crop object. If the subdivision_id does not exist, the server responds with an error. Permission is denied when the subdivision does not belong to the current user.
  *    tags: [Crops]
  *    parameters:
  *      - in: path
