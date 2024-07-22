@@ -1,7 +1,7 @@
 import QueryString from "qs"
 import { db } from "../db"
 import format from "pg-format"
-import { Plot } from "../types/plot-types"
+import { Plot, PlotRequest } from "../types/plot-types"
 import { checkPlotNameConflict, getPlotOwnerId, searchForUserId, validatePlotType } from "../utils/db-query-utils"
 import { verifyPermission, verifyParamIsPositiveInt } from "../utils/verification-utils"
 
@@ -49,7 +49,7 @@ export const selectPlotsByOwner = async (
 export const insertPlotByOwner = async (
   authUserId: number,
   owner_id: number,
-  plot: Plot
+  plot: PlotRequest
 ): Promise<Plot> => {
 
   await verifyParamIsPositiveInt(owner_id)
@@ -109,7 +109,7 @@ export const selectPlotByPlotId = async (
 export const updatePlotByPlotId = async (
   authUserId: number,
   plot_id: number,
-  plot: Plot
+  plot: PlotRequest
 ): Promise<Plot> => {
 
   await verifyParamIsPositiveInt(plot_id)

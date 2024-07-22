@@ -1,6 +1,6 @@
 import QueryString from "qs"
 import { db } from "../db"
-import { Crop } from "../types/crop-types"
+import { Crop, CropRequest } from "../types/crop-types"
 import { getPlotOwnerId, getSubdivisionPlotId } from "../utils/db-query-utils"
 import { verifyPagination, verifyParamIsPositiveInt, verifyPermission } from "../utils/verification-utils"
 import format from "pg-format"
@@ -107,7 +107,7 @@ export const selectCropsByPlotId = async (
 export const insertCropByPlotId = async (
   authUserId: number,
   plot_id: number,
-  crop: Crop
+  crop: CropRequest
 ) => {
 
   await verifyParamIsPositiveInt(plot_id)
@@ -127,7 +127,7 @@ export const insertCropByPlotId = async (
       %L
     RETURNING *;
     `,
-    [[plot_id, crop.subdivision_id, crop.name, crop.variety, crop.quantity, crop.date_planted, crop.harvest_date]]
+    [[plot_id, null, crop.name, crop.variety, crop.quantity, crop.date_planted, crop.harvest_date]]
   ))
 
   return result.rows[0]
@@ -233,7 +233,7 @@ export const selectCropsBySubdivisionId = async (
 export const insertCropBySubdivisionId = async (
   authUserId: number,
   subdivision_id: number,
-  crop: Crop
+  crop: CropRequest
 ) => {
 
   await verifyParamIsPositiveInt(subdivision_id)

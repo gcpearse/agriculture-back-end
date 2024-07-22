@@ -2,7 +2,7 @@ import QueryString from "qs"
 import { db } from "../db"
 import { checkSubdivisionNameConflict, getPlotOwnerId, getSubdivisionPlotId, validateSubdivisionType } from "../utils/db-query-utils"
 import { verifyPermission, verifyParamIsPositiveInt } from "../utils/verification-utils"
-import { Subdivision } from "../types/subdivision-types"
+import { Subdivision, SubdivisionRequest } from "../types/subdivision-types"
 import format from "pg-format"
 
 
@@ -49,7 +49,7 @@ export const selectSubdivisionsByPlotId = async (
 export const insertSubdivisionByPlotId = async (
   authUserId: number,
   plot_id: number,
-  subdivision: Subdivision
+  subdivision: SubdivisionRequest
 ): Promise<Subdivision> => {
 
   await verifyParamIsPositiveInt(plot_id)
@@ -115,7 +115,7 @@ export const selectSubdivisionBySubdivisionId = async (
 export const updateSubdivisionBySubdivisionId = async (
   authUserId: number,
   subdivision_id: number,
-  subdivision: Subdivision
+  subdivision: SubdivisionRequest
 ): Promise<Subdivision> => {
 
   await verifyParamIsPositiveInt(subdivision_id)
