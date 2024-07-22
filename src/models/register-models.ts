@@ -2,6 +2,7 @@ import format from "pg-format"
 import { db } from "../db"
 import { SecureUser, User } from "../types/user-types"
 import { checkEmailConflict } from "../utils/db-query-utils"
+import { hashPassword } from "../middleware/security"
 
 
 export const registerUser = async (
@@ -32,6 +33,8 @@ export const registerUser = async (
 
   await checkEmailConflict(email)
 
+  const hashedPassword = await hashPassword(password)
+
   const result = await db.query(format(`
     INSERT INTO users
       (username, password, email, first_name, surname, unit_preference)
@@ -45,7 +48,7 @@ export const registerUser = async (
       surname, 
       unit_preference;
     `,
-    [[username, password, email, first_name, surname, unit_preference]]
+    [[username, hashedPassword, email, first_name, surname, unit_preference]]
   ))
 
   return result.rows[0]
