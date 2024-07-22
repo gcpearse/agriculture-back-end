@@ -59,7 +59,7 @@ cropsRouter.route("/crops/plot/:plot_id")
  *                crops:
  *                  type: array
  *                  items:
- *                    $ref: "#/components/schemas/Crop"
+ *                    $ref: "#/components/schemas/ExtendedCrop"
  *                count:
  *                  type: integer
  *                  example: 1
