@@ -10,6 +10,8 @@ expect.extend({ toBeOneOf })
 
 let token: string
 
+const regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
+
 
 beforeEach(async () => {
 
@@ -47,8 +49,6 @@ describe("GET /api/crops/plot/:plot_id", () => {
     })
 
     expect(body.crops).toEqual(sortedCrops)
-
-    const regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
 
     for (const crop of body.crops) {
       expect(crop).toMatchObject({
@@ -457,6 +457,196 @@ describe("GET /api/crops/plot/:plot_id?name=&page=", () => {
     expect(body).toMatchObject({
       message: "Not Found",
       details: "Page not found"
+    })
+  })
+})
+
+
+describe("POST /api/crops/plot/:plot_id", () => {
+
+  test("POST:201 Responds with a new crop object", async () => {
+
+    const newCrop = {
+      plot_id: 1,
+      subdivision_id: null,
+      name: "pear",
+      variety: "conference",
+      quantity: 1,
+      date_planted: new Date("2024-07-21"),
+      harvest_date: new Date("2024-09-30")
+    }
+
+    const { body } = await request(app)
+      .post("/api/crops/plot/1")
+      .send(newCrop)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(201)
+
+    expect(body.crop).toMatchObject({
+      crop_id: 7,
+      plot_id: 1,
+      subdivision_id: null,
+      name: "pear",
+      variety: "conference",
+      quantity: 1,
+      date_planted: expect.toBeOneOf([expect.stringMatching(regex), null]),
+      harvest_date: expect.toBeOneOf([expect.stringMatching(regex), null])
+    })
+  })
+
+  test("POST:201 Assigns a null value to 'subdivision_id', 'variety', 'quantity', 'date_planted', and 'harvest_date' when no value is provided", async () => {
+
+    const newCrop = {
+      plot_id: 1,
+      name: "pear"
+    }
+
+    const { body } = await request(app)
+      .post("/api/crops/plot/1")
+      .send(newCrop)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(201)
+
+    expect(body.crop).toMatchObject({
+      crop_id: 7,
+      plot_id: 1,
+      subdivision_id: null,
+      name: "pear",
+      variety: null,
+      quantity: null,
+      date_planted: null,
+      harvest_date: null
+    })
+  })
+
+  test("POST:201 Ignores any unnecessary properties on the object", async () => {
+
+    const newCrop = {
+      plot_id: 1,
+      name: "pear",
+      price: 100
+    }
+
+    const { body } = await request(app)
+      .post("/api/crops/plot/1")
+      .send(newCrop)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(201)
+
+    expect(body.crop).not.toHaveProperty("price")
+  })
+
+  test("POST:400 Responds with an error when passed a property with an invalid data type", async () => {
+
+    const newCrop = {
+      plot_id: 1,
+      name: "pear",
+      quantity: "one",
+    }
+
+    const { body } = await request(app)
+      .post("/api/crops/plot/1")
+      .send(newCrop)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid text representation"
+    })
+  })
+
+  test("POST:400 Responds with an error when a required property is missing from the request body", async () => {
+
+    const newCrop = {
+      plot_id: 1
+    }
+
+    const { body } = await request(app)
+      .post("/api/crops/plot/1")
+      .send(newCrop)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Not null violation"
+    })
+  })
+
+  test("POST:400 Responds with an error message when the plot_id is not a positive integer", async () => {
+
+    const newCrop = {
+      plot_id: 1,
+      name: "pear"
+    }
+
+    const { body } = await request(app)
+      .post("/api/crops/plot/example")
+      .send(newCrop)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
+  test("POST:403 Responds with a warning when the authenticated user attempts to add a crop for another user", async () => {
+
+    const newCrop = {
+      plot_id: 1,
+      name: "pear"
+    }
+
+    const { body } = await request(app)
+      .post("/api/crops/plot/2")
+      .send(newCrop)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to add crop denied"
+    })
+  })
+
+  test("POST:403 Responds with a warning when the authenticated user attempts to add a crop for another user (forbidden plot_id on request body)", async () => {
+
+    const newCrop = {
+      plot_id: 2,
+      name: "pear"
+    }
+
+    const { body } = await request(app)
+      .post("/api/crops/plot/1")
+      .send(newCrop)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to add crop denied"
+    })
+  })
+
+  test("POST:404 Responds with an error message when the plot_id does not exist", async () => {
+
+    const newCrop = {
+      plot_id: 1,
+      name: "pear"
+    }
+
+    const { body } = await request(app)
+      .post("/api/crops/plot/999")
+      .send(newCrop)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Plot not found"
     })
   })
 })

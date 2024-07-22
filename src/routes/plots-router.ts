@@ -34,9 +34,12 @@ plotsRouter.route("/plots/user/:owner_id")
  *        content:
  *          application/json:
  *            schema:
- *              type: array
- *              items:
- *                $ref: "#/components/schemas/Plot"
+ *              type: object
+ *              properties:
+ *                plots:
+ *                  type: array
+ *                  items:
+ *                    $ref: "#/components/schemas/Plot"
  *      400:
  *        description: Bad Request
  *        content:
@@ -97,7 +100,8 @@ plotsRouter.route("/plots/user/:owner_id")
  *                type: string    
  *                example: Farmville
  *              area:
- *                type: integer    
+ *                type: integer
+ *                nullable: true    
  *                example: 100
  *    responses:
  *      201:
@@ -105,7 +109,10 @@ plotsRouter.route("/plots/user/:owner_id")
  *        content:
  *          application/json:
  *            schema:
- *              $ref: "#/components/schemas/Plot"
+ *              type: object
+ *              properties:
+ *                plot:
+ *                  $ref: "#/components/schemas/Plot"
  *      400:
  *        description: Bad Request
  *        content:
@@ -158,7 +165,10 @@ plotsRouter.route("/plots/:plot_id")
  *        content:
  *          application/json:
  *            schema:
- *              $ref: "#/components/schemas/Plot"
+ *              type: object
+ *              properties:
+ *                plot:
+ *                  $ref: "#/components/schemas/Plot"
  *      400:
  *        description: Bad Request
  *        content:
@@ -217,6 +227,7 @@ plotsRouter.route("/plots/:plot_id")
  *                example: Farmville
  *              area:
  *                type: integer    
+ *                nullable: true
  *                example: 100
  *    responses:
  *      200:
@@ -224,7 +235,10 @@ plotsRouter.route("/plots/:plot_id")
  *        content:
  *          application/json:
  *            schema:
- *              $ref: "#/components/schemas/Plot"
+ *              type: object
+ *              properties:
+ *                plot:
+ *                  $ref: "#/components/schemas/Plot"
  *      400:
  *        description: Bad Request
  *        content:

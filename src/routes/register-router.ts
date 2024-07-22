@@ -43,25 +43,29 @@ export const registerRouter = Router()
  *        content:
  *          application/json:
  *            schema:
+ *              type: object
  *              properties:
- *                user_id:
- *                  type: integer
- *                  example: 3
- *                username:
- *                  type: string
- *                  example: farmer123
- *                email:
- *                  type: string
- *                  example: fred.flint@example.com
- *                first_name:
- *                  type: string
- *                  example: Fred
- *                surname:
- *                  type: string
- *                  example: Flint
- *                unit_preference:
- *                  type: string
- *                  example: metric
+ *                user:
+ *                  type: object
+ *                  properties:
+ *                    user_id:
+ *                      type: integer
+ *                      example: 3
+ *                    username:
+ *                      type: string
+ *                      example: farmer123
+ *                    email:
+ *                      type: string
+ *                      example: fred.flint@example.com
+ *                    first_name:
+ *                      type: string
+ *                      example: Fred
+ *                    surname:
+ *                      type: string
+ *                      example: Flint
+ *                    unit_preference:
+ *                      type: string
+ *                      example: metric
  *      400:
  *        description: Bad Request
  *        content:

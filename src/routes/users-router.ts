@@ -30,7 +30,10 @@ usersRouter.route("/users/:username")
  *        content:
  *          application/json:
  *            schema:
- *              $ref: "#/components/schemas/User"
+ *              type: object
+ *              properties:
+ *                user:
+ *                  $ref: "#/components/schemas/User"
  *      403:
  *        description: Forbidden
  *        content:
@@ -86,7 +89,10 @@ usersRouter.route("/users/:username")
  *        content:
  *          application/json:
  *            schema:
- *              $ref: "#/components/schemas/User"
+ *              type: object
+ *              properties:
+ *                user:
+ *                  $ref: "#/components/schemas/User"
  *      400:
  *        description: Bad Request
  *        content:
@@ -169,16 +175,23 @@ usersRouter.route("/users/:username")
  *          schema:
  *            type: object
  *            properties:
- *              password:
+ *              oldPassword:
  *                type: string
  *                example: password123
+ *              newPassword:
+ *                type: string
+ *                example: password456 
  *    responses:
  *      200:
  *        description: OK
  *        content:
  *          application/json:
  *            schema:
- *              $ref: "#/components/schemas/User"
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  example: Password changed successfully
  *      400:
  *        description: Bad Request
  *        content:

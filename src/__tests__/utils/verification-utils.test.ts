@@ -71,7 +71,16 @@ describe("verifyParamIsPositiveInt", () => {
     })
   })
 
-  test("Returns undefined when the value of the parameter is a number", () => {
+  test("When the value of the parameter is zero, the promise is rejected", () => {
+
+    expect(verifyParamIsPositiveInt(0)).rejects.toMatchObject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
+  test("Returns undefined when the value of the parameter is a positive integer", () => {
 
     expect(verifyParamIsPositiveInt(1)).toBeUndefined()
   })
