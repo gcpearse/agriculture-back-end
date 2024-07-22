@@ -1160,21 +1160,21 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
     })
   })
 
-  test("POST:404 Responds with an error message when the plot_id does not exist", async () => {
+  test("POST:404 Responds with an error message when the subdivision does not exist", async () => {
 
     const newCrop = {
       name: "pear"
     }
 
     const { body } = await request(app)
-      .post("/api/crops/plot/999")
+      .post("/api/crops/subdivision/999")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
     expect(body).toMatchObject({
       message: "Not Found",
-      details: "Plot not found"
+      details: "Subdivision not found"
     })
   })
 })
