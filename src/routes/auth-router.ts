@@ -41,13 +41,13 @@ export const authRouter = Router()
  *                details:
  *                  type: string
  *            examples:
- *              Login status:
+ *              Login required:
  *                value:
  *                  message: Unauthorized
  *                  details: Login required
- *              Invalid token:
+ *              Invalid or expired token:
  *                value:
  *                  message: Unauthorized
- *                  details: Token could not be verified
+ *                  details: Invalid or expired token
  */
 authRouter.get("/auth", verifyToken, testAuth)

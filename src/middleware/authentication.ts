@@ -28,7 +28,7 @@ export const verifyToken = (req: ExtendedRequest, res: Response, next: NextFunct
     if (err) {
       return res.status(401).send({
         message: "Unauthorized",
-        details: "Token could not be verified"
+        details: "Invalid or expired token"
       })
     }
 

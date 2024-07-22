@@ -53,7 +53,7 @@ describe("GET /api/auth", () => {
 
     expect(body).toMatchObject({
       message: "Unauthorized",
-      details: "Token could not be verified"
+      details: "Invalid or expired token"
     })
   })
 })
