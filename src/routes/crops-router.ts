@@ -116,23 +116,23 @@ cropsRouter.route("/crops/plot/:plot_id")
  *                example: null
  *              name:
  *                type: string
- *                example: pear
+ *                example: carrot
  *              variety:
  *                type: string
  *                nullable: true
- *                example: conference
+ *                example: chantenay
  *              quantity:
  *                type: integer
  *                nullable: true
- *                example: 1
+ *                example: 20
  *              date_planted:
  *                type: string
  *                nullable: true
- *                example: 2024-07-21
+ *                example: 2024-06-19
  *              harvest_date:
  *                type: string
  *                nullable: true
- *                example: 2024-09-30
+ *                example: 2024-09-14
  *    responses:
  *      201:
  *        description: OK
