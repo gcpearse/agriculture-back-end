@@ -3,7 +3,13 @@ import bcrypt from "bcryptjs"
 
 export const hashPassword = async (password: string) => {
 
-  return await bcrypt.hash(password, 10)
+  let saltRounds = 10
+
+  if (process.env.NODE_ENV === "test") {
+    saltRounds = 1
+  }
+
+  return await bcrypt.hash(password, saltRounds)
 }
 
 
