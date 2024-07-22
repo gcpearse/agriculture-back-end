@@ -65,7 +65,7 @@ export const schemaRouter = Router()
  *          properties:
  *            subdivision_name:
  *              type: string
- *              example: Example
+ *              example: Vegetable Patch
  *            note_count:
  *              type: integer
  *              example: 1
