@@ -1,6 +1,7 @@
-import { RequestHandler } from "express"
+import { NextFunction, Response } from "express"
 import jwt from "jsonwebtoken"
 import { LoggedInUser } from "../types/user-types"
+import { ExtendedRequest } from "../types/auth-types"
 
 
 export const generateToken = (user: LoggedInUser): string => {
@@ -9,7 +10,7 @@ export const generateToken = (user: LoggedInUser): string => {
 }
 
 
-export const verifyToken: RequestHandler = (req, res, next) => {
+export const verifyToken = (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
   const bearer = req.headers.authorization
 
@@ -31,7 +32,7 @@ export const verifyToken: RequestHandler = (req, res, next) => {
       })
     }
 
-    req.body.user = user
+    req.user = user
 
     next()
   })

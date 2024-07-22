@@ -1,10 +1,11 @@
-import { RequestHandler } from "express"
+import { NextFunction, Response } from "express"
 import { insertPlotByOwner, removePlotByPlotId, selectPlotByPlotId, selectPlotsByOwner, updatePlotByPlotId } from "../models/plot-models"
+import { ExtendedRequest } from "../types/auth-types"
 
 
-export const getPlotsByOwner: RequestHandler = async (req, res, next) => {
+export const getPlotsByOwner = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.body.user.user_id
+  const authUserId: number = req.user!.user_id
 
   const { owner_id } = req.params
 
@@ -17,9 +18,9 @@ export const getPlotsByOwner: RequestHandler = async (req, res, next) => {
 }
 
 
-export const postPlotByOwner: RequestHandler = async (req, res, next) => {
+export const postPlotByOwner= async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.body.user.user_id
+  const authUserId: number = req.user!.user_id
 
   const { owner_id } = req.params
 
@@ -32,9 +33,9 @@ export const postPlotByOwner: RequestHandler = async (req, res, next) => {
 }
 
 
-export const getPlotByPlotId: RequestHandler = async (req, res, next) => {
+export const getPlotByPlotId= async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.body.user.user_id
+  const authUserId: number = req.user!.user_id
 
   const { plot_id } = req.params
 
@@ -47,9 +48,9 @@ export const getPlotByPlotId: RequestHandler = async (req, res, next) => {
 }
 
 
-export const patchPlotByPlotId: RequestHandler = async (req, res, next) => {
+export const patchPlotByPlotId= async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.body.user.user_id
+  const authUserId: number = req.user!.user_id
 
   const { plot_id } = req.params
 
@@ -62,9 +63,9 @@ export const patchPlotByPlotId: RequestHandler = async (req, res, next) => {
 }
 
 
-export const deletePlotByPlotId: RequestHandler = async (req, res, next) => {
+export const deletePlotByPlotId= async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.body.user.user_id
+  const authUserId: number = req.user!.user_id
 
   const { plot_id } = req.params
 

@@ -1,10 +1,11 @@
-import { RequestHandler } from "express"
+import { NextFunction, Response } from "express"
 import { insertCropByPlotId, selectCropsByPlotId } from "../models/crop-models"
+import { ExtendedRequest } from "../types/auth-types"
 
 
-export const getCropsByPlotId: RequestHandler = async (req, res, next) => {
+export const getCropsByPlotId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.body.user.user_id
+  const authUserId: number = req.user!.user_id
 
   const { plot_id } = req.params
 
@@ -17,9 +18,9 @@ export const getCropsByPlotId: RequestHandler = async (req, res, next) => {
 }
 
 
-export const postCropByPlotId: RequestHandler = async (req, res, next) => {
+export const postCropByPlotId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.body.user.user_id
+  const authUserId: number = req.user!.user_id
 
   const { plot_id } = req.params
 
