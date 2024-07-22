@@ -1,7 +1,7 @@
 import { Plot } from "../../../../types/plot-types";
 
 
-export const plotData = [
+export const plotData: Plot[] = [
   {
     owner_id: 1,
     name: "John's Garden",
@@ -34,4 +34,4 @@ export const plotData = [
     location: "Farmville",
     area: 40
   }
-] as Plot[]
+]
