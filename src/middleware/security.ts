@@ -5,6 +5,8 @@ export const hashPassword = async (password: string) => {
 
   let saltRounds = 10
 
+  console.log(process.env.NODE_ENV)
+
   if (process.env.NODE_ENV === "test") {
     saltRounds = 1
   }
