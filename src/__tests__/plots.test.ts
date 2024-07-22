@@ -167,7 +167,7 @@ describe("GET /api/plots/user/:owner_id?type=", () => {
 
 describe("POST /api/plots/user/:owner_id", () => {
 
-  test("POST:201 Responds with a new plot object, assigning plot_id automatically", async () => {
+  test("POST:201 Responds with a new plot object, assigning owner_id automatically", async () => {
 
     const newPlot = {
       name: "John's Field",
