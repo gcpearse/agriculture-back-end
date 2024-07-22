@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { getCropsByPlotId, getCropsBySubdivisionId, postCropByPlotId } from "../controllers/crop-controllers"
+import { getCropsByPlotId, getCropsBySubdivisionId, postCropByPlotId, postCropBySubdivisionId } from "../controllers/crop-controllers"
 
 
 export const cropsRouter = Router()
@@ -107,13 +107,6 @@ cropsRouter.route("/crops/plot/:plot_id")
  *          schema:
  *            type: object
  *            properties:
- *              plot_id:
- *                type: integer
- *                example: 1
- *              subdivision_id:
- *                type: integer
- *                nullable: true
- *                example: null
  *              name:
  *                type: string
  *                example: carrot
@@ -275,3 +268,76 @@ cropsRouter.route("/crops/subdivision/:subdivision_id")
  *              $ref: "#/components/schemas/NotFound"
  */
   .get(verifyToken, getCropsBySubdivisionId)
+
+
+/**
+ * @swagger
+ * /api/crops/subdivision/{subdivision_id}:
+ *  post:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Add a new crop to a subdivision
+ *    description: Responds with a crop object. If the subdivision_id does not exist, the server responds with an error. Permission is denied when the plot does not belong to the current user.
+ *    tags: [Crops]
+ *    parameters:
+ *      - in: path
+ *        name: subdivision_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              name:
+ *                type: string
+ *                example: carrot
+ *              variety:
+ *                type: string
+ *                nullable: true
+ *                example: chantenay
+ *              quantity:
+ *                type: integer
+ *                nullable: true
+ *                example: 20
+ *              date_planted:
+ *                type: string
+ *                nullable: true
+ *                example: 2024-06-19
+ *              harvest_date:
+ *                type: string
+ *                nullable: true
+ *                example: 2024-09-14
+ *    responses:
+ *      201:
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                crop:
+ *                  $ref: "#/components/schemas/Crop"
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/BadRequest"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Forbidden"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/NotFound"
+ */
+  .post(verifyToken, postCropBySubdivisionId)
