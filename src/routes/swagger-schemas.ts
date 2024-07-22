@@ -58,6 +58,17 @@ export const schemaRouter = Router()
  *          type: string
  *          nullable: true
  *          example: 2024-09-14T23:00:00.000Z
+ *    ExtendedCrop:
+ *      allOf: 
+ *        - $ref: "#/components/schemas/Crop"
+ *        - type: object
+ *          properties:
+ *            subdivision_name:
+ *              type: string
+ *              example: Example
+ *            note_count:
+ *              type: integer
+ *              example: 1
  *    Forbidden:
  *      type: object
  *      properties:
