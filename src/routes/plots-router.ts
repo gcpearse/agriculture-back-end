@@ -84,9 +84,6 @@ plotsRouter.route("/plots/user/:owner_id")
  *          schema:
  *            type: object
  *            properties:
- *              owner_id:
- *                type: integer
- *                example: 1
  *              name:
  *                type: string
  *                example: John's Garden
