@@ -1,4 +1,5 @@
 import { db } from "../db"
+import { comparePasswords } from "../middleware/security"
 import { Credentials, LoggedInUser } from "../types/user-types"
 
 
@@ -26,12 +27,13 @@ export const logInUser = async (
   const dbPassword = await db.query(`
     SELECT password
     FROM users
-    WHERE username = $1
-    AND password = $2;
+    WHERE username = $1;
     `,
-    [username, password])
+    [username])
 
-  if (!dbPassword.rowCount) {
+  const isCorrectPassword = await comparePasswords(password, dbPassword.rows[0].password)
+
+  if (!isCorrectPassword) {
     return Promise.reject({
       status: 401,
       message: "Unauthorized",

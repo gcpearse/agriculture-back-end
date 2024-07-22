@@ -1,11 +1,12 @@
 import { db } from "../db"
+import { comparePasswords, hashPassword } from "../middleware/security"
 import { PasswordUpdate, SecureUser } from "../types/user-types"
 import { checkEmailConflict, searchForUsername } from "../utils/db-query-utils"
 import { verifyPermission } from "../utils/verification-utils"
 
 
 export const selectUserByUsername = async (
-  authUsername: string, 
+  authUsername: string,
   username: string
 ): Promise<SecureUser> => {
 
@@ -31,8 +32,8 @@ export const selectUserByUsername = async (
 
 
 export const updateUserByUsername = async (
-  authUsername: string, 
-  username: string, 
+  authUsername: string,
+  username: string,
   user: SecureUser
 ): Promise<SecureUser> => {
 
@@ -65,7 +66,7 @@ export const updateUserByUsername = async (
 
 
 export const removeUserByUsername = async (
-  authUsername: string, 
+  authUsername: string,
   username: string
 ): Promise<void> => {
 
@@ -83,11 +84,11 @@ export const removeUserByUsername = async (
 
 
 export const changePasswordByUsername = async (
-  authUsername: string, 
-  username: string, 
-  { 
-    oldPassword, 
-    newPassword 
+  authUsername: string,
+  username: string,
+  {
+    oldPassword,
+    newPassword
   }: PasswordUpdate
 ): Promise<{ message: string }> => {
 
@@ -102,13 +103,17 @@ export const changePasswordByUsername = async (
     `,
     [username])
 
-  if (oldPassword !== currentPassword.rows[0].password) {
+  const isCorrectPassword = await comparePasswords(oldPassword, currentPassword.rows[0].password)
+
+  if (!isCorrectPassword) {
     return Promise.reject({
       status: 401,
       message: "Unauthorized",
       details: "Incorrect password"
     })
   }
+
+  const hashedPassword = await hashPassword(newPassword)
 
   await db.query(`
     UPDATE users
@@ -122,7 +127,7 @@ export const changePasswordByUsername = async (
       surname, 
       unit_preference;
     `,
-    [newPassword, username])
+    [hashedPassword, username])
 
   return {
     message: "Password changed successfully"
