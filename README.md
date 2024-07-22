@@ -20,9 +20,13 @@ Database management is handled with **PostgreSQL**. The application uses the `pg
 
 Access to routes, services, and resources is handled by a **JSON Web Token (JWT)** authentication system.
 
+### Security
+
+The application uses the `bcryptjs` library to store hashed passwords in the database and verify those passwords when retrieved.
+
 ### Testing
 
-The project contains a full suite of integration tests using **Jest** and **SuperTest** with the `ts-jest` library for TypeScript support.
+This project contains a full suite of integration tests using **Jest** and **SuperTest** with the `ts-jest` library for TypeScript support.
 
 ## Documentation
 
