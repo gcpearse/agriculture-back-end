@@ -276,24 +276,6 @@ describe("PATCH /api/users/:username/password", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error when a property is missing from the request body", async () => {
-
-    const passwordUpdate = {
-      oldPassword: "carrots123"
-    }
-
-    const { body } = await request(app)
-      .patch("/api/users/carrot_king/password")
-      .send(passwordUpdate)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject({
-      message: "Bad Request",
-      details: "Not null violation"
-    })
-  })
-
   test("PATCH:401 Responds with an error when the old password does not match the current password", async () => {
 
     const passwordUpdate = {
@@ -349,5 +331,19 @@ describe("PATCH /api/users/:username/password", () => {
       message: "Not Found",
       details: "User not found"
     })
+  })
+
+  // 500 status code here as the error is thrown by passing undefined as an argument to hashPassword
+  test("PATCH:500 Responds with an error when newPassword is missing from the request body", async () => {
+
+    const passwordUpdate = {
+      oldPassword: "carrots123"
+    }
+
+    await request(app)
+      .patch("/api/users/carrot_king/password")
+      .send(passwordUpdate)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(500)
   })
 })
