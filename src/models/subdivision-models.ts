@@ -58,7 +58,7 @@ export const insertSubdivisionByPlotId = async (
 
   await verifyPermission(authUserId, owner_id, "Permission to create subdivision denied")
 
-  owner_id = await getPlotOwnerId(subdivision.plot_id)
+  owner_id = await getPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to create subdivision denied")
 
@@ -81,7 +81,7 @@ export const insertSubdivisionByPlotId = async (
       %L
     RETURNING *;
     `,
-    [[subdivision.plot_id, subdivision.name, subdivision.type, subdivision.description, subdivision.area]]
+    [[plot_id, subdivision.name, subdivision.type, subdivision.description, subdivision.area]]
   ))
 
   return result.rows[0]
