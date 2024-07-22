@@ -18,15 +18,15 @@ export const verifyToken: RequestHandler = (req, res, next) => {
   if (!token) {
     return res.status(401).send({
       message: "Unauthorized",
-      details: "Invalid credentials provided"
+      details: "Login required"
     })
   }
 
   jwt.verify(token!, process.env.JWT_SECRET!, (err: any, user: any) => {
 
     if (err) {
-      return res.status(403).send({
-        message: "Forbidden",
+      return res.status(401).send({
+        message: "Unauthorized",
         details: "Token could not be verified"
       })
     }
