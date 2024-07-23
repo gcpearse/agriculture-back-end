@@ -99,7 +99,9 @@ export const seed = async (
       email VARCHAR NOT NULL,
       first_name VARCHAR NOT NULL,
       surname VARCHAR NOT NULL,
-      unit_preference unit_system NOT NULL DEFAULT 'metric'
+      unit_preference unit_system NOT NULL DEFAULT 'metric',
+      token VARCHAR,
+      token_expiry TIMESTAMP
     );
     `)
 
