@@ -175,10 +175,9 @@ describe("GET /api/subdivisions/plot/:plot_id?type=", () => {
 
 describe("POST /api/subdivisions/plot/:plot_id", () => {
 
-  test("POST:201 Responds with a new subdivision object", async () => {
+  test("POST:201 Responds with a new subdivision object, assigning plot_id automatically", async () => {
 
     const newSubdivision = {
-      plot_id: 1,
       name: "Wildflowers",
       type: "flowerbed",
       description: "Foxgloves and bluebells",
@@ -204,7 +203,6 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
   test("POST:201 Assigns a null value to 'area' when no value is provided", async () => {
 
     const newSubdivision = {
-      plot_id: 1,
       name: "Wildflowers",
       type: "flowerbed",
       description: "Foxgloves and bluebells"
@@ -222,7 +220,6 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
   test("POST:201 Ignores any unnecessary properties on the object", async () => {
 
     const newSubdivision = {
-      plot_id: 1,
       name: "Wildflowers",
       type: "flowerbed",
       description: "Foxgloves and bluebells",
@@ -242,7 +239,6 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
   test("POST:400 Responds with an error when passed a property with an invalid data type", async () => {
 
     const newSubdivision = {
-      plot_id: 1,
       name: "Wildflowers",
       type: "flowerbed",
       description: "Foxgloves and bluebells",
@@ -264,7 +260,6 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
   test("POST:400 Responds with an error when a required property is missing from the request body", async () => {
 
     const newSubdivision = {
-      plot_id: 1,
       type: "flowerbed",
       description: "Foxgloves and bluebells",
       area: 2
@@ -285,7 +280,6 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
   test("POST:400 Responds with an error when passed an invalid subdivision type", async () => {
 
     const newSubdivision = {
-      plot_id: 1,
       name: "Wildflowers",
       type: "garage",
       description: "Foxgloves and bluebells",
@@ -307,7 +301,6 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
   test("POST:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const newSubdivision = {
-      plot_id: 1,
       name: "Wildflowers",
       type: "flowerbed",
       description: "Foxgloves and bluebells",
@@ -329,7 +322,6 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
   test("POST:403 Responds with a warning when the authenticated user attempts to create a subdivision for another user", async () => {
 
     const newSubdivision = {
-      plot_id: 1,
       name: "Wildflowers",
       type: "flowerbed",
       description: "Foxgloves and bluebells",
@@ -348,32 +340,9 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
     })
   })
 
-  test("POST:403 Responds with a warning when the authenticated user attempts to create a subdivision for another user (forbidden plot_id on request body)", async () => {
-
-    const newSubdivision = {
-      plot_id: 2,
-      name: "Wildflowers",
-      type: "flowerbed",
-      description: "Foxgloves and bluebells",
-      area: 2
-    }
-
-    const { body } = await request(app)
-      .post("/api/subdivisions/plot/1")
-      .send(newSubdivision)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(403)
-
-    expect(body).toMatchObject({
-      message: "Forbidden",
-      details: "Permission to create subdivision denied"
-    })
-  })
-
   test("POST:404 Responds with an error message when the plot_id does not exist", async () => {
 
     const newSubdivision = {
-      plot_id: 1,
       name: "Wildflowers",
       type: "flowerbed",
       description: "Foxgloves and bluebells",
@@ -395,7 +364,6 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
   test("POST:409 Responds with an error message when the subdivision name already exists for one of the given user's subdivisions of that plot", async () => {
 
     const newSubdivision = {
-      plot_id: 1,
       name: "Onion Bed",
       type: "flowerbed",
       description: "Foxgloves and bluebells",

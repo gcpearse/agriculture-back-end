@@ -84,9 +84,6 @@ subdivisionsRouter.route("/subdivisions/plot/:plot_id")
  *          schema:
  *            type: object
  *            properties:
- *              plot_id:
- *                type: integer
- *                example: 1
  *              name:
  *                type: string
  *                example: Root Vegetable Bed

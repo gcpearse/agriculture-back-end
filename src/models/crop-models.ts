@@ -1,6 +1,6 @@
 import QueryString from "qs"
 import { db } from "../db"
-import { Crop } from "../types/crop-types"
+import { Crop, CropRequest } from "../types/crop-types"
 import { getPlotOwnerId, getSubdivisionPlotId } from "../utils/db-query-utils"
 import { verifyPagination, verifyParamIsPositiveInt, verifyPermission } from "../utils/verification-utils"
 import format from "pg-format"
@@ -107,7 +107,7 @@ export const selectCropsByPlotId = async (
 export const insertCropByPlotId = async (
   authUserId: number,
   plot_id: number,
-  crop: Crop
+  crop: CropRequest
 ) => {
 
   await verifyParamIsPositiveInt(plot_id)
@@ -116,7 +116,7 @@ export const insertCropByPlotId = async (
 
   await verifyPermission(authUserId, owner_id, "Permission to add crop denied")
 
-  owner_id = await getPlotOwnerId(crop.plot_id)
+  owner_id = await getPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to add crop denied")
 
@@ -127,7 +127,7 @@ export const insertCropByPlotId = async (
       %L
     RETURNING *;
     `,
-    [[crop.plot_id, crop.subdivision_id, crop.name, crop.variety, crop.quantity, crop.date_planted, crop.harvest_date]]
+    [[plot_id, null, crop.name, crop.variety, crop.quantity, crop.date_planted, crop.harvest_date]]
   ))
 
   return result.rows[0]
@@ -227,4 +227,32 @@ export const selectCropsBySubdivisionId = async (
   const countResult = await db.query(`${countQuery};`, [subdivision_id])
 
   return Promise.all([result.rows, +countResult.rows[0].count])
+}
+
+
+export const insertCropBySubdivisionId = async (
+  authUserId: number,
+  subdivision_id: number,
+  crop: CropRequest
+) => {
+
+  await verifyParamIsPositiveInt(subdivision_id)
+
+  const plotId = await getSubdivisionPlotId(subdivision_id)
+
+  const owner_id = await getPlotOwnerId(plotId)
+
+  await verifyPermission(authUserId, owner_id, "Permission to add crop denied")
+
+  const result = await db.query(format(`
+    INSERT INTO crops
+      (plot_id, subdivision_id, name, variety, quantity, date_planted, harvest_date)
+    VALUES
+      %L
+    RETURNING *;
+    `,
+    [[plotId, subdivision_id, crop.name, crop.variety, crop.quantity, crop.date_planted, crop.harvest_date]]
+  ))
+
+  return result.rows[0]
 }

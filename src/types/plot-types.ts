@@ -7,3 +7,12 @@ export type Plot = {
   location: string
   area: number | null
 }
+
+
+export type PlotRequest = {
+  name: string
+  type: string
+  description: string
+  location: string
+  area?: number | null
+}

@@ -2,7 +2,7 @@ import QueryString from "qs"
 import { db } from "../db"
 import { checkSubdivisionNameConflict, getPlotOwnerId, getSubdivisionPlotId, validateSubdivisionType } from "../utils/db-query-utils"
 import { verifyPermission, verifyParamIsPositiveInt } from "../utils/verification-utils"
-import { Subdivision } from "../types/subdivision-types"
+import { Subdivision, SubdivisionRequest } from "../types/subdivision-types"
 import format from "pg-format"
 
 
@@ -49,7 +49,7 @@ export const selectSubdivisionsByPlotId = async (
 export const insertSubdivisionByPlotId = async (
   authUserId: number,
   plot_id: number,
-  subdivision: Subdivision
+  subdivision: SubdivisionRequest
 ): Promise<Subdivision> => {
 
   await verifyParamIsPositiveInt(plot_id)
@@ -58,7 +58,7 @@ export const insertSubdivisionByPlotId = async (
 
   await verifyPermission(authUserId, owner_id, "Permission to create subdivision denied")
 
-  owner_id = await getPlotOwnerId(subdivision.plot_id)
+  owner_id = await getPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to create subdivision denied")
 
@@ -81,7 +81,7 @@ export const insertSubdivisionByPlotId = async (
       %L
     RETURNING *;
     `,
-    [[subdivision.plot_id, subdivision.name, subdivision.type, subdivision.description, subdivision.area]]
+    [[plot_id, subdivision.name, subdivision.type, subdivision.description, subdivision.area]]
   ))
 
   return result.rows[0]
@@ -115,7 +115,7 @@ export const selectSubdivisionBySubdivisionId = async (
 export const updateSubdivisionBySubdivisionId = async (
   authUserId: number,
   subdivision_id: number,
-  subdivision: Subdivision
+  subdivision: SubdivisionRequest
 ): Promise<Subdivision> => {
 
   await verifyParamIsPositiveInt(subdivision_id)

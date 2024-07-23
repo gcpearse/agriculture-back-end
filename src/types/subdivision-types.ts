@@ -6,3 +6,11 @@ export type Subdivision = {
   description: string
   area: number | null
 }
+
+
+export type SubdivisionRequest = {
+  name: string
+  type: string
+  description: string
+  area?: number | null
+}
