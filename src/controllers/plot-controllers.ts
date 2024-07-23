@@ -18,7 +18,7 @@ export const getPlotsByOwner = async (req: ExtendedRequest, res: Response, next:
 }
 
 
-export const postPlotByOwner= async (req: ExtendedRequest, res: Response, next: NextFunction) => {
+export const postPlotByOwner = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
   const authUserId: number = req.user!.user_id
 
@@ -33,7 +33,7 @@ export const postPlotByOwner= async (req: ExtendedRequest, res: Response, next: 
 }
 
 
-export const getPlotByPlotId= async (req: ExtendedRequest, res: Response, next: NextFunction) => {
+export const getPlotByPlotId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
   const authUserId: number = req.user!.user_id
 
@@ -48,7 +48,7 @@ export const getPlotByPlotId= async (req: ExtendedRequest, res: Response, next: 
 }
 
 
-export const patchPlotByPlotId= async (req: ExtendedRequest, res: Response, next: NextFunction) => {
+export const patchPlotByPlotId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
   const authUserId: number = req.user!.user_id
 
@@ -63,7 +63,7 @@ export const patchPlotByPlotId= async (req: ExtendedRequest, res: Response, next
 }
 
 
-export const deletePlotByPlotId= async (req: ExtendedRequest, res: Response, next: NextFunction) => {
+export const deletePlotByPlotId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
   const authUserId: number = req.user!.user_id
 
