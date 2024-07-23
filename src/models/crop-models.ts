@@ -112,11 +112,7 @@ export const insertCropByPlotId = async (
 
   await verifyParamIsPositiveInt(plot_id)
 
-  let owner_id = await getPlotOwnerId(plot_id)
-
-  await verifyPermission(authUserId, owner_id, "Permission to add crop denied")
-
-  owner_id = await getPlotOwnerId(plot_id)
+  const owner_id = await getPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to add crop denied")
 
