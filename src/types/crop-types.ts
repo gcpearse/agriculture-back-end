@@ -10,6 +10,12 @@ export type Crop = {
 }
 
 
+export type ExtendedCrop = {
+  subdivision_name: string
+  note_count: number
+} & Crop
+
+
 export type CropRequest = {
   name: string
   variety?: string | null

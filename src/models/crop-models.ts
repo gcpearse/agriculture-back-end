@@ -1,6 +1,6 @@
 import QueryString from "qs"
 import { db } from "../db"
-import { Crop, CropRequest } from "../types/crop-types"
+import { Crop, CropRequest, ExtendedCrop } from "../types/crop-types"
 import { getPlotOwnerId, getSubdivisionPlotId } from "../utils/db-query-utils"
 import { verifyPagination, verifyParamIsPositiveInt, verifyPermission } from "../utils/verification-utils"
 import format from "pg-format"
@@ -16,7 +16,7 @@ export const selectCropsByPlotId = async (
     limit = "10",
     page = "1"
   }: QueryString.ParsedQs
-): Promise<[Crop[], number]> => {
+): Promise<[ExtendedCrop[], number]> => {
 
   await verifyParamIsPositiveInt(plot_id)
 
@@ -49,9 +49,9 @@ export const selectCropsByPlotId = async (
     COUNT(crop_notes.crop_id)::INT
     AS note_count
   FROM crops
-  LEFT OUTER JOIN subdivisions
+  LEFT JOIN subdivisions
   ON crops.subdivision_id = subdivisions.subdivision_id
-  LEFT OUTER JOIN crop_notes
+  LEFT JOIN crop_notes
   ON crops.crop_id = crop_notes.crop_id
   WHERE crops.plot_id = $1
   `
@@ -108,7 +108,7 @@ export const insertCropByPlotId = async (
   authUserId: number,
   plot_id: number,
   crop: CropRequest
-) => {
+): Promise<Crop> => {
 
   await verifyParamIsPositiveInt(plot_id)
 
@@ -140,7 +140,7 @@ export const selectCropsBySubdivisionId = async (
     limit = "10",
     page = "1"
   }: QueryString.ParsedQs
-): Promise<[Crop[], number]> => {
+): Promise<[ExtendedCrop[], number]> => {
 
   await verifyParamIsPositiveInt(subdivision_id)
 
@@ -173,7 +173,7 @@ export const selectCropsBySubdivisionId = async (
     COUNT(crop_notes.crop_id)::INT
     AS note_count
   FROM crops
-  LEFT OUTER JOIN crop_notes
+  LEFT JOIN crop_notes
   ON crops.crop_id = crop_notes.crop_id
   WHERE crops.subdivision_id = $1
   `
@@ -230,7 +230,7 @@ export const insertCropBySubdivisionId = async (
   authUserId: number,
   subdivision_id: number,
   crop: CropRequest
-) => {
+): Promise<Crop> => {
 
   await verifyParamIsPositiveInt(subdivision_id)
 

@@ -59,7 +59,16 @@ cropsRouter.route("/crops/plot/:plot_id")
  *                crops:
  *                  type: array
  *                  items:
- *                    $ref: "#/components/schemas/ExtendedCrop"
+ *                    allOf:
+ *                      - $ref: "#/components/schemas/Crop"
+ *                      - type: object
+ *                        properties:
+ *                          subdivision_name:
+ *                            type: string
+ *                            example: Vegetable Patch
+ *                          note_count:
+ *                            type: integer
+ *                            example: 1
  *                count:
  *                  type: integer
  *                  example: 1
@@ -105,27 +114,7 @@ cropsRouter.route("/crops/plot/:plot_id")
  *      content:
  *        application/json:
  *          schema:
- *            type: object
- *            properties:
- *              name:
- *                type: string
- *                example: carrot
- *              variety:
- *                type: string
- *                nullable: true
- *                example: chantenay
- *              quantity:
- *                type: integer
- *                nullable: true
- *                example: 20
- *              date_planted:
- *                type: string
- *                nullable: true
- *                example: 2024-06-19
- *              harvest_date:
- *                type: string
- *                nullable: true
- *                example: 2024-09-14
+ *            $ref: "#/components/schemas/CropRequest"
  *    responses:
  *      201:
  *        description: OK
@@ -211,40 +200,13 @@ cropsRouter.route("/crops/subdivision/:subdivision_id")
  *                crops:
  *                  type: array
  *                  items:
- *                    type: object
- *                    properties:
- *                      crop_id:
- *                        type: integer
- *                        example: 1
- *                      plot_id:
- *                        type: integer
- *                        example: 1
- *                      subdivision_id:
- *                        type: integer
- *                        nullable: true
- *                        example: null
- *                      name:
- *                        type: string
- *                        example: carrot
- *                      variety:
- *                        type: string
- *                        nullable: true
- *                        example: chantenay
- *                      quantity:
- *                        type: integer
- *                        nullable: true
- *                        example: 20
- *                      date_planted:
- *                        type: string
- *                        nullable: true
- *                        example: 2024-06-19T23:00:00.000Z
- *                      harvest_date:
- *                        type: string
- *                        nullable: true
- *                        example: 2024-09-14T23:00:00.000Z
- *                      note_count:
- *                        type: integer
- *                        example: 1
+ *                    allOf:
+ *                      - $ref: "#/components/schemas/Crop"
+ *                      - type: object
+ *                        properties:
+ *                          note_count:
+ *                            type: integer
+ *                            example: 1
  *                count:
  *                  type: integer
  *                  example: 1
@@ -290,27 +252,7 @@ cropsRouter.route("/crops/subdivision/:subdivision_id")
  *      content:
  *        application/json:
  *          schema:
- *            type: object
- *            properties:
- *              name:
- *                type: string
- *                example: carrot
- *              variety:
- *                type: string
- *                nullable: true
- *                example: chantenay
- *              quantity:
- *                type: integer
- *                nullable: true
- *                example: 20
- *              date_planted:
- *                type: string
- *                nullable: true
- *                example: 2024-06-19
- *              harvest_date:
- *                type: string
- *                nullable: true
- *                example: 2024-09-14
+ *            $ref: "#/components/schemas/CropRequest"
  *    responses:
  *      201:
  *        description: OK

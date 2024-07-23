@@ -82,24 +82,7 @@ plotsRouter.route("/plots/user/:owner_id")
  *      content:
  *        application/json:
  *          schema:
- *            type: object
- *            properties:
- *              name:
- *                type: string
- *                example: John's Garden
- *              type:
- *                type: string    
- *                example: garden
- *              description:
- *                type: string    
- *                example: A vegetable garden
- *              location:
- *                type: string    
- *                example: Farmville
- *              area:
- *                type: integer
- *                nullable: true    
- *                example: 100
+ *            $ref: "#/components/schemas/PlotRequest"
  *    responses:
  *      201:
  *        description: OK
@@ -208,24 +191,7 @@ plotsRouter.route("/plots/:plot_id")
  *      content:
  *        application/json:
  *          schema:
- *            type: object
- *            properties:
- *              name:
- *                type: string
- *                example: John's Garden
- *              type:
- *                type: string    
- *                example: garden
- *              description:
- *                type: string    
- *                example: A vegetable garden
- *              location:
- *                type: string    
- *                example: Farmville
- *              area:
- *                type: integer    
- *                nullable: true
- *                example: 100
+ *            $ref: "#/components/schemas/PlotRequest"
  *    responses:
  *      200:
  *        description: OK

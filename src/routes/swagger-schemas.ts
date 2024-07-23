@@ -41,11 +41,11 @@ export const schemaRouter = Router()
  *          example: null
  *        name:
  *          type: string
- *          example: carrot
+ *          example: Carrot
  *        variety:
  *          type: string
  *          nullable: true
- *          example: chantenay
+ *          example: Chantenay
  *        quantity:
  *          type: integer
  *          nullable: true
@@ -58,17 +58,28 @@ export const schemaRouter = Router()
  *          type: string
  *          nullable: true
  *          example: 2024-09-14T23:00:00.000Z
- *    ExtendedCrop:
- *      allOf: 
- *        - $ref: "#/components/schemas/Crop"
- *        - type: object
- *          properties:
- *            subdivision_name:
- *              type: string
- *              example: Vegetable Patch
- *            note_count:
- *              type: integer
- *              example: 1
+ *    CropRequest:
+ *      type: object
+ *      properties:
+ *        name:
+ *          type: string
+ *          example: Carrot
+ *        variety:
+ *          type: string
+ *          nullable: true
+ *          example: Chantenay
+ *        quantity:
+ *          type: integer
+ *          nullable: true
+ *          example: 20
+ *        date_planted:
+ *          type: string
+ *          nullable: true
+ *          example: 2024-06-19
+ *        harvest_date:
+ *          type: string
+ *          nullable: true
+ *          example: 2024-09-14
  *    Forbidden:
  *      type: object
  *      properties:
@@ -101,7 +112,26 @@ export const schemaRouter = Router()
  *          example: John's Garden
  *        type:
  *          type: string
- *          example: garden
+ *          example: Garden
+ *        description:
+ *          type: string
+ *          example: A vegetable garden
+ *        location:
+ *          type: string
+ *          example: Farmville
+ *        area:
+ *          type: integer
+ *          nullable: true
+ *          example: 100
+ *    PlotRequest:
+ *      type: object
+ *      properties:
+ *        name:
+ *          type: string
+ *          example: John's Garden
+ *        type:
+ *          type: string
+ *          example: Garden
  *        description:
  *          type: string
  *          example: A vegetable garden
@@ -126,7 +156,7 @@ export const schemaRouter = Router()
  *          example: Root Vegetable Bed
  *        type:
  *          type: string
- *          example: bed
+ *          example: Bed
  *        description:
  *          type: string
  *          example: Carrots, beetroots, and parsnips
@@ -134,6 +164,31 @@ export const schemaRouter = Router()
  *          type: integer
  *          nullable: true
  *          example: 10
+ *    SubdivisionRequest:
+ *      type: object
+ *      properties:
+ *        name:
+ *          type: string
+ *          example: Root Vegetable Bed
+ *        type:
+ *          type: string
+ *          example: Bed
+ *        description:
+ *          type: string
+ *          example: Carrots, beetroots, and parsnips
+ *        area:
+ *          type: integer
+ *          nullable: true
+ *          example: 10
+ *    Unauthorized:
+ *      type: object
+ *      properties:
+ *        message:
+ *          type: string
+ *          example: Unauthorized
+ *        details:
+ *          type: string
+ *          example: Incorrect password
  *    User:
  *      type: object
  *      properties:
@@ -155,13 +210,19 @@ export const schemaRouter = Router()
  *        unit_preference:
  *          type: string
  *          example: imperial
- *    Unauthorized:
+ *    UserRequest:
  *      type: object
  *      properties:
- *        message:
+ *        email:
  *          type: string
- *          example: Unauthorized
- *        details:
+ *          example: john.smith@example.com
+ *        first_name:
  *          type: string
- *          example: Incorrect password
+ *          example: John
+ *        surname:
+ *          type: string
+ *          example: Smith
+ *        unit_preference:
+ *          type: string
+ *          example: imperial
  */

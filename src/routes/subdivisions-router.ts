@@ -82,21 +82,7 @@ subdivisionsRouter.route("/subdivisions/plot/:plot_id")
  *      content:
  *        application/json:
  *          schema:
- *            type: object
- *            properties:
- *              name:
- *                type: string
- *                example: Root Vegetable Bed
- *              type:
- *                type: string
- *                example: bed
- *              description:
- *                type: string
- *                example: Carrots, beetroots, and parsnips
- *              area:
- *                type: integer
- *                nullable: true
- *                example: 10
+ *            $ref: "#/components/schemas/SubdivisionRequest"
  *    responses:
  *      201:
  *        description: OK
@@ -205,21 +191,7 @@ subdivisionsRouter.route("/subdivisions/:subdivision_id")
  *      content:
  *        application/json:
  *          schema:
- *            type: object
- *            properties:
- *              name:
- *                type: string
- *                example: Root Vegetable Bed
- *              type:
- *                type: string
- *                example: bed
- *              description:
- *                type: string
- *                example: Carrots, beetroots, and parsnips
- *              area:
- *                type: integer
- *                nullable: true
- *                example: 10
+ *            $ref: "#/components/schemas/SubdivisionRequest"
  *    responses:
  *      200:
  *        description: OK
@@ -265,7 +237,7 @@ subdivisionsRouter.route("/subdivisions/:subdivision_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Delete a subdivision from the database
- *    description: Removes the plot subdivision and all associated data from the database. If the subdivision_id does not exist, the server responds with an error Permission is denied when the subdivision does not belong to the current user.
+ *    description: Removes the plot subdivision and all associated data from the database. If the subdivision_id does not exist, the server responds with an error. Permission is denied when the subdivision does not belong to the current user.
  *    tags: [Subdivisions]
  *    parameters:
  *      - in: path
