@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express"
-import { insertPlotByOwner, removePlotByPlotId, selectPlotByPlotId, selectPlotsByOwner, updatePlotByPlotId } from "../models/plot-models"
+import { insertPlotByOwner, removePlotByPlotId, selectPlotByPlotId, selectPlotsByOwner, updatePlotByPlotId } from "../models/plots-models"
 import { ExtendedRequest } from "../types/auth-types"
 
 

@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { deleteSubdivisionBySubdivisionId, getSubdivisionBySubdivisionId, getSubdivisionsByPlotId, patchSubdivisionBySubdivisionId, postSubdivisionByPlotId } from "../controllers/subdivision-controllers"
+import { deleteSubdivisionBySubdivisionId, getSubdivisionBySubdivisionId, getSubdivisionsByPlotId, patchSubdivisionBySubdivisionId, postSubdivisionByPlotId } from "../controllers/subdivisions-controllers"
 
 
 export const subdivisionsRouter = Router()

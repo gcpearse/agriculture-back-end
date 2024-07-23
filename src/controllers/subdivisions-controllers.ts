@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express"
-import { insertSubdivisionByPlotId, removeSubdivisionBySubdivisionId, selectSubdivisionBySubdivisionId, selectSubdivisionsByPlotId, updateSubdivisionBySubdivisionId } from "../models/subdivision-models"
+import { insertSubdivisionByPlotId, removeSubdivisionBySubdivisionId, selectSubdivisionBySubdivisionId, selectSubdivisionsByPlotId, updateSubdivisionBySubdivisionId } from "../models/subdivisions-models"
 import { ExtendedRequest } from "../types/auth-types"
 
 

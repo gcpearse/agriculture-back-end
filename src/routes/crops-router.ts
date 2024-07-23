@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { getCropsByPlotId, getCropsBySubdivisionId, postCropByPlotId, postCropBySubdivisionId } from "../controllers/crop-controllers"
+import { getCropsByPlotId, getCropsBySubdivisionId, postCropByPlotId, postCropBySubdivisionId } from "../controllers/crops-controllers"
 
 
 export const cropsRouter = Router()

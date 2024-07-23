@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express"
-import { changePasswordByUsername, removeUserByUsername, selectUserByUsername, updateUserByUsername } from "../models/user-models"
+import { changePasswordByUsername, removeUserByUsername, selectUserByUsername, updateUserByUsername } from "../models/users-models"
 import { ExtendedRequest } from "../types/auth-types"
 
 

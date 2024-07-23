@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express"
-import { insertCropByPlotId, insertCropBySubdivisionId, selectCropsByPlotId, selectCropsBySubdivisionId } from "../models/crop-models"
+import { insertCropByPlotId, insertCropBySubdivisionId, selectCropsByPlotId, selectCropsBySubdivisionId } from "../models/crops-models"
 import { ExtendedRequest } from "../types/auth-types"
 
 
