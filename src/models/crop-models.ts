@@ -118,12 +118,12 @@ export const insertCropByPlotId = async (
 
   const result = await db.query(format(`
     INSERT INTO crops
-      (plot_id, subdivision_id, name, variety, quantity, date_planted, harvest_date)
+      (plot_id, name, variety, quantity, date_planted, harvest_date)
     VALUES
       %L
     RETURNING *;
     `,
-    [[plot_id, null, crop.name, crop.variety, crop.quantity, crop.date_planted, crop.harvest_date]]
+    [[plot_id, crop.name, crop.variety, crop.quantity, crop.date_planted, crop.harvest_date]]
   ))
 
   return result.rows[0]
