@@ -90,7 +90,7 @@ export const changePasswordByUsername = async (
     oldPassword,
     newPassword
   }: PasswordUpdate
-): Promise<{ message: string }> => {
+): Promise<{ message: string, details: string }> => {
 
   await searchForUsername(username)
 
@@ -130,6 +130,7 @@ export const changePasswordByUsername = async (
     [hashedPassword, username])
 
   return {
-    message: "Password changed successfully"
+    message: "OK",
+    details: "Password changed successfully"
   }
 }
