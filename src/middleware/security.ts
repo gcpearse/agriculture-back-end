@@ -5,8 +5,8 @@ export const hashPassword = async (password: string) => {
 
   let saltRounds = 10
 
-  if (process.env.NODE_ENV === "test") {
-    saltRounds = 1
+  if (process.env.SALT_ROUNDS) {
+    saltRounds = +process.env.SALT_ROUNDS
   }
 
   return await bcrypt.hash(password, saltRounds)
