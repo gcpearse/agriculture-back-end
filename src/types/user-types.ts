@@ -31,7 +31,10 @@ export type SecureUser = {
 } & Username
 
 
-export type User = SecureUser & Password
+export type User = {
+  token: string | null
+  token_expiry: string | null
+} & SecureUser & Password
 
 
 export type PasswordUpdate = {
