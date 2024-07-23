@@ -5,7 +5,7 @@ import { ExtendedRequest } from "../types/auth-types"
 
 export const getSubdivisionsByPlotId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.user!.user_id
+  const authUserId = req.user!.user_id
 
   const { plot_id } = req.params
 
@@ -20,7 +20,7 @@ export const getSubdivisionsByPlotId = async (req: ExtendedRequest, res: Respons
 
 export const postSubdivisionByPlotId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.user!.user_id
+  const authUserId = req.user!.user_id
 
   const { plot_id } = req.params
 
@@ -35,7 +35,7 @@ export const postSubdivisionByPlotId = async (req: ExtendedRequest, res: Respons
 
 export const getSubdivisionBySubdivisionId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.user!.user_id
+  const authUserId = req.user!.user_id
 
   const { subdivision_id } = req.params
 
@@ -50,7 +50,7 @@ export const getSubdivisionBySubdivisionId = async (req: ExtendedRequest, res: R
 
 export const patchSubdivisionBySubdivisionId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.user!.user_id
+  const authUserId = req.user!.user_id
 
   const { subdivision_id } = req.params
 
@@ -65,7 +65,7 @@ export const patchSubdivisionBySubdivisionId = async (req: ExtendedRequest, res:
 
 export const deleteSubdivisionBySubdivisionId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.user!.user_id
+  const authUserId = req.user!.user_id
 
   const { subdivision_id } = req.params
 

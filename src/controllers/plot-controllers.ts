@@ -5,7 +5,7 @@ import { ExtendedRequest } from "../types/auth-types"
 
 export const getPlotsByOwner = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.user!.user_id
+  const authUserId = req.user!.user_id
 
   const { owner_id } = req.params
 
@@ -20,7 +20,7 @@ export const getPlotsByOwner = async (req: ExtendedRequest, res: Response, next:
 
 export const postPlotByOwner = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.user!.user_id
+  const authUserId = req.user!.user_id
 
   const { owner_id } = req.params
 
@@ -35,7 +35,7 @@ export const postPlotByOwner = async (req: ExtendedRequest, res: Response, next:
 
 export const getPlotByPlotId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.user!.user_id
+  const authUserId = req.user!.user_id
 
   const { plot_id } = req.params
 
@@ -50,7 +50,7 @@ export const getPlotByPlotId = async (req: ExtendedRequest, res: Response, next:
 
 export const patchPlotByPlotId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.user!.user_id
+  const authUserId = req.user!.user_id
 
   const { plot_id } = req.params
 
@@ -65,7 +65,7 @@ export const patchPlotByPlotId = async (req: ExtendedRequest, res: Response, nex
 
 export const deletePlotByPlotId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.user!.user_id
+  const authUserId = req.user!.user_id
 
   const { plot_id } = req.params
 
