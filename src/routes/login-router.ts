@@ -21,10 +21,10 @@ export const loginRouter = Router()
  *            properties:
  *              username:
  *                type: string
- *                example: carrot_king
+ *                example: admin
  *              password:
  *                type: string
- *                example: carrots123
+ *                example: password
  *    responses:
  *      200:
  *        description: OK

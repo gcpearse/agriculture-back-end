@@ -69,20 +69,7 @@ usersRouter.route("/users/:username")
  *      content:
  *        application/json:
  *          schema:
- *            type: object
- *            properties:
- *              email:
- *                type: string
- *                example: john.smith@example.com
- *              first_name:
- *                type: string
- *                example: John
- *              surname:
- *                type: string
- *                example: Smith
- *              unit_preference:
- *                type: string    
- *                example: imperial
+ *            $ref: "#/components/schemas/UserRequest"
  *    responses:
  *      200:
  *        description: OK
@@ -177,10 +164,10 @@ usersRouter.route("/users/:username")
  *            properties:
  *              oldPassword:
  *                type: string
- *                example: password123
+ *                example: password
  *              newPassword:
  *                type: string
- *                example: password456 
+ *                example: wordpass 
  *    responses:
  *      200:
  *        description: OK
