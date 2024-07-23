@@ -147,7 +147,7 @@ usersRouter.route("/users/:username")
  *    security:
  *      - bearerAuth: []
  *    summary: Update a user's password
- *    description: Responds with an updated user object without revealing the password property. If the username does not exist, the server responds with an error. Permission is denied when the username does not belong to the current user.
+ *    description: Responds with a success message. If the username does not exist, the server responds with an error. Permission is denied when the username does not belong to the current user.
  *    tags: [Users]
  *    parameters:
  *      - in: path
@@ -177,6 +177,9 @@ usersRouter.route("/users/:username")
  *              type: object
  *              properties:
  *                message:
+ *                  type: string
+ *                  example: OK
+ *                details:
  *                  type: string
  *                  example: Password changed successfully
  *      400:
