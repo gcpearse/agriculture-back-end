@@ -29,7 +29,7 @@ describe("checkPlotNameConflict", () => {
 
 describe("getPlotOwnerId", () => {
 
-  test("Returns a the owner_id associated with the plot", async () => {
+  test("Returns the owner_id associated with the plot", async () => {
 
     const result = await getPlotOwnerId(1)
 
