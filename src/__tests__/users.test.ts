@@ -333,7 +333,7 @@ describe("PATCH /api/users/:username/password", () => {
     })
   })
 
-  // 500 status code here as the error is thrown by passing undefined as an argument to hashPassword
+  // 500 status code here as the error is thrown by passing undefined as an argument to generateHash
   test("PATCH:500 Responds with an error when newPassword is missing from the request body", async () => {
 
     const passwordUpdate = {

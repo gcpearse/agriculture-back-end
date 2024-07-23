@@ -1,5 +1,5 @@
 import { db } from "../db"
-import { comparePasswords, hashPassword } from "../middleware/security"
+import { compareHash, generateHash } from "../middleware/security"
 import { PasswordUpdate, SecureUser } from "../types/user-types"
 import { checkEmailConflict, searchForUsername } from "../utils/db-query-utils"
 import { verifyPermission } from "../utils/verification-utils"
@@ -103,7 +103,7 @@ export const changePasswordByUsername = async (
     `,
     [username])
 
-  const isCorrectPassword = await comparePasswords(oldPassword, currentPassword.rows[0].password)
+  const isCorrectPassword = await compareHash(oldPassword, currentPassword.rows[0].password)
 
   if (!isCorrectPassword) {
     return Promise.reject({
@@ -113,7 +113,7 @@ export const changePasswordByUsername = async (
     })
   }
 
-  const hashedPassword = await hashPassword(newPassword)
+  const hashedPassword = await generateHash(newPassword)
 
   await db.query(`
     UPDATE users

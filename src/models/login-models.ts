@@ -1,5 +1,5 @@
 import { db } from "../db"
-import { comparePasswords } from "../middleware/security"
+import { compareHash } from "../middleware/security"
 import { Credentials, LoggedInUser } from "../types/user-types"
 
 
@@ -31,7 +31,7 @@ export const logInUser = async (
     `,
     [username])
 
-  const isCorrectPassword = await comparePasswords(password, dbPassword.rows[0].password)
+  const isCorrectPassword = await compareHash(password, dbPassword.rows[0].password)
 
   if (!isCorrectPassword) {
     return Promise.reject({

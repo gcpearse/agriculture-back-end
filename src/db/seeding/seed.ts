@@ -1,7 +1,7 @@
 import { db } from ".."
 import format from "pg-format"
 import { SeedData } from "../../types/seed-types"
-import { hashPassword } from "../../middleware/security"
+import { generateHash } from "../../middleware/security"
 
 
 export const seed = async (
@@ -247,7 +247,7 @@ export const seed = async (
     `,
     await Promise.all(
       userData.map(async user => {
-        const hashedPassword = await hashPassword(user.password)
+        const hashedPassword = await generateHash(user.password)
         return [
           user.username,
           hashedPassword,

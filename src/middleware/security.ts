@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs"
 
 
-export const hashPassword = async (password: string) => {
+export const generateHash = async (plaintext: string) => {
 
   let saltRounds = 10
 
@@ -9,11 +9,11 @@ export const hashPassword = async (password: string) => {
     saltRounds = +process.env.SALT_ROUNDS
   }
 
-  return await bcrypt.hash(password, saltRounds)
+  return await bcrypt.hash(plaintext, saltRounds)
 }
 
 
-export const comparePasswords = async (password: string, hashedPassword: string) => {
+export const compareHash = async (plaintext: string, hash: string) => {
 
-  return await bcrypt.compare(password, hashedPassword)
+  return await bcrypt.compare(plaintext, hash)
 }
