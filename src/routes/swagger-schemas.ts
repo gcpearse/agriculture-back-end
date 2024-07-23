@@ -38,7 +38,7 @@ export const schemaRouter = Router()
  *        subdivision_id:
  *          type: integer
  *          nullable: true
- *          example: null
+ *          example: 1
  *        name:
  *          type: string
  *          example: Carrot
