@@ -5,7 +5,7 @@ import { ExtendedRequest } from "../types/auth-types"
 
 export const getUserByUsername = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUsername: string = req.user!.username
+  const authUsername = req.user!.username
 
   const { username } = req.params
 
@@ -20,7 +20,7 @@ export const getUserByUsername = async (req: ExtendedRequest, res: Response, nex
 
 export const patchUserByUsername = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUsername: string = req.user!.username
+  const authUsername = req.user!.username
 
   const { username } = req.params
 
@@ -50,13 +50,13 @@ export const deleteUserByUsername = async (req: ExtendedRequest, res: Response, 
 
 export const patchPasswordByUsername = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUsername: string = req.user!.username
+  const authUsername = req.user!.username
 
   const { username } = req.params
 
   try {
-    const message = await changePasswordByUsername(authUsername, username, req.body)
-    res.status(200).send({ message })
+    const response = await changePasswordByUsername(authUsername, username, req.body)
+    res.status(200).send(response)
   } catch (err) {
     next(err)
   }

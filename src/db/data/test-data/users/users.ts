@@ -8,7 +8,9 @@ export const userData: User[] = [
     email: "john.smith@example.com",
     first_name: "John",
     surname: "Smith",
-    unit_preference: UnitSystem.Imperial
+    unit_preference: UnitSystem.Imperial,
+    token: null,
+    token_expiry: null
   },
   {
     username: "peach_princess",
@@ -16,7 +18,9 @@ export const userData: User[] = [
     email: "olivia.jones@example.com",
     first_name: "Olivia",
     surname: "Jones",
-    unit_preference: UnitSystem.Metric
+    unit_preference: UnitSystem.Metric,
+    token: null,
+    token_expiry: null
   },
   {
     username: "quince_queen",
@@ -24,6 +28,8 @@ export const userData: User[] = [
     email: "maria.perez@example.com",
     first_name: "Maria",
     surname: "Perez",
-    unit_preference: UnitSystem.Metric
+    unit_preference: UnitSystem.Metric,
+    token: null,
+    token_expiry: null
   }
 ]

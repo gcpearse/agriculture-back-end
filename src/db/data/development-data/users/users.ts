@@ -8,6 +8,8 @@ export const userData: User[] = [
     email: "admin",
     first_name: "Admin",
     surname: "Admin",
-    unit_preference: UnitSystem.Metric
+    unit_preference: UnitSystem.Metric,
+    token: null,
+    token_expiry: null
   }
 ]

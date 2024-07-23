@@ -5,7 +5,7 @@ import { ExtendedRequest } from "../types/auth-types"
 
 export const getCropsByPlotId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.user!.user_id
+  const authUserId = req.user!.user_id
 
   const { plot_id } = req.params
 
@@ -20,7 +20,7 @@ export const getCropsByPlotId = async (req: ExtendedRequest, res: Response, next
 
 export const postCropByPlotId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.user!.user_id
+  const authUserId = req.user!.user_id
 
   const { plot_id } = req.params
 
@@ -35,7 +35,7 @@ export const postCropByPlotId = async (req: ExtendedRequest, res: Response, next
 
 export const getCropsBySubdivisionId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.user!.user_id
+  const authUserId = req.user!.user_id
 
   const { subdivision_id } = req.params
 
@@ -50,7 +50,7 @@ export const getCropsBySubdivisionId = async (req: ExtendedRequest, res: Respons
 
 export const postCropBySubdivisionId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUserId: number = req.user!.user_id
+  const authUserId = req.user!.user_id
 
   const { subdivision_id } = req.params
 
