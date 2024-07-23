@@ -271,8 +271,9 @@ describe("PATCH /api/users/:username/password", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.message).toMatchObject({
-      message: "Password changed successfully"
+    expect(body).toMatchObject({
+      message: "OK",
+      details: "Password changed successfully"
     })
   })
 
