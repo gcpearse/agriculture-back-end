@@ -14,9 +14,9 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_DB: test_ci_db
+          POSTGRES_DB: test_db
           POSTGRES_PASSWORD: postgres
-          POSTGRES_USER: test_ci_user
+          POSTGRES_USER: test_user
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -39,9 +39,10 @@ jobs:
 
       - name: Run tests
         env:
-          PGDATABASE: test_ci_db
+          PGDATABASE: test_db
           PGHOST: localhost
           PGPASSWORD: postgres
-          PGUSER: test_ci_user
+          PGUSER: test_user
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          SALT_ROUNDS: 1
         run: npm t
