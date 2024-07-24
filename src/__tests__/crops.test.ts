@@ -638,7 +638,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
 
 describe("GET /api/crops/subdivision/:subdivision_id", () => {
 
-  test("GET:200 Responds with an array of crop objects sorted by crop_id in ascending order", async () => {
+  test("GET:200 Responds with an array of crop objects sorted by crop_id in descending order", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/subdivision/1")
