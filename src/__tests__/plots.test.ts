@@ -276,17 +276,108 @@ describe("GET /api/plots/user/:owner_id?order=", () => {
       details: "No results found for that query"
     })
   })
+})
 
-  test("GET:404 Responds with an error when passed an invalid sort value", async () => {
+
+describe("GET /api/plots/user/:owner_id?limit=", () => {
+
+  test("GET:200 Responds with a limited array of plot objects associated with the owner", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/user/1?sort=example")
+      .get("/api/plots/user/1?limit=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.plots).toHaveLength(2)
+  })
+
+  test("GET:200 Responds with an array of all plots associated with the owner when the limit exceeds the total number of results", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?limit=20")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.plots).toHaveLength(3)
+  })
+
+  test("GET:400 Responds with an error message when the value of limit is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?limit=two")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+})
+
+
+describe("GET /api/plots/user/:owner_id?page=", () => {
+
+  test("GET:200 Responds with an array of plot objects associated with the plot beginning from the page set in the query parameter", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?limit=2&page=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.plots.map((crop: Plot) => {
+      return crop.plot_id
+    })).toEqual([1])
+  })
+
+  test("GET:200 The page defaults to page one", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?limit=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.plots.map((crop: Plot) => {
+      return crop.plot_id
+    })).toEqual([4, 3])
+  })
+
+  test("GET:400 Responds with an error when the value of page is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?limit=2&page=three")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
+  test("GET:404 Responds with an error when the page cannot be found", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?limit=2&page=3")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
     expect(body).toMatchObject({
       message: "Not Found",
-      details: "No results found for that query"
+      details: "Page not found"
+    })
+  })
+
+  test("GET:404 Responds with an error when the page cannot be found (multiple queries affecting total query result rows)", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?type=garden&limit=1&page=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Page not found"
     })
   })
 })
