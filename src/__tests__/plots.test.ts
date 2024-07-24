@@ -56,7 +56,12 @@ describe("GET /api/plots/user/:owner_id", () => {
         type: expect.any(String),
         description: expect.any(String),
         location: expect.any(String),
-        area: expect.toBeOneOf([expect.any(Number), null])
+        area: expect.toBeOneOf([expect.any(Number), null]),
+        image_count: expect.any(Number),
+        subdivision_count: expect.any(Number),
+        crop_count: expect.any(Number),
+        issue_count: expect.any(Number),
+        job_count: expect.any(Number)
       })
     }
   })
