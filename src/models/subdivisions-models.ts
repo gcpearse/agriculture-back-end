@@ -1,7 +1,7 @@
 import QueryString from "qs"
 import { db } from "../db"
-import { checkSubdivisionNameConflict, getPlotOwnerId, getSubdivisionPlotId, validateSubdivisionType } from "../utils/db-query-utils"
-import { verifyPermission, verifyParamIsPositiveInt } from "../utils/verification-utils"
+import { checkSubdivisionNameConflict, getPlotOwnerId, getSubdivisionPlotId, validateSubdivisionType } from "../utils/db-queries"
+import { verifyPermission, verifyParamIsPositiveInt } from "../utils/verification"
 import { Subdivision, SubdivisionRequest } from "../types/subdivision-types"
 import format from "pg-format"
 

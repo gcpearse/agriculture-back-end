@@ -1,4 +1,4 @@
-import { verifyPermission, verifyParamIsPositiveInt, verifyPagination } from "../../utils/verification-utils"
+import { verifyPermission, verifyParamIsPositiveInt, verifyPagination } from "../../utils/verification"
 
 
 describe("verifyPermission", () => {

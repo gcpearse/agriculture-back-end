@@ -1,8 +1,8 @@
 import { db } from "../db"
 import { compareHash, generateHash } from "../middleware/security"
 import { PasswordUpdate, SecureUser } from "../types/user-types"
-import { checkEmailConflict, searchForUsername } from "../utils/db-query-utils"
-import { verifyPermission } from "../utils/verification-utils"
+import { checkEmailConflict, searchForUsername } from "../utils/db-queries"
+import { verifyPermission } from "../utils/verification"
 
 
 export const selectUserByUsername = async (

@@ -1,7 +1,7 @@
 import data from "../../db/data/test-data/test-index"
 import { db } from "../../db"
 import { seed } from "../../db/seeding/seed"
-import { checkPlotNameConflict, getPlotOwnerId } from "../../utils/db-query-utils"
+import { checkPlotNameConflict, getPlotOwnerId } from "../../utils/db-queries"
 
 
 beforeEach(() => seed(data))

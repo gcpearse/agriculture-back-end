@@ -2,8 +2,8 @@ import QueryString from "qs"
 import { db } from "../db"
 import format from "pg-format"
 import { ExtendedPlot, Plot, PlotRequest } from "../types/plot-types"
-import { checkPlotNameConflict, getPlotOwnerId, searchForUserId, validatePlotType } from "../utils/db-query-utils"
-import { verifyPermission, verifyParamIsPositiveInt, verifyPagination } from "../utils/verification-utils"
+import { checkPlotNameConflict, getPlotOwnerId, searchForUserId, validatePlotType } from "../utils/db-queries"
+import { verifyPermission, verifyParamIsPositiveInt, verifyPagination } from "../utils/verification"
 
 
 export const selectPlotsByOwner = async (

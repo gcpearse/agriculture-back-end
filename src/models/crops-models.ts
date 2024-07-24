@@ -1,8 +1,8 @@
 import QueryString from "qs"
 import { db } from "../db"
 import { Crop, CropRequest, ExtendedCrop } from "../types/crop-types"
-import { getPlotOwnerId, getSubdivisionPlotId } from "../utils/db-query-utils"
-import { verifyPagination, verifyParamIsPositiveInt, verifyPermission } from "../utils/verification-utils"
+import { getPlotOwnerId, getSubdivisionPlotId } from "../utils/db-queries"
+import { verifyPagination, verifyParamIsPositiveInt, verifyPermission } from "../utils/verification"
 import format from "pg-format"
 
 
