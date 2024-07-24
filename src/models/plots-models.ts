@@ -3,7 +3,7 @@ import { db } from "../db"
 import format from "pg-format"
 import { Plot, PlotRequest } from "../types/plot-types"
 import { checkPlotNameConflict, getPlotOwnerId, searchForUserId, validatePlotType } from "../utils/db-query-utils"
-import { verifyPermission, verifyParamIsPositiveInt } from "../utils/verification-utils"
+import { verifyPermission, verifyParamIsPositiveInt, verifyPagination } from "../utils/verification-utils"
 
 
 export const selectPlotsByOwner = async (
@@ -13,11 +13,17 @@ export const selectPlotsByOwner = async (
     name,
     type,
     sort = "plot_id",
-    order = "desc"
+    order = "desc",
+    limit = "10",
+    page = "1"
   }: QueryString.ParsedQs
 ): Promise<Plot[]> => {
 
   await verifyParamIsPositiveInt(owner_id)
+
+  await verifyParamIsPositiveInt(+limit)
+
+  await verifyParamIsPositiveInt(+page)
 
   await searchForUserId(owner_id)
 
@@ -70,9 +76,13 @@ export const selectPlotsByOwner = async (
 
   query += `
   ORDER BY ${sort} ${order}, name
+  LIMIT ${limit}
+  OFFSET ${(+page - 1) * +limit}
   `
 
   const result = await db.query(`${query};`, [owner_id])
+
+  await verifyPagination(+page, result.rows.length)
 
   return result.rows
 }
