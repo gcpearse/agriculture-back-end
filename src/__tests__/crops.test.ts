@@ -169,7 +169,7 @@ describe("GET /api/crops/plot/:plot_id?name=", () => {
       .expect(200)
 
     for (const crop of body.crops) {
-      expect(crop.name).toMatch(/ca/)
+      expect(crop.name).toMatch(/ca/i)
     }
 
     expect(body.count).toBe(3)
@@ -183,7 +183,7 @@ describe("GET /api/crops/plot/:plot_id?name=", () => {
       .expect(200)
 
     for (const crop of body.crops) {
-      expect(crop.name).toMatch(/ca/)
+      expect(crop.name).toMatch(/ca/i)
     }
 
     expect(body.count).toBe(3)
@@ -294,7 +294,7 @@ describe("GET /api/crops/plot/:plot_id?name=&sort=", () => {
       .expect(200)
 
     for (const crop of body.crops) {
-      expect(crop.name).toMatch(/ca/)
+      expect(crop.name).toMatch(/ca/i)
     }
 
     const sortedCrops = [...body.crops].sort((a: Crop, b: Crop) => {
@@ -316,7 +316,7 @@ describe("GET /api/crops/plot/:plot_id?name=&sort=", () => {
       .expect(200)
 
     for (const crop of body.crops) {
-      expect(crop.name).toMatch(/ca/)
+      expect(crop.name).toMatch(/ca/i)
     }
 
     const sortedCrops = [...body.crops].sort((a: Crop, b: Crop) => {
@@ -740,7 +740,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=", () => {
       .expect(200)
 
     for (const crop of body.crops) {
-      expect(crop.name).toMatch(/car/)
+      expect(crop.name).toMatch(/car/i)
     }
 
     expect(body.count).toBe(1)
@@ -754,7 +754,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=", () => {
       .expect(200)
 
     for (const crop of body.crops) {
-      expect(crop.name).toMatch(/car/)
+      expect(crop.name).toMatch(/car/i)
     }
 
     expect(body.count).toBe(1)
@@ -865,7 +865,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=&sort=", () => {
       .expect(200)
 
     for (const crop of body.crops) {
-      expect(crop.name).toMatch(/car/)
+      expect(crop.name).toMatch(/car/i)
     }
 
     const sortedCrops = [...body.crops].sort((a: Crop, b: Crop) => {
@@ -887,7 +887,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=&sort=", () => {
       .expect(200)
 
     for (const crop of body.crops) {
-      expect(crop.name).toMatch(/car/)
+      expect(crop.name).toMatch(/car/i)
     }
 
     const sortedCrops = [...body.crops].sort((a: Crop, b: Crop) => {
