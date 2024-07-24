@@ -434,6 +434,19 @@ describe("GET /api/crops/plot/:plot_id?page=", () => {
     expect(body.count).toBe(4)
   })
 
+  test("GET:400 Responds with an error when the value of page is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/plot/1?limit=2&page=three")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
   test("GET:404 Responds with an error when the page cannot be found", async () => {
 
     const { body } = await request(app)
@@ -989,6 +1002,19 @@ describe("GET /api/crops/subdivision/:subdivision_id?page=", () => {
     })).toEqual([4])
 
     expect(body.count).toBe(2)
+  })
+
+  test("GET:400 Responds with an error message when the value of page is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/subdivision/1?limit=1&page=three")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
   })
 
   test("GET:404 Responds with an error when the page cannot be found", async () => {
