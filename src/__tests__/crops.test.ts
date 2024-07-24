@@ -35,7 +35,7 @@ afterAll(async () => {
 
 describe("GET /api/crops/plot/:plot_id", () => {
 
-  test("GET:200 Responds with an array of crop objects sorted by crop_id in ascending order", async () => {
+  test("GET:200 Responds with an array of crop objects sorted by crop_id in descending order", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/plot/1")
@@ -43,8 +43,8 @@ describe("GET /api/crops/plot/:plot_id", () => {
       .expect(200)
 
     const sortedCrops = [...body.crops].sort((a: Crop, b: Crop) => {
-      if (a.crop_id! > b.crop_id!) return 1
-      if (a.crop_id! < b.crop_id!) return -1
+      if (a.crop_id! < b.crop_id!) return 1
+      if (a.crop_id! > b.crop_id!) return -1
       return 0
     })
 
@@ -401,7 +401,7 @@ describe("GET /api/crops/plot/:plot_id?name=&page=", () => {
 
     expect(body.crops.map((crop: Crop) => {
       return crop.crop_id
-    })).toEqual([3, 4])
+    })).toEqual([2, 1])
 
     expect(body.count).toBe(4)
   })
@@ -415,7 +415,7 @@ describe("GET /api/crops/plot/:plot_id?name=&page=", () => {
 
     expect(body.crops.map((crop: Crop) => {
       return crop.crop_id
-    })).toEqual([1, 2])
+    })).toEqual([4, 3])
 
     expect(body.count).toBe(4)
   })
@@ -429,7 +429,7 @@ describe("GET /api/crops/plot/:plot_id?name=&page=", () => {
 
     expect(body.crops.map((crop: Crop) => {
       return crop.crop_id
-    })).toEqual([4])
+    })).toEqual([1])
 
     expect(body.count).toBe(4)
   })
@@ -633,8 +633,8 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
       .expect(200)
 
     const sortedCrops = [...body.crops].sort((a: Crop, b: Crop) => {
-      if (a.crop_id! > b.crop_id!) return 1
-      if (a.crop_id! < b.crop_id!) return -1
+      if (a.crop_id! < b.crop_id!) return 1
+      if (a.crop_id! > b.crop_id!) return -1
       return 0
     })
 
@@ -972,7 +972,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=&page=", () => {
 
     expect(body.crops.map((crop: Crop) => {
       return crop.crop_id
-    })).toEqual([4])
+    })).toEqual([1])
 
     expect(body.count).toBe(2)
   })
@@ -986,7 +986,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=&page=", () => {
 
     expect(body.crops.map((crop: Crop) => {
       return crop.crop_id
-    })).toEqual([1])
+    })).toEqual([4])
 
     expect(body.count).toBe(2)
   })
