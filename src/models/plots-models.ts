@@ -1,7 +1,7 @@
 import QueryString from "qs"
 import { db } from "../db"
 import format from "pg-format"
-import { Plot, PlotRequest } from "../types/plot-types"
+import { ExtendedPlot, Plot, PlotRequest } from "../types/plot-types"
 import { checkPlotNameConflict, getPlotOwnerId, searchForUserId, validatePlotType } from "../utils/db-query-utils"
 import { verifyPermission, verifyParamIsPositiveInt, verifyPagination } from "../utils/verification-utils"
 
@@ -17,7 +17,7 @@ export const selectPlotsByOwner = async (
     limit = "10",
     page = "1"
   }: QueryString.ParsedQs
-): Promise<Plot[]> => {
+): Promise<ExtendedPlot[]> => {
 
   await verifyParamIsPositiveInt(owner_id)
 
@@ -43,14 +43,35 @@ export const selectPlotsByOwner = async (
   }
 
   let query = `
-  SELECT * 
+  SELECT
+    plots.*,
+    COUNT(DISTINCT plot_images.image_id)::INT
+    AS image_count,
+    COUNT(DISTINCT subdivisions.subdivision_id)::INT
+    AS subdivision_count,
+    COUNT(DISTINCT crops.crop_id)::INT
+    AS crop_count,
+    COUNT(DISTINCT issues.issue_id)::INT
+    AS issue_count,
+    COUNT(DISTINCT jobs.job_id)::INT
+    AS job_count
   FROM plots
-  WHERE owner_id = $1
+  LEFT JOIN plot_images
+  ON plots.plot_id = plot_images.plot_id
+  LEFT JOIN subdivisions
+  ON plots.plot_id = subdivisions.plot_id
+  LEFT JOIN crops
+  ON plots.plot_id = crops.plot_id
+  LEFT JOIN issues
+  ON plots.plot_id = issues.plot_id
+  LEFT JOIN jobs
+  ON plots.plot_id = jobs.plot_id
+  WHERE plots.owner_id = $1
   `
 
   if (name) {
     query += format(`
-      AND name ILIKE %L
+      AND plots.name ILIKE %L
       `, `%${name}%`)
   }
 
@@ -66,9 +87,13 @@ export const selectPlotsByOwner = async (
 
   if (type) {
     query += format(`
-      AND type = %L
+      AND plots.type = %L
       `, type)
   }
+
+  query += `
+  GROUP BY plots.plot_id
+  `
 
   if (sort === "name") {
     order = "asc"
