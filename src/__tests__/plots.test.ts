@@ -4,6 +4,7 @@ import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
 import { toBeOneOf } from 'jest-extended'
+import { Plot } from "../types/plot-types"
 expect.extend({ toBeOneOf })
 
 
@@ -32,14 +33,20 @@ afterAll(async () => {
 
 describe("GET /api/plots/user/:owner_id", () => {
 
-  test("GET:200 Responds with an array of plot objects", async () => {
+  test("GET:200 Responds with an array of plot objects sorted by plot_id in descending order", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/user/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.plots).toHaveLength(3)
+    const sortedPlots = [...body.plots].sort((a: Plot, b: Plot) => {
+      if (a.plot_id! < b.plot_id!) return 1
+      if (a.plot_id! > b.plot_id!) return -1
+      return 0
+    })
+
+    expect(body.plots).toEqual(sortedPlots)
 
     for (const plot of body.plots) {
       expect(plot).toMatchObject({
@@ -154,6 +161,69 @@ describe("GET /api/plots/user/:owner_id?type=", () => {
 
     const { body } = await request(app)
       .get("/api/plots/user/1?type=castle")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  })
+})
+
+
+describe("GET /api/plots/user/:owner_id?sort=", () => {
+
+  test("GET:200 Responds with an array of plot objects sorted by name in ascending order", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?sort=name")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    const sortedPlots = [...body.plots].sort((a: Plot, b: Plot) => {
+      if (a.name! > b.name!) return 1
+      if (a.name! < b.name!) return -1
+      return 0
+    })
+
+    expect(body.plots).toEqual(sortedPlots)
+  })
+
+  test("GET:404 Responds with an error when passed an invalid sort value", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?sort=example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  })
+})
+
+
+describe("GET /api/plots/user/:owner_id?order=", () => {
+
+  test("GET:404 Responds with an error when passed an invalid order value", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?order=example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  })
+
+  test("GET:404 Responds with an error when passed an invalid sort value", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?sort=example")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
