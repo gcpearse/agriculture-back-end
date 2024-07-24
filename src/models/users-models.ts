@@ -83,7 +83,7 @@ export const removeUserByUsername = async (
 }
 
 
-export const changePasswordByUsername = async (
+export const updatePasswordByUsername = async (
   authUsername: string,
   username: string,
   {
