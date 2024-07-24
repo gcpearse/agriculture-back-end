@@ -63,7 +63,28 @@ plotsRouter.route("/plots/user/:owner_id")
  *                plots:
  *                  type: array
  *                  items:
- *                    $ref: "#/components/schemas/Plot"
+ *                    allOf:
+ *                      - $ref: "#/components/schemas/Plot"
+ *                      - type: object
+ *                        properties:
+ *                          image_count:
+ *                            type: integer
+ *                            example: 1
+ *                          subdivision_count:
+ *                            type: integer
+ *                            example: 2
+ *                          crop_count:
+ *                            type: integer
+ *                            example: 5
+ *                          issue_count:
+ *                            type: integer
+ *                            example: 3
+ *                          job_count:
+ *                            type: integer
+ *                            example: 0
+ *                count:
+ *                  type: integer
+ *                  example: 1
  *      400:
  *        description: Bad Request
  *        content:
