@@ -21,7 +21,7 @@ describe("verifyPermission", () => {
 
 describe("verifyPagination", () => {
 
-  test("When the page number is greater than one and the query result returns no rows, the promise is rejects", () => {
+  test("When the page number is greater than one and the query result returns no rows, the promise is rejected", () => {
 
     expect(verifyPagination(2, 0)).rejects.toMatchObject({
       status: 404,
