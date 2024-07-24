@@ -12,7 +12,7 @@ export const selectCropsByPlotId = async (
   {
     name,
     sort = "crop_id",
-    order = "asc",
+    order = "desc",
     limit = "10",
     page = "1"
   }: QueryString.ParsedQs
@@ -84,12 +84,12 @@ export const selectCropsByPlotId = async (
   GROUP BY crops.crop_id, subdivisions.name
   `
 
-  if (sort === "date_planted" || sort === "harvest_date") {
-    order = "desc"
+  if (sort === "name") {
+    order = "asc"
   }
 
   query += `
-  ORDER BY ${sort} ${order}
+  ORDER BY ${sort} ${order}, name
   LIMIT ${limit}
   OFFSET ${(+page - 1) * +limit}
   `
@@ -136,7 +136,7 @@ export const selectCropsBySubdivisionId = async (
   {
     name,
     sort = "crop_id",
-    order = "asc",
+    order = "desc",
     limit = "10",
     page = "1"
   }: QueryString.ParsedQs
@@ -206,12 +206,12 @@ export const selectCropsBySubdivisionId = async (
   GROUP BY crops.crop_id
   `
 
-  if (sort === "date_planted" || sort === "harvest_date") {
-    order = "desc"
+  if (sort === "name") {
+    order = "asc"
   }
 
   query += `
-  ORDER BY ${sort} ${order}
+  ORDER BY ${sort} ${order}, name
   LIMIT ${limit}
   OFFSET ${(+page - 1) * +limit}
   `
