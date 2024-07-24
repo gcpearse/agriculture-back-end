@@ -9,7 +9,11 @@ import { verifyPermission, verifyParamIsPositiveInt } from "../utils/verificatio
 export const selectPlotsByOwner = async (
   authUserId: number,
   owner_id: number,
-  { type }: QueryString.ParsedQs
+  {
+    type,
+    sort = "plot_id",
+    order = "desc"
+  }: QueryString.ParsedQs
 ): Promise<Plot[]> => {
 
   await verifyParamIsPositiveInt(owner_id)
@@ -17,6 +21,19 @@ export const selectPlotsByOwner = async (
   await searchForUserId(owner_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to view plot data denied")
+
+  const validValues = {
+    sort: ["plot_id", "name"],
+    order: ["asc", "desc"]
+  }
+
+  if (!validValues.sort.includes(sort as string) || !validValues.order.includes(order as string)) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  }
 
   let query = `
   SELECT * 
@@ -39,6 +56,14 @@ export const selectPlotsByOwner = async (
       AND type = %L
       `, type)
   }
+
+  if (sort === "name") {
+    order = "asc"
+  }
+
+  query += `
+  ORDER BY ${sort} ${order}, name
+  `
 
   const result = await db.query(`${query};`, [owner_id])
 
