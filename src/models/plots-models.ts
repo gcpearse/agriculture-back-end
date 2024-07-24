@@ -17,7 +17,7 @@ export const selectPlotsByOwner = async (
     limit = "10",
     page = "1"
   }: QueryString.ParsedQs
-): Promise<ExtendedPlot[]> => {
+): Promise<[ExtendedPlot[], number]> => {
 
   await verifyParamIsPositiveInt(owner_id)
 
@@ -69,8 +69,17 @@ export const selectPlotsByOwner = async (
   WHERE plots.owner_id = $1
   `
 
+  let countQuery = `
+  SELECT COUNT(plot_id)::INT
+  FROM plots
+  WHERE owner_id = $1
+  `
+
   if (name) {
     query += format(`
+      AND plots.name ILIKE %L
+      `, `%${name}%`)
+    countQuery += format(`
       AND plots.name ILIKE %L
       `, `%${name}%`)
   }
@@ -87,6 +96,9 @@ export const selectPlotsByOwner = async (
 
   if (type) {
     query += format(`
+      AND plots.type = %L
+      `, type)
+    countQuery += format(`
       AND plots.type = %L
       `, type)
   }
@@ -109,7 +121,9 @@ export const selectPlotsByOwner = async (
 
   await verifyPagination(+page, result.rows.length)
 
-  return result.rows
+  const countResult = await db.query(`${countQuery};`, [owner_id])
+
+  return Promise.all([result.rows, countResult.rows[0].count])
 }
 
 
