@@ -10,6 +10,7 @@ export const selectPlotsByOwner = async (
   authUserId: number,
   owner_id: number,
   {
+    name,
     type,
     sort = "plot_id",
     order = "desc"
@@ -40,6 +41,12 @@ export const selectPlotsByOwner = async (
   FROM plots
   WHERE owner_id = $1
   `
+
+  if (name) {
+    query += format(`
+      AND name ILIKE %L
+      `, `%${name}%`)
+  }
 
   const isValidPlotType = await validatePlotType(type as string)
 
