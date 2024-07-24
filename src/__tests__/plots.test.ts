@@ -172,6 +172,63 @@ describe("GET /api/plots/user/:owner_id?type=", () => {
 })
 
 
+describe("GET /api/plots/user/:owner_id?name=", () => {
+
+  test("GET:200 Responds with an array of plot objects filtered by name", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?name=all")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    for (const plot of body.plots) {
+      expect(plot.name).toMatch(/all/i)
+    }
+  })
+
+  test("GET:200 Filtered results are case-insensitive", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?name=ALL")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    for (const plot of body.plots) {
+      expect(plot.name).toMatch(/all/i)
+    }
+  })
+
+  test("GET:200 Returns an empty array when the value of name matches no results", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?name=example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(Array.isArray(body.plots)).toBe(true)
+
+    expect(body.plots).toHaveLength(0)
+  })
+})
+
+
+describe("GET /api/plots/user/:owner_id?type=&name=", () => {
+
+  test("GET:200 Responds with an array of plot objects filtered by type and name", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?type=allotment&name=new")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    for (const plot of body.plots) {
+      expect(plot.type).toBe("allotment")
+      expect(plot.name).toMatch(/new/i)
+    }
+  })
+})
+
+
 describe("GET /api/plots/user/:owner_id?sort=", () => {
 
   test("GET:200 Responds with an array of plot objects sorted by name in ascending order", async () => {
