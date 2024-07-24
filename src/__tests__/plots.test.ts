@@ -64,6 +64,8 @@ describe("GET /api/plots/user/:owner_id", () => {
         job_count: expect.any(Number)
       })
     }
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:200 Responds with an empty array when no plots are associated with the authenticated user", async () => {
@@ -85,6 +87,8 @@ describe("GET /api/plots/user/:owner_id", () => {
     expect(Array.isArray(body.plots)).toBe(true)
 
     expect(body.plots).toHaveLength(0)
+
+    expect(body.count).toBe(0)
   })
 
   test("GET:400 Responds with an error message when the owner_id is not a positive integer", async () => {
@@ -160,6 +164,8 @@ describe("GET /api/plots/user/:owner_id?type=", () => {
     for (const plot of body.plots) {
       expect(plot.type).toBe("allotment")
     }
+
+    expect(body.count).toBe(2)
   })
 
   test("GET:404 Responds with an error message when the query value is invalid", async () => {
@@ -189,6 +195,8 @@ describe("GET /api/plots/user/:owner_id?name=", () => {
     for (const plot of body.plots) {
       expect(plot.name).toMatch(/all/i)
     }
+
+    expect(body.count).toBe(2)
   })
 
   test("GET:200 Filtered results are case-insensitive", async () => {
@@ -201,6 +209,8 @@ describe("GET /api/plots/user/:owner_id?name=", () => {
     for (const plot of body.plots) {
       expect(plot.name).toMatch(/all/i)
     }
+
+    expect(body.count).toBe(2)
   })
 
   test("GET:200 Returns an empty array when the value of name matches no results", async () => {
@@ -213,6 +223,8 @@ describe("GET /api/plots/user/:owner_id?name=", () => {
     expect(Array.isArray(body.plots)).toBe(true)
 
     expect(body.plots).toHaveLength(0)
+
+    expect(body.count).toBe(0)
   })
 })
 
@@ -230,6 +242,8 @@ describe("GET /api/plots/user/:owner_id?type=&name=", () => {
       expect(plot.type).toBe("allotment")
       expect(plot.name).toMatch(/new/i)
     }
+
+    expect(body.count).toBe(1)
   })
 })
 
@@ -250,6 +264,8 @@ describe("GET /api/plots/user/:owner_id?sort=", () => {
     })
 
     expect(body.plots).toEqual(sortedPlots)
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:404 Responds with an error when passed an invalid sort value", async () => {
@@ -294,6 +310,8 @@ describe("GET /api/plots/user/:owner_id?limit=", () => {
       .expect(200)
 
     expect(body.plots).toHaveLength(2)
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:200 Responds with an array of all plots associated with the owner when the limit exceeds the total number of results", async () => {
@@ -304,6 +322,8 @@ describe("GET /api/plots/user/:owner_id?limit=", () => {
       .expect(200)
 
     expect(body.plots).toHaveLength(3)
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:400 Responds with an error message when the value of limit is not a positive integer", async () => {
@@ -333,6 +353,8 @@ describe("GET /api/plots/user/:owner_id?page=", () => {
     expect(body.plots.map((crop: Plot) => {
       return crop.plot_id
     })).toEqual([1])
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:200 The page defaults to page one", async () => {
@@ -345,6 +367,8 @@ describe("GET /api/plots/user/:owner_id?page=", () => {
     expect(body.plots.map((crop: Plot) => {
       return crop.plot_id
     })).toEqual([4, 3])
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:400 Responds with an error when the value of page is not a positive integer", async () => {
