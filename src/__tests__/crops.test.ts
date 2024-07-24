@@ -349,7 +349,7 @@ describe("GET /api/crops/plot/:plot_id?order=", () => {
 })
 
 
-describe("GET /api/crops/plot/:plot_id?name=&limit=", () => {
+describe("GET /api/crops/plot/:plot_id?limit=", () => {
 
   test("GET:200 Responds with a limited array of crop objects associated with the plot", async () => {
 
@@ -390,7 +390,7 @@ describe("GET /api/crops/plot/:plot_id?name=&limit=", () => {
 })
 
 
-describe("GET /api/crops/plot/:plot_id?name=&page=", () => {
+describe("GET /api/crops/plot/:plot_id?page=", () => {
 
   test("GET:200 Responds with an array of crop objects associated with the plot beginning from the page set in the query parameter", async () => {
 
@@ -920,7 +920,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?order=", () => {
 })
 
 
-describe("GET /api/crops/subdivision/:subdivision_id?name=&limit=", () => {
+describe("GET /api/crops/subdivision/:subdivision_id?limit=", () => {
 
   test("GET:200 Responds with a limited array of crop objects associated with the subdivision", async () => {
 
@@ -961,7 +961,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=&limit=", () => {
 })
 
 
-describe("GET /api/crops/subdivision/:subdivision_id?name=&page=", () => {
+describe("GET /api/crops/subdivision/:subdivision_id?page=", () => {
 
   test("GET:200 Responds with an array of crop objects associated with the plot beginning from the page set in the query parameter", async () => {
 
