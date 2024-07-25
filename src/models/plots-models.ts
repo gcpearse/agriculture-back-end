@@ -168,7 +168,7 @@ export const insertPlotByOwner = async (
 export const selectPlotByPlotId = async (
   authUserId: number,
   plot_id: number
-): Promise<Plot> => {
+): Promise<ExtendedPlot> => {
 
   await verifyParamIsPositiveInt(plot_id)
 
@@ -177,9 +177,31 @@ export const selectPlotByPlotId = async (
   await verifyPermission(authUserId, owner_id, "Permission to view plot data denied")
 
   const result = await db.query(`
-    SELECT * 
+    SELECT
+      plots.*,
+      COUNT(DISTINCT plot_images.image_id)::INT
+      AS image_count,
+      COUNT(DISTINCT subdivisions.subdivision_id)::INT
+      AS subdivision_count,
+      COUNT(DISTINCT crops.crop_id)::INT
+      AS crop_count,
+      COUNT(DISTINCT issues.issue_id)::INT
+      AS issue_count,
+      COUNT(DISTINCT jobs.job_id)::INT
+      AS job_count
     FROM plots
-    WHERE plot_id = $1;
+    LEFT JOIN plot_images
+    ON plots.plot_id = plot_images.plot_id
+    LEFT JOIN subdivisions
+    ON plots.plot_id = subdivisions.plot_id
+    LEFT JOIN crops
+    ON plots.plot_id = crops.plot_id
+    LEFT JOIN issues
+    ON plots.plot_id = issues.plot_id
+    LEFT JOIN jobs
+    ON plots.plot_id = jobs.plot_id
+    WHERE plots.plot_id = $1
+    GROUP BY plots.plot_id;
     `,
     [plot_id])
 
