@@ -10,8 +10,8 @@ export const getPlotsByOwner = async (req: ExtendedRequest, res: Response, next:
   const { owner_id } = req.params
 
   try {
-    const plots = await selectPlotsByOwner(authUserId, +owner_id, req.query)
-    res.status(200).send({ plots })
+    const [plots, count] = await selectPlotsByOwner(authUserId, +owner_id, req.query)
+    res.status(200).send({ plots, count })
   } catch (err) {
     next(err)
   }

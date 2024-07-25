@@ -37,7 +37,7 @@ cropsRouter.route("/crops/plot/:plot_id")
  *        name: order
  *        schema:
  *          type: string
- *        default: asc
+ *        default: desc
  *      - in: query
  *        name: limit
  *        schema:
@@ -178,7 +178,7 @@ cropsRouter.route("/crops/subdivision/:subdivision_id")
  *        name: order
  *        schema:
  *          type: string
- *        default: asc
+ *        default: desc
  *      - in: query
  *        name: limit
  *        schema:

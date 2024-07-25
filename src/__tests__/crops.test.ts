@@ -35,7 +35,7 @@ afterAll(async () => {
 
 describe("GET /api/crops/plot/:plot_id", () => {
 
-  test("GET:200 Responds with an array of crop objects sorted by crop_id in ascending order", async () => {
+  test("GET:200 Responds with an array of crop objects sorted by crop_id in descending order", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/plot/1")
@@ -43,8 +43,8 @@ describe("GET /api/crops/plot/:plot_id", () => {
       .expect(200)
 
     const sortedCrops = [...body.crops].sort((a: Crop, b: Crop) => {
-      if (a.crop_id! > b.crop_id!) return 1
-      if (a.crop_id! < b.crop_id!) return -1
+      if (a.crop_id! < b.crop_id!) return 1
+      if (a.crop_id! > b.crop_id!) return -1
       return 0
     })
 
@@ -169,7 +169,7 @@ describe("GET /api/crops/plot/:plot_id?name=", () => {
       .expect(200)
 
     for (const crop of body.crops) {
-      expect(crop.name).toMatch(/ca/)
+      expect(crop.name).toMatch(/ca/i)
     }
 
     expect(body.count).toBe(3)
@@ -183,7 +183,7 @@ describe("GET /api/crops/plot/:plot_id?name=", () => {
       .expect(200)
 
     for (const crop of body.crops) {
-      expect(crop.name).toMatch(/ca/)
+      expect(crop.name).toMatch(/ca/i)
     }
 
     expect(body.count).toBe(3)
@@ -294,7 +294,7 @@ describe("GET /api/crops/plot/:plot_id?name=&sort=", () => {
       .expect(200)
 
     for (const crop of body.crops) {
-      expect(crop.name).toMatch(/ca/)
+      expect(crop.name).toMatch(/ca/i)
     }
 
     const sortedCrops = [...body.crops].sort((a: Crop, b: Crop) => {
@@ -316,7 +316,7 @@ describe("GET /api/crops/plot/:plot_id?name=&sort=", () => {
       .expect(200)
 
     for (const crop of body.crops) {
-      expect(crop.name).toMatch(/ca/)
+      expect(crop.name).toMatch(/ca/i)
     }
 
     const sortedCrops = [...body.crops].sort((a: Crop, b: Crop) => {
@@ -349,7 +349,7 @@ describe("GET /api/crops/plot/:plot_id?order=", () => {
 })
 
 
-describe("GET /api/crops/plot/:plot_id?name=&limit=", () => {
+describe("GET /api/crops/plot/:plot_id?limit=", () => {
 
   test("GET:200 Responds with a limited array of crop objects associated with the plot", async () => {
 
@@ -390,7 +390,7 @@ describe("GET /api/crops/plot/:plot_id?name=&limit=", () => {
 })
 
 
-describe("GET /api/crops/plot/:plot_id?name=&page=", () => {
+describe("GET /api/crops/plot/:plot_id?page=", () => {
 
   test("GET:200 Responds with an array of crop objects associated with the plot beginning from the page set in the query parameter", async () => {
 
@@ -401,7 +401,7 @@ describe("GET /api/crops/plot/:plot_id?name=&page=", () => {
 
     expect(body.crops.map((crop: Crop) => {
       return crop.crop_id
-    })).toEqual([3, 4])
+    })).toEqual([2, 1])
 
     expect(body.count).toBe(4)
   })
@@ -415,7 +415,7 @@ describe("GET /api/crops/plot/:plot_id?name=&page=", () => {
 
     expect(body.crops.map((crop: Crop) => {
       return crop.crop_id
-    })).toEqual([1, 2])
+    })).toEqual([4, 3])
 
     expect(body.count).toBe(4)
   })
@@ -429,9 +429,22 @@ describe("GET /api/crops/plot/:plot_id?name=&page=", () => {
 
     expect(body.crops.map((crop: Crop) => {
       return crop.crop_id
-    })).toEqual([4])
+    })).toEqual([1])
 
     expect(body.count).toBe(4)
+  })
+
+  test("GET:400 Responds with an error when the value of page is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/plot/1?limit=2&page=three")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
   })
 
   test("GET:404 Responds with an error when the page cannot be found", async () => {
@@ -625,7 +638,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
 
 describe("GET /api/crops/subdivision/:subdivision_id", () => {
 
-  test("GET:200 Responds with an array of crop objects sorted by crop_id in ascending order", async () => {
+  test("GET:200 Responds with an array of crop objects sorted by crop_id in descending order", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/subdivision/1")
@@ -633,8 +646,8 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
       .expect(200)
 
     const sortedCrops = [...body.crops].sort((a: Crop, b: Crop) => {
-      if (a.crop_id! > b.crop_id!) return 1
-      if (a.crop_id! < b.crop_id!) return -1
+      if (a.crop_id! < b.crop_id!) return 1
+      if (a.crop_id! > b.crop_id!) return -1
       return 0
     })
 
@@ -740,7 +753,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=", () => {
       .expect(200)
 
     for (const crop of body.crops) {
-      expect(crop.name).toMatch(/car/)
+      expect(crop.name).toMatch(/car/i)
     }
 
     expect(body.count).toBe(1)
@@ -754,7 +767,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=", () => {
       .expect(200)
 
     for (const crop of body.crops) {
-      expect(crop.name).toMatch(/car/)
+      expect(crop.name).toMatch(/car/i)
     }
 
     expect(body.count).toBe(1)
@@ -865,7 +878,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=&sort=", () => {
       .expect(200)
 
     for (const crop of body.crops) {
-      expect(crop.name).toMatch(/car/)
+      expect(crop.name).toMatch(/car/i)
     }
 
     const sortedCrops = [...body.crops].sort((a: Crop, b: Crop) => {
@@ -887,7 +900,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=&sort=", () => {
       .expect(200)
 
     for (const crop of body.crops) {
-      expect(crop.name).toMatch(/car/)
+      expect(crop.name).toMatch(/car/i)
     }
 
     const sortedCrops = [...body.crops].sort((a: Crop, b: Crop) => {
@@ -920,7 +933,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?order=", () => {
 })
 
 
-describe("GET /api/crops/subdivision/:subdivision_id?name=&limit=", () => {
+describe("GET /api/crops/subdivision/:subdivision_id?limit=", () => {
 
   test("GET:200 Responds with a limited array of crop objects associated with the subdivision", async () => {
 
@@ -961,7 +974,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=&limit=", () => {
 })
 
 
-describe("GET /api/crops/subdivision/:subdivision_id?name=&page=", () => {
+describe("GET /api/crops/subdivision/:subdivision_id?page=", () => {
 
   test("GET:200 Responds with an array of crop objects associated with the plot beginning from the page set in the query parameter", async () => {
 
@@ -972,7 +985,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=&page=", () => {
 
     expect(body.crops.map((crop: Crop) => {
       return crop.crop_id
-    })).toEqual([4])
+    })).toEqual([1])
 
     expect(body.count).toBe(2)
   })
@@ -986,9 +999,22 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=&page=", () => {
 
     expect(body.crops.map((crop: Crop) => {
       return crop.crop_id
-    })).toEqual([1])
+    })).toEqual([4])
 
     expect(body.count).toBe(2)
+  })
+
+  test("GET:400 Responds with an error message when the value of page is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/subdivision/1?limit=1&page=three")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
   })
 
   test("GET:404 Responds with an error when the page cannot be found", async () => {

@@ -4,6 +4,7 @@ import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
 import { toBeOneOf } from 'jest-extended'
+import { Plot } from "../types/plot-types"
 expect.extend({ toBeOneOf })
 
 
@@ -32,14 +33,20 @@ afterAll(async () => {
 
 describe("GET /api/plots/user/:owner_id", () => {
 
-  test("GET:200 Responds with an array of plot objects", async () => {
+  test("GET:200 Responds with an array of plot objects sorted by plot_id in descending order", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/user/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.plots).toHaveLength(3)
+    const sortedPlots = [...body.plots].sort((a: Plot, b: Plot) => {
+      if (a.plot_id! < b.plot_id!) return 1
+      if (a.plot_id! > b.plot_id!) return -1
+      return 0
+    })
+
+    expect(body.plots).toEqual(sortedPlots)
 
     for (const plot of body.plots) {
       expect(plot).toMatchObject({
@@ -49,9 +56,16 @@ describe("GET /api/plots/user/:owner_id", () => {
         type: expect.any(String),
         description: expect.any(String),
         location: expect.any(String),
-        area: expect.toBeOneOf([expect.any(Number), null])
+        area: expect.toBeOneOf([expect.any(Number), null]),
+        image_count: expect.any(Number),
+        subdivision_count: expect.any(Number),
+        crop_count: expect.any(Number),
+        issue_count: expect.any(Number),
+        job_count: expect.any(Number)
       })
     }
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:200 Responds with an empty array when no plots are associated with the authenticated user", async () => {
@@ -73,6 +87,8 @@ describe("GET /api/plots/user/:owner_id", () => {
     expect(Array.isArray(body.plots)).toBe(true)
 
     expect(body.plots).toHaveLength(0)
+
+    expect(body.count).toBe(0)
   })
 
   test("GET:400 Responds with an error message when the owner_id is not a positive integer", async () => {
@@ -148,6 +164,8 @@ describe("GET /api/plots/user/:owner_id?type=", () => {
     for (const plot of body.plots) {
       expect(plot.type).toBe("allotment")
     }
+
+    expect(body.count).toBe(2)
   })
 
   test("GET:404 Responds with an error message when the query value is invalid", async () => {
@@ -160,6 +178,235 @@ describe("GET /api/plots/user/:owner_id?type=", () => {
     expect(body).toMatchObject({
       message: "Not Found",
       details: "No results found for that query"
+    })
+  })
+})
+
+
+describe("GET /api/plots/user/:owner_id?name=", () => {
+
+  test("GET:200 Responds with an array of plot objects filtered by name", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?name=all")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    for (const plot of body.plots) {
+      expect(plot.name).toMatch(/all/i)
+    }
+
+    expect(body.count).toBe(2)
+  })
+
+  test("GET:200 Filtered results are case-insensitive", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?name=ALL")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    for (const plot of body.plots) {
+      expect(plot.name).toMatch(/all/i)
+    }
+
+    expect(body.count).toBe(2)
+  })
+
+  test("GET:200 Returns an empty array when the value of name matches no results", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?name=example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(Array.isArray(body.plots)).toBe(true)
+
+    expect(body.plots).toHaveLength(0)
+
+    expect(body.count).toBe(0)
+  })
+})
+
+
+describe("GET /api/plots/user/:owner_id?type=&name=", () => {
+
+  test("GET:200 Responds with an array of plot objects filtered by type and name", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?type=allotment&name=new")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    for (const plot of body.plots) {
+      expect(plot.type).toBe("allotment")
+      expect(plot.name).toMatch(/new/i)
+    }
+
+    expect(body.count).toBe(1)
+  })
+})
+
+
+describe("GET /api/plots/user/:owner_id?sort=", () => {
+
+  test("GET:200 Responds with an array of plot objects sorted by name in ascending order", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?sort=name")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    const sortedPlots = [...body.plots].sort((a: Plot, b: Plot) => {
+      if (a.name! > b.name!) return 1
+      if (a.name! < b.name!) return -1
+      return 0
+    })
+
+    expect(body.plots).toEqual(sortedPlots)
+
+    expect(body.count).toBe(3)
+  })
+
+  test("GET:404 Responds with an error when passed an invalid sort value", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?sort=example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  })
+})
+
+
+describe("GET /api/plots/user/:owner_id?order=", () => {
+
+  test("GET:404 Responds with an error when passed an invalid order value", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?order=example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  })
+})
+
+
+describe("GET /api/plots/user/:owner_id?limit=", () => {
+
+  test("GET:200 Responds with a limited array of plot objects associated with the owner", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?limit=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.plots).toHaveLength(2)
+
+    expect(body.count).toBe(3)
+  })
+
+  test("GET:200 Responds with an array of all plots associated with the owner when the limit exceeds the total number of results", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?limit=20")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.plots).toHaveLength(3)
+
+    expect(body.count).toBe(3)
+  })
+
+  test("GET:400 Responds with an error message when the value of limit is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?limit=two")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+})
+
+
+describe("GET /api/plots/user/:owner_id?page=", () => {
+
+  test("GET:200 Responds with an array of plot objects associated with the plot beginning from the page set in the query parameter", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?limit=2&page=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.plots.map((crop: Plot) => {
+      return crop.plot_id
+    })).toEqual([1])
+
+    expect(body.count).toBe(3)
+  })
+
+  test("GET:200 The page defaults to page one", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?limit=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.plots.map((crop: Plot) => {
+      return crop.plot_id
+    })).toEqual([4, 3])
+
+    expect(body.count).toBe(3)
+  })
+
+  test("GET:400 Responds with an error when the value of page is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?limit=2&page=three")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
+  test("GET:404 Responds with an error when the page cannot be found", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?limit=2&page=3")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Page not found"
+    })
+  })
+
+  test("GET:404 Responds with an error when the page cannot be found (multiple queries affecting total query result rows)", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1?type=garden&limit=1&page=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Page not found"
     })
   })
 })

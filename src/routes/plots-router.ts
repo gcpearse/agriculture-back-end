@@ -25,9 +25,33 @@ plotsRouter.route("/plots/user/:owner_id")
  *        schema:
  *          type: integer
  *      - in: query
+ *        name: name
+ *        schema:
+ *          type: string
+ *      - in: query
  *        name: type
  *        schema:
  *          type: string
+ *      - in: query
+ *        name: sort
+ *        schema:
+ *          type: string
+ *        default: crop_id
+ *      - in: query
+ *        name: order
+ *        schema:
+ *          type: string
+ *        default: desc
+ *      - in: query
+ *        name: limit
+ *        schema:
+ *          type: integer
+ *        default: 10
+ *      - in: query
+ *        name: page
+ *        schema:
+ *          type: integer
+ *        default: 1
  *    responses:
  *      200:
  *        description: OK
@@ -39,7 +63,28 @@ plotsRouter.route("/plots/user/:owner_id")
  *                plots:
  *                  type: array
  *                  items:
- *                    $ref: "#/components/schemas/Plot"
+ *                    allOf:
+ *                      - $ref: "#/components/schemas/Plot"
+ *                      - type: object
+ *                        properties:
+ *                          image_count:
+ *                            type: integer
+ *                            example: 1
+ *                          subdivision_count:
+ *                            type: integer
+ *                            example: 2
+ *                          crop_count:
+ *                            type: integer
+ *                            example: 5
+ *                          issue_count:
+ *                            type: integer
+ *                            example: 3
+ *                          job_count:
+ *                            type: integer
+ *                            example: 0
+ *                count:
+ *                  type: integer
+ *                  example: 1
  *      400:
  *        description: Bad Request
  *        content:

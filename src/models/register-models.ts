@@ -1,7 +1,7 @@
 import format from "pg-format"
 import { db } from "../db"
 import { SecureUser, User } from "../types/user-types"
-import { checkEmailConflict } from "../utils/db-query-utils"
+import { checkEmailConflict } from "../utils/db-queries"
 import { generateHash } from "../middleware/security"
 
 

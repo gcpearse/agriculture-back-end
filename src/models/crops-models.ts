@@ -1,8 +1,8 @@
 import QueryString from "qs"
 import { db } from "../db"
 import { Crop, CropRequest, ExtendedCrop } from "../types/crop-types"
-import { getPlotOwnerId, getSubdivisionPlotId } from "../utils/db-query-utils"
-import { verifyPagination, verifyParamIsPositiveInt, verifyPermission } from "../utils/verification-utils"
+import { getPlotOwnerId, getSubdivisionPlotId } from "../utils/db-queries"
+import { verifyPagination, verifyParamIsPositiveInt, verifyPermission } from "../utils/verification"
 import format from "pg-format"
 
 
@@ -12,7 +12,7 @@ export const selectCropsByPlotId = async (
   {
     name,
     sort = "crop_id",
-    order = "asc",
+    order = "desc",
     limit = "10",
     page = "1"
   }: QueryString.ParsedQs
@@ -57,7 +57,7 @@ export const selectCropsByPlotId = async (
   `
 
   let countQuery = `
-  SELECT COUNT(crop_id)
+  SELECT COUNT(crop_id)::INT
   FROM crops
   WHERE plot_id = $1
   `
@@ -84,12 +84,12 @@ export const selectCropsByPlotId = async (
   GROUP BY crops.crop_id, subdivisions.name
   `
 
-  if (sort === "date_planted" || sort === "harvest_date") {
-    order = "desc"
+  if (sort === "name") {
+    order = "asc"
   }
 
   query += `
-  ORDER BY ${sort} ${order}
+  ORDER BY ${sort} ${order}, name
   LIMIT ${limit}
   OFFSET ${(+page - 1) * +limit}
   `
@@ -100,7 +100,7 @@ export const selectCropsByPlotId = async (
 
   const countResult = await db.query(`${countQuery};`, [plot_id])
 
-  return Promise.all([result.rows, +countResult.rows[0].count])
+  return Promise.all([result.rows, countResult.rows[0].count])
 }
 
 
@@ -136,7 +136,7 @@ export const selectCropsBySubdivisionId = async (
   {
     name,
     sort = "crop_id",
-    order = "asc",
+    order = "desc",
     limit = "10",
     page = "1"
   }: QueryString.ParsedQs
@@ -179,7 +179,7 @@ export const selectCropsBySubdivisionId = async (
   `
 
   let countQuery = `
-  SELECT COUNT(crop_id)
+  SELECT COUNT(crop_id)::INT
   FROM crops
   WHERE subdivision_id = $1
   `
@@ -206,12 +206,12 @@ export const selectCropsBySubdivisionId = async (
   GROUP BY crops.crop_id
   `
 
-  if (sort === "date_planted" || sort === "harvest_date") {
-    order = "desc"
+  if (sort === "name") {
+    order = "asc"
   }
 
   query += `
-  ORDER BY ${sort} ${order}
+  ORDER BY ${sort} ${order}, name
   LIMIT ${limit}
   OFFSET ${(+page - 1) * +limit}
   `
@@ -222,7 +222,7 @@ export const selectCropsBySubdivisionId = async (
 
   const countResult = await db.query(`${countQuery};`, [subdivision_id])
 
-  return Promise.all([result.rows, +countResult.rows[0].count])
+  return Promise.all([result.rows, countResult.rows[0].count])
 }
 
 

@@ -1,28 +1,88 @@
 import QueryString from "qs"
 import { db } from "../db"
 import format from "pg-format"
-import { Plot, PlotRequest } from "../types/plot-types"
-import { checkPlotNameConflict, getPlotOwnerId, searchForUserId, validatePlotType } from "../utils/db-query-utils"
-import { verifyPermission, verifyParamIsPositiveInt } from "../utils/verification-utils"
+import { ExtendedPlot, Plot, PlotRequest } from "../types/plot-types"
+import { checkPlotNameConflict, getPlotOwnerId, searchForUserId, validatePlotType } from "../utils/db-queries"
+import { verifyPermission, verifyParamIsPositiveInt, verifyPagination } from "../utils/verification"
 
 
 export const selectPlotsByOwner = async (
   authUserId: number,
   owner_id: number,
-  { type }: QueryString.ParsedQs
-): Promise<Plot[]> => {
+  {
+    name,
+    type,
+    sort = "plot_id",
+    order = "desc",
+    limit = "10",
+    page = "1"
+  }: QueryString.ParsedQs
+): Promise<[ExtendedPlot[], number]> => {
 
   await verifyParamIsPositiveInt(owner_id)
+
+  await verifyParamIsPositiveInt(+limit)
+
+  await verifyParamIsPositiveInt(+page)
 
   await searchForUserId(owner_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to view plot data denied")
 
+  const validValues = {
+    sort: ["plot_id", "name"],
+    order: ["asc", "desc"]
+  }
+
+  if (!validValues.sort.includes(sort as string) || !validValues.order.includes(order as string)) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  }
+
   let query = `
-  SELECT * 
+  SELECT
+    plots.*,
+    COUNT(DISTINCT plot_images.image_id)::INT
+    AS image_count,
+    COUNT(DISTINCT subdivisions.subdivision_id)::INT
+    AS subdivision_count,
+    COUNT(DISTINCT crops.crop_id)::INT
+    AS crop_count,
+    COUNT(DISTINCT issues.issue_id)::INT
+    AS issue_count,
+    COUNT(DISTINCT jobs.job_id)::INT
+    AS job_count
+  FROM plots
+  LEFT JOIN plot_images
+  ON plots.plot_id = plot_images.plot_id
+  LEFT JOIN subdivisions
+  ON plots.plot_id = subdivisions.plot_id
+  LEFT JOIN crops
+  ON plots.plot_id = crops.plot_id
+  LEFT JOIN issues
+  ON plots.plot_id = issues.plot_id
+  LEFT JOIN jobs
+  ON plots.plot_id = jobs.plot_id
+  WHERE plots.owner_id = $1
+  `
+
+  let countQuery = `
+  SELECT COUNT(plot_id)::INT
   FROM plots
   WHERE owner_id = $1
   `
+
+  if (name) {
+    query += format(`
+      AND plots.name ILIKE %L
+      `, `%${name}%`)
+    countQuery += format(`
+      AND plots.name ILIKE %L
+      `, `%${name}%`)
+  }
 
   const isValidPlotType = await validatePlotType(type as string)
 
@@ -36,13 +96,34 @@ export const selectPlotsByOwner = async (
 
   if (type) {
     query += format(`
-      AND type = %L
+      AND plots.type = %L
+      `, type)
+    countQuery += format(`
+      AND plots.type = %L
       `, type)
   }
 
+  query += `
+  GROUP BY plots.plot_id
+  `
+
+  if (sort === "name") {
+    order = "asc"
+  }
+
+  query += `
+  ORDER BY ${sort} ${order}, name
+  LIMIT ${limit}
+  OFFSET ${(+page - 1) * +limit}
+  `
+
   const result = await db.query(`${query};`, [owner_id])
 
-  return result.rows
+  await verifyPagination(+page, result.rows.length)
+
+  const countResult = await db.query(`${countQuery};`, [owner_id])
+
+  return Promise.all([result.rows, countResult.rows[0].count])
 }
 
 
