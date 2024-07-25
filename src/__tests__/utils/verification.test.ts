@@ -1,4 +1,4 @@
-import { verifyPermission, verifyParamIsPositiveInt, verifyPagination, verifyQueryValues } from "../../utils/verification"
+import { verifyPermission, verifyParamIsPositiveInt, verifyPagination, verifyQueryValue } from "../../utils/verification"
 
 
 describe("verifyPermission", () => {
@@ -87,11 +87,11 @@ describe("verifyParamIsPositiveInt", () => {
 })
 
 
-describe("verifyQueryValues", () => {
+describe("verifyQueryValue", () => {
 
   test("When the query value is not found in the array of valid values, the promise is rejected", () => {
 
-    expect(verifyQueryValues(["foo", "bar"], "example")).rejects.toMatchObject({
+    expect(verifyQueryValue(["foo", "bar"], "example")).rejects.toMatchObject({
       status: 404,
       message: "Not Found",
       details: "No results found for that query"
@@ -100,6 +100,6 @@ describe("verifyQueryValues", () => {
 
   test("Returns undefined when the query value is found in the array of valid values", () => {
 
-    expect(verifyQueryValues(["foo", "bar"], "foo")).toBeUndefined()
+    expect(verifyQueryValue(["foo", "bar"], "foo")).toBeUndefined()
   })
 })

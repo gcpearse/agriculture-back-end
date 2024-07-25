@@ -43,7 +43,7 @@ export const verifyPermission = (
 }
 
 
-export const verifyQueryValues = (
+export const verifyQueryValue = (
   validValues: string[],
   queryValue: string
 ): Promise<never> | undefined => {

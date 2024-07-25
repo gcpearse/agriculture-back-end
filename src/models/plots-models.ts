@@ -3,7 +3,7 @@ import { db } from "../db"
 import format from "pg-format"
 import { ExtendedPlot, Plot, PlotRequest } from "../types/plot-types"
 import { checkPlotNameConflict, getPlotOwnerId, searchForUserId, validatePlotType } from "../utils/db-queries"
-import { verifyPermission, verifyParamIsPositiveInt, verifyPagination, verifyQueryValues } from "../utils/verification"
+import { verifyPermission, verifyParamIsPositiveInt, verifyPagination, verifyQueryValue } from "../utils/verification"
 
 
 export const selectPlotsByOwner = async (
@@ -29,9 +29,9 @@ export const selectPlotsByOwner = async (
 
   await verifyPermission(authUserId, owner_id, "Permission to view plot data denied")
 
-  await verifyQueryValues(["plot_id", "name"], sort as string)
+  await verifyQueryValue(["plot_id", "name"], sort as string)
 
-  await verifyQueryValues(["asc", "desc"], order as string)
+  await verifyQueryValue(["asc", "desc"], order as string)
 
   const isValidPlotType = await validatePlotType(type as string)
 

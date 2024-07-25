@@ -2,7 +2,7 @@ import QueryString from "qs"
 import { db } from "../db"
 import { Crop, CropRequest, ExtendedCrop } from "../types/crop-types"
 import { getPlotOwnerId, getSubdivisionPlotId } from "../utils/db-queries"
-import { verifyPagination, verifyParamIsPositiveInt, verifyPermission, verifyQueryValues } from "../utils/verification"
+import { verifyPagination, verifyParamIsPositiveInt, verifyPermission, verifyQueryValue } from "../utils/verification"
 import format from "pg-format"
 
 
@@ -28,9 +28,9 @@ export const selectCropsByPlotId = async (
 
   await verifyPermission(authUserId, owner_id, "Permission to view crop data denied")
 
-  await verifyQueryValues(["crop_id", "name", "date_planted", "harvest_date"], sort as string)
+  await verifyQueryValue(["crop_id", "name", "date_planted", "harvest_date"], sort as string)
 
-  await verifyQueryValues(["asc", "desc"], order as string)
+  await verifyQueryValue(["asc", "desc"], order as string)
 
   let query = `
   SELECT
@@ -145,9 +145,9 @@ export const selectCropsBySubdivisionId = async (
 
   await verifyPermission(authUserId, owner_id, "Permission to view crop data denied")
 
-  await verifyQueryValues(["crop_id", "name", "date_planted", "harvest_date"], sort as string)
+  await verifyQueryValue(["crop_id", "name", "date_planted", "harvest_date"], sort as string)
 
-  await verifyQueryValues(["asc", "desc"], order as string)
+  await verifyQueryValue(["asc", "desc"], order as string)
 
   let query = `
   SELECT
