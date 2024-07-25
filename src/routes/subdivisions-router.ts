@@ -25,9 +25,33 @@ subdivisionsRouter.route("/subdivisions/plot/:plot_id")
  *        schema:
  *          type: integer
  *      - in: query
+ *        name: name
+ *        schema:
+ *          type: string
+ *      - in: query
  *        name: type
  *        schema:
  *          type: string
+ *      - in: query
+ *        name: sort
+ *        schema:
+ *          type: string
+ *        default: subdivision_id
+ *      - in: query
+ *        name: order
+ *        schema:
+ *          type: string
+ *        default: desc
+ *      - in: query
+ *        name: limit
+ *        schema:
+ *          type: integer
+ *        default: 10
+ *      - in: query
+ *        name: page
+ *        schema:
+ *          type: integer
+ *        default: 1
  *    responses:
  *      200:
  *        description: OK
@@ -39,7 +63,25 @@ subdivisionsRouter.route("/subdivisions/plot/:plot_id")
  *                subdivisions:
  *                  type: array
  *                  items:
- *                    $ref: "#/components/schemas/Subdivision"
+ *                    allOf:
+ *                      - $ref: "#/components/schemas/Subdivision"
+ *                      - type: object
+ *                        properties:
+ *                          image_count:
+ *                            type: integer
+ *                            example: 1
+ *                          crop_count:
+ *                            type: integer
+ *                            example: 5
+ *                          issue_count:
+ *                            type: integer
+ *                            example: 3
+ *                          job_count:
+ *                            type: integer
+ *                            example: 0
+ *                count:
+ *                  type: integer
+ *                  example: 1
  *      400:
  *        description: Bad Request
  *        content:
