@@ -4,6 +4,7 @@ import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
 import { toBeOneOf } from 'jest-extended'
+import { Subdivision } from "../types/subdivision-types"
 expect.extend({ toBeOneOf })
 
 
@@ -32,14 +33,20 @@ afterAll(async () => {
 
 describe("GET /api/subdivisions/plot/:plot_id", () => {
 
-  test("GET:200 Responds with an array of subdivision objects", async () => {
+  test("GET:200 Responds with an array of subdivision objects sorted by subdivision_id in descending order", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/plot/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.subdivisions).toHaveLength(3)
+    const sortedSubdivisions = [...body.subdivisions].sort((a: Subdivision, b: Subdivision) => {
+      if (a.subdivision_id! < b.subdivision_id!) return 1
+      if (a.subdivision_id! > b.subdivision_id!) return -1
+      return 0
+    })
+
+    expect(body.subdivisions).toEqual(sortedSubdivisions)
 
     for (const subdivision of body.subdivisions) {
       expect(subdivision).toMatchObject({
@@ -162,6 +169,113 @@ describe("GET /api/subdivisions/plot/:plot_id?type=", () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/plot/1?type=castle")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  })
+})
+
+
+describe("GET /api/subdivisions/plot/:plot_id?name=", () => {
+
+  test("GET:200 Responds with an array of subdivision objects filtered by name", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?name=bed")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    for (const subdivision of body.subdivisions) {
+      expect(subdivision.name).toMatch(/bed/i)
+    }
+  })
+
+  test("GET:200 Filtered results are case-insensitive", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?name=BED")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    for (const subdivision of body.subdivisions) {
+      expect(subdivision.name).toMatch(/bed/i)
+    }
+  })
+
+  test("GET:200 Returns an empty array when the value of name matches no results", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?name=example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(Array.isArray(body.subdivisions)).toBe(true)
+
+    expect(body.subdivisions).toHaveLength(0)
+  })
+})
+
+
+describe("GET /api/subdivisions/plot/:plot_id?type=&name=", () => {
+
+  test("GET:200 Responds with an array of subdivision objects filtered by type and name", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?type=bed&name=onion")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    for (const subdivision of body.subdivisions) {
+      expect(subdivision.type).toBe("bed")
+      expect(subdivision.name).toMatch(/onion/i)
+    }
+  })
+})
+
+
+describe("GET /api/subdivisions/plot/:plot_id?sort=", () => {
+
+  test("GET:200 Responds with an array of subdivision objects sorted by name in ascending order", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?sort=name")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    const sortedSubdivisions = [...body.subdivisions].sort((a: Subdivision, b: Subdivision) => {
+      if (a.name! > b.name!) return 1
+      if (a.name! < b.name!) return -1
+      return 0
+    })
+
+    expect(body.subdivisions).toEqual(sortedSubdivisions)
+  })
+
+  test("GET:404 Responds with an error when passed an invalid sort value", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?sort=example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  })
+})
+
+
+describe("GET /api/subdivisions/plot/:plot_id?order=", () => {
+
+  test("GET:404 Responds with an error when passed an invalid order value", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?order=example")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
