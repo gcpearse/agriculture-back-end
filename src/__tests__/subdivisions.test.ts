@@ -287,6 +287,43 @@ describe("GET /api/subdivisions/plot/:plot_id?order=", () => {
 })
 
 
+describe("GET /api/subdivisions/plot/:plot_id?limit=", () => {
+
+  test("GET:200 Responds with a limited array of subdivision objects associated with the plot", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?limit=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.subdivisions).toHaveLength(2)
+  })
+
+  test("GET:200 Responds with an array of all subdivisions associated with the plot when the limit exceeds the total number of results", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?limit=20")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.subdivisions).toHaveLength(3)
+  })
+
+  test("GET:400 Responds with an error message when the value of limit is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?limit=two")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+})
+
+
 describe("POST /api/subdivisions/plot/:plot_id", () => {
 
   test("POST:201 Responds with a new subdivision object, assigning plot_id automatically", async () => {
