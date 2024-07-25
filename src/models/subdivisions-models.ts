@@ -1,7 +1,7 @@
 import QueryString from "qs"
 import { db } from "../db"
 import { checkSubdivisionNameConflict, getPlotOwnerId, getSubdivisionPlotId, validateSubdivisionType } from "../utils/db-queries"
-import { verifyPermission, verifyParamIsPositiveInt, verifyQueryValue } from "../utils/verification"
+import { verifyPermission, verifyParamIsPositiveInt, verifyQueryValue, verifyPagination } from "../utils/verification"
 import { Subdivision, SubdivisionRequest } from "../types/subdivision-types"
 import format from "pg-format"
 
@@ -14,13 +14,16 @@ export const selectSubdivisionsByPlotId = async (
     type,
     sort = "subdivision_id",
     order = "desc",
-    limit = "10"
+    limit = "10",
+    page = "1"
   }: QueryString.ParsedQs
 ): Promise<Subdivision[]> => {
 
   await verifyParamIsPositiveInt(plot_id)
 
   await verifyParamIsPositiveInt(+limit)
+
+  await verifyParamIsPositiveInt(+page)
 
   const owner_id = await getPlotOwnerId(plot_id)
 
@@ -65,9 +68,12 @@ export const selectSubdivisionsByPlotId = async (
   query += `
   ORDER BY ${sort} ${order}, subdivisions.name
   LIMIT ${limit}
+  OFFSET ${(+page - 1) * +limit}
   `
 
   const result = await db.query(`${query};`, [plot_id])
+
+  await verifyPagination(+page, result.rows.length)
 
   return result.rows
 }
