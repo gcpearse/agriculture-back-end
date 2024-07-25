@@ -4,7 +4,7 @@ import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
 import { toBeOneOf } from 'jest-extended'
-import { ExtendedPlot } from "../types/plot-types"
+import { ExtendedPlot, Plot } from "../types/plot-types"
 expect.extend({ toBeOneOf })
 
 
@@ -631,6 +631,99 @@ describe("POST /api/plots/user/:owner_id", () => {
     expect(body).toMatchObject({
       message: "Conflict",
       details: "Plot name already exists"
+    })
+  })
+})
+
+
+describe("GET /api/plots/user/:owner_id/pinned", () => {
+
+  test("GET:200 Responds with an array of pinned plot objects sorted by name in ascending order", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/1/pinned")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    const sortedPlots = [...body.plots].sort((a: Plot, b: Plot) => {
+      if (a.name! > b.name!) return 1
+      if (a.name! < b.name!) return -1
+      return 0
+    })
+
+    expect(body.plots).toEqual(sortedPlots)
+
+    for (const plot of body.plots) {
+      expect(plot).toMatchObject({
+        plot_id: expect.any(Number),
+        owner_id: 1,
+        name: expect.any(String),
+        type: expect.any(String),
+        description: expect.any(String),
+        location: expect.any(String),
+        area: expect.toBeOneOf([expect.any(Number), null]),
+        is_pinned: true
+      })
+    }
+  })
+
+  test("GET:200 Responds with an empty array when no pinned plots are associated with the authenticated user", async () => {
+
+    const auth = await request(app)
+      .post("/api/login")
+      .send({
+        username: "peach_princess",
+        password: "peaches123",
+      })
+
+    token = auth.body.token
+
+    const { body } = await request(app)
+      .get("/api/plots/user/2/pinned")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(Array.isArray(body.plots)).toBe(true)
+
+    expect(body.plots).toHaveLength(0)
+  })
+
+  test("GET:400 Responds with an error message when the owner_id is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/example/pinned")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
+  test("GET:403 Responds with a warning when the authenticated user attempts to retrieve another user's plot data", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/2/pinned")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to view pinned plot data denied"
+    })
+  })
+
+  test("GET:404 Responds with an error message when the owner_id does not exist", async () => {
+
+    const { body } = await request(app)
+      .get("/api/plots/user/999/pinned")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "User not found"
     })
   })
 })

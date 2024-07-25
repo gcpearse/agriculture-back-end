@@ -18,7 +18,7 @@ export const plotData: Plot[] = [
     description: "An orchard",
     location: "Lemongrove",
     area: 500,
-    is_pinned: true
+    is_pinned: false
   },
   {
     owner_id: 1,
@@ -27,7 +27,7 @@ export const plotData: Plot[] = [
     description: "An allotment",
     location: "Farmville",
     area: 50,
-    is_pinned: false
+    is_pinned: true
   },
   {
     owner_id: 1,
