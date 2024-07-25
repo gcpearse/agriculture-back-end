@@ -4,6 +4,7 @@ import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
 import { toBeOneOf } from 'jest-extended'
+import { ExtendedSubdivision } from "../types/subdivision-types"
 expect.extend({ toBeOneOf })
 
 
@@ -32,14 +33,20 @@ afterAll(async () => {
 
 describe("GET /api/subdivisions/plot/:plot_id", () => {
 
-  test("GET:200 Responds with an array of subdivision objects", async () => {
+  test("GET:200 Responds with an array of subdivision objects sorted by subdivision_id in descending order", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/plot/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.subdivisions).toHaveLength(3)
+    const sortedSubdivisions = [...body.subdivisions].sort((a: ExtendedSubdivision, b: ExtendedSubdivision) => {
+      if (a.subdivision_id! < b.subdivision_id!) return 1
+      if (a.subdivision_id! > b.subdivision_id!) return -1
+      return 0
+    })
+
+    expect(body.subdivisions).toEqual(sortedSubdivisions)
 
     for (const subdivision of body.subdivisions) {
       expect(subdivision).toMatchObject({
@@ -48,9 +55,15 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
         name: expect.any(String),
         type: expect.any(String),
         description: expect.any(String),
-        area: expect.toBeOneOf([expect.any(Number), null])
+        area: expect.toBeOneOf([expect.any(Number), null]),
+        image_count: expect.any(Number),
+        crop_count: expect.any(Number),
+        issue_count: expect.any(Number),
+        job_count: expect.any(Number)
       })
     }
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:200 Responds with an empty array when no subdivisions are associated with the plot_id", async () => {
@@ -63,6 +76,8 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
     expect(Array.isArray(body.subdivisions)).toBe(true)
 
     expect(body.subdivisions).toHaveLength(0)
+
+    expect(body.count).toBe(0)
   })
 
   test("GET:400 Responds with an error message when the plot_id is not a positive integer", async () => {
@@ -156,6 +171,8 @@ describe("GET /api/subdivisions/plot/:plot_id?type=", () => {
     for (const subdivision of body.subdivisions) {
       expect(subdivision.type).toBe("bed")
     }
+
+    expect(body.count).toBe(2)
   })
 
   test("GET:404 Responds with an error message when the query value is invalid", async () => {
@@ -168,6 +185,235 @@ describe("GET /api/subdivisions/plot/:plot_id?type=", () => {
     expect(body).toMatchObject({
       message: "Not Found",
       details: "No results found for that query"
+    })
+  })
+})
+
+
+describe("GET /api/subdivisions/plot/:plot_id?name=", () => {
+
+  test("GET:200 Responds with an array of subdivision objects filtered by name", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?name=bed")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    for (const subdivision of body.subdivisions) {
+      expect(subdivision.name).toMatch(/bed/i)
+    }
+
+    expect(body.count).toBe(2)
+  })
+
+  test("GET:200 Filtered results are case-insensitive", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?name=BED")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    for (const subdivision of body.subdivisions) {
+      expect(subdivision.name).toMatch(/bed/i)
+    }
+
+    expect(body.count).toBe(2)
+  })
+
+  test("GET:200 Returns an empty array when the value of name matches no results", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?name=example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(Array.isArray(body.subdivisions)).toBe(true)
+
+    expect(body.subdivisions).toHaveLength(0)
+
+    expect(body.count).toBe(0)
+  })
+})
+
+
+describe("GET /api/subdivisions/plot/:plot_id?type=&name=", () => {
+
+  test("GET:200 Responds with an array of subdivision objects filtered by type and name", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?type=bed&name=onion")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    for (const subdivision of body.subdivisions) {
+      expect(subdivision.type).toBe("bed")
+      expect(subdivision.name).toMatch(/onion/i)
+    }
+
+    expect(body.count).toBe(1)
+  })
+})
+
+
+describe("GET /api/subdivisions/plot/:plot_id?sort=", () => {
+
+  test("GET:200 Responds with an array of subdivision objects sorted by name in ascending order", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?sort=name")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    const sortedSubdivisions = [...body.subdivisions].sort((a: ExtendedSubdivision, b: ExtendedSubdivision) => {
+      if (a.name! > b.name!) return 1
+      if (a.name! < b.name!) return -1
+      return 0
+    })
+
+    expect(body.subdivisions).toEqual(sortedSubdivisions)
+
+    expect(body.count).toBe(3)
+  })
+
+  test("GET:404 Responds with an error when passed an invalid sort value", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?sort=example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  })
+})
+
+
+describe("GET /api/subdivisions/plot/:plot_id?order=", () => {
+
+  test("GET:404 Responds with an error when passed an invalid order value", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?order=example")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  })
+})
+
+
+describe("GET /api/subdivisions/plot/:plot_id?limit=", () => {
+
+  test("GET:200 Responds with a limited array of subdivision objects associated with the plot", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?limit=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.subdivisions).toHaveLength(2)
+
+    expect(body.count).toBe(3)
+  })
+
+  test("GET:200 Responds with an array of all subdivisions associated with the plot when the limit exceeds the total number of results", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?limit=20")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.subdivisions).toHaveLength(3)
+
+    expect(body.count).toBe(3)
+  })
+
+  test("GET:400 Responds with an error message when the value of limit is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?limit=two")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+})
+
+
+describe("GET /api/subdivisions/plot/:plot_id?page=", () => {
+
+  test("GET:200 Responds with an array of subdivisions objects associated with the plot beginning from the page set in the query parameter", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?limit=2&page=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.subdivisions.map((subdivision: ExtendedSubdivision) => {
+      return subdivision.subdivision_id
+    })).toEqual([1])
+
+    expect(body.count).toBe(3)
+  })
+
+  test("GET:200 The page defaults to page one", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?limit=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.subdivisions.map((subdivision: ExtendedSubdivision) => {
+      return subdivision.subdivision_id
+    })).toEqual([3, 2])
+
+    expect(body.count).toBe(3)
+  })
+
+  test("GET:400 Responds with an error when the value of page is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?limit=2&page=two")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
+  test("GET:404 Responds with an error when the page cannot be found", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?limit=2&page=3")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Page not found"
+    })
+  })
+
+  test("GET:404 Responds with an error when the page cannot be found (multiple queries affecting total query result rows)", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?type=bed&name=onion&limit=1&page=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Page not found"
     })
   })
 })

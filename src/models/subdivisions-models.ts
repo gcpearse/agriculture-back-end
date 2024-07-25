@@ -1,28 +1,37 @@
 import QueryString from "qs"
 import { db } from "../db"
 import { checkSubdivisionNameConflict, getPlotOwnerId, getSubdivisionPlotId, validateSubdivisionType } from "../utils/db-queries"
-import { verifyPermission, verifyParamIsPositiveInt } from "../utils/verification"
-import { Subdivision, SubdivisionRequest } from "../types/subdivision-types"
+import { verifyPermission, verifyParamIsPositiveInt, verifyQueryValue, verifyPagination } from "../utils/verification"
+import { ExtendedSubdivision, Subdivision, SubdivisionRequest } from "../types/subdivision-types"
 import format from "pg-format"
 
 
 export const selectSubdivisionsByPlotId = async (
   authUserId: number,
   plot_id: number,
-  { type }: QueryString.ParsedQs
-): Promise<Subdivision[]> => {
+  {
+    name,
+    type,
+    sort = "subdivision_id",
+    order = "desc",
+    limit = "10",
+    page = "1"
+  }: QueryString.ParsedQs
+): Promise<[ExtendedSubdivision[], number]> => {
 
   await verifyParamIsPositiveInt(plot_id)
+
+  await verifyParamIsPositiveInt(+limit)
+
+  await verifyParamIsPositiveInt(+page)
 
   const owner_id = await getPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to view plot subdivision data denied")
 
-  let query = `
-  SELECT * 
-  FROM subdivisions
-  WHERE plot_id = $1
-  `
+  await verifyQueryValue(["subdivision_id", "name"], sort as string)
+
+  await verifyQueryValue(["asc", "desc"], order as string)
 
   const isValidSubdivisionType = await validateSubdivisionType(type as string)
 
@@ -34,15 +43,74 @@ export const selectSubdivisionsByPlotId = async (
     })
   }
 
+  let query = `
+  SELECT
+    subdivisions.*,
+    COUNT(DISTINCT subdivision_images.image_id)::INT
+    AS image_count,
+    COUNT(DISTINCT crops.crop_id)::INT
+    AS crop_count,
+    COUNT(DISTINCT issues.issue_id)::INT
+    AS issue_count,
+    COUNT(DISTINCT jobs.job_id)::INT
+    AS job_count
+  FROM subdivisions
+  LEFT JOIN subdivision_images
+  ON subdivisions.subdivision_id = subdivision_images.subdivision_id
+  LEFT JOIN crops
+  ON subdivisions.subdivision_id = crops.subdivision_id
+  LEFT JOIN issues
+  ON subdivisions.subdivision_id = issues.subdivision_id
+  LEFT JOIN jobs
+  ON subdivisions.subdivision_id = jobs.subdivision_id
+  WHERE subdivisions.plot_id = $1
+  `
+
+  let countQuery = `
+  SELECT COUNT(subdivision_id)::INT
+  FROM subdivisions
+  WHERE plot_id = $1
+  `
+
+  if (name) {
+    query += format(`
+      AND subdivisions.name ILIKE %L
+      `, `%${name}%`)
+    countQuery += format(`
+      AND subdivisions.name ILIKE %L
+      `, `%${name}%`)
+  }
+
   if (type) {
     query += format(`
-      AND type = %L
+      AND subdivisions.type = %L
+      `, type)
+    countQuery += format(`
+      AND subdivisions.type = %L
       `, type)
   }
 
+  query += `
+  GROUP BY subdivisions.subdivision_id
+  `
+
+  if (sort === "name") {
+    order = "asc"
+  }
+
+  query += `
+  ORDER BY ${sort} ${order}, subdivisions.name
+  LIMIT ${limit}
+  OFFSET ${(+page - 1) * +limit}
+  `
+
   const result = await db.query(`${query};`, [plot_id])
 
-  return result.rows
+  await verifyPagination(+page, result.rows.length)
+
+  const countResult = await db.query(`${countQuery};`, [plot_id])
+
+  return Promise.all([result.rows, countResult.rows[0].count])
 }
 
 

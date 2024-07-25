@@ -41,3 +41,18 @@ export const verifyPermission = (
     })
   }
 }
+
+
+export const verifyQueryValue = (
+  validValues: string[],
+  queryValue: string
+): Promise<never> | undefined => {
+
+  if (!validValues.includes(queryValue)) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  }
+}

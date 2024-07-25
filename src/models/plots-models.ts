@@ -3,7 +3,7 @@ import { db } from "../db"
 import format from "pg-format"
 import { ExtendedPlot, Plot, PlotRequest } from "../types/plot-types"
 import { checkPlotNameConflict, getPlotOwnerId, searchForUserId, validatePlotType } from "../utils/db-queries"
-import { verifyPermission, verifyParamIsPositiveInt, verifyPagination } from "../utils/verification"
+import { verifyPermission, verifyParamIsPositiveInt, verifyPagination, verifyQueryValue } from "../utils/verification"
 
 
 export const selectPlotsByOwner = async (
@@ -29,12 +29,13 @@ export const selectPlotsByOwner = async (
 
   await verifyPermission(authUserId, owner_id, "Permission to view plot data denied")
 
-  const validValues = {
-    sort: ["plot_id", "name"],
-    order: ["asc", "desc"]
-  }
+  await verifyQueryValue(["plot_id", "name"], sort as string)
 
-  if (!validValues.sort.includes(sort as string) || !validValues.order.includes(order as string)) {
+  await verifyQueryValue(["asc", "desc"], order as string)
+
+  const isValidPlotType = await validatePlotType(type as string)
+
+  if (type && !isValidPlotType) {
     return Promise.reject({
       status: 404,
       message: "Not Found",
@@ -84,16 +85,6 @@ export const selectPlotsByOwner = async (
       `, `%${name}%`)
   }
 
-  const isValidPlotType = await validatePlotType(type as string)
-
-  if (type && !isValidPlotType) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "No results found for that query"
-    })
-  }
-
   if (type) {
     query += format(`
       AND plots.type = %L
@@ -112,7 +103,7 @@ export const selectPlotsByOwner = async (
   }
 
   query += `
-  ORDER BY ${sort} ${order}, name
+  ORDER BY ${sort} ${order}, plots.name
   LIMIT ${limit}
   OFFSET ${(+page - 1) * +limit}
   `

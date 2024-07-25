@@ -4,7 +4,7 @@ import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
 import { toBeOneOf } from 'jest-extended'
-import { Plot } from "../types/plot-types"
+import { ExtendedPlot } from "../types/plot-types"
 expect.extend({ toBeOneOf })
 
 
@@ -40,7 +40,7 @@ describe("GET /api/plots/user/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedPlots = [...body.plots].sort((a: Plot, b: Plot) => {
+    const sortedPlots = [...body.plots].sort((a: ExtendedPlot, b: ExtendedPlot) => {
       if (a.plot_id! < b.plot_id!) return 1
       if (a.plot_id! > b.plot_id!) return -1
       return 0
@@ -257,7 +257,7 @@ describe("GET /api/plots/user/:owner_id?sort=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedPlots = [...body.plots].sort((a: Plot, b: Plot) => {
+    const sortedPlots = [...body.plots].sort((a: ExtendedPlot, b: ExtendedPlot) => {
       if (a.name! > b.name!) return 1
       if (a.name! < b.name!) return -1
       return 0
@@ -343,14 +343,14 @@ describe("GET /api/plots/user/:owner_id?limit=", () => {
 
 describe("GET /api/plots/user/:owner_id?page=", () => {
 
-  test("GET:200 Responds with an array of plot objects associated with the plot beginning from the page set in the query parameter", async () => {
+  test("GET:200 Responds with an array of plot objects associated with the owner beginning from the page set in the query parameter", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/user/1?limit=2&page=2")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.plots.map((crop: Plot) => {
+    expect(body.plots.map((crop: ExtendedPlot) => {
       return crop.plot_id
     })).toEqual([1])
 
@@ -364,7 +364,7 @@ describe("GET /api/plots/user/:owner_id?page=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.plots.map((crop: Plot) => {
+    expect(body.plots.map((crop: ExtendedPlot) => {
       return crop.plot_id
     })).toEqual([4, 3])
 

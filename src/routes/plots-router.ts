@@ -36,7 +36,7 @@ plotsRouter.route("/plots/user/:owner_id")
  *        name: sort
  *        schema:
  *          type: string
- *        default: crop_id
+ *        default: plot_id
  *      - in: query
  *        name: order
  *        schema:

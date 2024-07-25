@@ -2,7 +2,7 @@ import QueryString from "qs"
 import { db } from "../db"
 import { Crop, CropRequest, ExtendedCrop } from "../types/crop-types"
 import { getPlotOwnerId, getSubdivisionPlotId } from "../utils/db-queries"
-import { verifyPagination, verifyParamIsPositiveInt, verifyPermission } from "../utils/verification"
+import { verifyPagination, verifyParamIsPositiveInt, verifyPermission, verifyQueryValue } from "../utils/verification"
 import format from "pg-format"
 
 
@@ -28,18 +28,9 @@ export const selectCropsByPlotId = async (
 
   await verifyPermission(authUserId, owner_id, "Permission to view crop data denied")
 
-  const validValues = {
-    sort: ["crop_id", "name", "date_planted", "harvest_date"],
-    order: ["asc", "desc"]
-  }
+  await verifyQueryValue(["crop_id", "name", "date_planted", "harvest_date"], sort as string)
 
-  if (!validValues.sort.includes(sort as string) || !validValues.order.includes(order as string)) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "No results found for that query"
-    })
-  }
+  await verifyQueryValue(["asc", "desc"], order as string)
 
   let query = `
   SELECT
@@ -89,7 +80,7 @@ export const selectCropsByPlotId = async (
   }
 
   query += `
-  ORDER BY ${sort} ${order}, name
+  ORDER BY ${sort} ${order}, crops.name
   LIMIT ${limit}
   OFFSET ${(+page - 1) * +limit}
   `
@@ -154,18 +145,9 @@ export const selectCropsBySubdivisionId = async (
 
   await verifyPermission(authUserId, owner_id, "Permission to view crop data denied")
 
-  const validValues = {
-    sort: ["crop_id", "name", "date_planted", "harvest_date"],
-    order: ["asc", "desc"]
-  }
+  await verifyQueryValue(["crop_id", "name", "date_planted", "harvest_date"], sort as string)
 
-  if (!validValues.sort.includes(sort as string) || !validValues.order.includes(order as string)) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "No results found for that query"
-    })
-  }
+  await verifyQueryValue(["asc", "desc"], order as string)
 
   let query = `
   SELECT
@@ -211,7 +193,7 @@ export const selectCropsBySubdivisionId = async (
   }
 
   query += `
-  ORDER BY ${sort} ${order}, name
+  ORDER BY ${sort} ${order}, crops.name
   LIMIT ${limit}
   OFFSET ${(+page - 1) * +limit}
   `
