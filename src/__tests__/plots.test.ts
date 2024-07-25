@@ -343,7 +343,7 @@ describe("GET /api/plots/user/:owner_id?limit=", () => {
 
 describe("GET /api/plots/user/:owner_id?page=", () => {
 
-  test("GET:200 Responds with an array of plot objects associated with the plot beginning from the page set in the query parameter", async () => {
+  test("GET:200 Responds with an array of plot objects associated with the owner beginning from the page set in the query parameter", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/user/1?limit=2&page=2")
