@@ -58,6 +58,8 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
         area: expect.toBeOneOf([expect.any(Number), null])
       })
     }
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:200 Responds with an empty array when no subdivisions are associated with the plot_id", async () => {
@@ -70,6 +72,8 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
     expect(Array.isArray(body.subdivisions)).toBe(true)
 
     expect(body.subdivisions).toHaveLength(0)
+
+    expect(body.count).toBe(0)
   })
 
   test("GET:400 Responds with an error message when the plot_id is not a positive integer", async () => {
@@ -163,6 +167,8 @@ describe("GET /api/subdivisions/plot/:plot_id?type=", () => {
     for (const subdivision of body.subdivisions) {
       expect(subdivision.type).toBe("bed")
     }
+
+    expect(body.count).toBe(2)
   })
 
   test("GET:404 Responds with an error message when the query value is invalid", async () => {
@@ -192,6 +198,8 @@ describe("GET /api/subdivisions/plot/:plot_id?name=", () => {
     for (const subdivision of body.subdivisions) {
       expect(subdivision.name).toMatch(/bed/i)
     }
+
+    expect(body.count).toBe(2)
   })
 
   test("GET:200 Filtered results are case-insensitive", async () => {
@@ -204,6 +212,8 @@ describe("GET /api/subdivisions/plot/:plot_id?name=", () => {
     for (const subdivision of body.subdivisions) {
       expect(subdivision.name).toMatch(/bed/i)
     }
+
+    expect(body.count).toBe(2)
   })
 
   test("GET:200 Returns an empty array when the value of name matches no results", async () => {
@@ -216,6 +226,8 @@ describe("GET /api/subdivisions/plot/:plot_id?name=", () => {
     expect(Array.isArray(body.subdivisions)).toBe(true)
 
     expect(body.subdivisions).toHaveLength(0)
+
+    expect(body.count).toBe(0)
   })
 })
 
@@ -233,6 +245,8 @@ describe("GET /api/subdivisions/plot/:plot_id?type=&name=", () => {
       expect(subdivision.type).toBe("bed")
       expect(subdivision.name).toMatch(/onion/i)
     }
+
+    expect(body.count).toBe(1)
   })
 })
 
@@ -253,6 +267,8 @@ describe("GET /api/subdivisions/plot/:plot_id?sort=", () => {
     })
 
     expect(body.subdivisions).toEqual(sortedSubdivisions)
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:404 Responds with an error when passed an invalid sort value", async () => {
@@ -297,6 +313,8 @@ describe("GET /api/subdivisions/plot/:plot_id?limit=", () => {
       .expect(200)
 
     expect(body.subdivisions).toHaveLength(2)
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:200 Responds with an array of all subdivisions associated with the plot when the limit exceeds the total number of results", async () => {
@@ -307,6 +325,8 @@ describe("GET /api/subdivisions/plot/:plot_id?limit=", () => {
       .expect(200)
 
     expect(body.subdivisions).toHaveLength(3)
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:400 Responds with an error message when the value of limit is not a positive integer", async () => {
@@ -336,6 +356,8 @@ describe("GET /api/subdivisions/plot/:plot_id?page=", () => {
     expect(body.subdivisions.map((subdivision: Subdivision) => {
       return subdivision.subdivision_id
     })).toEqual([1])
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:200 The page defaults to page one", async () => {
@@ -348,6 +370,8 @@ describe("GET /api/subdivisions/plot/:plot_id?page=", () => {
     expect(body.subdivisions.map((subdivision: Subdivision) => {
       return subdivision.subdivision_id
     })).toEqual([3, 2])
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:400 Responds with an error when the value of page is not a positive integer", async () => {
