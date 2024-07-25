@@ -193,7 +193,25 @@ plotsRouter.route("/plots/:plot_id")
  *              type: object
  *              properties:
  *                plot:
- *                  $ref: "#/components/schemas/Plot"
+ *                  allOf:
+ *                    - $ref: "#/components/schemas/Plot"
+ *                    - type: object
+ *                      properties:
+ *                        image_count:
+ *                          type: integer
+ *                          example: 1
+ *                        subdivision_count:
+ *                          type: integer
+ *                          example: 2
+ *                        crop_count:
+ *                          type: integer
+ *                          example: 5
+ *                        issue_count:
+ *                          type: integer
+ *                          example: 3
+ *                        job_count:
+ *                          type: integer
+ *                          example: 0
  *      400:
  *        description: Bad Request
  *        content:
