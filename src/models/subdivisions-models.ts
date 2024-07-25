@@ -13,11 +13,14 @@ export const selectSubdivisionsByPlotId = async (
     name,
     type,
     sort = "subdivision_id",
-    order = "desc"
+    order = "desc",
+    limit = "10"
   }: QueryString.ParsedQs
 ): Promise<Subdivision[]> => {
 
   await verifyParamIsPositiveInt(plot_id)
+
+  await verifyParamIsPositiveInt(+limit)
 
   const owner_id = await getPlotOwnerId(plot_id)
 
@@ -61,6 +64,7 @@ export const selectSubdivisionsByPlotId = async (
 
   query += `
   ORDER BY ${sort} ${order}, subdivisions.name
+  LIMIT ${limit}
   `
 
   const result = await db.query(`${query};`, [plot_id])
