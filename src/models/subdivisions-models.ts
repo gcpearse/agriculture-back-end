@@ -17,7 +17,7 @@ export const selectSubdivisionsByPlotId = async (
     limit = "10",
     page = "1"
   }: QueryString.ParsedQs
-): Promise<Subdivision[]> => {
+): Promise<[Subdivision[], number]> => {
 
   await verifyParamIsPositiveInt(plot_id)
 
@@ -49,15 +49,27 @@ export const selectSubdivisionsByPlotId = async (
   WHERE plot_id = $1
   `
 
+  let countQuery = `
+  SELECT COUNT(subdivision_id)::INT
+  FROM subdivisions
+  WHERE plot_id = $1
+  `
+
   if (name) {
     query += format(`
+      AND subdivisions.name ILIKE %L
+      `, `%${name}%`)
+    countQuery += format(`
       AND subdivisions.name ILIKE %L
       `, `%${name}%`)
   }
 
   if (type) {
     query += format(`
-      AND type = %L
+      AND subdivisions.type = %L
+      `, type)
+    countQuery += format(`
+      AND subdivisions.type = %L
       `, type)
   }
 
@@ -75,7 +87,9 @@ export const selectSubdivisionsByPlotId = async (
 
   await verifyPagination(+page, result.rows.length)
 
-  return result.rows
+  const countResult = await db.query(`${countQuery};`, [plot_id])
+
+  return Promise.all([result.rows, countResult.rows[0].count])
 }
 
 
