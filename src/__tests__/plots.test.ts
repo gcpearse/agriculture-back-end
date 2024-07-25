@@ -1158,7 +1158,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error when the value of toggle is not true (boolean data type)", async () => {
+  test("PATCH:400 Responds with an error when the value of bool is not true (boolean data type)", async () => {
 
     const toggles = [
       { bool: false },
