@@ -112,7 +112,7 @@ export const selectPlotsByOwner = async (
   }
 
   query += `
-  ORDER BY ${sort} ${order}, name
+  ORDER BY ${sort} ${order}, plots.name
   LIMIT ${limit}
   OFFSET ${(+page - 1) * +limit}
   `

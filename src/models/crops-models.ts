@@ -89,7 +89,7 @@ export const selectCropsByPlotId = async (
   }
 
   query += `
-  ORDER BY ${sort} ${order}, name
+  ORDER BY ${sort} ${order}, crops.name
   LIMIT ${limit}
   OFFSET ${(+page - 1) * +limit}
   `
@@ -211,7 +211,7 @@ export const selectCropsBySubdivisionId = async (
   }
 
   query += `
-  ORDER BY ${sort} ${order}, name
+  ORDER BY ${sort} ${order}, crops.name
   LIMIT ${limit}
   OFFSET ${(+page - 1) * +limit}
   `
