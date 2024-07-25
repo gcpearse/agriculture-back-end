@@ -9,7 +9,12 @@ import format from "pg-format"
 export const selectSubdivisionsByPlotId = async (
   authUserId: number,
   plot_id: number,
-  { type }: QueryString.ParsedQs
+  {
+    name,
+    type,
+    sort = "subdivision_id",
+    order = "desc"
+  }: QueryString.ParsedQs
 ): Promise<Subdivision[]> => {
 
   await verifyParamIsPositiveInt(plot_id)
@@ -18,11 +23,18 @@ export const selectSubdivisionsByPlotId = async (
 
   await verifyPermission(authUserId, owner_id, "Permission to view plot subdivision data denied")
 
-  let query = `
-  SELECT * 
-  FROM subdivisions
-  WHERE plot_id = $1
-  `
+  const validValues = {
+    sort: ["subdivision_id", "name"],
+    order: ["asc", "desc"]
+  }
+
+  if (!validValues.sort.includes(sort as string) || !validValues.order.includes(order as string)) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  }
 
   const isValidSubdivisionType = await validateSubdivisionType(type as string)
 
@@ -34,11 +46,31 @@ export const selectSubdivisionsByPlotId = async (
     })
   }
 
+  let query = `
+  SELECT * 
+  FROM subdivisions
+  WHERE plot_id = $1
+  `
+
+  if (name) {
+    query += format(`
+      AND subdivisions.name ILIKE %L
+      `, `%${name}%`)
+  }
+
   if (type) {
     query += format(`
       AND type = %L
       `, type)
   }
+
+  if (sort === "name") {
+    order = "asc"
+  }
+
+  query += `
+  ORDER BY ${sort} ${order}, subdivisions.name
+  `
 
   const result = await db.query(`${query};`, [plot_id])
 
