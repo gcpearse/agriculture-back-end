@@ -86,15 +86,16 @@ The `test.yaml` YAML file in `.github/workflows` requires a repository secret to
 
 A repository secret can be added by following these steps:
 
-On GitHub, select the repository and go to **Settings**.
+- On GitHub, select the repository and go to **Settings**.
 
-Under **Security**, select **Secrets and variables** and then **Actions**.
+- Under **Security**, select **Secrets and variables** and then **Actions**.
 
-Under **Repository secrets**, select **New repository secret**.
+- Under **Repository secrets**, select **New repository secret**.
 
-In the **Name** field, enter `JWT_SECRET`.
+- In the **Name** field, enter `JWT_SECRET`.
 
-In the **Secret** field, enter a JWT secret key.
+- In the **Secret** field, enter a JWT secret key.
+
 > See the previous section for JavaScript code to generate a random string.
 
 ## Scripts
