@@ -156,6 +156,30 @@ export const insertPlotByOwner = async (
 }
 
 
+export const selectPinnedPlotsByOwner = async (
+  authUserId: number,
+  owner_id: number,
+): Promise<Plot[]> => {
+
+  await verifyParamIsPositiveInt(owner_id)
+
+  await searchForUserId(owner_id)
+
+  await verifyPermission(authUserId, owner_id, "Permission to view pinned plot data denied")
+
+  const result = await db.query(`
+    SELECT *
+    FROM plots
+    WHERE owner_id = $1
+    AND is_pinned IS TRUE
+    ORDER BY name ASC;
+    `,
+    [owner_id])
+
+  return result.rows
+}
+
+
 export const selectPlotByPlotId = async (
   authUserId: number,
   plot_id: number
