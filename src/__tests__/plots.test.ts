@@ -5,6 +5,7 @@ import request from "supertest"
 import { app } from "../app"
 import { toBeOneOf } from 'jest-extended'
 import { ExtendedPlot, Plot } from "../types/plot-types"
+import { StatusResponse } from "../types/response-types"
 expect.extend({ toBeOneOf })
 
 
@@ -49,7 +50,7 @@ describe("GET /api/plots/user/:owner_id", () => {
     expect(body.plots).toEqual(sortedPlots)
 
     for (const plot of body.plots) {
-      expect(plot).toMatchObject({
+      expect(plot).toMatchObject<ExtendedPlot>({
         plot_id: expect.any(Number),
         owner_id: 1,
         name: expect.any(String),
@@ -99,7 +100,7 @@ describe("GET /api/plots/user/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -112,7 +113,7 @@ describe("GET /api/plots/user/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to view plot data denied"
     })
@@ -125,7 +126,7 @@ describe("GET /api/plots/user/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "User not found"
     })
@@ -143,7 +144,7 @@ describe("GET /api/plots/user/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "User not found"
     })
@@ -176,7 +177,7 @@ describe("GET /api/plots/user/:owner_id?type=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "No results found for that query"
     })
@@ -276,7 +277,7 @@ describe("GET /api/plots/user/:owner_id?sort=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "No results found for that query"
     })
@@ -293,7 +294,7 @@ describe("GET /api/plots/user/:owner_id?order=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "No results found for that query"
     })
@@ -334,7 +335,7 @@ describe("GET /api/plots/user/:owner_id?limit=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -379,7 +380,7 @@ describe("GET /api/plots/user/:owner_id?page=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -392,7 +393,7 @@ describe("GET /api/plots/user/:owner_id?page=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Page not found"
     })
@@ -405,7 +406,7 @@ describe("GET /api/plots/user/:owner_id?page=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Page not found"
     })
@@ -431,7 +432,7 @@ describe("POST /api/plots/user/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
 
-    expect(body.plot).toMatchObject({
+    expect(body.plot).toMatchObject<Plot>({
       plot_id: 5,
       owner_id: 1,
       name: "John's Field",
@@ -497,7 +498,7 @@ describe("POST /api/plots/user/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid text representation"
     })
@@ -518,7 +519,7 @@ describe("POST /api/plots/user/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Not null violation"
     })
@@ -540,7 +541,7 @@ describe("POST /api/plots/user/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid plot type"
     })
@@ -562,7 +563,7 @@ describe("POST /api/plots/user/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -584,7 +585,7 @@ describe("POST /api/plots/user/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to create plot denied"
     })
@@ -606,7 +607,7 @@ describe("POST /api/plots/user/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "User not found"
     })
@@ -628,7 +629,7 @@ describe("POST /api/plots/user/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(409)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Conflict",
       details: "Plot name already exists"
     })
@@ -654,7 +655,7 @@ describe("GET /api/plots/user/:owner_id/pinned", () => {
     expect(body.plots).toEqual(sortedPlots)
 
     for (const plot of body.plots) {
-      expect(plot).toMatchObject({
+      expect(plot).toMatchObject<Plot>({
         plot_id: expect.any(Number),
         owner_id: 1,
         name: expect.any(String),
@@ -695,7 +696,7 @@ describe("GET /api/plots/user/:owner_id/pinned", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -708,7 +709,7 @@ describe("GET /api/plots/user/:owner_id/pinned", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to view pinned plot data denied"
     })
@@ -721,7 +722,7 @@ describe("GET /api/plots/user/:owner_id/pinned", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "User not found"
     })
@@ -738,7 +739,7 @@ describe("GET /api/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.plot).toMatchObject({
+    expect(body.plot).toMatchObject<ExtendedPlot>({
       plot_id: 1,
       owner_id: 1,
       name: "John's Garden",
@@ -762,7 +763,7 @@ describe("GET /api/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -775,7 +776,7 @@ describe("GET /api/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to view plot data denied"
     })
@@ -788,7 +789,7 @@ describe("GET /api/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Plot not found"
     })
@@ -814,7 +815,7 @@ describe("PATCH /api/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.plot).toMatchObject({
+    expect(body.plot).toMatchObject<Plot>({
       plot_id: 1,
       owner_id: 1,
       name: "John's Homestead",
@@ -842,7 +843,7 @@ describe("PATCH /api/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.plot).toMatchObject({
+    expect(body.plot).toMatchObject<Plot>({
       plot_id: 1,
       owner_id: 1,
       name: "John's Garden",
@@ -869,7 +870,7 @@ describe("PATCH /api/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Not null violation"
     })
@@ -891,7 +892,7 @@ describe("PATCH /api/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid text representation"
     })
@@ -913,7 +914,7 @@ describe("PATCH /api/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid plot type"
     })
@@ -935,7 +936,7 @@ describe("PATCH /api/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -957,7 +958,7 @@ describe("PATCH /api/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to edit plot data denied"
     })
@@ -979,7 +980,7 @@ describe("PATCH /api/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Plot not found"
     })
@@ -1001,7 +1002,7 @@ describe("PATCH /api/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(409)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Conflict",
       details: "Plot name already exists"
     })
@@ -1023,7 +1024,7 @@ describe("DELETE /api/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Plot not found"
     })
@@ -1036,7 +1037,7 @@ describe("DELETE /api/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -1049,7 +1050,7 @@ describe("DELETE /api/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to delete plot data denied"
     })
@@ -1062,7 +1063,7 @@ describe("DELETE /api/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Plot not found"
     })
@@ -1082,7 +1083,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "OK",
       details: "Plot pinned successfully"
     })
@@ -1098,7 +1099,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "OK",
       details: "Plot unpinned successfully"
     })
@@ -1152,7 +1153,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Pin limit reached"
     })
@@ -1174,7 +1175,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
         .set("Authorization", `Bearer ${token}`)
         .expect(400)
 
-      expect(body).toMatchObject({
+      expect(body).toMatchObject<StatusResponse>({
         message: "Bad Request",
         details: "Invalid boolean value"
       })
@@ -1191,7 +1192,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -1207,7 +1208,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to edit pinned plot data denied"
     })
@@ -1223,7 +1224,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Plot not found"
     })

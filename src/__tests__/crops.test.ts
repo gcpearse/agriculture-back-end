@@ -3,8 +3,9 @@ import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
-import { ExtendedCrop } from "../types/crop-types"
+import { Crop, ExtendedCrop } from "../types/crop-types"
 import { toBeOneOf } from 'jest-extended'
+import { StatusResponse } from "../types/response-types"
 expect.extend({ toBeOneOf })
 
 
@@ -51,7 +52,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
     expect(body.crops).toEqual(sortedCrops)
 
     for (const crop of body.crops) {
-      expect(crop).toMatchObject({
+      expect(crop).toMatchObject<ExtendedCrop>({
         crop_id: expect.any(Number),
         plot_id: 1,
         subdivision_id: expect.toBeOneOf([expect.any(Number), null]),
@@ -90,7 +91,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -103,7 +104,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to view crop data denied"
     })
@@ -116,7 +117,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Plot not found"
     })
@@ -134,7 +135,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Plot not found"
     })
@@ -152,7 +153,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Plot not found"
     })
@@ -256,7 +257,7 @@ describe("GET /api/crops/plot/:plot_id?sort=", () => {
       .expect(200)
 
     for (const crop of body.crops) {
-      expect(crop.date_planted).not.toBeNull()
+      expect(crop.harvest_date).not.toBeNull()
     }
 
     const sortedCrops = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
@@ -277,7 +278,7 @@ describe("GET /api/crops/plot/:plot_id?sort=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "No results found for that query"
     })
@@ -342,7 +343,7 @@ describe("GET /api/crops/plot/:plot_id?order=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "No results found for that query"
     })
@@ -383,7 +384,7 @@ describe("GET /api/crops/plot/:plot_id?limit=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -442,7 +443,7 @@ describe("GET /api/crops/plot/:plot_id?page=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -455,7 +456,7 @@ describe("GET /api/crops/plot/:plot_id?page=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Page not found"
     })
@@ -468,7 +469,7 @@ describe("GET /api/crops/plot/:plot_id?page=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Page not found"
     })
@@ -494,7 +495,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
 
-    expect(body.crop).toMatchObject({
+    expect(body.crop).toMatchObject<Crop>({
       crop_id: 7,
       plot_id: 1,
       subdivision_id: null,
@@ -518,7 +519,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
 
-    expect(body.crop).toMatchObject({
+    expect(body.crop).toMatchObject<Crop>({
       crop_id: 7,
       plot_id: 1,
       subdivision_id: null,
@@ -559,7 +560,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid text representation"
     })
@@ -575,7 +576,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Not null violation"
     })
@@ -593,7 +594,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -611,7 +612,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to add crop denied"
     })
@@ -629,7 +630,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Plot not found"
     })
@@ -655,7 +656,7 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
     expect(body.crops).toEqual(sortedCrops)
 
     for (const crop of body.crops) {
-      expect(crop).toMatchObject({
+      expect(crop).toMatchObject<ExtendedCrop>({
         crop_id: expect.any(Number),
         plot_id: 1,
         subdivision_id: expect.toBeOneOf([expect.any(Number), null]),
@@ -693,7 +694,7 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -706,7 +707,7 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to view crop data denied"
     })
@@ -719,7 +720,7 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Subdivision not found"
     })
@@ -737,7 +738,7 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Subdivision not found"
     })
@@ -862,7 +863,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?sort=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "No results found for that query"
     })
@@ -927,7 +928,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?order=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "No results found for that query"
     })
@@ -968,7 +969,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?limit=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -1013,7 +1014,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?page=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -1026,7 +1027,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?page=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Page not found"
     })
@@ -1039,7 +1040,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?page=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Page not found"
     })
@@ -1065,7 +1066,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
 
-    expect(body.crop).toMatchObject({
+    expect(body.crop).toMatchObject<Crop>({
       crop_id: 7,
       plot_id: 1,
       subdivision_id: 1,
@@ -1089,7 +1090,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
 
-    expect(body.crop).toMatchObject({
+    expect(body.crop).toMatchObject<Crop>({
       crop_id: 7,
       plot_id: 1,
       subdivision_id: 1,
@@ -1130,7 +1131,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid text representation"
     })
@@ -1146,7 +1147,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Not null violation"
     })
@@ -1164,7 +1165,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -1182,7 +1183,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to add crop denied"
     })
@@ -1200,7 +1201,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Subdivision not found"
     })
