@@ -179,7 +179,7 @@ export const selectCropsBySubdivisionId = async (
   `
 
   let countQuery = `
-  SELECT COUNT(crop_id)
+  SELECT COUNT(crop_id)::INT
   FROM crops
   WHERE subdivision_id = $1
   `
@@ -222,7 +222,7 @@ export const selectCropsBySubdivisionId = async (
 
   const countResult = await db.query(`${countQuery};`, [subdivision_id])
 
-  return Promise.all([result.rows, +countResult.rows[0].count])
+  return Promise.all([result.rows, countResult.rows[0].count])
 }
 
 
