@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express"
-import { insertPlotByOwner, removePlotByPlotId, selectPlotByPlotId, selectPlotsByOwner, updatePlotByPlotId } from "../models/plots-models"
+import { insertPlotByOwner, removePlotByPlotId, selectPinnedPlotsByOwner, selectPlotByPlotId, selectPlotsByOwner, updatePlotByPlotId } from "../models/plots-models"
 import { ExtendedRequest } from "../types/auth-types"
 
 
@@ -27,6 +27,21 @@ export const postPlotByOwner = async (req: ExtendedRequest, res: Response, next:
   try {
     const plot = await insertPlotByOwner(authUserId, +owner_id, req.body)
     res.status(201).send({ plot })
+  } catch (err) {
+    next(err)
+  }
+}
+
+
+export const getPinnedPlotsByOwner = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
+
+  const authUserId = req.user!.user_id
+
+  const { owner_id } = req.params
+
+  try {
+    const plots = await selectPinnedPlotsByOwner(authUserId, +owner_id)
+    res.status(200).send({ plots })
   } catch (err) {
     next(err)
   }
