@@ -13,6 +13,7 @@ export type Crop = {
 export type ExtendedCrop = {
   subdivision_name?: string
   note_count: number
+  image_count: number
 } & Crop
 
 
