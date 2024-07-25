@@ -1,7 +1,7 @@
 import QueryString from "qs"
 import { db } from "../db"
 import { checkSubdivisionNameConflict, getPlotOwnerId, getSubdivisionPlotId, validateSubdivisionType } from "../utils/db-queries"
-import { verifyPermission, verifyParamIsPositiveInt } from "../utils/verification"
+import { verifyPermission, verifyParamIsPositiveInt, verifyQueryValues } from "../utils/verification"
 import { Subdivision, SubdivisionRequest } from "../types/subdivision-types"
 import format from "pg-format"
 
@@ -23,18 +23,9 @@ export const selectSubdivisionsByPlotId = async (
 
   await verifyPermission(authUserId, owner_id, "Permission to view plot subdivision data denied")
 
-  const validValues = {
-    sort: ["subdivision_id", "name"],
-    order: ["asc", "desc"]
-  }
+  await verifyQueryValues(["subdivision_id", "name"], sort as string)
 
-  if (!validValues.sort.includes(sort as string) || !validValues.order.includes(order as string)) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "No results found for that query"
-    })
-  }
+  await verifyQueryValues(["asc", "desc"], order as string)
 
   const isValidSubdivisionType = await validateSubdivisionType(type as string)
 
