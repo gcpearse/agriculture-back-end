@@ -8,7 +8,8 @@ export const plotData: Plot[] = [
     type: "field",
     description: "The admin's field",
     location: "Example location",
-    area: 100
+    area: 100,
+    is_pinned: true
   },
   {
     owner_id: 1,
@@ -16,6 +17,7 @@ export const plotData: Plot[] = [
     type: "allotment",
     description: "The admin's allotment",
     location: "Example location",
-    area: null
+    area: null,
+    is_pinned: false
   }
 ]
