@@ -57,6 +57,7 @@ describe("GET /api/plots/user/:owner_id", () => {
         description: expect.any(String),
         location: expect.any(String),
         area: expect.toBeOneOf([expect.any(Number), null]),
+        is_pinned: expect.any(Boolean),
         image_count: expect.any(Number),
         subdivision_count: expect.any(Number),
         crop_count: expect.any(Number),
@@ -414,7 +415,7 @@ describe("GET /api/plots/user/:owner_id?page=", () => {
 
 describe("POST /api/plots/user/:owner_id", () => {
 
-  test("POST:201 Responds with a new plot object, assigning owner_id automatically", async () => {
+  test("POST:201 Responds with a new plot object, assigning owner_id and is_pinned automatically", async () => {
 
     const newPlot = {
       name: "John's Field",
@@ -437,11 +438,12 @@ describe("POST /api/plots/user/:owner_id", () => {
       type: "field",
       description: "A large field",
       location: "Wildwood",
-      area: 3000
+      area: 3000,
+      is_pinned: false
     })
   })
 
-  test("POST:201 Assigns a null value to 'area' when no value is provided", async () => {
+  test("POST:201 Assigns a null value to area when no value is provided", async () => {
 
     const newPlot = {
       name: "John's Field",
@@ -651,6 +653,7 @@ describe("GET /api/plots/:plot_id", () => {
       description: "A vegetable garden",
       location: "Farmville",
       area: 100,
+      is_pinned: true,
       image_count: 1,
       subdivision_count: 3,
       crop_count: 4,
@@ -725,7 +728,8 @@ describe("PATCH /api/plots/:plot_id", () => {
       type: "homestead",
       description: "A homestead",
       location: "Farmville",
-      area: 1200
+      area: 1200,
+      is_pinned: true
     })
   })
 
@@ -752,7 +756,8 @@ describe("PATCH /api/plots/:plot_id", () => {
       type: "garden",
       description: "A new description",
       location: "234, Apricot Avenue, Farmville",
-      area: 180
+      area: 180,
+      is_pinned: true
     })
   })
 
