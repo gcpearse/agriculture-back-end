@@ -9,6 +9,7 @@ export type Subdivision = {
 
 
 export type ExtendedSubdivision = {
+  plot_name?: string
   image_count: number
   crop_count: number
   issue_count: number

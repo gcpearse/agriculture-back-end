@@ -155,7 +155,7 @@ export const insertSubdivisionByPlotId = async (
 export const selectSubdivisionBySubdivisionId = async (
   authUserId: number,
   subdivision_id: number
-): Promise<Subdivision> => {
+): Promise<ExtendedSubdivision> => {
 
   await verifyParamIsPositiveInt(subdivision_id)
 
@@ -166,9 +166,31 @@ export const selectSubdivisionBySubdivisionId = async (
   await verifyPermission(authUserId, owner_id, "Permission to view subdivision data denied")
 
   const result = await db.query(`
-    SELECT * 
+    SELECT
+      subdivisions.*,
+      plots.name
+      AS plot_name,
+      COUNT(DISTINCT subdivision_images.image_id)::INT
+      AS image_count,
+      COUNT(DISTINCT crops.crop_id)::INT
+      AS crop_count,
+      COUNT(DISTINCT issues.issue_id)::INT
+      AS issue_count,
+      COUNT(DISTINCT jobs.job_id)::INT
+      AS job_count
     FROM subdivisions
-    WHERE subdivision_id = $1;
+    LEFT JOIN plots
+    ON subdivisions.plot_id = plots.plot_id
+    LEFT JOIN subdivision_images
+    ON subdivisions.subdivision_id = subdivision_images.subdivision_id
+    LEFT JOIN crops
+    ON subdivisions.subdivision_id = crops.subdivision_id
+    LEFT JOIN issues
+    ON subdivisions.subdivision_id = issues.subdivision_id
+    LEFT JOIN jobs
+    ON subdivisions.subdivision_id = jobs.subdivision_id
+    WHERE subdivisions.subdivision_id = $1
+    GROUP BY subdivisions.subdivision_id, plots.name;
     `,
     [subdivision_id])
 
