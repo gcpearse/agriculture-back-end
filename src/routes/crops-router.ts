@@ -69,6 +69,9 @@ cropsRouter.route("/crops/plot/:plot_id")
  *                          note_count:
  *                            type: integer
  *                            example: 1
+ *                          image_count:
+ *                            type: integer
+ *                            example: 1
  *                count:
  *                  type: integer
  *                  example: 1
@@ -205,6 +208,9 @@ cropsRouter.route("/crops/subdivision/:subdivision_id")
  *                      - type: object
  *                        properties:
  *                          note_count:
+ *                            type: integer
+ *                            example: 1
+ *                          image_count:
  *                            type: integer
  *                            example: 1
  *                count:
