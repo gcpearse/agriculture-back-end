@@ -42,6 +42,16 @@ export const selectPlotsByOwner = async (
     })
   }
 
+  const isValidPlotType = await validatePlotType(type as string)
+
+  if (type && !isValidPlotType) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  }
+
   let query = `
   SELECT
     plots.*,
@@ -82,16 +92,6 @@ export const selectPlotsByOwner = async (
     countQuery += format(`
       AND plots.name ILIKE %L
       `, `%${name}%`)
-  }
-
-  const isValidPlotType = await validatePlotType(type as string)
-
-  if (type && !isValidPlotType) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "No results found for that query"
-    })
   }
 
   if (type) {
