@@ -84,7 +84,7 @@ console.log(require("crypto").randomBytes(64).toString("hex"))
 
 The `test.yaml` YAML file in `.github/workflows` requires a repository secret to run the **Run tests** workflow.
 
-> A repository secret can be added by following these steps:
+A repository secret can be added by following these steps:
 
 On GitHub, select the repository and go to **Settings**.
 
