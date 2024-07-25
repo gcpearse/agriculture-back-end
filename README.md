@@ -60,13 +60,17 @@ Create the following `.env` files in the root directory:
 Add the following environment variables to `.env.test`:
 
 `PGDATABASE=` followed by the name of the test database.\
-`JWT_SECRET=` followed by a JWT secret key.
+`JWT_SECRET=` followed by a JWT secret key.\
+`SALT_ROUNDS=1`
+
+> For test runs, a single salt round is used to avoid throttling the testing process.
 
 Add the following environment variables to `.env.development`:
 
 `PGDATABASE=` followed by the name of the development database.\
 `JWT_SECRET=` followed by a JWT secret key.\
-`ADMIN_PASSWORD=` followed by an admin password.
+`ADMIN_PASSWORD=` followed by an admin password.\
+`SALT_ROUNDS=` followed by the desired number of salt rounds.
 
 > A random string can be generated to serve as a JWT secret key with the following JavaScript code:
 
@@ -74,9 +78,11 @@ Add the following environment variables to `.env.development`:
 console.log(require("crypto").randomBytes(64).toString("hex"))
 ```
 
+> A lower value can be passed to `randomBytes()` to generate a shorter string.
+
 ### Continuous integration workflow
 
-The `test.yml` YAML file in `.github/workflows` requires a repository secret to run the **Run tests** workflow.
+The `test.yaml` YAML file in `.github/workflows` requires a repository secret to run the **Run tests** workflow.
 
 > A repository secret can be added by following these steps:
 
