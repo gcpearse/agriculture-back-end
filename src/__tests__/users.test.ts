@@ -3,6 +3,8 @@ import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
+import { SecureUser, UnitSystem } from "../types/user-types"
+import { StatusResponse } from "../types/response-types"
 
 
 let token: string
@@ -37,13 +39,13 @@ describe("GET /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.user).toMatchObject({
+    expect(body.user).toMatchObject<SecureUser>({
       user_id: 1,
       username: "carrot_king",
       email: "john.smith@example.com",
       first_name: "John",
       surname: "Smith",
-      unit_preference: "imperial"
+      unit_preference: UnitSystem.Imperial
     })
   })
 
@@ -54,7 +56,7 @@ describe("GET /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to view user data denied"
     })
@@ -67,7 +69,7 @@ describe("GET /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "User not found"
     })
@@ -92,13 +94,13 @@ describe("PATCH /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.user).toMatchObject({
+    expect(body.user).toMatchObject<SecureUser>({
       user_id: 1,
       username: "carrot_king",
       email: "jsj@example.com",
       first_name: "Johnny",
       surname: "Smith-Jones",
-      unit_preference: "metric"
+      unit_preference: UnitSystem.Metric
     })
   })
 
@@ -116,7 +118,7 @@ describe("PATCH /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Not null violation"
     })
@@ -137,7 +139,7 @@ describe("PATCH /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid text representation"
     })
@@ -158,7 +160,7 @@ describe("PATCH /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to edit user data denied"
     })
@@ -179,7 +181,7 @@ describe("PATCH /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "User not found"
     })
@@ -200,7 +202,7 @@ describe("PATCH /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(409)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Conflict",
       details: "Email already exists"
     })
@@ -222,7 +224,7 @@ describe("DELETE /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "User not found"
     })
@@ -235,7 +237,7 @@ describe("DELETE /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to delete user data denied"
     })
@@ -248,7 +250,7 @@ describe("DELETE /api/users/:username", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "User not found"
     })
@@ -271,7 +273,7 @@ describe("PATCH /api/users/:username/password", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "OK",
       details: "Password changed successfully"
     })
@@ -290,7 +292,7 @@ describe("PATCH /api/users/:username/password", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(401)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Unauthorized",
       details: "Incorrect password"
     })
@@ -309,7 +311,7 @@ describe("PATCH /api/users/:username/password", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to edit password denied"
     })
@@ -328,7 +330,7 @@ describe("PATCH /api/users/:username/password", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "User not found"
     })

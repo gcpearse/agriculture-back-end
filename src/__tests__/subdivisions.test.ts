@@ -4,7 +4,8 @@ import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
 import { toBeOneOf } from 'jest-extended'
-import { ExtendedSubdivision } from "../types/subdivision-types"
+import { ExtendedSubdivision, Subdivision } from "../types/subdivision-types"
+import { StatusResponse } from "../types/response-types"
 expect.extend({ toBeOneOf })
 
 
@@ -49,7 +50,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
     expect(body.subdivisions).toEqual(sortedSubdivisions)
 
     for (const subdivision of body.subdivisions) {
-      expect(subdivision).toMatchObject({
+      expect(subdivision).toMatchObject<ExtendedSubdivision>({
         subdivision_id: expect.any(Number),
         plot_id: 1,
         name: expect.any(String),
@@ -87,7 +88,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -100,7 +101,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to view plot subdivision data denied"
     })
@@ -113,7 +114,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Plot not found"
     })
@@ -131,7 +132,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Plot not found"
     })
@@ -149,7 +150,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Plot not found"
     })
@@ -182,7 +183,7 @@ describe("GET /api/subdivisions/plot/:plot_id?type=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "No results found for that query"
     })
@@ -282,7 +283,7 @@ describe("GET /api/subdivisions/plot/:plot_id?sort=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "No results found for that query"
     })
@@ -299,7 +300,7 @@ describe("GET /api/subdivisions/plot/:plot_id?order=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "No results found for that query"
     })
@@ -340,7 +341,7 @@ describe("GET /api/subdivisions/plot/:plot_id?limit=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -385,7 +386,7 @@ describe("GET /api/subdivisions/plot/:plot_id?page=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -398,7 +399,7 @@ describe("GET /api/subdivisions/plot/:plot_id?page=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Page not found"
     })
@@ -411,7 +412,7 @@ describe("GET /api/subdivisions/plot/:plot_id?page=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Page not found"
     })
@@ -436,7 +437,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
 
-    expect(body.subdivision).toMatchObject({
+    expect(body.subdivision).toMatchObject<Subdivision>({
       subdivision_id: 5,
       plot_id: 1,
       name: "Wildflowers",
@@ -497,7 +498,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid text representation"
     })
@@ -517,7 +518,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Not null violation"
     })
@@ -538,7 +539,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid subdivision type"
     })
@@ -559,7 +560,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -580,7 +581,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to create subdivision denied"
     })
@@ -601,7 +602,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Plot not found"
     })
@@ -622,7 +623,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(409)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Conflict",
       details: "Subdivision name already exists"
     })
@@ -639,7 +640,7 @@ describe("GET /api/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.subdivision).toMatchObject({
+    expect(body.subdivision).toMatchObject<ExtendedSubdivision>({
       subdivision_id: 1,
       plot_id: 1,
       name: "Root Vegetable Bed",
@@ -661,7 +662,7 @@ describe("GET /api/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -674,7 +675,7 @@ describe("GET /api/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to view subdivision data denied"
     })
@@ -687,7 +688,7 @@ describe("GET /api/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Subdivision not found"
     })
@@ -712,7 +713,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.subdivision).toMatchObject({
+    expect(body.subdivision).toMatchObject<Subdivision>({
       subdivision_id: 1,
       plot_id: 1,
       name: 'Root Vegetable Patch',
@@ -737,7 +738,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.subdivision).toMatchObject({
+    expect(body.subdivision).toMatchObject<Subdivision>({
       subdivision_id: 1,
       plot_id: 1,
       name: 'Root Vegetable Bed',
@@ -761,7 +762,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Not null violation"
     })
@@ -782,7 +783,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid text representation"
     })
@@ -803,7 +804,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid subdivision type"
     })
@@ -824,7 +825,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -845,7 +846,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to edit subdivision data denied"
     })
@@ -866,7 +867,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Subdivision not found"
     })
@@ -887,7 +888,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(409)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Conflict",
       details: "Subdivision name already exists"
     })
@@ -909,7 +910,7 @@ describe("DELETE /api/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Subdivision not found"
     })
@@ -922,7 +923,7 @@ describe("DELETE /api/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid parameter"
     })
@@ -935,7 +936,7 @@ describe("DELETE /api/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to delete subdivision data denied"
     })
@@ -948,7 +949,7 @@ describe("DELETE /api/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Subdivision not found"
     })

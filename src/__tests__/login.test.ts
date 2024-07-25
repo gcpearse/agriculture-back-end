@@ -3,6 +3,7 @@ import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
+import { StatusResponse } from "../types/response-types"
 
 
 beforeEach(() => seed(data))
@@ -39,7 +40,7 @@ describe("POST /api/login", () => {
       .send(user)
       .expect(401)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Unauthorized",
       details: "Incorrect password"
     })
@@ -57,7 +58,7 @@ describe("POST /api/login", () => {
       .send(user)
       .expect(404)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Username could not be found"
     })

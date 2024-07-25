@@ -3,6 +3,8 @@ import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
+import { SecureUser, UnitSystem } from "../types/user-types"
+import { StatusResponse } from "../types/response-types"
 
 
 beforeEach(() => seed(data))
@@ -31,13 +33,13 @@ describe("POST /api/register", () => {
       .send(newUser)
       .expect(201)
 
-    expect(body.user).toMatchObject({
+    expect(body.user).toMatchObject<SecureUser>({
       user_id: 4,
       username: "farmer123",
       email: "fred.flint@example.com",
       first_name: "Fred",
       surname: "Flint",
-      unit_preference: "metric"
+      unit_preference: UnitSystem.Metric
     })
   })
 
@@ -56,7 +58,7 @@ describe("POST /api/register", () => {
       .send(newUser)
       .expect(400)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Not null violation"
     })
@@ -78,7 +80,7 @@ describe("POST /api/register", () => {
       .send(newUser)
       .expect(409)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Conflict",
       details: "Username already exists"
     })
@@ -100,7 +102,7 @@ describe("POST /api/register", () => {
       .send(newUser)
       .expect(409)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Conflict",
       details: "Email already exists"
     })

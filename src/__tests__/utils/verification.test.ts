@@ -1,3 +1,4 @@
+import { StatusResponse } from "../../types/response-types"
 import { verifyPermission, verifyParamIsPositiveInt, verifyPagination, verifyQueryValue } from "../../utils/verification"
 
 
@@ -5,7 +6,7 @@ describe("verifyPermission", () => {
 
   test("When the base value does not match the target value, the promise is rejected", () => {
 
-    expect(verifyPermission(1, 2, "Test")).rejects.toMatchObject({
+    expect(verifyPermission(1, 2, "Test")).rejects.toMatchObject<StatusResponse>({
       status: 403,
       message: "Forbidden",
       details: "Test"
@@ -23,7 +24,7 @@ describe("verifyPagination", () => {
 
   test("When the page number is greater than one and the query result returns no rows, the promise is rejected", () => {
 
-    expect(verifyPagination(2, 0)).rejects.toMatchObject({
+    expect(verifyPagination(2, 0)).rejects.toMatchObject<StatusResponse>({
       status: 404,
       message: "Not Found",
       details: "Page not found"
@@ -46,7 +47,7 @@ describe("verifyParamIsPositiveInt", () => {
 
   test("When the value of the parameter is not a number (NaN), the promise is rejected", () => {
 
-    expect(verifyParamIsPositiveInt(NaN)).rejects.toMatchObject({
+    expect(verifyParamIsPositiveInt(NaN)).rejects.toMatchObject<StatusResponse>({
       status: 400,
       message: "Bad Request",
       details: "Invalid parameter"
@@ -55,7 +56,7 @@ describe("verifyParamIsPositiveInt", () => {
 
   test("When the value of the parameter is a negative number, the promise is rejected", () => {
 
-    expect(verifyParamIsPositiveInt(-1)).rejects.toMatchObject({
+    expect(verifyParamIsPositiveInt(-1)).rejects.toMatchObject<StatusResponse>({
       status: 400,
       message: "Bad Request",
       details: "Invalid parameter"
@@ -64,7 +65,7 @@ describe("verifyParamIsPositiveInt", () => {
 
   test("When the value of the parameter is not an integer, the promise is rejected", () => {
 
-    expect(verifyParamIsPositiveInt(1.1)).rejects.toMatchObject({
+    expect(verifyParamIsPositiveInt(1.1)).rejects.toMatchObject<StatusResponse>({
       status: 400,
       message: "Bad Request",
       details: "Invalid parameter"
@@ -73,7 +74,7 @@ describe("verifyParamIsPositiveInt", () => {
 
   test("When the value of the parameter is zero, the promise is rejected", () => {
 
-    expect(verifyParamIsPositiveInt(0)).rejects.toMatchObject({
+    expect(verifyParamIsPositiveInt(0)).rejects.toMatchObject<StatusResponse>({
       status: 400,
       message: "Bad Request",
       details: "Invalid parameter"
@@ -91,7 +92,7 @@ describe("verifyQueryValue", () => {
 
   test("When the query value is not found in the array of valid values, the promise is rejected", () => {
 
-    expect(verifyQueryValue(["foo", "bar"], "example")).rejects.toMatchObject({
+    expect(verifyQueryValue(["foo", "bar"], "example")).rejects.toMatchObject<StatusResponse>({
       status: 404,
       message: "Not Found",
       details: "No results found for that query"

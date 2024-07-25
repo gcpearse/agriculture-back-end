@@ -2,6 +2,7 @@ import data from "../../db/data/test-data/test-index"
 import { db } from "../../db"
 import { seed } from "../../db/seeding/seed"
 import { checkPlotNameConflict, getPlotOwnerId } from "../../utils/db-queries"
+import { StatusResponse } from "../../types/response-types"
 
 
 beforeEach(() => seed(data))
@@ -13,7 +14,7 @@ describe("checkPlotNameConflict", () => {
 
   test("When a plot name conflict is found, the promise is rejected", async () => {
 
-    await expect(checkPlotNameConflict(1, "John's Garden")).rejects.toMatchObject({
+    await expect(checkPlotNameConflict(1, "John's Garden")).rejects.toMatchObject<StatusResponse>({
       status: 409,
       message: "Conflict",
       details: "Plot name already exists"
@@ -38,7 +39,7 @@ describe("getPlotOwnerId", () => {
 
   test("Returns an empty array when no plots are associated with the owner_id", async () => {
 
-    await expect(getPlotOwnerId(10)).rejects.toMatchObject({
+    await expect(getPlotOwnerId(10)).rejects.toMatchObject<StatusResponse>({
       status: 404,
       message: "Not Found",
       details: "Plot not found"

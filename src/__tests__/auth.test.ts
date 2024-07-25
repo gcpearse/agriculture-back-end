@@ -3,6 +3,7 @@ import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
+import { StatusResponse } from "../types/response-types"
 
 
 beforeEach(() => seed(data))
@@ -26,7 +27,7 @@ describe("GET /api/auth", () => {
       .set("Authorization", `Bearer ${auth.body.token}`)
       .expect(200)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "OK",
       details: "Authentication successful"
     })
@@ -38,7 +39,7 @@ describe("GET /api/auth", () => {
       .get("/api/auth")
       .expect(401)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Unauthorized",
       details: "Login required"
     })
@@ -51,7 +52,7 @@ describe("GET /api/auth", () => {
       .set("Authorization", `Bearer invalidToken`)
       .expect(401)
 
-    expect(body).toMatchObject({
+    expect(body).toMatchObject<StatusResponse>({
       message: "Unauthorized",
       details: "Invalid or expired token"
     })
