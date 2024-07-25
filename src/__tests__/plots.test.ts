@@ -4,7 +4,7 @@ import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
 import { toBeOneOf } from 'jest-extended'
-import { Plot } from "../types/plot-types"
+import { ExtendedPlot, Plot } from "../types/plot-types"
 expect.extend({ toBeOneOf })
 
 
@@ -40,7 +40,7 @@ describe("GET /api/plots/user/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedPlots = [...body.plots].sort((a: Plot, b: Plot) => {
+    const sortedPlots = [...body.plots].sort((a: ExtendedPlot, b: ExtendedPlot) => {
       if (a.plot_id! < b.plot_id!) return 1
       if (a.plot_id! > b.plot_id!) return -1
       return 0

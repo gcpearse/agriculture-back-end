@@ -3,7 +3,7 @@ import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
-import { Crop } from "../types/crop-types"
+import { Crop, ExtendedCrop } from "../types/crop-types"
 import { toBeOneOf } from 'jest-extended'
 expect.extend({ toBeOneOf })
 
@@ -42,7 +42,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedCrops = [...body.crops].sort((a: Crop, b: Crop) => {
+    const sortedCrops = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
       if (a.crop_id! < b.crop_id!) return 1
       if (a.crop_id! > b.crop_id!) return -1
       return 0
