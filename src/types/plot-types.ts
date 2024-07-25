@@ -6,6 +6,7 @@ export type Plot = {
   description: string
   location: string
   area: number | null
+  is_pinned: boolean
 }
 
 
