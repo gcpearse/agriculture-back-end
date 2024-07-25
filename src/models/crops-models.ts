@@ -37,13 +37,17 @@ export const selectCropsByPlotId = async (
     crops.*,
     subdivisions.name
     AS subdivision_name,
-    COUNT(crop_notes.crop_id)::INT
-    AS note_count
+    COUNT(DISTINCT crop_notes.note_id)::INT
+    AS note_count,
+    COUNT(DISTINCT crop_images.image_id)::INT
+    AS image_count
   FROM crops
   LEFT JOIN subdivisions
   ON crops.subdivision_id = subdivisions.subdivision_id
   LEFT JOIN crop_notes
   ON crops.crop_id = crop_notes.crop_id
+  LEFT JOIN crop_images
+  ON crops.crop_id = crop_images.crop_id
   WHERE crops.plot_id = $1
   `
 
@@ -152,11 +156,15 @@ export const selectCropsBySubdivisionId = async (
   let query = `
   SELECT
     crops.*,
-    COUNT(crop_notes.crop_id)::INT
-    AS note_count
+    COUNT(DISTINCT crop_notes.note_id)::INT
+    AS note_count,
+    COUNT(DISTINCT crop_images.image_id)::INT
+    AS image_count
   FROM crops
   LEFT JOIN crop_notes
   ON crops.crop_id = crop_notes.crop_id
+  LEFT JOIN crop_images
+  ON crops.crop_id = crop_images.crop_id
   WHERE crops.subdivision_id = $1
   `
 

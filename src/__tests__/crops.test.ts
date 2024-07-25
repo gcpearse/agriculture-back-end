@@ -61,7 +61,8 @@ describe("GET /api/crops/plot/:plot_id", () => {
         date_planted: expect.toBeOneOf([expect.stringMatching(regex), null]),
         harvest_date: expect.toBeOneOf([expect.stringMatching(regex), null]),
         subdivision_name: expect.toBeOneOf([expect.any(String), null]),
-        note_count: expect.any(Number)
+        note_count: expect.any(Number),
+        image_count: expect.any(Number)
       })
     }
 
@@ -663,7 +664,8 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
         quantity: expect.toBeOneOf([expect.any(Number), null]),
         date_planted: expect.toBeOneOf([expect.stringMatching(regex), null]),
         harvest_date: expect.toBeOneOf([expect.stringMatching(regex), null]),
-        note_count: expect.any(Number)
+        note_count: expect.any(Number),
+        image_count: expect.any(Number)
       })
     }
 
