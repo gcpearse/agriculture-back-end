@@ -4,6 +4,7 @@ import format from "pg-format"
 import { ExtendedPlot, Plot, PlotRequest } from "../types/plot-types"
 import { checkPlotNameConflict, getPlotOwnerId, searchForUserId, validatePlotType } from "../utils/db-queries"
 import { verifyPermission, verifyParamIsPositiveInt, verifyPagination, verifyQueryValue } from "../utils/verification"
+import { CustomResponse } from "../types/response-types"
 
 
 export const selectPlotsByOwner = async (
@@ -298,7 +299,7 @@ export const updateIsPinnedByPlotId = async (
   authUserId: number,
   plot_id: number,
   toggle: { bool: boolean }
-) => {
+): Promise<CustomResponse> => {
 
   await verifyParamIsPositiveInt(plot_id)
 

@@ -1,5 +1,6 @@
 import { db } from "../db"
 import { compareHash, generateHash } from "../middleware/security"
+import { CustomResponse } from "../types/response-types"
 import { PasswordUpdate, SecureUser } from "../types/user-types"
 import { checkEmailConflict, searchForUsername } from "../utils/db-queries"
 import { verifyPermission } from "../utils/verification"
@@ -90,7 +91,7 @@ export const updatePasswordByUsername = async (
     oldPassword,
     newPassword
   }: PasswordUpdate
-): Promise<{ message: string, details: string }> => {
+): Promise<CustomResponse> => {
 
   await searchForUsername(username)
 
