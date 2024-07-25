@@ -4,7 +4,7 @@ import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
 import { toBeOneOf } from 'jest-extended'
-import { ExtendedPlot, Plot } from "../types/plot-types"
+import { ExtendedPlot } from "../types/plot-types"
 expect.extend({ toBeOneOf })
 
 
@@ -257,7 +257,7 @@ describe("GET /api/plots/user/:owner_id?sort=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedPlots = [...body.plots].sort((a: Plot, b: Plot) => {
+    const sortedPlots = [...body.plots].sort((a: ExtendedPlot, b: ExtendedPlot) => {
       if (a.name! > b.name!) return 1
       if (a.name! < b.name!) return -1
       return 0
@@ -350,7 +350,7 @@ describe("GET /api/plots/user/:owner_id?page=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.plots.map((crop: Plot) => {
+    expect(body.plots.map((crop: ExtendedPlot) => {
       return crop.plot_id
     })).toEqual([1])
 
@@ -364,7 +364,7 @@ describe("GET /api/plots/user/:owner_id?page=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.plots.map((crop: Plot) => {
+    expect(body.plots.map((crop: ExtendedPlot) => {
       return crop.plot_id
     })).toEqual([4, 3])
 
