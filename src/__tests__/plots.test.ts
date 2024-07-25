@@ -650,7 +650,12 @@ describe("GET /api/plots/:plot_id", () => {
       type: "garden",
       description: "A vegetable garden",
       location: "Farmville",
-      area: 100
+      area: 100,
+      image_count: 1,
+      subdivision_count: 3,
+      crop_count: 4,
+      issue_count: 3,
+      job_count: 2
     })
   })
 
