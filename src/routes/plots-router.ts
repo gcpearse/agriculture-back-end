@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { deletePlotByPlotId, getPlotByPlotId, getPlotsByOwner, patchPlotByPlotId, postPlotByOwner } from "../controllers/plots-controllers"
+import { deletePlotByPlotId, getPinnedPlotsByOwner, getPlotByPlotId, getPlotsByOwner, patchPlotByPlotId, postPlotByOwner } from "../controllers/plots-controllers"
 
 
 export const plotsRouter = Router()
@@ -164,6 +164,58 @@ plotsRouter.route("/plots/user/:owner_id")
  *              $ref: "#/components/schemas/Conflict"
  */
   .post(verifyToken, postPlotByOwner)
+
+
+plotsRouter.route("/plots/user/:owner_id/pinned")
+
+
+/**
+ * @swagger
+ * /api/plots/user/{owner_id}/pinned:
+ *  get:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Retrieve a user's pinned plots
+ *    description: Responds with an array of plot objects. If the owner_id does not exist, the server responds with an error. Permission is denied when the current user's ID does not match the target owner_id.
+ *    tags: [Plots]
+ *    parameters:
+ *      - in: path
+ *        name: owner_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *    responses:
+ *      200:
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                plots:
+ *                  type: array
+ *                  items:
+ *                    $ref: "#/components/schemas/Plot"
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/BadRequest"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Forbidden"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/NotFound"
+ */
+  .get(verifyToken, getPinnedPlotsByOwner)
 
 
 plotsRouter.route("/plots/:plot_id")
