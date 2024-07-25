@@ -4,7 +4,7 @@ import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
 import { toBeOneOf } from 'jest-extended'
-import { Subdivision } from "../types/subdivision-types"
+import { ExtendedSubdivision } from "../types/subdivision-types"
 expect.extend({ toBeOneOf })
 
 
@@ -40,7 +40,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedSubdivisions = [...body.subdivisions].sort((a: Subdivision, b: Subdivision) => {
+    const sortedSubdivisions = [...body.subdivisions].sort((a: ExtendedSubdivision, b: ExtendedSubdivision) => {
       if (a.subdivision_id! < b.subdivision_id!) return 1
       if (a.subdivision_id! > b.subdivision_id!) return -1
       return 0
@@ -264,7 +264,7 @@ describe("GET /api/subdivisions/plot/:plot_id?sort=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedSubdivisions = [...body.subdivisions].sort((a: Subdivision, b: Subdivision) => {
+    const sortedSubdivisions = [...body.subdivisions].sort((a: ExtendedSubdivision, b: ExtendedSubdivision) => {
       if (a.name! > b.name!) return 1
       if (a.name! < b.name!) return -1
       return 0
@@ -357,7 +357,7 @@ describe("GET /api/subdivisions/plot/:plot_id?page=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.subdivisions.map((subdivision: Subdivision) => {
+    expect(body.subdivisions.map((subdivision: ExtendedSubdivision) => {
       return subdivision.subdivision_id
     })).toEqual([1])
 
@@ -371,7 +371,7 @@ describe("GET /api/subdivisions/plot/:plot_id?page=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body.subdivisions.map((subdivision: Subdivision) => {
+    expect(body.subdivisions.map((subdivision: ExtendedSubdivision) => {
       return subdivision.subdivision_id
     })).toEqual([3, 2])
 

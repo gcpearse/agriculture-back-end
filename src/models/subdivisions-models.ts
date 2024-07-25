@@ -2,7 +2,7 @@ import QueryString from "qs"
 import { db } from "../db"
 import { checkSubdivisionNameConflict, getPlotOwnerId, getSubdivisionPlotId, validateSubdivisionType } from "../utils/db-queries"
 import { verifyPermission, verifyParamIsPositiveInt, verifyQueryValue, verifyPagination } from "../utils/verification"
-import { Subdivision, SubdivisionRequest } from "../types/subdivision-types"
+import { ExtendedSubdivision, Subdivision, SubdivisionRequest } from "../types/subdivision-types"
 import format from "pg-format"
 
 
@@ -17,7 +17,7 @@ export const selectSubdivisionsByPlotId = async (
     limit = "10",
     page = "1"
   }: QueryString.ParsedQs
-): Promise<[Subdivision[], number]> => {
+): Promise<[ExtendedSubdivision[], number]> => {
 
   await verifyParamIsPositiveInt(plot_id)
 
