@@ -645,7 +645,12 @@ describe("GET /api/subdivisions/:subdivision_id", () => {
       name: "Root Vegetable Bed",
       type: "bed",
       description: "Carrots, beetroots, and parsnips",
-      area: 10
+      area: 10,
+      plot_name: "John's Garden",
+      image_count: 1,
+      crop_count: 2,
+      issue_count: 1,
+      job_count: 1
     })
   })
 
