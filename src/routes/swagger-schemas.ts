@@ -123,6 +123,9 @@ export const schemaRouter = Router()
  *          type: integer
  *          nullable: true
  *          example: 100
+ *        is_pinned:
+ *          type: boolean
+ *          example: true
  *    PlotRequest:
  *      type: object
  *      properties:

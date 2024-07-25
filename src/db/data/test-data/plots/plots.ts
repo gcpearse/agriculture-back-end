@@ -8,7 +8,8 @@ export const plotData: Plot[] = [
     type: "garden",
     description: "A vegetable garden",
     location: "Farmville",
-    area: 100
+    area: 100,
+    is_pinned: true
   },
   {
     owner_id: 2,
@@ -16,7 +17,8 @@ export const plotData: Plot[] = [
     type: "field",
     description: "An orchard",
     location: "Lemongrove",
-    area: 500
+    area: 500,
+    is_pinned: true
   },
   {
     owner_id: 1,
@@ -24,7 +26,8 @@ export const plotData: Plot[] = [
     type: "allotment",
     description: "An allotment",
     location: "Farmville",
-    area: 50
+    area: 50,
+    is_pinned: false
   },
   {
     owner_id: 1,
@@ -32,6 +35,7 @@ export const plotData: Plot[] = [
     type: "allotment",
     description: "A second allotment",
     location: "Farmville",
-    area: 40
+    area: 40,
+    is_pinned: false
   }
 ]

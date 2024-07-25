@@ -113,7 +113,8 @@ export const seed = async (
       type VARCHAR NOT NULL,
       description VARCHAR NOT NULL,
       location VARCHAR NOT NULL,
-      area INT
+      area INT,
+      is_pinned BOOLEAN NOT NULL DEFAULT FALSE
     );
     `)
 
@@ -195,7 +196,7 @@ export const seed = async (
       subdivision_id INT REFERENCES subdivisions(subdivision_id) ON DELETE CASCADE,
       title VARCHAR NOT NULL,
       description VARCHAR NOT NULL,
-      is_resolved BOOLEAN DEFAULT FALSE
+      is_resolved BOOLEAN NOT NULL DEFAULT FALSE
     );
     `)
 
@@ -227,8 +228,8 @@ export const seed = async (
       description VARCHAR NOT NULL,
       date_added DATE DEFAULT NOW(),
       deadline DATE,
-      is_started BOOLEAN DEFAULT FALSE,
-      is_completed BOOLEAN DEFAULT FALSE
+      is_started BOOLEAN NOT NULL DEFAULT FALSE,
+      is_completed BOOLEAN NOT NULL DEFAULT FALSE
     );
     `)
 
@@ -262,7 +263,7 @@ export const seed = async (
 
   await db.query(format(`
     INSERT INTO plots 
-      (owner_id, name, type, description, location, area)
+      (owner_id, name, type, description, location, area, is_pinned)
     VALUES %L;
     `,
     plotData.map(entry => Object.values(entry))
