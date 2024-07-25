@@ -324,6 +324,73 @@ describe("GET /api/subdivisions/plot/:plot_id?limit=", () => {
 })
 
 
+describe("GET /api/subdivisions/plot/:plot_id?page=", () => {
+
+  test("GET:200 Responds with an array of subdivisions objects associated with the plot beginning from the page set in the query parameter", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?limit=2&page=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.subdivisions.map((subdivision: Subdivision) => {
+      return subdivision.subdivision_id
+    })).toEqual([1])
+  })
+
+  test("GET:200 The page defaults to page one", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?limit=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.subdivisions.map((subdivision: Subdivision) => {
+      return subdivision.subdivision_id
+    })).toEqual([3, 2])
+  })
+
+  test("GET:400 Responds with an error when the value of page is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?limit=2&page=two")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
+  test("GET:404 Responds with an error when the page cannot be found", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?limit=2&page=3")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Page not found"
+    })
+  })
+
+  test("GET:404 Responds with an error when the page cannot be found (multiple queries affecting total query result rows)", async () => {
+
+    const { body } = await request(app)
+      .get("/api/subdivisions/plot/1?type=bed&name=onion&limit=1&page=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Page not found"
+    })
+  })
+})
+
+
 describe("POST /api/subdivisions/plot/:plot_id", () => {
 
   test("POST:201 Responds with a new subdivision object, assigning plot_id automatically", async () => {
