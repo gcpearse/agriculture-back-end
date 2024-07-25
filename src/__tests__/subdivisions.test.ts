@@ -55,7 +55,11 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
         name: expect.any(String),
         type: expect.any(String),
         description: expect.any(String),
-        area: expect.toBeOneOf([expect.any(Number), null])
+        area: expect.toBeOneOf([expect.any(Number), null]),
+        image_count: expect.any(Number),
+        crop_count: expect.any(Number),
+        issue_count: expect.any(Number),
+        job_count: expect.any(Number)
       })
     }
 
