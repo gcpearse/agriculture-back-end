@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { deletePlotByPlotId, getPinnedPlotsByOwner, getPlotByPlotId, getPlotsByOwner, patchPlotByPlotId, postPlotByOwner } from "../controllers/plots-controllers"
+import { deletePlotByPlotId, getPinnedPlotsByOwner, getPlotByPlotId, getPlotsByOwner, patchIsPinnedByPlotId, patchPlotByPlotId, postPlotByOwner } from "../controllers/plots-controllers"
 
 
 export const plotsRouter = Router()
@@ -383,3 +383,74 @@ plotsRouter.route("/plots/:plot_id")
  *              $ref: "#/components/schemas/NotFound"
  */
   .delete(verifyToken, deletePlotByPlotId)
+
+
+plotsRouter.route("/plots/:plot_id/pin")
+
+
+/**
+ * @swagger
+ * /api/plots/{plot_id}/pin:
+ *  patch:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Pin or unpin a plot
+ *    description: Responds with a success message. If the maximum number of plots are already pinned or the plot_id does not exist, the server responds with an error. Permission is denied when the plot does not belong to the current user.
+ *    tags: [Plots]
+ *    parameters:
+ *      - in: path
+ *        name: plot_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              bool:
+ *                type: boolean
+ *                example: true
+ *    responses:
+ *      200:
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                details:
+ *                  type: string
+ *            examples:
+ *              Plot pinned:
+ *                value:
+ *                  message: OK
+ *                  details: Plot pinned successfully
+ *              Plot unpinned:
+ *                value:
+ *                  message: OK
+ *                  details: Plot unpinned successfully
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/BadRequest"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Forbidden"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/NotFound"
+ */
+  .patch(verifyToken, patchIsPinnedByPlotId)
