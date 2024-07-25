@@ -292,3 +292,69 @@ export const removePlotByPlotId = async (
     `,
     [plot_id])
 }
+
+
+export const updateIsPinnedByPlotId = async (
+  authUserId: number,
+  plot_id: number,
+  toggle: { bool: boolean }
+) => {
+
+  await verifyParamIsPositiveInt(plot_id)
+
+  const owner_id = await getPlotOwnerId(plot_id)
+
+  await verifyPermission(authUserId, owner_id, "Permission to edit pinned plot data denied")
+
+  if (toggle.bool !== true) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid boolean value"
+    })
+  }
+
+  const countResult = await db.query(`
+    SELECT COUNT(plots.plot_id)::INT 
+    AS plot_count 
+    FROM plots 
+    WHERE owner_id = $1 
+    AND is_pinned IS TRUE;
+    `,
+    [owner_id])
+
+  const count = countResult.rows[0].plot_count
+
+  const isPinnedResult = await db.query(`
+    SELECT is_pinned
+    FROM plots
+    WHERE plot_id = $1;
+    `,
+    [plot_id])
+
+  let isPinned = isPinnedResult.rows[0].is_pinned
+
+  if (!isPinned && count === 4) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Pin limit reached"
+    })
+  }
+
+  const result = await db.query(`
+    UPDATE plots
+    SET
+      is_pinned = NOT is_pinned
+    WHERE plot_id = $1
+    RETURNING is_pinned;
+    `,
+    [plot_id])
+
+  isPinned = result.rows[0].is_pinned
+
+  return {
+    message: "OK",
+    details: `Plot ${isPinned ? "pinned" : "unpinned"} successfully`
+  }
+}
