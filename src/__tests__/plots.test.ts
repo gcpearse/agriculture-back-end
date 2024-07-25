@@ -1068,3 +1068,164 @@ describe("DELETE /api/plots/:plot_id", () => {
     })
   })
 })
+
+
+describe("PATCH /api/plots/:plot_id/pin", () => {
+
+  test("PATCH:200 Responds with a success message when a plot is successfully pinned", async () => {
+
+    const toggle = { bool: true }
+
+    const { body } = await request(app)
+      .patch("/api/plots/4/pin")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body).toMatchObject({
+      message: "OK",
+      details: "Plot pinned successfully"
+    })
+  })
+
+  test("PATCH:200 Responds with a success message when a plot is successfully unpinned", async () => {
+
+    const toggle = { bool: true }
+
+    const { body } = await request(app)
+      .patch("/api/plots/1/pin")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body).toMatchObject({
+      message: "OK",
+      details: "Plot unpinned successfully"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when the maximum number of plots are already pinned", async () => {
+
+    const fourthPlot = {
+      name: "John's Orchard",
+      type: "orchard",
+      description: "An orchard",
+      location: "Farmville"
+    }
+
+    const fifthPlot = {
+      name: "John's New Orchard",
+      type: "orchard",
+      description: "A new orchard",
+      location: "Farmville",
+    }
+
+    await request(app)
+      .post("/api/plots/user/1")
+      .send(fourthPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(201)
+
+    await request(app)
+      .post("/api/plots/user/1")
+      .send(fifthPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(201)
+
+    const toggle = { bool: true }
+
+    await request(app)
+      .patch("/api/plots/4/pin")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    await request(app)
+      .patch("/api/plots/5/pin")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    const { body } = await request(app)
+      .patch("/api/plots/6/pin")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Pin limit reached"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when the value of toggle is not true (boolean data type)", async () => {
+
+    const toggles = [
+      { bool: false },
+      { bool: "true" },
+      { bool: 1 }
+    ]
+
+    for (const toggle of toggles) {
+
+      const { body } = await request(app)
+        .patch("/api/plots/1/pin")
+        .send(toggle)
+        .set("Authorization", `Bearer ${token}`)
+        .expect(400)
+
+      expect(body).toMatchObject({
+        message: "Bad Request",
+        details: "Invalid boolean value"
+      })
+    }
+  })
+
+  test("PATCH:400 Responds with an error message when the plot_id is not a positive integer", async () => {
+
+    const toggle = { bool: true }
+
+    const { body } = await request(app)
+      .patch("/api/plots/example/pin")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
+  test("PATCH:403 Responds with a warning when the plot_id does not belong to the authenticated user", async () => {
+
+    const toggle = { bool: true }
+
+    const { body } = await request(app)
+      .patch("/api/plots/2/pin")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject({
+      message: "Forbidden",
+      details: "Permission to edit pinned plot data denied"
+    })
+  })
+
+  test("PATCH:404 Responds with an error message when the plot_id does not exist", async () => {
+
+    const toggle = { bool: true }
+
+    const { body } = await request(app)
+      .patch("/api/plots/999/pin")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject({
+      message: "Not Found",
+      details: "Plot not found"
+    })
+  })
+})
