@@ -5,7 +5,7 @@ export const plotData: Plot[] = [
   {
     owner_id: 1,
     name: "Admin's Field",
-    type: "field",
+    type: "Field",
     description: "The admin's field",
     location: "Example location",
     area: 100,
@@ -14,7 +14,7 @@ export const plotData: Plot[] = [
   {
     owner_id: 1,
     name: "Admin's Allotment",
-    type: "allotment",
+    type: "Allotment",
     description: "The admin's allotment",
     location: "Example location",
     area: null,

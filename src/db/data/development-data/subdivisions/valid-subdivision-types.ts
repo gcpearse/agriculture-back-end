@@ -1,17 +1,17 @@
 export const subdivisionTypeData: { type: string }[] = [
   {
-    type: "bed"
+    type: "Bed"
   },
   {
-    type: "flowerbed"
+    type: "Flowerbed"
   },
   {
-    type: "herb garden"
+    type: "Herb garden"
   },
   {
-    type: "row"
+    type: "Row"
   },
   {
-    type: "vegetable patch"
+    type: "Vegetable patch"
   }
 ]

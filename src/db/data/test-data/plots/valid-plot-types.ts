@@ -1,17 +1,17 @@
 export const plotTypeData: {type: string}[] = [
   {
-    type: "allotment"
+    type: "Allotment"
   },
   {
-    type: "field"
+    type: "Field"
   },
   {
-    type: "garden"
+    type: "Garden"
   },
   {
-    type: "homestead"
+    type: "Homestead"
   },
   {
-    type: "orchard"
+    type: "Orchard"
   }
 ]
