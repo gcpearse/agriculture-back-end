@@ -5,7 +5,7 @@ export const cropData: Crop[] = [
   {
     plot_id: 1,
     subdivision_id: 1,
-    name: "carrot",
+    name: "Carrot",
     variety: null,
     quantity: 20,
     date_planted: new Date("2024-06-20"),
@@ -14,8 +14,8 @@ export const cropData: Crop[] = [
   {
     plot_id: 1,
     subdivision_id: null,
-    name: "apple",
-    variety: "lord derby",
+    name: "Apple",
+    variety: "Lord Derby",
     quantity: 1,
     date_planted: new Date("2023-09-21"),
     harvest_date: new Date("2024-09-21")
@@ -23,7 +23,7 @@ export const cropData: Crop[] = [
   {
     plot_id: 1,
     subdivision_id: null,
-    name: "cabbage",
+    name: "Cabbage",
     variety: null,
     quantity: null,
     date_planted:  null,
@@ -32,7 +32,7 @@ export const cropData: Crop[] = [
   {
     plot_id: 1,
     subdivision_id: 1,
-    name: "pecan",
+    name: "Pecan",
     variety: null,
     quantity: 1,
     date_planted: new Date("2024-07-19"),
@@ -41,7 +41,7 @@ export const cropData: Crop[] = [
   {
     plot_id: 2,
     subdivision_id: null,
-    name: "peach",
+    name: "Peach",
     variety: null,
     quantity: 2,
     date_planted: new Date("2020-06-30"),
@@ -50,7 +50,7 @@ export const cropData: Crop[] = [
   {
     plot_id: 2,
     subdivision_id: null,
-    name: "blackcurrant",
+    name: "Blackcurrant",
     variety: null,
     quantity: null,
     date_planted: new Date("2022-08-30"),
