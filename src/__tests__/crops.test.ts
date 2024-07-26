@@ -163,24 +163,10 @@ describe("GET /api/crops/plot/:plot_id", () => {
 
 describe("GET /api/crops/plot/:plot_id?name=", () => {
 
-  test("GET:200 Responds with an array of crop objects filtered by name", async () => {
+  test("GET:200 Responds with an array of crop objects filtered case-insensitively by name", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/plot/1?name=ca")
-      .set("Authorization", `Bearer ${token}`)
-      .expect(200)
-
-    for (const crop of body.crops) {
-      expect(crop.name).toMatch(/ca/i)
-    }
-
-    expect(body.count).toBe(3)
-  })
-
-  test("GET:200 Filtered results are case-insensitive", async () => {
-
-    const { body } = await request(app)
-      .get("/api/crops/plot/1?name=CA")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -274,7 +260,7 @@ describe("GET /api/crops/plot/:plot_id?sort=", () => {
   test("GET:404 Responds with an error when passed an invalid sort value", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?sort=variety")
+      .get("/api/crops/plot/1?sort=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -339,7 +325,7 @@ describe("GET /api/crops/plot/:plot_id?order=", () => {
   test("GET:404 Responds with an error when passed an invalid order value", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?order=")
+      .get("/api/crops/plot/1?order=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -482,8 +468,8 @@ describe("POST /api/crops/plot/:plot_id", () => {
   test("POST:201 Responds with a new crop object, assigning plot_id and subdivision_id (null) automatically", async () => {
 
     const newCrop = {
-      name: "pear",
-      variety: "conference",
+      name: "Pear",
+      variety: "Conference",
       quantity: 1,
       date_planted: new Date("2024-07-21"),
       harvest_date: new Date("2024-09-30")
@@ -499,8 +485,8 @@ describe("POST /api/crops/plot/:plot_id", () => {
       crop_id: 7,
       plot_id: 1,
       subdivision_id: null,
-      name: "pear",
-      variety: "conference",
+      name: "Pear",
+      variety: "Conference",
       quantity: 1,
       date_planted: expect.toBeOneOf([expect.stringMatching(regex), null]),
       harvest_date: expect.toBeOneOf([expect.stringMatching(regex), null])
@@ -510,7 +496,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
   test("POST:201 Assigns a null value to 'subdivision_id', 'variety', 'quantity', 'date_planted', and 'harvest_date' when no value is provided", async () => {
 
     const newCrop = {
-      name: "pear"
+      name: "Pear"
     }
 
     const { body } = await request(app)
@@ -523,7 +509,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
       crop_id: 7,
       plot_id: 1,
       subdivision_id: null,
-      name: "pear",
+      name: "Pear",
       variety: null,
       quantity: null,
       date_planted: null,
@@ -534,7 +520,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
   test("POST:201 Ignores any unnecessary properties on the object", async () => {
 
     const newCrop = {
-      name: "pear",
+      name: "Pear",
       price: 100
     }
 
@@ -550,7 +536,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
   test("POST:400 Responds with an error when passed a property with an invalid data type", async () => {
 
     const newCrop = {
-      name: "pear",
+      name: "Pear",
       quantity: "one",
     }
 
@@ -585,7 +571,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
   test("POST:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const newCrop = {
-      name: "pear"
+      name: "Pear"
     }
 
     const { body } = await request(app)
@@ -603,7 +589,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
   test("POST:403 Responds with a warning when the authenticated user attempts to add a crop for another user", async () => {
 
     const newCrop = {
-      name: "pear"
+      name: "Pear"
     }
 
     const { body } = await request(app)
@@ -621,7 +607,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
   test("POST:404 Responds with an error message when the plot_id does not exist", async () => {
 
     const newCrop = {
-      name: "pear"
+      name: "Pear"
     }
 
     const { body } = await request(app)
@@ -748,24 +734,10 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
 
 describe("GET /api/crops/subdivision/:subdivision_id?name=", () => {
 
-  test("GET:200 Responds with an array of crop objects filtered by name", async () => {
+  test("GET:200 Responds with an array of crop objects filtered case-insensitively by name", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/subdivision/1?name=car")
-      .set("Authorization", `Bearer ${token}`)
-      .expect(200)
-
-    for (const crop of body.crops) {
-      expect(crop.name).toMatch(/car/i)
-    }
-
-    expect(body.count).toBe(1)
-  })
-
-  test("GET:200 Filtered results are case-insensitive", async () => {
-
-    const { body } = await request(app)
-      .get("/api/crops/subdivision/1?name=CAR")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -859,7 +831,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?sort=", () => {
   test("GET:404 Responds with an error when passed an invalid sort value", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?sort=variety")
+      .get("/api/crops/subdivision/1?sort=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -1053,8 +1025,8 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
   test("POST:201 Responds with a new crop object, assigning plot_id and subdivision_id automatically", async () => {
 
     const newCrop = {
-      name: "pear",
-      variety: "conference",
+      name: "Pear",
+      variety: "Conference",
       quantity: 1,
       date_planted: new Date("2024-07-21"),
       harvest_date: new Date("2024-09-30")
@@ -1070,8 +1042,8 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
       crop_id: 7,
       plot_id: 1,
       subdivision_id: 1,
-      name: "pear",
-      variety: "conference",
+      name: "Pear",
+      variety: "Conference",
       quantity: 1,
       date_planted: expect.toBeOneOf([expect.stringMatching(regex), null]),
       harvest_date: expect.toBeOneOf([expect.stringMatching(regex), null])
@@ -1081,7 +1053,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
   test("POST:201 Assigns a null value to 'variety', 'quantity', 'date_planted', and 'harvest_date' when no value is provided", async () => {
 
     const newCrop = {
-      name: "pear"
+      name: "Pear"
     }
 
     const { body } = await request(app)
@@ -1094,7 +1066,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
       crop_id: 7,
       plot_id: 1,
       subdivision_id: 1,
-      name: "pear",
+      name: "Pear",
       variety: null,
       quantity: null,
       date_planted: null,
@@ -1105,7 +1077,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
   test("POST:201 Ignores any unnecessary properties on the object", async () => {
 
     const newCrop = {
-      name: "pear",
+      name: "Pear",
       price: 100
     }
 
@@ -1121,7 +1093,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
   test("POST:400 Responds with an error when passed a property with an invalid data type", async () => {
 
     const newCrop = {
-      name: "pear",
+      name: "Pear",
       quantity: "one",
     }
 
@@ -1156,7 +1128,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
   test("POST:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const newCrop = {
-      name: "pear"
+      name: "Pear"
     }
 
     const { body } = await request(app)
@@ -1174,7 +1146,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
   test("POST:403 Responds with a warning when the authenticated user attempts to add a crop for another user", async () => {
 
     const newCrop = {
-      name: "pear"
+      name: "Pear"
     }
 
     const { body } = await request(app)
@@ -1192,7 +1164,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
   test("POST:404 Responds with an error message when the subdivision does not exist", async () => {
 
     const newCrop = {
-      name: "pear"
+      name: "Pear"
     }
 
     const { body } = await request(app)
