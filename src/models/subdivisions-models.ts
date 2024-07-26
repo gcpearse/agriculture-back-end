@@ -33,7 +33,7 @@ export const selectSubdivisionsByPlotId = async (
 
   await verifyQueryValue(["asc", "desc"], order as string)
 
-  const isValidSubdivisionType = await validateSubdivisionType(type as string)
+  const isValidSubdivisionType = await validateSubdivisionType(type as string, true)
 
   if (type && !isValidSubdivisionType) {
     return Promise.reject({
@@ -83,10 +83,10 @@ export const selectSubdivisionsByPlotId = async (
 
   if (type) {
     query += format(`
-      AND subdivisions.type = %L
+      AND subdivisions.type ILIKE %L
       `, type)
     countQuery += format(`
-      AND subdivisions.type = %L
+      AND subdivisions.type ILIKE %L
       `, type)
   }
 
@@ -128,7 +128,7 @@ export const insertSubdivisionByPlotId = async (
 
   await checkSubdivisionNameConflict(plot_id, subdivision.name)
 
-  const isValidSubdivisionType = await validateSubdivisionType(subdivision.type as string)
+  const isValidSubdivisionType = await validateSubdivisionType(subdivision.type as string, false)
 
   if (!isValidSubdivisionType) {
     return Promise.reject({
@@ -223,7 +223,7 @@ export const updateSubdivisionBySubdivisionId = async (
     await checkSubdivisionNameConflict(plotId, subdivision.name)
   }
 
-  const isValidSubdivisionType = await validateSubdivisionType(subdivision.type)
+  const isValidSubdivisionType = await validateSubdivisionType(subdivision.type, false)
 
   if (!isValidSubdivisionType) {
     return Promise.reject({

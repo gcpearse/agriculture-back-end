@@ -34,7 +34,7 @@ export const selectPlotsByOwner = async (
 
   await verifyQueryValue(["asc", "desc"], order as string)
 
-  const isValidPlotType = await validatePlotType(type as string)
+  const isValidPlotType = await validatePlotType(type as string, true)
 
   if (type && !isValidPlotType) {
     return Promise.reject({
@@ -88,10 +88,10 @@ export const selectPlotsByOwner = async (
 
   if (type) {
     query += format(`
-      AND plots.type = %L
+      AND plots.type ILIKE %L
       `, type)
     countQuery += format(`
-      AND plots.type = %L
+      AND plots.type ILIKE %L
       `, type)
   }
 
@@ -133,7 +133,7 @@ export const insertPlotByOwner = async (
 
   await checkPlotNameConflict(owner_id, plot.name)
 
-  const isValidPlotType = await validatePlotType(plot.type)
+  const isValidPlotType = await validatePlotType(plot.type, false)
 
   if (!isValidPlotType) {
     return Promise.reject({
@@ -248,7 +248,7 @@ export const updatePlotByPlotId = async (
     await checkPlotNameConflict(owner_id, plot.name)
   }
 
-  const isValidPlotType = await validatePlotType(plot.type)
+  const isValidPlotType = await validatePlotType(plot.type, false)
 
   if (!isValidPlotType) {
     return Promise.reject({
