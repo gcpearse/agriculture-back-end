@@ -160,7 +160,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
 
 describe("GET /api/subdivisions/plot/:plot_id?type=", () => {
 
-  test("GET:200 Responds with an array of subdivision objects filtered by type", async () => {
+  test("GET:200 Responds with an array of subdivision objects filtered case-insensitively by type", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/plot/1?type=bed")
@@ -170,7 +170,7 @@ describe("GET /api/subdivisions/plot/:plot_id?type=", () => {
     expect(body.subdivisions).toHaveLength(2)
 
     for (const subdivision of body.subdivisions) {
-      expect(subdivision.type).toBe("bed")
+      expect(subdivision.type).toBe("Bed")
     }
 
     expect(body.count).toBe(2)
@@ -247,7 +247,7 @@ describe("GET /api/subdivisions/plot/:plot_id?type=&name=", () => {
       .expect(200)
 
     for (const subdivision of body.subdivisions) {
-      expect(subdivision.type).toBe("bed")
+      expect(subdivision.type).toBe("Bed")
       expect(subdivision.name).toMatch(/onion/i)
     }
 
@@ -426,7 +426,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
 
     const newSubdivision = {
       name: "Wildflowers",
-      type: "flowerbed",
+      type: "Flowerbed",
       description: "Foxgloves and bluebells",
       area: 2
     }
@@ -441,7 +441,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
       subdivision_id: 5,
       plot_id: 1,
       name: "Wildflowers",
-      type: "flowerbed",
+      type: "Flowerbed",
       description: "Foxgloves and bluebells",
       area: 2
     })
@@ -451,7 +451,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
 
     const newSubdivision = {
       name: "Wildflowers",
-      type: "flowerbed",
+      type: "Flowerbed",
       description: "Foxgloves and bluebells"
     }
 
@@ -468,7 +468,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
 
     const newSubdivision = {
       name: "Wildflowers",
-      type: "flowerbed",
+      type: "Flowerbed",
       description: "Foxgloves and bluebells",
       area: 2,
       price: 100
@@ -487,7 +487,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
 
     const newSubdivision = {
       name: "Wildflowers",
-      type: "flowerbed",
+      type: "Flowerbed",
       description: "Foxgloves and bluebells",
       area: "two metres squared"
     }
@@ -507,7 +507,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
   test("POST:400 Responds with an error when a required property is missing from the request body", async () => {
 
     const newSubdivision = {
-      type: "flowerbed",
+      type: "Flowerbed",
       description: "Foxgloves and bluebells",
       area: 2
     }
@@ -528,7 +528,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
 
     const newSubdivision = {
       name: "Wildflowers",
-      type: "garage",
+      type: "foobar",
       description: "Foxgloves and bluebells",
       area: 2
     }
@@ -549,7 +549,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
 
     const newSubdivision = {
       name: "Wildflowers",
-      type: "flowerbed",
+      type: "Flowerbed",
       description: "Foxgloves and bluebells",
       area: 2
     }
@@ -570,7 +570,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
 
     const newSubdivision = {
       name: "Wildflowers",
-      type: "flowerbed",
+      type: "Flowerbed",
       description: "Foxgloves and bluebells",
       area: 2
     }
@@ -591,7 +591,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
 
     const newSubdivision = {
       name: "Wildflowers",
-      type: "flowerbed",
+      type: "Flowerbed",
       description: "Foxgloves and bluebells",
       area: 2
     }
@@ -612,7 +612,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
 
     const newSubdivision = {
       name: "Onion Bed",
-      type: "flowerbed",
+      type: "Flowerbed",
       description: "Foxgloves and bluebells",
       area: 2
     }
@@ -644,7 +644,7 @@ describe("GET /api/subdivisions/:subdivision_id", () => {
       subdivision_id: 1,
       plot_id: 1,
       name: "Root Vegetable Bed",
-      type: "bed",
+      type: "Bed",
       description: "Carrots, beetroots, and parsnips",
       area: 10,
       plot_name: "John's Garden",
@@ -702,7 +702,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
 
     const newDetails = {
       name: "Root Vegetable Patch",
-      type: "vegetable patch",
+      type: "Vegetable patch",
       description: "Turnips and radishes",
       area: 20
     }
@@ -717,7 +717,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
       subdivision_id: 1,
       plot_id: 1,
       name: 'Root Vegetable Patch',
-      type: 'vegetable patch',
+      type: 'Vegetable patch',
       description: 'Turnips and radishes',
       area: 20
     })
@@ -727,7 +727,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
 
     const newDetails = {
       name: "Root Vegetable Bed",
-      type: "vegetable patch",
+      type: "Vegetable patch",
       description: "Turnips and radishes",
       area: 20
     }
@@ -742,7 +742,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
       subdivision_id: 1,
       plot_id: 1,
       name: 'Root Vegetable Bed',
-      type: 'vegetable patch',
+      type: 'Vegetable patch',
       description: 'Turnips and radishes',
       area: 20
     })
@@ -751,7 +751,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
   test("PATCH:400 Responds with an error when a property is missing from the request body", async () => {
 
     const newDetails = {
-      type: "vegetable patch",
+      type: "Vegetable patch",
       description: "Turnips and radishes",
       area: 20
     }
@@ -772,7 +772,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
 
     const newDetails = {
       name: "Root Vegetable Patch",
-      type: "vegetable patch",
+      type: "Vegetable patch",
       description: "Turnips and radishes",
       area: "twenty"
     }
@@ -793,7 +793,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
 
     const newDetails = {
       name: "Root Vegetable Patch",
-      type: "garage",
+      type: "foobar",
       description: "Turnips and radishes",
       area: 20
     }
@@ -814,7 +814,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
 
     const newDetails = {
       name: "Root Vegetable Patch",
-      type: "vegetable patch",
+      type: "Vegetable patch",
       description: "Turnips and radishes",
       area: 20
     }
@@ -835,7 +835,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
 
     const newDetails = {
       name: "Root Vegetable Patch",
-      type: "vegetable patch",
+      type: "Vegetable patch",
       description: "Turnips and radishes",
       area: 20
     }
@@ -856,7 +856,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
 
     const newDetails = {
       name: "Root Vegetable Patch",
-      type: "vegetable patch",
+      type: "Vegetable patch",
       description: "Turnips and radishes",
       area: 20
     }
@@ -877,7 +877,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
 
     const newDetails = {
       name: "Onion Bed",
-      type: "bed",
+      type: "Bed",
       description: "Yellow and white onions",
       area: 20
     }
