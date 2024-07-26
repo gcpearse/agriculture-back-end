@@ -87,7 +87,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
   test("GET:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/example")
+      .get("/api/crops/plot/foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -194,7 +194,7 @@ describe("GET /api/crops/plot/:plot_id?name=", () => {
   test("GET:200 Returns an empty array when the value of name matches no results", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?name=example")
+      .get("/api/crops/plot/1?name=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -339,7 +339,7 @@ describe("GET /api/crops/plot/:plot_id?order=", () => {
   test("GET:404 Responds with an error when passed an invalid order value", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?order=example")
+      .get("/api/crops/plot/1?order=")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -589,7 +589,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/crops/plot/example")
+      .post("/api/crops/plot/foobar")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -690,7 +690,7 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
   test("GET:400 Responds with an error message when the subdivision_id is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/example")
+      .get("/api/crops/subdivision/foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -779,7 +779,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=", () => {
   test("GET:200 Returns an empty array when the value of name matches no results", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?name=example")
+      .get("/api/crops/subdivision/1?name=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -924,7 +924,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?order=", () => {
   test("GET:404 Responds with an error when passed an invalid order value", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?order=example")
+      .get("/api/crops/subdivision/1?order=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -1160,7 +1160,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/crops/subdivision/example")
+      .post("/api/crops/subdivision/foobar")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)

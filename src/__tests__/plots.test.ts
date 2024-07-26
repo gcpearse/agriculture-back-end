@@ -96,7 +96,7 @@ describe("GET /api/plots/user/:owner_id", () => {
   test("GET:400 Responds with an error message when the owner_id is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/user/example")
+      .get("/api/plots/user/foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -218,7 +218,7 @@ describe("GET /api/plots/user/:owner_id?name=", () => {
   test("GET:200 Returns an empty array when the value of name matches no results", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/user/1?name=example")
+      .get("/api/plots/user/1?name=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -273,7 +273,7 @@ describe("GET /api/plots/user/:owner_id?sort=", () => {
   test("GET:404 Responds with an error when passed an invalid sort value", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/user/1?sort=example")
+      .get("/api/plots/user/1?sort=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -290,7 +290,7 @@ describe("GET /api/plots/user/:owner_id?order=", () => {
   test("GET:404 Responds with an error when passed an invalid order value", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/user/1?order=example")
+      .get("/api/plots/user/1?order=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -558,7 +558,7 @@ describe("POST /api/plots/user/:owner_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/plots/user/example")
+      .post("/api/plots/user/foobar")
       .send(newPlot)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -692,7 +692,7 @@ describe("GET /api/plots/user/:owner_id/pinned", () => {
   test("GET:400 Responds with an error message when the owner_id is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/user/example/pinned")
+      .get("/api/plots/user/foobar/pinned")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -759,7 +759,7 @@ describe("GET /api/plots/:plot_id", () => {
   test("GET:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/example")
+      .get("/api/plots/foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -931,7 +931,7 @@ describe("PATCH /api/plots/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/plots/example")
+      .patch("/api/plots/foobar")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -1033,7 +1033,7 @@ describe("DELETE /api/plots/:plot_id", () => {
   test("DELETE:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .delete("/api/plots/example")
+      .delete("/api/plots/foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -1187,7 +1187,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
     const toggle = { bool: true }
 
     const { body } = await request(app)
-      .patch("/api/plots/example/pin")
+      .patch("/api/plots/foobar/pin")
       .send(toggle)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)

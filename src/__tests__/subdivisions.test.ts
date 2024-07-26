@@ -84,7 +84,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
   test("GET:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/example")
+      .get("/api/subdivisions/plot/foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -224,7 +224,7 @@ describe("GET /api/subdivisions/plot/:plot_id?name=", () => {
   test("GET:200 Returns an empty array when the value of name matches no results", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?name=example")
+      .get("/api/subdivisions/plot/1?name=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -279,7 +279,7 @@ describe("GET /api/subdivisions/plot/:plot_id?sort=", () => {
   test("GET:404 Responds with an error when passed an invalid sort value", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?sort=example")
+      .get("/api/subdivisions/plot/1?sort=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -296,7 +296,7 @@ describe("GET /api/subdivisions/plot/:plot_id?order=", () => {
   test("GET:404 Responds with an error when passed an invalid order value", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?order=example")
+      .get("/api/subdivisions/plot/1?order=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -555,7 +555,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/plot/example")
+      .post("/api/subdivisions/plot/foobar")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -658,7 +658,7 @@ describe("GET /api/subdivisions/:subdivision_id", () => {
   test("GET:400 Responds with an error message when the subdivision is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/example")
+      .get("/api/subdivisions/foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -820,7 +820,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/subdivisions/example")
+      .patch("/api/subdivisions/foobar")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -919,7 +919,7 @@ describe("DELETE /api/subdivisions/:subdivision_id", () => {
   test("DELETE:400 Responds with an error message when the subdivision_id is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .delete("/api/subdivisions/example")
+      .delete("/api/subdivisions/foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
