@@ -46,6 +46,9 @@ export const schemaRouter = Router()
  *          type: string
  *          nullable: true
  *          example: Chantenay
+ *        category:
+ *          type: string
+ *          example: Vegetables
  *        quantity:
  *          type: integer
  *          nullable: true
@@ -68,6 +71,9 @@ export const schemaRouter = Router()
  *          type: string
  *          nullable: true
  *          example: Chantenay
+ *        category:
+ *          type: string
+ *          example: Vegetables
  *        quantity:
  *          type: integer
  *          nullable: true
