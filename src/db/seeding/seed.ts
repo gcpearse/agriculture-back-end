@@ -16,6 +16,7 @@ export const seed = async (
     cropData,
     cropNoteData,
     cropImageData,
+    cropCategoryData,
     issueData,
     issueNoteData,
     issueImageData,
@@ -42,6 +43,10 @@ export const seed = async (
 
   await db.query(`
     DROP TABLE IF EXISTS issues;
+    `)
+
+  await db.query(`
+    DROP TABLE IF EXISTS crop_categories;
     `)
 
   await db.query(`
@@ -128,7 +133,7 @@ export const seed = async (
 
   await db.query(`
     CREATE TABLE plot_types (
-      plot_type_id SERIAL PRIMARY KEY,
+      type_id SERIAL PRIMARY KEY,
       type VARCHAR NOT NULL
     );
     `)
@@ -154,7 +159,7 @@ export const seed = async (
 
   await db.query(`
     CREATE TABLE subdivision_types (
-      subdivision_type_id SERIAL PRIMARY KEY,
+      type_id SERIAL PRIMARY KEY,
       type VARCHAR NOT NULL
     );
     `)
@@ -166,6 +171,7 @@ export const seed = async (
       subdivision_id INT REFERENCES subdivisions(subdivision_id) ON DELETE CASCADE,
       name VARCHAR NOT NULL,
       variety VARCHAR,
+      category VARCHAR NOT NULL,
       quantity INT,
       date_planted DATE,
       harvest_date DATE
@@ -186,6 +192,13 @@ export const seed = async (
       image_id SERIAL PRIMARY KEY,
       crop_id INT NOT NULL REFERENCES crops(crop_id) ON DELETE CASCADE,
       image_url TEXT NOT NULL
+    );
+    `)
+
+  await db.query(`
+    CREATE TABLE crop_categories (
+      category_id SERIAL PRIMARY KEY,
+      category VARCHAR NOT NULL
     );
     `)
 
@@ -311,7 +324,7 @@ export const seed = async (
 
   await db.query(format(`
     INSERT INTO crops 
-      (plot_id, subdivision_id, name, variety, quantity, date_planted, harvest_date)
+      (plot_id, subdivision_id, name, variety, category, quantity, date_planted, harvest_date)
     VALUES %L;
     `,
     cropData.map(entry => Object.values(entry))
@@ -331,6 +344,14 @@ export const seed = async (
     VALUES %L;
     `,
     cropImageData.map(entry => Object.values(entry))
+  ))
+
+  await db.query(format(`
+    INSERT INTO crop_categories 
+      (category)
+    VALUES %L;
+    `,
+    cropCategoryData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`

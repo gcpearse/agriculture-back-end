@@ -10,7 +10,7 @@ export const loginRouter = Router()
  * /api/login:
  *  post:
  *    summary: Log in a user
- *    description: Responds with a JSON Web Token. The server responds with an error if the username does not exist or the password is incorrect.
+ *    description: Responds with a JSON Web Token. The server responds with an error if the username or email does not exist or the password is incorrect.
  *    tags: [Login]
  *    requestBody:
  *      required: true
@@ -19,7 +19,7 @@ export const loginRouter = Router()
  *          schema:
  *            type: object
  *            properties:
- *              username:
+ *              login:
  *                type: string
  *                example: admin
  *              password:
@@ -53,6 +53,6 @@ export const loginRouter = Router()
  *                  example: Not Found
  *                details:
  *                  type: string
- *                  example: Username could not be found
+ *                  example: Username or email could not be found
  */
 loginRouter.post("/login", postLogin)

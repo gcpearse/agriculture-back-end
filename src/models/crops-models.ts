@@ -1,7 +1,7 @@
 import QueryString from "qs"
 import { db } from "../db"
 import { Crop, CropRequest, ExtendedCrop } from "../types/crop-types"
-import { getPlotOwnerId, getSubdivisionPlotId } from "../utils/db-queries"
+import { getPlotOwnerId, getSubdivisionPlotId, validateCropCategory } from "../utils/db-queries"
 import { verifyPagination, verifyParamIsPositiveInt, verifyPermission, verifyQueryValue } from "../utils/verification"
 import format from "pg-format"
 
@@ -111,14 +111,24 @@ export const insertCropByPlotId = async (
 
   await verifyPermission(authUserId, owner_id, "Permission to add crop denied")
 
+  const isValidCropCategory = await validateCropCategory(crop.category, false)
+
+  if (!isValidCropCategory) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid crop category"
+    })
+  }
+
   const result = await db.query(format(`
     INSERT INTO crops
-      (plot_id, name, variety, quantity, date_planted, harvest_date)
+      (plot_id, name, variety, category, quantity, date_planted, harvest_date)
     VALUES
       %L
     RETURNING *;
     `,
-    [[plot_id, crop.name, crop.variety, crop.quantity, crop.date_planted, crop.harvest_date]]
+    [[plot_id, crop.name, crop.variety, crop.category, crop.quantity, crop.date_planted, crop.harvest_date]]
   ))
 
   return result.rows[0]
@@ -230,14 +240,24 @@ export const insertCropBySubdivisionId = async (
 
   await verifyPermission(authUserId, owner_id, "Permission to add crop denied")
 
+  const isValidCropCategory = await validateCropCategory(crop.category, false)
+
+  if (!isValidCropCategory) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid crop category"
+    })
+  }
+
   const result = await db.query(format(`
     INSERT INTO crops
-      (plot_id, subdivision_id, name, variety, quantity, date_planted, harvest_date)
+      (plot_id, subdivision_id, name, variety, category, quantity, date_planted, harvest_date)
     VALUES
       %L
     RETURNING *;
     `,
-    [[plotId, subdivision_id, crop.name, crop.variety, crop.quantity, crop.date_planted, crop.harvest_date]]
+    [[plotId, subdivision_id, crop.name, crop.variety, crop.category, crop.quantity, crop.date_planted, crop.harvest_date]]
   ))
 
   return result.rows[0]

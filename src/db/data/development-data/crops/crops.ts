@@ -7,6 +7,7 @@ export const cropData: Crop[] = [
     subdivision_id: 1,
     name: "Thyme",
     variety: null,
+    category: "Herbs and spices",
     quantity: null,
     date_planted: null,
     harvest_date: null
@@ -16,6 +17,7 @@ export const cropData: Crop[] = [
     subdivision_id: 2,
     name: "Potato",
     variety: "Maris Piper",
+    category: "Vegetables",
     quantity: 10,
     date_planted: new Date("2024-07-01"),
     harvest_date: new Date("2034-07-01")
@@ -25,6 +27,7 @@ export const cropData: Crop[] = [
     subdivision_id: 2,
     name: "Cabbage",
     variety: "Savoy",
+    category: "Vegetables",
     quantity: 20,
     date_planted: new Date("2024-06-01"),
     harvest_date: new Date("2025-06-01")

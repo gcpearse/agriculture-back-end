@@ -18,7 +18,7 @@ describe("GET /api/auth", () => {
     const auth = await request(app)
       .post("/api/login")
       .send({
-        username: "carrot_king",
+        login: "carrot_king",
         password: "carrots123",
       })
 

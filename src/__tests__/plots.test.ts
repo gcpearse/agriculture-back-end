@@ -19,7 +19,7 @@ beforeEach(async () => {
   const auth = await request(app)
     .post("/api/login")
     .send({
-      username: "carrot_king",
+      login: "carrot_king",
       password: "carrots123",
     })
 
@@ -75,7 +75,7 @@ describe("GET /api/plots/user/:owner_id", () => {
     const auth = await request(app)
       .post("/api/login")
       .send({
-        username: "quince_queen",
+        login: "quince_queen",
         password: "quince123",
       })
 
@@ -96,7 +96,7 @@ describe("GET /api/plots/user/:owner_id", () => {
   test("GET:400 Responds with an error message when the owner_id is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/user/example")
+      .get("/api/plots/user/foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -154,7 +154,7 @@ describe("GET /api/plots/user/:owner_id", () => {
 
 describe("GET /api/plots/user/:owner_id?type=", () => {
 
-  test("GET:200 Responds with an array of plot objects filtered by type", async () => {
+  test("GET:200 Responds with an array of plot objects filtered case-insensitively by type", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/user/1?type=allotment")
@@ -164,7 +164,7 @@ describe("GET /api/plots/user/:owner_id?type=", () => {
     expect(body.plots).toHaveLength(2)
 
     for (const plot of body.plots) {
-      expect(plot.type).toBe("allotment")
+      expect(plot.type).toBe("Allotment")
     }
 
     expect(body.count).toBe(2)
@@ -218,7 +218,7 @@ describe("GET /api/plots/user/:owner_id?name=", () => {
   test("GET:200 Returns an empty array when the value of name matches no results", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/user/1?name=example")
+      .get("/api/plots/user/1?name=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -241,7 +241,7 @@ describe("GET /api/plots/user/:owner_id?type=&name=", () => {
       .expect(200)
 
     for (const plot of body.plots) {
-      expect(plot.type).toBe("allotment")
+      expect(plot.type).toBe("Allotment")
       expect(plot.name).toMatch(/new/i)
     }
 
@@ -273,7 +273,7 @@ describe("GET /api/plots/user/:owner_id?sort=", () => {
   test("GET:404 Responds with an error when passed an invalid sort value", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/user/1?sort=example")
+      .get("/api/plots/user/1?sort=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -290,7 +290,7 @@ describe("GET /api/plots/user/:owner_id?order=", () => {
   test("GET:404 Responds with an error when passed an invalid order value", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/user/1?order=example")
+      .get("/api/plots/user/1?order=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -420,7 +420,7 @@ describe("POST /api/plots/user/:owner_id", () => {
 
     const newPlot = {
       name: "John's Field",
-      type: "field",
+      type: "Field",
       description: "A large field",
       location: "Wildwood",
       area: 3000
@@ -436,7 +436,7 @@ describe("POST /api/plots/user/:owner_id", () => {
       plot_id: 5,
       owner_id: 1,
       name: "John's Field",
-      type: "field",
+      type: "Field",
       description: "A large field",
       location: "Wildwood",
       area: 3000,
@@ -448,7 +448,7 @@ describe("POST /api/plots/user/:owner_id", () => {
 
     const newPlot = {
       name: "John's Field",
-      type: "field",
+      type: "Field",
       description: "A large field",
       location: "Wildwood"
     }
@@ -466,7 +466,7 @@ describe("POST /api/plots/user/:owner_id", () => {
 
     const newPlot = {
       name: "John's Field",
-      type: "field",
+      type: "Field",
       description: "A large field",
       location: "Wildwood",
       area: 3000,
@@ -486,7 +486,7 @@ describe("POST /api/plots/user/:owner_id", () => {
 
     const newPlot = {
       name: "John's Field",
-      type: "field",
+      type: "Field",
       description: "A large field",
       location: "Wildwood",
       area: "three thousand metres"
@@ -507,7 +507,7 @@ describe("POST /api/plots/user/:owner_id", () => {
   test("POST:400 Responds with an error when a required property is missing from the request body", async () => {
 
     const newPlot = {
-      type: "field",
+      type: "Field",
       description: "A large field",
       location: "Wildwood",
       area: 3000
@@ -529,7 +529,7 @@ describe("POST /api/plots/user/:owner_id", () => {
 
     const newPlot = {
       name: "John's Field",
-      type: "garage",
+      type: "foobar",
       description: "A large field",
       location: "Wildwood",
       area: 3000
@@ -551,14 +551,14 @@ describe("POST /api/plots/user/:owner_id", () => {
 
     const newPlot = {
       name: "John's Field",
-      type: "field",
+      type: "Field",
       description: "A large field",
       location: "Wildwood",
       area: 3000
     }
 
     const { body } = await request(app)
-      .post("/api/plots/user/example")
+      .post("/api/plots/user/foobar")
       .send(newPlot)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -573,7 +573,7 @@ describe("POST /api/plots/user/:owner_id", () => {
 
     const newPlot = {
       name: "John's Field",
-      type: "field",
+      type: "Field",
       description: "A large field",
       location: "Wildwood",
       area: 3000
@@ -595,7 +595,7 @@ describe("POST /api/plots/user/:owner_id", () => {
 
     const newPlot = {
       name: "John's Field",
-      type: "field",
+      type: "Field",
       description: "A large field",
       location: "Wildwood",
       area: 3000
@@ -617,7 +617,7 @@ describe("POST /api/plots/user/:owner_id", () => {
 
     const newPlot = {
       name: "John's Garden",
-      type: "garden",
+      type: "Garden",
       description: "The garden at the new house",
       location: "Applebury",
       area: 120
@@ -673,7 +673,7 @@ describe("GET /api/plots/user/:owner_id/pinned", () => {
     const auth = await request(app)
       .post("/api/login")
       .send({
-        username: "peach_princess",
+        login: "peach_princess",
         password: "peaches123",
       })
 
@@ -692,7 +692,7 @@ describe("GET /api/plots/user/:owner_id/pinned", () => {
   test("GET:400 Responds with an error message when the owner_id is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/user/example/pinned")
+      .get("/api/plots/user/foobar/pinned")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -743,7 +743,7 @@ describe("GET /api/plots/:plot_id", () => {
       plot_id: 1,
       owner_id: 1,
       name: "John's Garden",
-      type: "garden",
+      type: "Garden",
       description: "A vegetable garden",
       location: "Farmville",
       area: 100,
@@ -759,7 +759,7 @@ describe("GET /api/plots/:plot_id", () => {
   test("GET:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/example")
+      .get("/api/plots/foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -803,7 +803,7 @@ describe("PATCH /api/plots/:plot_id", () => {
 
     const newDetails = {
       name: "John's Homestead",
-      type: "homestead",
+      type: "Homestead",
       description: "A homestead",
       location: "Farmville",
       area: 1200
@@ -819,7 +819,7 @@ describe("PATCH /api/plots/:plot_id", () => {
       plot_id: 1,
       owner_id: 1,
       name: "John's Homestead",
-      type: "homestead",
+      type: "Homestead",
       description: "A homestead",
       location: "Farmville",
       area: 1200,
@@ -831,7 +831,7 @@ describe("PATCH /api/plots/:plot_id", () => {
 
     const newDetails = {
       name: "John's Garden",
-      type: "garden",
+      type: "Garden",
       description: "A new description",
       location: "234, Apricot Avenue, Farmville",
       area: 180
@@ -847,7 +847,7 @@ describe("PATCH /api/plots/:plot_id", () => {
       plot_id: 1,
       owner_id: 1,
       name: "John's Garden",
-      type: "garden",
+      type: "Garden",
       description: "A new description",
       location: "234, Apricot Avenue, Farmville",
       area: 180,
@@ -858,7 +858,7 @@ describe("PATCH /api/plots/:plot_id", () => {
   test("PATCH:400 Responds with an error when a property is missing from the request body", async () => {
 
     const newDetails = {
-      type: "homestead",
+      type: "Homestead",
       description: "A homestead",
       location: "Farmville",
       area: 1200
@@ -880,7 +880,7 @@ describe("PATCH /api/plots/:plot_id", () => {
 
     const newDetails = {
       name: "John's Homestead",
-      type: "homestead",
+      type: "Homestead",
       description: "A homestead",
       location: "Farmville",
       area: "ten metres"
@@ -902,7 +902,7 @@ describe("PATCH /api/plots/:plot_id", () => {
 
     const newDetails = {
       name: "John's Homestead",
-      type: "garage",
+      type: "foobar",
       description: "A homestead",
       location: "Farmville",
       area: 1200
@@ -924,14 +924,14 @@ describe("PATCH /api/plots/:plot_id", () => {
 
     const newDetails = {
       name: "John's Homestead",
-      type: "homestead",
+      type: "Homestead",
       description: "A homestead",
       location: "Farmville",
       area: 1200
     }
 
     const { body } = await request(app)
-      .patch("/api/plots/example")
+      .patch("/api/plots/foobar")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -946,7 +946,7 @@ describe("PATCH /api/plots/:plot_id", () => {
 
     const newDetails = {
       name: "John's Homestead",
-      type: "homestead",
+      type: "Homestead",
       description: "A homestead",
       location: "Farmville",
       area: 1200
@@ -968,7 +968,7 @@ describe("PATCH /api/plots/:plot_id", () => {
 
     const newDetails = {
       name: "John's Homestead",
-      type: "homestead",
+      type: "Homestead",
       description: "A homestead",
       location: "Farmville",
       area: 1200
@@ -990,7 +990,7 @@ describe("PATCH /api/plots/:plot_id", () => {
 
     const newDetails = {
       name: "John's Allotment",
-      type: "homestead",
+      type: "Homestead",
       description: "A homestead",
       location: "Farmville",
       area: 1200
@@ -1033,7 +1033,7 @@ describe("DELETE /api/plots/:plot_id", () => {
   test("DELETE:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .delete("/api/plots/example")
+      .delete("/api/plots/foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -1109,14 +1109,14 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
 
     const fourthPlot = {
       name: "John's Orchard",
-      type: "orchard",
+      type: "Orchard",
       description: "An orchard",
       location: "Farmville"
     }
 
     const fifthPlot = {
       name: "John's New Orchard",
-      type: "orchard",
+      type: "Orchard",
       description: "A new orchard",
       location: "Farmville",
     }
@@ -1187,7 +1187,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
     const toggle = { bool: true }
 
     const { body } = await request(app)
-      .patch("/api/plots/example/pin")
+      .patch("/api/plots/foobar/pin")
       .send(toggle)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)

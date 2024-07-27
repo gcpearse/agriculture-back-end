@@ -4,6 +4,7 @@ export type Crop = {
   subdivision_id: number | null
   name: string
   variety: string | null
+  category: string
   quantity: number | null
   date_planted: Date | null
   harvest_date: Date | null
@@ -20,6 +21,7 @@ export type ExtendedCrop = {
 export type CropRequest = {
   name: string
   variety?: string | null
+  category: string
   quantity?: number | null
   date_planted?: Date | null
   harvest_date?: Date | null

@@ -5,7 +5,7 @@ export const plotData: Plot[] = [
   {
     owner_id: 1,
     name: "John's Garden",
-    type: "garden",
+    type: "Garden",
     description: "A vegetable garden",
     location: "Farmville",
     area: 100,
@@ -14,7 +14,7 @@ export const plotData: Plot[] = [
   {
     owner_id: 2,
     name: "Olivia's Field",
-    type: "field",
+    type: "Field",
     description: "An orchard",
     location: "Lemongrove",
     area: 500,
@@ -23,7 +23,7 @@ export const plotData: Plot[] = [
   {
     owner_id: 1,
     name: "John's Allotment",
-    type: "allotment",
+    type: "Allotment",
     description: "An allotment",
     location: "Farmville",
     area: 50,
@@ -32,7 +32,7 @@ export const plotData: Plot[] = [
   {
     owner_id: 1,
     name: "John's New Allotment",
-    type: "allotment",
+    type: "Allotment",
     description: "A second allotment",
     location: "Farmville",
     area: 40,
