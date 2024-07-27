@@ -577,6 +577,25 @@ describe("POST /api/crops/plot/:plot_id", () => {
     })
   })
 
+  test("POST:400 Responds with an error when passed an invalid crop category", async () => {
+
+    const newCrop = {
+      name: "Pear",
+      category: "foobar"
+    }
+
+    const { body } = await request(app)
+      .post("/api/crops/plot/1")
+      .send(newCrop)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid crop category"
+    })
+  })
+
   test("POST:400 Responds with an error message when the plot_id is not a positive integer", async () => {
 
     const newCrop = {
@@ -1143,6 +1162,25 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Not null violation"
+    })
+  })
+
+  test("POST:400 Responds with an error when passed an invalid crop category", async () => {
+
+    const newCrop = {
+      name: "Pear",
+      category: "foobar"
+    }
+
+    const { body } = await request(app)
+      .post("/api/crops/subdivision/1")
+      .send(newCrop)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid crop category"
     })
   })
 
