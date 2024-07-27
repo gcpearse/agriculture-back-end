@@ -16,6 +16,7 @@ export const seed = async (
     cropData,
     cropNoteData,
     cropImageData,
+    cropCategoryData,
     issueData,
     issueNoteData,
     issueImageData,
@@ -42,6 +43,10 @@ export const seed = async (
 
   await db.query(`
     DROP TABLE IF EXISTS issues;
+    `)
+
+  await db.query(`
+    DROP TABLE IF EXISTS crop_categories;
     `)
 
   await db.query(`
@@ -190,6 +195,13 @@ export const seed = async (
     `)
 
   await db.query(`
+    CREATE TABLE crop_categories (
+      category_id SERIAL PRIMARY KEY,
+      category VARCHAR NOT NULL
+    );
+    `)
+
+  await db.query(`
     CREATE TABLE issues (
       issue_id SERIAL PRIMARY KEY,
       plot_id INT NOT NULL REFERENCES plots(plot_id) ON DELETE CASCADE,
@@ -331,6 +343,14 @@ export const seed = async (
     VALUES %L;
     `,
     cropImageData.map(entry => Object.values(entry))
+  ))
+
+  await db.query(format(`
+    INSERT INTO crop_categories 
+      (category)
+    VALUES %L;
+    `,
+    cropCategoryData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`
