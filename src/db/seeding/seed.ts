@@ -128,7 +128,7 @@ export const seed = async (
 
   await db.query(`
     CREATE TABLE plot_types (
-      plot_type_id SERIAL PRIMARY KEY,
+      type_id SERIAL PRIMARY KEY,
       type VARCHAR NOT NULL
     );
     `)
@@ -154,7 +154,7 @@ export const seed = async (
 
   await db.query(`
     CREATE TABLE subdivision_types (
-      subdivision_type_id SERIAL PRIMARY KEY,
+      type_id SERIAL PRIMARY KEY,
       type VARCHAR NOT NULL
     );
     `)
