@@ -902,7 +902,7 @@ describe("PATCH /api/plots/:plot_id", () => {
 
     const newDetails = {
       name: "John's Homestead",
-      type: "Garage",
+      type: "foobar",
       description: "A homestead",
       location: "Farmville",
       area: 1200
