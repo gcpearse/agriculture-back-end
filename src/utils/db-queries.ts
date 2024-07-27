@@ -150,6 +150,22 @@ export const searchForUsername = async (
 }
 
 
+export const validateCropCategory = async (
+  category: string,
+  ignoreCase: boolean
+): Promise<boolean> => {
+
+  const result = await db.query(`
+    SELECT category 
+    FROM crop_categories
+    WHERE category ${ignoreCase ? "ILIKE" : "="} $1;
+    `,
+    [category])
+
+  return Boolean(result.rows.length)
+}
+
+
 export const validatePlotType = async (
   type: string,
   ignoreCase: boolean
