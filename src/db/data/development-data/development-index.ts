@@ -8,6 +8,7 @@ import { subdivisionTypeData } from "./subdivisions/valid-subdivision-types"
 import { cropData } from "./crops/crops"
 import { cropNoteData } from "./crops/crop-notes"
 import { cropImageData } from "./crops/crop-images"
+import { cropCategoryData } from "./crops/crop-categories"
 import { issueData } from "./issues/issues"
 import { issueNoteData } from "./issues/issue-notes"
 import { issueImageData } from "./issues/issue-images"
@@ -26,6 +27,7 @@ export default {
   cropData,
   cropNoteData,
   cropImageData,
+  cropCategoryData,
   issueData,
   issueNoteData,
   issueImageData,
