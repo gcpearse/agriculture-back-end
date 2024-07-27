@@ -1,7 +1,7 @@
 import QueryString from "qs"
 import { db } from "../db"
 import { Crop, CropRequest, ExtendedCrop } from "../types/crop-types"
-import { getPlotOwnerId, getSubdivisionPlotId } from "../utils/db-queries"
+import { getPlotOwnerId, getSubdivisionPlotId, validateCropCategory } from "../utils/db-queries"
 import { verifyPagination, verifyParamIsPositiveInt, verifyPermission, verifyQueryValue } from "../utils/verification"
 import format from "pg-format"
 
@@ -110,6 +110,16 @@ export const insertCropByPlotId = async (
   const owner_id = await getPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to add crop denied")
+
+  const isValidCropCategory = await validateCropCategory(crop.category, false)
+
+  if (!isValidCropCategory) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid crop category"
+    })
+  }
 
   const result = await db.query(format(`
     INSERT INTO crops
@@ -229,6 +239,16 @@ export const insertCropBySubdivisionId = async (
   const owner_id = await getPlotOwnerId(plotId)
 
   await verifyPermission(authUserId, owner_id, "Permission to add crop denied")
+
+  const isValidCropCategory = await validateCropCategory(crop.category, false)
+
+  if (!isValidCropCategory) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid crop category"
+    })
+  }
 
   const result = await db.query(format(`
     INSERT INTO crops
