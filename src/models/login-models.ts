@@ -4,7 +4,7 @@ import { Credentials, LoggedInUser } from "../types/user-types"
 
 
 export const logInUser = async (
-  { username, password }: Credentials
+  { login, password }: Credentials
 ): Promise<LoggedInUser> => {
 
   const result = await db.query(`
@@ -12,24 +12,26 @@ export const logInUser = async (
       user_id, 
       username 
     FROM users 
-    WHERE username = $1;
+    WHERE username = $1
+    OR email = $1;
     `,
-    [username])
+    [login])
 
   if (!result.rowCount) {
     return Promise.reject({
       status: 404,
       message: "Not Found",
-      details: "Username could not be found"
+      details: "Username or email could not be found"
     })
   }
 
   const dbPassword = await db.query(`
     SELECT password
     FROM users
-    WHERE username = $1;
+    WHERE username = $1
+    OR email = $1;
     `,
-    [username])
+    [login])
 
   const isCorrectPassword = await compareHash(password, dbPassword.rows[0].password)
 
