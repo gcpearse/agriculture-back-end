@@ -19,7 +19,7 @@ beforeEach(async () => {
   const auth = await request(app)
     .post("/api/login")
     .send({
-      username: "carrot_king",
+      login: "carrot_king",
       password: "carrots123",
     })
 
@@ -75,7 +75,7 @@ describe("GET /api/plots/user/:owner_id", () => {
     const auth = await request(app)
       .post("/api/login")
       .send({
-        username: "quince_queen",
+        login: "quince_queen",
         password: "quince123",
       })
 
@@ -673,7 +673,7 @@ describe("GET /api/plots/user/:owner_id/pinned", () => {
     const auth = await request(app)
       .post("/api/login")
       .send({
-        username: "peach_princess",
+        login: "peach_princess",
         password: "peaches123",
       })
 
