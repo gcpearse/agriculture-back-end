@@ -113,12 +113,12 @@ export const insertCropByPlotId = async (
 
   const result = await db.query(format(`
     INSERT INTO crops
-      (plot_id, name, variety, quantity, date_planted, harvest_date)
+      (plot_id, name, variety, category, quantity, date_planted, harvest_date)
     VALUES
       %L
     RETURNING *;
     `,
-    [[plot_id, crop.name, crop.variety, crop.quantity, crop.date_planted, crop.harvest_date]]
+    [[plot_id, crop.name, crop.variety, crop.category, crop.quantity, crop.date_planted, crop.harvest_date]]
   ))
 
   return result.rows[0]
@@ -232,12 +232,12 @@ export const insertCropBySubdivisionId = async (
 
   const result = await db.query(format(`
     INSERT INTO crops
-      (plot_id, subdivision_id, name, variety, quantity, date_planted, harvest_date)
+      (plot_id, subdivision_id, name, variety, category, quantity, date_planted, harvest_date)
     VALUES
       %L
     RETURNING *;
     `,
-    [[plotId, subdivision_id, crop.name, crop.variety, crop.quantity, crop.date_planted, crop.harvest_date]]
+    [[plotId, subdivision_id, crop.name, crop.variety, crop.category, crop.quantity, crop.date_planted, crop.harvest_date]]
   ))
 
   return result.rows[0]
