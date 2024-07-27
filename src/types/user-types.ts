@@ -8,7 +8,9 @@ export type Password = {
 }
 
 
-export type Credentials = Username & Password
+export type Credentials = {
+  login: string
+} & Password
 
 
 export type LoggedInUser = {
