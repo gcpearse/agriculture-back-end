@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { getCropsByPlotId, getCropsBySubdivisionId, postCropByPlotId, postCropBySubdivisionId } from "../controllers/crops-controllers"
+import { getCropByCropId, getCropsByPlotId, getCropsBySubdivisionId, postCropByPlotId, postCropBySubdivisionId } from "../controllers/crops-controllers"
 
 
 export const cropsRouter = Router()
@@ -297,3 +297,70 @@ cropsRouter.route("/crops/subdivision/:subdivision_id")
  *              $ref: "#/components/schemas/NotFound"
  */
   .post(verifyToken, postCropBySubdivisionId)
+
+
+cropsRouter.route("/crops/:crop_id")
+
+
+/**
+ * @swagger
+ * /api/crops/{crop_id}:
+ *  get:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Retrieve a crop
+ *    description: Responds with a crop object.
+ *    tags: [Crops]
+ *    parameters:
+ *      - in: path
+ *        name: crop_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *    responses:
+ *      200:
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                crops:
+ *                  type: array
+ *                  items:
+ *                    allOf:
+ *                      - $ref: "#/components/schemas/Crop"
+ *                      - type: object
+ *                        properties:
+ *                          plot_name:
+ *                            type: string
+ *                            example: John's Garden          
+ *                          subdivision_name:
+ *                            type: string
+ *                            example: Vegetable Patch
+ *                          note_count:
+ *                            type: integer
+ *                            example: 1
+ *                          image_count:
+ *                            type: integer
+ *                            example: 1
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/BadRequest"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Forbidden"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/NotFound"
+ */
+  .get(verifyToken, getCropByCropId)
