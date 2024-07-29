@@ -846,6 +846,69 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=", () => {
 })
 
 
+describe("GET /api/crops/subdivision/:subdivision_id?category=", () => {
+
+  test("GET:200 Responds with an array of crop objects filtered case-insensitively by category", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/subdivision/1?category=vegetables")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    for (const crop of body.crops) {
+      expect(crop.category).toBe("Vegetables")
+    }
+
+    expect(body.count).toBe(1)
+  })
+
+  test("GET:404 Responds with an error message when the query value is invalid", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/subdivision/1?category=foobar")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  })
+})
+
+
+describe("GET /api/crops/subdivision/:subdivision_id?name=&category=", () => {
+
+  test("GET:200 Responds with an array of crop objects filtered case-insensitively by name and category", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/subdivision/1?name=carrot&category=vegetables")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    for (const crop of body.crops) {
+      expect(crop.name).toMatch(/carrot/i)
+      expect(crop.category).toBe("Vegetables")
+    }
+
+    expect(body.count).toBe(1)
+  })
+
+  test("GET:404 Responds with an error message when the query value is invalid", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/subdivision/1?category=foobar")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  })
+})
+
+
 describe("GET /api/crops/subdivision/:subdivision_id?sort=", () => {
 
   test("GET:200 Responds with an array of crop objects sorted by name in ascending order", async () => {
