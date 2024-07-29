@@ -174,9 +174,9 @@ export const selectCropsBySubdivisionId = async (
 
   await verifyParamIsPositiveInt(+page)
 
-  const plotId = await getSubdivisionPlotId(subdivision_id)
+  const plot_id = await getSubdivisionPlotId(subdivision_id)
 
-  const owner_id = await getPlotOwnerId(plotId)
+  const owner_id = await getPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to view crop data denied")
 
@@ -274,9 +274,9 @@ export const insertCropBySubdivisionId = async (
 
   await verifyParamIsPositiveInt(subdivision_id)
 
-  const plotId = await getSubdivisionPlotId(subdivision_id)
+  const plot_id = await getSubdivisionPlotId(subdivision_id)
 
-  const owner_id = await getPlotOwnerId(plotId)
+  const owner_id = await getPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to add crop denied")
 
@@ -297,7 +297,7 @@ export const insertCropBySubdivisionId = async (
       %L
     RETURNING *;
     `,
-    [[plotId, subdivision_id, crop.name, crop.variety, crop.category, crop.quantity, crop.date_planted, crop.harvest_date]]
+    [[plot_id, subdivision_id, crop.name, crop.variety, crop.category, crop.quantity, crop.date_planted, crop.harvest_date]]
   ))
 
   return result.rows[0]
