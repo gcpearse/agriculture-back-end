@@ -159,9 +159,9 @@ export const selectSubdivisionBySubdivisionId = async (
 
   await verifyParamIsPositiveInt(subdivision_id)
 
-  const plotId = await getSubdivisionPlotId(subdivision_id)
+  const plot_id = await getSubdivisionPlotId(subdivision_id)
 
-  const owner_id = await getPlotOwnerId(plotId)
+  const owner_id = await getPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to view subdivision data denied")
 
@@ -206,9 +206,9 @@ export const updateSubdivisionBySubdivisionId = async (
 
   await verifyParamIsPositiveInt(subdivision_id)
 
-  const plotId = await getSubdivisionPlotId(subdivision_id)
+  const plot_id = await getSubdivisionPlotId(subdivision_id)
 
-  const owner_id = await getPlotOwnerId(plotId)
+  const owner_id = await getPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to edit subdivision data denied")
 
@@ -220,7 +220,7 @@ export const updateSubdivisionBySubdivisionId = async (
     [subdivision_id])
 
   if (currentSubdivisionName.rows[0].name !== subdivision.name) {
-    await checkSubdivisionNameConflict(plotId, subdivision.name)
+    await checkSubdivisionNameConflict(plot_id, subdivision.name)
   }
 
   const isValidSubdivisionType = await validateSubdivisionType(subdivision.type, false)
@@ -256,9 +256,9 @@ export const removeSubdivisionBySubdivisionId = async (
 
   await verifyParamIsPositiveInt(subdivision_id)
 
-  const plotId = await getSubdivisionPlotId(subdivision_id)
+  const plot_id = await getSubdivisionPlotId(subdivision_id)
 
-  const owner_id = await getPlotOwnerId(plotId)
+  const owner_id = await getPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to delete subdivision data denied")
 
