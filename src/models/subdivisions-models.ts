@@ -145,7 +145,13 @@ export const insertSubdivisionByPlotId = async (
       %L
     RETURNING *;
     `,
-    [[plot_id, subdivision.name, subdivision.type, subdivision.description, subdivision.area]]
+    [[
+      plot_id,
+      subdivision.name,
+      subdivision.type,
+      subdivision.description,
+      subdivision.area
+    ]]
   ))
 
   return result.rows[0]
@@ -159,9 +165,9 @@ export const selectSubdivisionBySubdivisionId = async (
 
   await verifyParamIsPositiveInt(subdivision_id)
 
-  const plotId = await getSubdivisionPlotId(subdivision_id)
+  const plot_id = await getSubdivisionPlotId(subdivision_id)
 
-  const owner_id = await getPlotOwnerId(plotId)
+  const owner_id = await getPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to view subdivision data denied")
 
@@ -192,7 +198,8 @@ export const selectSubdivisionBySubdivisionId = async (
     WHERE subdivisions.subdivision_id = $1
     GROUP BY subdivisions.subdivision_id, plots.name;
     `,
-    [subdivision_id])
+    [subdivision_id]
+  )
 
   return result.rows[0]
 }
@@ -206,9 +213,9 @@ export const updateSubdivisionBySubdivisionId = async (
 
   await verifyParamIsPositiveInt(subdivision_id)
 
-  const plotId = await getSubdivisionPlotId(subdivision_id)
+  const plot_id = await getSubdivisionPlotId(subdivision_id)
 
-  const owner_id = await getPlotOwnerId(plotId)
+  const owner_id = await getPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to edit subdivision data denied")
 
@@ -217,10 +224,11 @@ export const updateSubdivisionBySubdivisionId = async (
     FROM subdivisions
     WHERE subdivision_id = $1;
     `,
-    [subdivision_id])
+    [subdivision_id]
+  )
 
   if (currentSubdivisionName.rows[0].name !== subdivision.name) {
-    await checkSubdivisionNameConflict(plotId, subdivision.name)
+    await checkSubdivisionNameConflict(plot_id, subdivision.name)
   }
 
   const isValidSubdivisionType = await validateSubdivisionType(subdivision.type, false)
@@ -243,7 +251,13 @@ export const updateSubdivisionBySubdivisionId = async (
     WHERE subdivision_id = $5
     RETURNING *;
     `,
-    [subdivision.name, subdivision.type, subdivision.description, subdivision.area, subdivision_id])
+    [
+      subdivision.name,
+      subdivision.type,
+      subdivision.description,
+      subdivision.area,
+      subdivision_id]
+  )
 
   return result.rows[0]
 }
@@ -256,9 +270,9 @@ export const removeSubdivisionBySubdivisionId = async (
 
   await verifyParamIsPositiveInt(subdivision_id)
 
-  const plotId = await getSubdivisionPlotId(subdivision_id)
+  const plot_id = await getSubdivisionPlotId(subdivision_id)
 
-  const owner_id = await getPlotOwnerId(plotId)
+  const owner_id = await getPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to delete subdivision data denied")
 
@@ -267,5 +281,6 @@ export const removeSubdivisionBySubdivisionId = async (
     WHERE subdivision_id = $1
     RETURNING *;
     `,
-    [subdivision_id])
+    [subdivision_id]
+  )
 }

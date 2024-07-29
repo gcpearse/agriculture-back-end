@@ -26,7 +26,8 @@ export const selectUserByUsername = async (
     FROM users
     WHERE username = $1;
     `,
-    [username])
+    [username]
+  )
 
   return result.rows[0]
 }
@@ -60,7 +61,14 @@ export const updateUserByUsername = async (
       surname, 
       unit_preference;
     `,
-    [user.email, user.first_name, user.surname, user.unit_preference, username])
+    [
+      user.email,
+      user.first_name,
+      user.surname,
+      user.unit_preference,
+      username
+    ]
+  )
 
   return result.rows[0]
 }
@@ -80,7 +88,8 @@ export const removeUserByUsername = async (
     WHERE username = $1
     RETURNING *;
     `,
-    [username])
+    [username]
+  )
 }
 
 
@@ -102,7 +111,8 @@ export const updatePasswordByUsername = async (
     FROM users
     WHERE username = $1;
     `,
-    [username])
+    [username]
+  )
 
   const isCorrectPassword = await compareHash(oldPassword, currentPassword.rows[0].password)
 
@@ -128,7 +138,8 @@ export const updatePasswordByUsername = async (
       surname, 
       unit_preference;
     `,
-    [hashedPassword, username])
+    [hashedPassword, username]
+  )
 
   return {
     message: "OK",

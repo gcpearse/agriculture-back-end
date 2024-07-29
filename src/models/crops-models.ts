@@ -1,7 +1,7 @@
 import QueryString from "qs"
 import { db } from "../db"
 import { Crop, CropRequest, ExtendedCrop } from "../types/crop-types"
-import { getPlotOwnerId, getSubdivisionPlotId, validateCropCategory } from "../utils/db-queries"
+import { getCropOwnerId, getPlotOwnerId, getSubdivisionPlotId, validateCropCategory } from "../utils/db-queries"
 import { verifyPagination, verifyParamIsPositiveInt, verifyPermission, verifyQueryValue } from "../utils/verification"
 import format from "pg-format"
 
@@ -148,7 +148,15 @@ export const insertCropByPlotId = async (
       %L
     RETURNING *;
     `,
-    [[plot_id, crop.name, crop.variety, crop.category, crop.quantity, crop.date_planted, crop.harvest_date]]
+    [[
+      plot_id,
+      crop.name,
+      crop.variety,
+      crop.category,
+      crop.quantity,
+      crop.date_planted,
+      crop.harvest_date
+    ]]
   ))
 
   return result.rows[0]
@@ -174,9 +182,9 @@ export const selectCropsBySubdivisionId = async (
 
   await verifyParamIsPositiveInt(+page)
 
-  const plotId = await getSubdivisionPlotId(subdivision_id)
+  const plot_id = await getSubdivisionPlotId(subdivision_id)
 
-  const owner_id = await getPlotOwnerId(plotId)
+  const owner_id = await getPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to view crop data denied")
 
@@ -274,9 +282,9 @@ export const insertCropBySubdivisionId = async (
 
   await verifyParamIsPositiveInt(subdivision_id)
 
-  const plotId = await getSubdivisionPlotId(subdivision_id)
+  const plot_id = await getSubdivisionPlotId(subdivision_id)
 
-  const owner_id = await getPlotOwnerId(plotId)
+  const owner_id = await getPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id, "Permission to add crop denied")
 
@@ -297,8 +305,58 @@ export const insertCropBySubdivisionId = async (
       %L
     RETURNING *;
     `,
-    [[plotId, subdivision_id, crop.name, crop.variety, crop.category, crop.quantity, crop.date_planted, crop.harvest_date]]
+    [[
+      plot_id,
+      subdivision_id,
+      crop.name,
+      crop.variety,
+      crop.category,
+      crop.quantity,
+      crop.date_planted,
+      crop.harvest_date
+    ]]
   ))
+
+  return result.rows[0]
+}
+
+
+export const selectCropByCropId = async (
+  authUserId: number,
+  crop_id: number
+): Promise<Crop> => {
+
+  await verifyParamIsPositiveInt(crop_id)
+
+  const owner_id = await getCropOwnerId(crop_id)
+
+  await verifyPermission(authUserId, owner_id, "Permission to view crop data denied")
+
+  const result = await db.query(`
+    SELECT
+      crops.*,
+      plots.name
+      AS plot_name,
+      subdivisions.name
+      AS subdivision_name,
+      COUNT(DISTINCT crop_notes.note_id)::INT
+      AS note_count,
+      COUNT(DISTINCT crop_images.image_id)::INT
+      AS image_count
+    FROM crops
+    LEFT JOIN plots
+    ON crops.plot_id = plots.plot_id
+    LEFT JOIN subdivisions
+    ON crops.subdivision_id = subdivisions.subdivision_id
+    LEFT JOIN crop_notes
+    ON crops.crop_id = crop_notes.crop_id
+    LEFT JOIN crop_images
+    ON crops.crop_id = crop_images.crop_id
+    WHERE crops.crop_id = $1
+    GROUP BY crops.crop_id, plots.name, subdivisions.name;
+    `,
+    [crop_id]
+  )
 
   return result.rows[0]
 }
