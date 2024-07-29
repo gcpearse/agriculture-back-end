@@ -29,6 +29,10 @@ cropsRouter.route("/crops/plot/:plot_id")
  *        schema:
  *          type: string
  *      - in: query
+ *        name: category
+ *        schema:
+ *          type: string
+ *      - in: query
  *        name: sort
  *        schema:
  *          type: string

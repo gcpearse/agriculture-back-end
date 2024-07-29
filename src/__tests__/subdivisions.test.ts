@@ -179,7 +179,7 @@ describe("GET /api/subdivisions/plot/:plot_id?type=", () => {
   test("GET:404 Responds with an error message when the query value is invalid", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?type=castle")
+      .get("/api/subdivisions/plot/1?type=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
