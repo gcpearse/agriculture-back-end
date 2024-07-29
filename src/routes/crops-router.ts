@@ -309,7 +309,7 @@ cropsRouter.route("/crops/:crop_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve a crop
- *    description: Responds with a crop object.
+ *    description: Responds with a crop object. If no crop is found, the server responds with an error. Permission is denied when the crop does not belong to the current user.
  *    tags: [Crops]
  *    parameters:
  *      - in: path
