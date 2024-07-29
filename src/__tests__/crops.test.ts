@@ -1341,3 +1341,70 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
     })
   })
 })
+
+
+describe("GET /api/crops/:crop_id", () => {
+
+  test("GET:200 Responds with a crop object", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.crop).toMatchObject<ExtendedCrop>({
+      crop_id: 1,
+      plot_id: 1,
+      subdivision_id: 1,
+      name: "Carrot",
+      variety: null,
+      category: "Vegetables",
+      quantity: 20,
+      date_planted: expect.stringMatching(regex),
+      harvest_date: expect.stringMatching(regex),
+      plot_name: "John's Garden",
+      subdivision_name: "Root Vegetable Bed",
+      note_count: 2,
+      image_count: 2
+    })
+  })
+
+  test("GET:400 Responds with an error message when the subdivision is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/foobar")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
+  test("GET:403 Responds with a warning when the crop does not belong to the authenticated user", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/5")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Forbidden",
+      details: "Permission to view crop data denied"
+    })
+  })
+
+  test("GET:404 Responds with an error message when the crop does not exist", async () => {
+
+    const { body } = await request(app)
+      .get("/api/crops/999")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Crop not found"
+    })
+  })
+})
