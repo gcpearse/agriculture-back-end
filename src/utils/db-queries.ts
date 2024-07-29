@@ -30,11 +30,12 @@ export const checkPlotNameConflict = async (
   const result = await db.query(`
     SELECT name
     FROM plots
-    WHERE owner_id = $1;
+    WHERE owner_id = $1
+    AND name = $2;
     `,
-    [owner_id])
+    [owner_id, name])
 
-  if (result.rows.map(row => row.name).includes(name)) {
+  if (result.rowCount) {
     return Promise.reject({
       status: 409,
       message: "Conflict",
@@ -52,11 +53,12 @@ export const checkSubdivisionNameConflict = async (
   const result = await db.query(`
     SELECT name
     FROM subdivisions
-    WHERE plot_id = $1;
+    WHERE plot_id = $1
+    AND name = $2;
     `,
-    [plot_id])
+    [plot_id, name])
 
-  if (result.rows.map(row => row.name).includes(name)) {
+  if (result.rowCount) {
     return Promise.reject({
       status: 409,
       message: "Conflict",
@@ -143,10 +145,12 @@ export const searchForUserId = async (
 
   const result = await db.query(`
     SELECT user_id
-    FROM users;
-    `)
+    FROM users
+    WHERE user_id = $1;
+    `,
+    [owner_id])
 
-  if (!result.rows.map(row => row.user_id).includes(owner_id)) {
+  if (!result.rowCount) {
     return Promise.reject({
       status: 404,
       message: "Not Found",
@@ -162,10 +166,12 @@ export const searchForUsername = async (
 
   const result = await db.query(`
     SELECT username
-    FROM users;
-    `)
+    FROM users
+    WHERE username = $1;
+    `,
+    [username])
 
-  if (!result.rows.map(row => row.username).includes(username)) {
+  if (!result.rowCount) {
     return Promise.reject({
       status: 404,
       message: "Not Found",
@@ -187,7 +193,7 @@ export const validateCropCategory = async (
     `,
     [category])
 
-  return Boolean(result.rows.length)
+  return Boolean(result.rowCount)
 }
 
 
@@ -203,7 +209,7 @@ export const validatePlotType = async (
     `,
     [type])
 
-  return Boolean(result.rows.length)
+  return Boolean(result.rowCount)
 }
 
 
@@ -219,5 +225,5 @@ export const validateSubdivisionType = async (
     `,
     [type])
 
-  return Boolean(result.rows.length)
+  return Boolean(result.rowCount)
 }
