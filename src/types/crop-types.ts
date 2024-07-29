@@ -12,6 +12,7 @@ export type Crop = {
 
 
 export type ExtendedCrop = {
+  plot_name?: string
   subdivision_name?: string
   note_count: number
   image_count: number
