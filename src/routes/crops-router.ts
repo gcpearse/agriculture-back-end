@@ -177,6 +177,10 @@ cropsRouter.route("/crops/subdivision/:subdivision_id")
  *        schema:
  *          type: string
  *      - in: query
+ *        name: category
+ *        schema:
+ *          type: string
+ *      - in: query
  *        name: sort
  *        schema:
  *          type: string
