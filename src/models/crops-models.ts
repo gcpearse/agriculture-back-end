@@ -11,6 +11,7 @@ export const selectCropsByPlotId = async (
   plot_id: number,
   {
     name,
+    category,
     sort = "crop_id",
     order = "desc",
     limit = "10",
@@ -31,6 +32,16 @@ export const selectCropsByPlotId = async (
   await verifyQueryValue(["crop_id", "name", "date_planted", "harvest_date"], sort as string)
 
   await verifyQueryValue(["asc", "desc"], order as string)
+
+  const isValidCropCategory = await validateCropCategory(category as string, true)
+
+  if (category && !isValidCropCategory) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  }
 
   let query = `
   SELECT
@@ -64,6 +75,15 @@ export const selectCropsByPlotId = async (
     countQuery += format(`
       AND crops.name ILIKE %L
       `, `%${name}%`)
+  }
+
+  if (category) {
+    query += format(`
+      AND crops.category ILIKE %L
+      `, `%${category}%`)
+    countQuery += format(`
+      AND crops.category ILIKE %L
+      `, `%${category}%`)
   }
 
   if (sort === "date_planted" || sort === "harvest_date") {
