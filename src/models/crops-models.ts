@@ -148,7 +148,15 @@ export const insertCropByPlotId = async (
       %L
     RETURNING *;
     `,
-    [[plot_id, crop.name, crop.variety, crop.category, crop.quantity, crop.date_planted, crop.harvest_date]]
+    [[
+      plot_id,
+      crop.name,
+      crop.variety,
+      crop.category,
+      crop.quantity,
+      crop.date_planted,
+      crop.harvest_date
+    ]]
   ))
 
   return result.rows[0]
@@ -297,7 +305,16 @@ export const insertCropBySubdivisionId = async (
       %L
     RETURNING *;
     `,
-    [[plot_id, subdivision_id, crop.name, crop.variety, crop.category, crop.quantity, crop.date_planted, crop.harvest_date]]
+    [[
+      plot_id,
+      subdivision_id,
+      crop.name,
+      crop.variety,
+      crop.category,
+      crop.quantity,
+      crop.date_planted,
+      crop.harvest_date
+    ]]
   ))
 
   return result.rows[0]
@@ -338,7 +355,8 @@ export const selectCropByCropId = async (
     WHERE crops.crop_id = $1
     GROUP BY crops.crop_id, plots.name, subdivisions.name;
     `,
-    [crop_id])
+    [crop_id]
+  )
 
   return result.rows[0]
 }

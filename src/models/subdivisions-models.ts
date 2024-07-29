@@ -145,7 +145,13 @@ export const insertSubdivisionByPlotId = async (
       %L
     RETURNING *;
     `,
-    [[plot_id, subdivision.name, subdivision.type, subdivision.description, subdivision.area]]
+    [[
+      plot_id,
+      subdivision.name,
+      subdivision.type,
+      subdivision.description,
+      subdivision.area
+    ]]
   ))
 
   return result.rows[0]
@@ -192,7 +198,8 @@ export const selectSubdivisionBySubdivisionId = async (
     WHERE subdivisions.subdivision_id = $1
     GROUP BY subdivisions.subdivision_id, plots.name;
     `,
-    [subdivision_id])
+    [subdivision_id]
+  )
 
   return result.rows[0]
 }
@@ -217,7 +224,8 @@ export const updateSubdivisionBySubdivisionId = async (
     FROM subdivisions
     WHERE subdivision_id = $1;
     `,
-    [subdivision_id])
+    [subdivision_id]
+  )
 
   if (currentSubdivisionName.rows[0].name !== subdivision.name) {
     await checkSubdivisionNameConflict(plot_id, subdivision.name)
@@ -243,7 +251,13 @@ export const updateSubdivisionBySubdivisionId = async (
     WHERE subdivision_id = $5
     RETURNING *;
     `,
-    [subdivision.name, subdivision.type, subdivision.description, subdivision.area, subdivision_id])
+    [
+      subdivision.name,
+      subdivision.type,
+      subdivision.description,
+      subdivision.area,
+      subdivision_id]
+  )
 
   return result.rows[0]
 }
@@ -267,5 +281,6 @@ export const removeSubdivisionBySubdivisionId = async (
     WHERE subdivision_id = $1
     RETURNING *;
     `,
-    [subdivision_id])
+    [subdivision_id]
+  )
 }

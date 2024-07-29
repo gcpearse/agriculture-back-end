@@ -10,7 +10,8 @@ export const checkEmailConflict = async (
     FROM users
     WHERE email = $1;
     `,
-    [email])
+    [email]
+  )
 
   if (dbEmail.rowCount) {
     return Promise.reject({
@@ -33,7 +34,8 @@ export const checkPlotNameConflict = async (
     WHERE owner_id = $1
     AND name = $2;
     `,
-    [owner_id, name])
+    [owner_id, name]
+  )
 
   if (result.rowCount) {
     return Promise.reject({
@@ -56,7 +58,8 @@ export const checkSubdivisionNameConflict = async (
     WHERE plot_id = $1
     AND name = $2;
     `,
-    [plot_id, name])
+    [plot_id, name]
+  )
 
   if (result.rowCount) {
     return Promise.reject({
@@ -79,7 +82,8 @@ export const getCropOwnerId = async (
     ON plots.plot_id = crops.plot_id
     WHERE crop_id = $1;
     `,
-    [crop_id])
+    [crop_id]
+  )
 
   if (!result.rowCount) {
     return Promise.reject({
@@ -102,7 +106,8 @@ export const getPlotOwnerId = async (
     FROM plots
     WHERE plot_id = $1;
     `,
-    [plot_id])
+    [plot_id]
+  )
 
   if (!result.rowCount) {
     return Promise.reject({
@@ -125,7 +130,8 @@ export const getSubdivisionPlotId = async (
     FROM subdivisions
     WHERE subdivision_id = $1;
     `,
-    [subdivision_id])
+    [subdivision_id]
+  )
 
   if (!result.rowCount) {
     return Promise.reject({
@@ -148,7 +154,8 @@ export const searchForUserId = async (
     FROM users
     WHERE user_id = $1;
     `,
-    [owner_id])
+    [owner_id]
+  )
 
   if (!result.rowCount) {
     return Promise.reject({
@@ -169,7 +176,8 @@ export const searchForUsername = async (
     FROM users
     WHERE username = $1;
     `,
-    [username])
+    [username]
+  )
 
   if (!result.rowCount) {
     return Promise.reject({
@@ -191,7 +199,8 @@ export const validateCropCategory = async (
     FROM crop_categories
     WHERE category ${ignoreCase ? "ILIKE" : "="} $1;
     `,
-    [category])
+    [category]
+  )
 
   return Boolean(result.rowCount)
 }
@@ -207,7 +216,8 @@ export const validatePlotType = async (
     FROM plot_types
     WHERE type ${ignoreCase ? "ILIKE" : "="} $1;
     `,
-    [type])
+    [type]
+  )
 
   return Boolean(result.rowCount)
 }
@@ -223,7 +233,8 @@ export const validateSubdivisionType = async (
     FROM subdivision_types
     WHERE type ${ignoreCase ? "ILIKE" : "="} $1;
     `,
-    [type])
+    [type]
+  )
 
   return Boolean(result.rowCount)
 }

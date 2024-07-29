@@ -150,7 +150,14 @@ export const insertPlotByOwner = async (
       %L
     RETURNING *;
     `,
-    [[owner_id, plot.name, plot.type, plot.description, plot.location, plot.area]]
+    [[
+      owner_id,
+      plot.name,
+      plot.type,
+      plot.description,
+      plot.location,
+      plot.area
+    ]]
   ))
 
   return result.rows[0]
@@ -175,7 +182,8 @@ export const selectPinnedPlotsByOwner = async (
     AND is_pinned IS TRUE
     ORDER BY name ASC;
     `,
-    [owner_id])
+    [owner_id]
+  )
 
   return result.rows
 }
@@ -219,7 +227,8 @@ export const selectPlotByPlotId = async (
     WHERE plots.plot_id = $1
     GROUP BY plots.plot_id;
     `,
-    [plot_id])
+    [plot_id]
+  )
 
   return result.rows[0]
 }
@@ -242,7 +251,8 @@ export const updatePlotByPlotId = async (
     FROM plots
     WHERE plot_id = $1;
     `,
-    [plot_id])
+    [plot_id]
+  )
 
   if (currentPlotName.rows[0].name !== plot.name) {
     await checkPlotNameConflict(owner_id, plot.name)
@@ -269,7 +279,15 @@ export const updatePlotByPlotId = async (
     WHERE plot_id = $6
     RETURNING *;
     `,
-    [plot.name, plot.type, plot.description, plot.location, plot.area, plot_id])
+    [
+      plot.name,
+      plot.type,
+      plot.description,
+      plot.location,
+      plot.area,
+      plot_id
+    ]
+  )
 
   return result.rows[0]
 }
@@ -291,7 +309,8 @@ export const removePlotByPlotId = async (
     WHERE plot_id = $1
     RETURNING *;
     `,
-    [plot_id])
+    [plot_id]
+  )
 }
 
 
@@ -322,7 +341,8 @@ export const updateIsPinnedByPlotId = async (
     WHERE owner_id = $1 
     AND is_pinned IS TRUE;
     `,
-    [owner_id])
+    [owner_id]
+  )
 
   const count = countResult.rows[0].plot_count
 
@@ -331,7 +351,8 @@ export const updateIsPinnedByPlotId = async (
     FROM plots
     WHERE plot_id = $1;
     `,
-    [plot_id])
+    [plot_id]
+  )
 
   let isPinned = isPinnedResult.rows[0].is_pinned
 
@@ -350,7 +371,8 @@ export const updateIsPinnedByPlotId = async (
     WHERE plot_id = $1
     RETURNING is_pinned;
     `,
-    [plot_id])
+    [plot_id]
+  )
 
   isPinned = result.rows[0].is_pinned
 

@@ -15,7 +15,8 @@ export const logInUser = async (
     WHERE username = $1
     OR email = $1;
     `,
-    [login])
+    [login]
+  )
 
   if (!result.rowCount) {
     return Promise.reject({
@@ -31,7 +32,8 @@ export const logInUser = async (
     WHERE username = $1
     OR email = $1;
     `,
-    [login])
+    [login]
+  )
 
   const isCorrectPassword = await compareHash(password, dbPassword.rows[0].password)
 

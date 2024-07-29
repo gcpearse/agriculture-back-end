@@ -21,7 +21,8 @@ export const registerUser = async (
     FROM users 
     WHERE username = $1;
     `,
-    [username])
+    [username]
+  )
 
   if (dbUsername.rowCount) {
     return Promise.reject({
@@ -48,7 +49,14 @@ export const registerUser = async (
       surname, 
       unit_preference;
     `,
-    [[username, hashedPassword, email, first_name, surname, unit_preference]]
+    [[
+      username,
+      hashedPassword,
+      email,
+      first_name,
+      surname,
+      unit_preference
+    ]]
   ))
 
   return result.rows[0]
