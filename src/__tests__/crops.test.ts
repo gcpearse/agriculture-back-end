@@ -1369,7 +1369,7 @@ describe("GET /api/crops/:crop_id", () => {
     })
   })
 
-  test("GET:400 Responds with an error message when the subdivision is not a positive integer", async () => {
+  test("GET:400 Responds with an error message when the crop_id is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/foobar")

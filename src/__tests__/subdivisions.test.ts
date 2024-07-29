@@ -655,7 +655,7 @@ describe("GET /api/subdivisions/:subdivision_id", () => {
     })
   })
 
-  test("GET:400 Responds with an error message when the subdivision is not a positive integer", async () => {
+  test("GET:400 Responds with an error message when the subdivision_id is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/foobar")
