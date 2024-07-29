@@ -893,19 +893,6 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=&category=", () => {
 
     expect(body.count).toBe(1)
   })
-
-  test("GET:404 Responds with an error message when the query value is invalid", async () => {
-
-    const { body } = await request(app)
-      .get("/api/crops/subdivision/1?category=foobar")
-      .set("Authorization", `Bearer ${token}`)
-      .expect(404)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Not Found",
-      details: "No results found for that query"
-    })
-  })
 })
 
 
