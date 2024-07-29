@@ -66,6 +66,31 @@ export const checkSubdivisionNameConflict = async (
 }
 
 
+export const getCropOwnerId = async (
+  crop_id: number
+): Promise<number> => {
+
+  const result = await db.query(`
+    SELECT owner_id
+    FROM plots
+    JOIN crops
+    ON plots.plot_id = crops.plot_id
+    WHERE crop_id = $1;
+    `,
+    [crop_id])
+
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+      details: "Crop not found"
+    })
+  }
+
+  return result.rows[0].owner_id
+}
+
+
 export const getPlotOwnerId = async (
   plot_id: number
 ): Promise<number> => {
