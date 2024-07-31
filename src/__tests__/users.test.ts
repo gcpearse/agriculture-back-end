@@ -3,7 +3,7 @@ import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
-import { SecureUser, UnitSystem } from "../types/user-types"
+import { SecureUser, UnitSystem, UserRole } from "../types/user-types"
 import { StatusResponse } from "../types/response-types"
 
 
@@ -45,6 +45,7 @@ describe("GET /api/users/:username", () => {
       email: "john.smith@example.com",
       first_name: "John",
       surname: "Smith",
+      role: UserRole.Admin,
       unit_preference: UnitSystem.Imperial
     })
   })
@@ -100,6 +101,7 @@ describe("PATCH /api/users/:username", () => {
       email: "jsj@example.com",
       first_name: "Johnny",
       surname: "Smith-Jones",
+      role: UserRole.Admin,
       unit_preference: UnitSystem.Metric
     })
   })
