@@ -97,6 +97,13 @@ export const seed = async (
     `)
 
   await db.query(`
+    DROP TYPE IF EXISTS user_role;
+    CREATE TYPE user_role 
+    AS ENUM 
+      ('admin', 'supervisor', 'user');
+    `)
+
+  await db.query(`
     CREATE TABLE users (
       user_id SERIAL PRIMARY KEY,
       username VARCHAR NOT NULL,
@@ -104,6 +111,7 @@ export const seed = async (
       email VARCHAR NOT NULL,
       first_name VARCHAR NOT NULL,
       surname VARCHAR NOT NULL,
+      role user_role NOT NULL DEFAULT 'user',
       unit_preference unit_system NOT NULL DEFAULT 'metric',
       token VARCHAR,
       token_expiry TIMESTAMP
@@ -256,7 +264,7 @@ export const seed = async (
 
   await db.query(format(`
     INSERT INTO users 
-      (username, password, email, first_name, surname, unit_preference)
+      (username, password, email, first_name, surname, role, unit_preference)
     VALUES %L;
     `,
     await Promise.all(
@@ -268,6 +276,7 @@ export const seed = async (
           user.email,
           user.first_name,
           user.surname,
+          user.role,
           user.unit_preference
         ]
       })
