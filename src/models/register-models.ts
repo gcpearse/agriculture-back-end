@@ -46,7 +46,8 @@ export const registerUser = async (
       username,
       email, 
       first_name, 
-      surname, 
+      surname,
+      role,
       unit_preference;
     `,
     [[
