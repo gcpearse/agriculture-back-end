@@ -1,4 +1,4 @@
-import { UnitSystem, User } from "../../../../types/user-types";
+import { UnitSystem, User, UserRole } from "../../../../types/user-types";
 
 
 export const userData: User[] = [
@@ -8,6 +8,7 @@ export const userData: User[] = [
     email: "john.smith@example.com",
     first_name: "John",
     surname: "Smith",
+    role: UserRole.Admin,
     unit_preference: UnitSystem.Imperial,
     token: null,
     token_expiry: null
@@ -18,6 +19,7 @@ export const userData: User[] = [
     email: "olivia.jones@example.com",
     first_name: "Olivia",
     surname: "Jones",
+    role: UserRole.User,
     unit_preference: UnitSystem.Metric,
     token: null,
     token_expiry: null
@@ -28,6 +30,7 @@ export const userData: User[] = [
     email: "maria.perez@example.com",
     first_name: "Maria",
     surname: "Perez",
+    role: UserRole.User,
     unit_preference: UnitSystem.Metric,
     token: null,
     token_expiry: null

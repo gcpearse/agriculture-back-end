@@ -1,4 +1,4 @@
-import { UnitSystem, User } from "../../../../types/user-types";
+import { UnitSystem, User, UserRole } from "../../../../types/user-types";
 
 
 export const userData: User[] = [
@@ -8,6 +8,7 @@ export const userData: User[] = [
     email: "admin",
     first_name: "Admin",
     surname: "Admin",
+    role: UserRole.Admin,
     unit_preference: UnitSystem.Metric,
     token: null,
     token_expiry: null
