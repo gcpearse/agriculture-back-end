@@ -216,6 +216,9 @@ export const schemaRouter = Router()
  *        surname:
  *          type: string
  *          example: Smith
+ *        role:
+ *          type: string
+ *          example: user
  *        unit_preference:
  *          type: string
  *          example: imperial

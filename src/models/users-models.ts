@@ -21,7 +21,8 @@ export const selectUserByUsername = async (
       username, 
       email,
       first_name, 
-      surname, 
+      surname,
+      role,
       unit_preference
     FROM users
     WHERE username = $1;
@@ -59,6 +60,7 @@ export const updateUserByUsername = async (
       email,
       first_name, 
       surname, 
+      role,
       unit_preference;
     `,
     [

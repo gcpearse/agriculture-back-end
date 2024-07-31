@@ -3,7 +3,7 @@ import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
-import { SecureUser, UnitSystem } from "../types/user-types"
+import { SecureUser, UnitSystem, UserRole } from "../types/user-types"
 import { StatusResponse } from "../types/response-types"
 
 
@@ -17,7 +17,7 @@ afterAll(async () => {
 
 describe("POST /api/register", () => {
 
-  test("POST:201 Responds with a new user object without a password property", async () => {
+  test("POST:201 Responds with a new user object without a password property and an automatically assigned default user role", async () => {
 
     const newUser = {
       username: "farmer123",
@@ -39,6 +39,7 @@ describe("POST /api/register", () => {
       email: "fred.flint@example.com",
       first_name: "Fred",
       surname: "Flint",
+      role: UserRole.User,
       unit_preference: UnitSystem.Metric
     })
   })

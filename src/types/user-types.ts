@@ -18,6 +18,13 @@ export type LoggedInUser = {
 } & Username
 
 
+export enum UserRole {
+  Admin = "admin",
+  Supervisor = "supervisor",
+  User = "user"
+}
+
+
 export enum UnitSystem {
   Metric = "metric",
   Imperial = "imperial"
@@ -29,6 +36,7 @@ export type SecureUser = {
   email: string
   first_name: string
   surname: string
+  role: UserRole
   unit_preference: UnitSystem
 } & Username
 
