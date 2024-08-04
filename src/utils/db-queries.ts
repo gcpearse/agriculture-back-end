@@ -145,6 +145,29 @@ export const getSubdivisionPlotId = async (
 }
 
 
+export const getUserRole = async (
+  user_id: number
+): Promise<string> => {
+
+  const result = await db.query(`
+    SELECT role
+    FROM users
+    WHERE user_id = $1;
+    `,
+    [user_id])
+
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+      details: "User not found"
+    })
+  }
+
+  return result.rows[0].role
+}
+
+
 export const searchForUserId = async (
   owner_id: number
 ): Promise<undefined> => {
