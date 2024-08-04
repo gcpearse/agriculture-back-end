@@ -2,8 +2,38 @@ import { db } from "../db"
 import { compareHash, generateHash } from "../middleware/security"
 import { StatusResponse } from "../types/response-types"
 import { PasswordUpdate, SecureUser } from "../types/user-types"
-import { checkEmailConflict, searchForUsername } from "../utils/db-queries"
+import { checkEmailConflict, getUserRole, searchForUsername } from "../utils/db-queries"
 import { verifyPermission } from "../utils/verification"
+
+
+export const selectAllUsers = async (
+  authUserId: number
+): Promise<SecureUser[]> => {
+
+  const role = await getUserRole(authUserId)
+
+  if (role !== "admin") {
+    return Promise.reject({
+      status: 403,
+      message: "Forbidden",
+      details: "Permission to view user data denied"
+    })
+  }
+
+  const result = await db.query(`
+    SELECT
+      user_id, 
+      username, 
+      email,
+      first_name, 
+      surname,
+      role,
+      unit_preference
+    FROM users;
+    `)
+
+  return result.rows
+}
 
 
 export const selectUserByUsername = async (
