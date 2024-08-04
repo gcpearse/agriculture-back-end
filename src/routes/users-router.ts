@@ -1,9 +1,41 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { deleteUserByUsername, getUserByUsername, patchPasswordByUsername, patchUserByUsername } from "../controllers/users-controllers"
+import { deleteUserByUsername, getUserByUsername, getUsers, patchPasswordByUsername, patchUserByUsername } from "../controllers/users-controllers"
 
 
 export const usersRouter = Router()
+
+
+usersRouter.route("/users")
+
+
+/**
+ * @swagger
+ * /api/users:
+ *  get:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Retrieve all users' details
+ *    description: Responds with an array of user objects. Permission is denied when the current user is not an admin.
+ *    tags: [Users]
+ *    responses:
+ *      200:
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                user:
+ *                  $ref: "#/components/schemas/User"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Forbidden"
+ */
+  .get(verifyToken, getUsers)
 
 
 usersRouter.route("/users/:username")
@@ -48,6 +80,7 @@ usersRouter.route("/users/:username")
  *              $ref: "#/components/schemas/NotFound"
  */
   .get(verifyToken, getUserByUsername)
+
 
 /**
  * @swagger
@@ -107,6 +140,7 @@ usersRouter.route("/users/:username")
  */
   .patch(verifyToken, patchUserByUsername)
 
+
 /**
  * @swagger
  * /api/users/{username}:
@@ -139,6 +173,7 @@ usersRouter.route("/users/:username")
  *              $ref: "#/components/schemas/NotFound"
  */
   .delete(verifyToken, deleteUserByUsername)
+
 
 /**
  * @swagger
