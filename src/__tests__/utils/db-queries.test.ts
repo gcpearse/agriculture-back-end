@@ -1,7 +1,7 @@
 import data from "../../db/data/test-data/test-index"
 import { db } from "../../db"
 import { seed } from "../../db/seeding/seed"
-import { checkEmailConflict, checkPlotNameConflict, checkSubdivisionNameConflict, getCropOwnerId, getPlotOwnerId, getSubdivisionPlotId, searchForUserId, searchForUsername, validateCropCategory, validatePlotType, validateSubdivisionType } from "../../utils/db-queries"
+import { checkEmailConflict, checkPlotNameConflict, checkSubdivisionNameConflict, getCropOwnerId, getPlotOwnerId, getSubdivisionPlotId, getUserRole, searchForUserId, searchForUsername, validateCropCategory, validatePlotType, validateSubdivisionType } from "../../utils/db-queries"
 import { StatusResponse } from "../../types/response-types"
 
 
@@ -119,6 +119,26 @@ describe("getSubdivisionPlotId", () => {
       status: 404,
       message: "Not Found",
       details: "Subdivision not found"
+    })
+  })
+})
+
+
+describe("getUserRole", () => {
+
+  test("Returns the role of the user with the given user_id", async () => {
+
+    const result = await getUserRole(1)
+
+    expect(result).toBe("admin")
+  })
+
+  test("Returns an error message when the subdivision_id does not exist", async () => {
+
+    await expect(searchForUserId(999)).rejects.toMatchObject<StatusResponse>({
+      status: 404,
+      message: "Not Found",
+      details: "User not found"
     })
   })
 })
