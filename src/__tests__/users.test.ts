@@ -30,6 +30,52 @@ afterAll(async () => {
 })
 
 
+describe("GET /api/users", () => {
+
+  test("GET:200 Responds with an array of user objects", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    for (const user of body.users) {
+      expect(user).toMatchObject<SecureUser>({
+        user_id: expect.any(Number),
+        username: expect.any(String),
+        email: expect.any(String),
+        first_name: expect.any(String),
+        surname: expect.any(String),
+        role: expect.any(String),
+        unit_preference: expect.any(String)
+      })
+    }
+  })
+
+  test("GET:403 Responds with a warning when the authenticated user is not an admin", async () => {
+
+    const auth = await request(app)
+      .post("/api/login")
+      .send({
+        login: "quince_queen",
+        password: "quince123",
+      })
+
+    token = auth.body.token
+
+    const { body } = await request(app)
+      .get("/api/users")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Forbidden",
+      details: "Permission to view user data denied"
+    })
+  })
+})
+
+
 describe("GET /api/users/:username", () => {
 
   test("GET:200 Responds with a user object matching the value of the username parameter", async () => {
