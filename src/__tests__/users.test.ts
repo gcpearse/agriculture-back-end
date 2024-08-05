@@ -30,7 +30,7 @@ afterAll(async () => {
 })
 
 
-describe.only("GET /api/users", () => {
+describe("GET /api/users", () => {
 
   test("GET:200 Responds with an array of user objects", async () => {
 
@@ -76,7 +76,7 @@ describe.only("GET /api/users", () => {
 })
 
 
-describe.only("GET /api/users?role=", () => {
+describe("GET /api/users?role=", () => {
 
   test("GET:200 Responds with an array of user objects filtered by role", async () => {
 
@@ -86,7 +86,36 @@ describe.only("GET /api/users?role=", () => {
       .expect(200)
 
     for (const user of body.users) {
-      expect(user.role).toBe("user")
+      expect(user.role).toBe(UserRole.User)
+    }
+  })
+
+  test("GET:404 Responds with an error message when the query value is invalid", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users?unit_preference=foobar")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid unit system"
+    })
+  })
+})
+
+
+describe("GET /api/users?unit_preference=", () => {
+
+  test("GET:200 Responds with an array of user objects filtered by unit preference", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users?unit_preference=metric")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    for (const user of body.users) {
+      expect(user.unit_preference).toBe(UnitSystem.Metric)
     }
   })
 
