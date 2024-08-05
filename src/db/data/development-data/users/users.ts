@@ -9,7 +9,7 @@ export const userData: User[] = [
     first_name: "Admin",
     surname: "Admin",
     role: UserRole.Admin,
-    unit_preference: UnitSystem.Metric,
+    unit_system: UnitSystem.Metric,
     token: null,
     token_expiry: null
   }

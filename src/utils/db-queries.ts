@@ -145,6 +145,29 @@ export const getSubdivisionPlotId = async (
 }
 
 
+export const getUserRole = async (
+  user_id: number
+): Promise<string> => {
+
+  const result = await db.query(`
+    SELECT role
+    FROM users
+    WHERE user_id = $1;
+    `,
+    [user_id])
+
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+      details: "User not found"
+    })
+  }
+
+  return result.rows[0].role
+}
+
+
 export const searchForUserId = async (
   owner_id: number
 ): Promise<undefined> => {
@@ -237,4 +260,48 @@ export const validateSubdivisionType = async (
   )
 
   return Boolean(result.rowCount)
+}
+
+
+export const validateUnitSystem = async (
+  unit_system: string
+): Promise<undefined> => {
+
+  const result = await db.query(`
+    SELECT *
+    FROM unnest(enum_range(null::unit_system))
+    AS unit_system
+    WHERE unit_system::VARCHAR ILIKE $1;
+    `,
+    [unit_system])
+
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid unit system"
+    })
+  }
+}
+
+
+export const validateUserRole = async (
+  role: string
+): Promise<undefined> => {
+
+  const result = await db.query(`
+    SELECT *
+    FROM unnest(enum_range(null::user_role))
+    AS role
+    WHERE role::VARCHAR ILIKE $1;
+    `,
+    [role])
+
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid user role"
+    })
+  }
 }

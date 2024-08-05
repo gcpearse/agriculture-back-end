@@ -37,7 +37,7 @@ export type SecureUser = {
   first_name: string
   surname: string
   role: UserRole
-  unit_preference: UnitSystem
+  unit_system: UnitSystem
 } & Username
 
 

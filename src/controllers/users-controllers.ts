@@ -1,6 +1,19 @@
 import { NextFunction, Response } from "express"
-import { updatePasswordByUsername, removeUserByUsername, selectUserByUsername, updateUserByUsername } from "../models/users-models"
+import { updatePasswordByUsername, removeUserByUsername, selectUserByUsername, updateUserByUsername, selectAllUsers } from "../models/users-models"
 import { ExtendedRequest } from "../types/auth-types"
+
+
+export const getUsers = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
+
+  const authUserId = req.user!.user_id
+
+  try {
+    const users = await selectAllUsers(authUserId, req.query)
+    res.status(200).send({ users })
+  } catch (err) {
+    next(err)
+  }
+}
 
 
 export const getUserByUsername = async (req: ExtendedRequest, res: Response, next: NextFunction) => {

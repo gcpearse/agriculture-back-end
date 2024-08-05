@@ -112,7 +112,7 @@ export const seed = async (
       first_name VARCHAR NOT NULL,
       surname VARCHAR NOT NULL,
       role user_role NOT NULL DEFAULT 'user',
-      unit_preference unit_system NOT NULL DEFAULT 'metric',
+      unit_system unit_system NOT NULL DEFAULT 'metric',
       token VARCHAR,
       token_expiry TIMESTAMP
     );
@@ -264,7 +264,7 @@ export const seed = async (
 
   await db.query(format(`
     INSERT INTO users 
-      (username, password, email, first_name, surname, role, unit_preference)
+      (username, password, email, first_name, surname, role, unit_system)
     VALUES %L;
     `,
     await Promise.all(
@@ -277,7 +277,7 @@ export const seed = async (
           user.first_name,
           user.surname,
           user.role,
-          user.unit_preference
+          user.unit_system
         ]
       })
     )

@@ -80,10 +80,10 @@ export const selectCropsByPlotId = async (
   if (category) {
     query += format(`
       AND crops.category ILIKE %L
-      `, `%${category}%`)
+      `, category)
     countQuery += format(`
       AND crops.category ILIKE %L
-      `, `%${category}%`)
+      `, category)
   }
 
   if (sort === "date_planted" || sort === "harvest_date") {
@@ -235,10 +235,10 @@ export const selectCropsBySubdivisionId = async (
   if (category) {
     query += format(`
       AND crops.category ILIKE %L
-      `, `%${category}%`)
+      `, category)
     countQuery += format(`
       AND crops.category ILIKE %L
-      `, `%${category}%`)
+      `, category)
   }
 
   if (sort === "date_planted" || sort === "harvest_date") {

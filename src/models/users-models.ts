@@ -1,9 +1,68 @@
+import QueryString from "qs"
 import { db } from "../db"
 import { compareHash, generateHash } from "../middleware/security"
 import { StatusResponse } from "../types/response-types"
 import { PasswordUpdate, SecureUser } from "../types/user-types"
-import { checkEmailConflict, searchForUsername } from "../utils/db-queries"
-import { verifyPermission } from "../utils/verification"
+import { checkEmailConflict, getUserRole, searchForUsername, validateUnitSystem, validateUserRole } from "../utils/db-queries"
+import { verifyPermission, verifyQueryValue } from "../utils/verification"
+import format from "pg-format"
+
+
+export const selectAllUsers = async (
+  authUserId: number,
+  {
+    role,
+    unit_system,
+    sort = "user_id",
+    order = "asc"
+  }: QueryString.ParsedQs
+): Promise<SecureUser[]> => {
+
+  const userRole = await getUserRole(authUserId)
+
+  await verifyPermission(userRole, "admin", "Permission to view user data denied")
+
+  await verifyQueryValue(["user_id", "email", "first_name", "surname"], sort as string)
+
+  await verifyQueryValue(["asc", "desc"], order as string)
+
+  let query = `
+  SELECT
+    user_id, 
+    username, 
+    email,
+    first_name, 
+    surname,
+    role,
+    unit_system
+  FROM users
+  WHERE TRUE
+  `
+
+  if (role) {
+    await validateUserRole(role as string)
+
+    query += format(`
+      AND users.role::VARCHAR ILIKE %L
+      `, role)
+  }
+
+  if (unit_system) {
+    await validateUnitSystem(unit_system as string)
+    
+    query += format(`
+      AND users.unit_system::VARCHAR ILIKE %L
+      `, unit_system)
+  }
+
+  query += `
+  ORDER BY ${sort} ${order}
+  `
+
+  const result = await db.query(`${query};`)
+
+  return result.rows
+}
 
 
 export const selectUserByUsername = async (
@@ -23,7 +82,7 @@ export const selectUserByUsername = async (
       first_name, 
       surname,
       role,
-      unit_preference
+      unit_system
     FROM users
     WHERE username = $1;
     `,
@@ -52,7 +111,7 @@ export const updateUserByUsername = async (
       email = $1,
       first_name = $2, 
       surname = $3, 
-      unit_preference = $4
+      unit_system = $4
     WHERE username = $5
     RETURNING 
       user_id, 
@@ -61,13 +120,13 @@ export const updateUserByUsername = async (
       first_name, 
       surname, 
       role,
-      unit_preference;
+      unit_system;
     `,
     [
       user.email,
       user.first_name,
       user.surname,
-      user.unit_preference,
+      user.unit_system,
       username
     ]
   )
@@ -108,6 +167,14 @@ export const updatePasswordByUsername = async (
 
   await verifyPermission(authUsername, username, "Permission to edit password denied")
 
+  if (!newPassword) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Empty string"
+    })
+  }
+
   const currentPassword = await db.query(`
     SELECT password
     FROM users
@@ -138,7 +205,7 @@ export const updatePasswordByUsername = async (
       email,
       first_name, 
       surname, 
-      unit_preference;
+      unit_system;
     `,
     [hashedPassword, username]
   )

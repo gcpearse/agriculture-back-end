@@ -50,9 +50,9 @@ export const verifyQueryValue = (
 
   if (!validValues.includes(queryValue)) {
     return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "No results found for that query"
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid query value"
     })
   }
 }

@@ -1,9 +1,58 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { deleteUserByUsername, getUserByUsername, patchPasswordByUsername, patchUserByUsername } from "../controllers/users-controllers"
+import { deleteUserByUsername, getUserByUsername, getUsers, patchPasswordByUsername, patchUserByUsername } from "../controllers/users-controllers"
 
 
 export const usersRouter = Router()
+
+
+usersRouter.route("/users")
+
+
+/**
+ * @swagger
+ * /api/users:
+ *  get:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Retrieve all users' details
+ *    description: Responds with an array of user objects. If a query parameter is invalid, the server responds with an error. Permission is denied when the current user is not an admin.
+ *    tags: [Users]
+ *    parameters:
+ *      - in: query
+ *        name: role
+ *        schema:
+ *          type: string
+ *      - in: query
+ *        name: unit_system
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                users:
+ *                  type: array
+ *                  items:
+ *                    $ref: "#/components/schemas/User"
+ *      400:
+ *        description: BadRequest
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/BadRequest"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Forbidden"
+ */
+  .get(verifyToken, getUsers)
 
 
 usersRouter.route("/users/:username")
@@ -49,6 +98,7 @@ usersRouter.route("/users/:username")
  */
   .get(verifyToken, getUserByUsername)
 
+
 /**
  * @swagger
  * /api/users/{username}:
@@ -56,7 +106,7 @@ usersRouter.route("/users/:username")
  *    security:
  *      - bearerAuth: []
  *    summary: Update a user's details
- *    description: Responds with an updated user object. If the value of unit_preference is not valid, the email already exists for another user, or the username does not exist, the server responds with an error. Permission is denied when the username does not belong to the current user. 
+ *    description: Responds with an updated user object. If the value of unit_system is not valid, the email already exists for another user, or the username does not exist, the server responds with an error. Permission is denied when the username does not belong to the current user. 
  *    tags: [Users]
  *    parameters:
  *      - in: path
@@ -107,6 +157,7 @@ usersRouter.route("/users/:username")
  */
   .patch(verifyToken, patchUserByUsername)
 
+
 /**
  * @swagger
  * /api/users/{username}:
@@ -139,6 +190,7 @@ usersRouter.route("/users/:username")
  *              $ref: "#/components/schemas/NotFound"
  */
   .delete(verifyToken, deleteUserByUsername)
+
 
 /**
  * @swagger
