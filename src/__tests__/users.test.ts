@@ -30,7 +30,7 @@ afterAll(async () => {
 })
 
 
-describe("GET /api/users", () => {
+describe.only("GET /api/users", () => {
 
   test("GET:200 Responds with an array of user objects", async () => {
 
@@ -71,6 +71,35 @@ describe("GET /api/users", () => {
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
       details: "Permission to view user data denied"
+    })
+  })
+})
+
+
+describe.only("GET /api/users?role=", () => {
+
+  test("GET:200 Responds with an array of user objects filtered by role", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users?role=user")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    for (const user of body.users) {
+      expect(user.role).toBe("user")
+    }
+  })
+
+  test("GET:404 Responds with an error message when the query value is invalid", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users?role=uuserr")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid user role"
     })
   })
 })
