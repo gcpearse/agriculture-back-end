@@ -23,6 +23,10 @@ usersRouter.route("/users")
  *        name: role
  *        schema:
  *          type: string
+ *      - in: query
+ *        name: unit_system
+ *        schema:
+ *          type: string
  *    responses:
  *      200:
  *        description: OK
