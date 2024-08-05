@@ -12,7 +12,7 @@ export const registerUser = async (
     email,
     first_name,
     surname,
-    unit_preference
+    unit_system
   }: User
 ): Promise<SecureUser> => {
 
@@ -38,7 +38,7 @@ export const registerUser = async (
 
   const result = await db.query(format(`
     INSERT INTO users
-      (username, password, email, first_name, surname, unit_preference)
+      (username, password, email, first_name, surname, unit_system)
     VALUES
       %L
     RETURNING 
@@ -48,7 +48,7 @@ export const registerUser = async (
       first_name, 
       surname,
       role,
-      unit_preference;
+      unit_system;
     `,
     [[
       username,
@@ -56,7 +56,7 @@ export const registerUser = async (
       email,
       first_name,
       surname,
-      unit_preference
+      unit_system
     ]]
   ))
 

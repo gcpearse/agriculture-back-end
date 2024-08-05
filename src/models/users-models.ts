@@ -12,7 +12,7 @@ export const selectAllUsers = async (
   authUserId: number,
   {
     role,
-    unit_preference
+    unit_system
   }: QueryString.ParsedQs
 ): Promise<SecureUser[]> => {
 
@@ -34,7 +34,7 @@ export const selectAllUsers = async (
     first_name, 
     surname,
     role,
-    unit_preference
+    unit_system
   FROM users
   WHERE TRUE
   `
@@ -47,12 +47,12 @@ export const selectAllUsers = async (
       `, role)
   }
 
-  if (unit_preference) {
-    await validateUnitSystem(unit_preference as string)
+  if (unit_system) {
+    await validateUnitSystem(unit_system as string)
     
     query += format(`
-      AND users.unit_preference::VARCHAR ILIKE %L
-      `, unit_preference)
+      AND users.unit_system::VARCHAR ILIKE %L
+      `, unit_system)
   }
 
   const result = await db.query(`${query};`)
@@ -78,7 +78,7 @@ export const selectUserByUsername = async (
       first_name, 
       surname,
       role,
-      unit_preference
+      unit_system
     FROM users
     WHERE username = $1;
     `,
@@ -107,7 +107,7 @@ export const updateUserByUsername = async (
       email = $1,
       first_name = $2, 
       surname = $3, 
-      unit_preference = $4
+      unit_system = $4
     WHERE username = $5
     RETURNING 
       user_id, 
@@ -116,13 +116,13 @@ export const updateUserByUsername = async (
       first_name, 
       surname, 
       role,
-      unit_preference;
+      unit_system;
     `,
     [
       user.email,
       user.first_name,
       user.surname,
-      user.unit_preference,
+      user.unit_system,
       username
     ]
   )
@@ -193,7 +193,7 @@ export const updatePasswordByUsername = async (
       email,
       first_name, 
       surname, 
-      unit_preference;
+      unit_system;
     `,
     [hashedPassword, username]
   )

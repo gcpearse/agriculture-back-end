@@ -264,7 +264,7 @@ export const validateSubdivisionType = async (
 
 
 export const validateUnitSystem = async (
-  unit_preference: string
+  unit_system: string
 ): Promise<undefined> => {
 
   const result = await db.query(`
@@ -273,7 +273,7 @@ export const validateUnitSystem = async (
     AS unit_system
     WHERE unit_system::VARCHAR ILIKE $1;
     `,
-    [unit_preference])
+    [unit_system])
 
   if (!result.rowCount) {
     return Promise.reject({

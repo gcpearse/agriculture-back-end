@@ -219,7 +219,7 @@ export const schemaRouter = Router()
  *        role:
  *          type: string
  *          example: user
- *        unit_preference:
+ *        unit_system:
  *          type: string
  *          example: imperial
  *    UserRequest:
@@ -234,7 +234,7 @@ export const schemaRouter = Router()
  *        surname:
  *          type: string
  *          example: Smith
- *        unit_preference:
+ *        unit_system:
  *          type: string
  *          example: imperial
  */

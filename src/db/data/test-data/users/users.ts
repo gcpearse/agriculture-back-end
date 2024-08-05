@@ -9,7 +9,7 @@ export const userData: User[] = [
     first_name: "John",
     surname: "Smith",
     role: UserRole.Admin,
-    unit_preference: UnitSystem.Imperial,
+    unit_system: UnitSystem.Imperial,
     token: null,
     token_expiry: null
   },
@@ -20,7 +20,7 @@ export const userData: User[] = [
     first_name: "Olivia",
     surname: "Jones",
     role: UserRole.User,
-    unit_preference: UnitSystem.Metric,
+    unit_system: UnitSystem.Metric,
     token: null,
     token_expiry: null
   },
@@ -31,7 +31,7 @@ export const userData: User[] = [
     first_name: "Maria",
     surname: "Perez",
     role: UserRole.User,
-    unit_preference: UnitSystem.Metric,
+    unit_system: UnitSystem.Metric,
     token: null,
     token_expiry: null
   }

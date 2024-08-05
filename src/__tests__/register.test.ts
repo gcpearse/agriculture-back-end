@@ -25,7 +25,7 @@ describe("POST /api/register", () => {
       email: "fred.flint@example.com",
       first_name: "Fred",
       surname: "Flint",
-      unit_preference: "metric"
+      unit_system: "metric"
     }
 
     const { body } = await request(app)
@@ -40,7 +40,7 @@ describe("POST /api/register", () => {
       first_name: "Fred",
       surname: "Flint",
       role: UserRole.User,
-      unit_preference: UnitSystem.Metric
+      unit_system: UnitSystem.Metric
     })
   })
 
@@ -51,7 +51,7 @@ describe("POST /api/register", () => {
       email: "fred.flint@example.com",
       first_name: "Fred",
       surname: "Flint",
-      unit_preference: "metric"
+      unit_system: "metric"
     }
 
     const { body } = await request(app)
@@ -73,7 +73,7 @@ describe("POST /api/register", () => {
       email: "bob.booth@example.com",
       first_name: "Bob",
       surname: "Booth",
-      unit_preference: "imperial"
+      unit_system: "imperial"
     }
 
     const { body } = await request(app)
@@ -95,7 +95,7 @@ describe("POST /api/register", () => {
       email: "john.smith@example.com",
       first_name: "Fred",
       surname: "Flint",
-      unit_preference: "metric"
+      unit_system: "metric"
     }
 
     const { body } = await request(app)

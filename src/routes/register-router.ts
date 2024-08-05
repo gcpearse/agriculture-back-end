@@ -34,7 +34,7 @@ export const registerRouter = Router()
  *              surname:
  *                type: string
  *                example: Flint
- *              unit_preference:
+ *              unit_system:
  *                type: string    
  *                example: metric
  *    responses:
@@ -66,7 +66,7 @@ export const registerRouter = Router()
  *                    role:
  *                      type: string
  *                      example: user
- *                    unit_preference:
+ *                    unit_system:
  *                      type: string
  *                      example: metric
  *      400:

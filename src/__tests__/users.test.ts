@@ -47,7 +47,7 @@ describe("GET /api/users", () => {
         first_name: expect.any(String),
         surname: expect.any(String),
         role: expect.any(String),
-        unit_preference: expect.any(String)
+        unit_system: expect.any(String)
       })
     }
   })
@@ -93,7 +93,7 @@ describe("GET /api/users?role=", () => {
   test("GET:404 Responds with an error message when the query value is invalid", async () => {
 
     const { body } = await request(app)
-      .get("/api/users?unit_preference=foobar")
+      .get("/api/users?unit_system=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -105,17 +105,17 @@ describe("GET /api/users?role=", () => {
 })
 
 
-describe("GET /api/users?unit_preference=", () => {
+describe("GET /api/users?unit_system=", () => {
 
   test("GET:200 Responds with an array of user objects filtered by unit preference", async () => {
 
     const { body } = await request(app)
-      .get("/api/users?unit_preference=metric")
+      .get("/api/users?unit_system=metric")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
     for (const user of body.users) {
-      expect(user.unit_preference).toBe(UnitSystem.Metric)
+      expect(user.unit_system).toBe(UnitSystem.Metric)
     }
   })
 
@@ -150,7 +150,7 @@ describe("GET /api/users/:username", () => {
       first_name: "John",
       surname: "Smith",
       role: UserRole.Admin,
-      unit_preference: UnitSystem.Imperial
+      unit_system: UnitSystem.Imperial
     })
   })
 
@@ -190,7 +190,7 @@ describe("PATCH /api/users/:username", () => {
       email: "jsj@example.com",
       first_name: "Johnny",
       surname: "Smith-Jones",
-      unit_preference: "metric"
+      unit_system: "metric"
     }
 
     const { body } = await request(app)
@@ -206,7 +206,7 @@ describe("PATCH /api/users/:username", () => {
       first_name: "Johnny",
       surname: "Smith-Jones",
       role: UserRole.Admin,
-      unit_preference: UnitSystem.Metric
+      unit_system: UnitSystem.Metric
     })
   })
 
@@ -215,7 +215,7 @@ describe("PATCH /api/users/:username", () => {
     const newDetails = {
       email: "jsj@example.com",
       surname: "Smith-Jones",
-      unit_preference: "metric"
+      unit_system: "metric"
     }
 
     const { body } = await request(app)
@@ -230,13 +230,13 @@ describe("PATCH /api/users/:username", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error when an invalid value is passed for unit_preference", async () => {
+  test("PATCH:400 Responds with an error when an invalid value is passed for unit_system", async () => {
 
     const newDetails = {
       email: "jsj@example.com",
       first_name: "Johnny",
       surname: "Smith-Jones",
-      unit_preference: "international"
+      unit_system: "international"
     }
 
     const { body } = await request(app)
@@ -257,7 +257,7 @@ describe("PATCH /api/users/:username", () => {
       email: "john.smith@example.com",
       first_name: "John",
       surname: "Smith",
-      unit_preference: "imperial"
+      unit_system: "imperial"
     }
 
     const { body } = await request(app)
@@ -278,7 +278,7 @@ describe("PATCH /api/users/:username", () => {
       email: "john.smith@example.com",
       first_name: "John",
       surname: "Smith",
-      unit_preference: "imperial"
+      unit_system: "imperial"
     }
 
     const { body } = await request(app)
@@ -299,7 +299,7 @@ describe("PATCH /api/users/:username", () => {
       email: "olivia.jones@example.com",
       first_name: "John",
       surname: "Smith",
-      unit_preference: "imperial"
+      unit_system: "imperial"
     }
 
     const { body } = await request(app)
