@@ -98,7 +98,7 @@ describe("GET /api/users?role=", () => {
     }
   })
 
-  test("GET:404 Responds with an error message when the query value is invalid", async () => {
+  test("GET:400 Responds with an error message when the query value is invalid", async () => {
 
     const { body } = await request(app)
       .get("/api/users?unit_system=foobar")
@@ -115,7 +115,7 @@ describe("GET /api/users?role=", () => {
 
 describe("GET /api/users?unit_system=", () => {
 
-  test("GET:200 Responds with an array of user objects filtered by unit preference", async () => {
+  test("GET:200 Responds with an array of user objects filtered by unit system", async () => {
 
     const { body } = await request(app)
       .get("/api/users?unit_system=metric")
@@ -127,16 +127,16 @@ describe("GET /api/users?unit_system=", () => {
     }
   })
 
-  test("GET:404 Responds with an error message when the query value is invalid", async () => {
+  test("GET:400 Responds with an error message when the query value is invalid", async () => {
 
     const { body } = await request(app)
-      .get("/api/users?role=uuserr")
+      .get("/api/users?unit_system=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid user role"
+      details: "Invalid unit system"
     })
   })
 })
@@ -176,16 +176,16 @@ describe("GET /api/users?sort=", () => {
     expect(body.users).toEqual(sortedUsers)
   })
 
-  test("GET:404 Responds with an error when passed an invalid sort value", async () => {
+  test("GET:400 Responds with an error when passed an invalid sort value", async () => {
 
     const { body } = await request(app)
       .get("/api/users?sort=foobar")
       .set("Authorization", `Bearer ${token}`)
-      .expect(404)
+      .expect(400)
 
     expect(body).toMatchObject<StatusResponse>({
-      message: "Not Found",
-      details: "No results found for that query"
+      message: "Bad Request",
+      details: "Invalid query value"
     })
   })
 })
@@ -193,7 +193,7 @@ describe("GET /api/users?sort=", () => {
 
 describe("GET /api/users?role=&sort=", () => {
 
-  test("GET:200 Responds with an array of user objects sorted by email in ascending order", async () => {
+  test("GET:200 Responds with an array of user objects filtered by role and sorted by first name in ascending order", async () => {
 
     const { body } = await request(app)
       .get("/api/users?role=user&sort=first_name")
@@ -201,8 +201,8 @@ describe("GET /api/users?role=&sort=", () => {
       .expect(200)
 
     const sortedUsers = [...body.users].sort((a: SecureUser, b: SecureUser) => {
-      if (a.role > b.role) return 1
-      if (a.role < b.role) return -1
+      if (a.first_name > b.first_name) return 1
+      if (a.first_name < b.first_name) return -1
       return 0
     })
 
@@ -233,16 +233,16 @@ describe("GET /api/users?order=", () => {
     expect(body.users).toEqual(sortedUsers)
   })
 
-  test("GET:404 Responds with an error when passed an invalid order value", async () => {
+  test("GET:400 Responds with an error when passed an invalid order value", async () => {
 
     const { body } = await request(app)
       .get("/api/users?order=foobar")
       .set("Authorization", `Bearer ${token}`)
-      .expect(404)
+      .expect(400)
 
     expect(body).toMatchObject<StatusResponse>({
-      message: "Not Found",
-      details: "No results found for that query"
+      message: "Bad Request",
+      details: "Invalid query value"
     })
   })
 })

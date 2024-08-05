@@ -93,9 +93,9 @@ describe("verifyQueryValue", () => {
   test("When the query value is not found in the array of valid values, the promise is rejected", () => {
 
     expect(verifyQueryValue(["foo", "bar"], "foobar")).rejects.toMatchObject<StatusResponse>({
-      status: 404,
-      message: "Not Found",
-      details: "No results found for that query"
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid query value"
     })
   })
 

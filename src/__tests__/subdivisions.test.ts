@@ -276,16 +276,16 @@ describe("GET /api/subdivisions/plot/:plot_id?sort=", () => {
     expect(body.count).toBe(3)
   })
 
-  test("GET:404 Responds with an error when passed an invalid sort value", async () => {
+  test("GET:400 Responds with an error when passed an invalid sort value", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/plot/1?sort=foobar")
       .set("Authorization", `Bearer ${token}`)
-      .expect(404)
+      .expect(400)
 
     expect(body).toMatchObject<StatusResponse>({
-      message: "Not Found",
-      details: "No results found for that query"
+      message: "Bad Request",
+      details: "Invalid query value"
     })
   })
 })
@@ -293,16 +293,16 @@ describe("GET /api/subdivisions/plot/:plot_id?sort=", () => {
 
 describe("GET /api/subdivisions/plot/:plot_id?order=", () => {
 
-  test("GET:404 Responds with an error when passed an invalid order value", async () => {
+  test("GET:400 Responds with an error when passed an invalid order value", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/plot/1?order=foobar")
       .set("Authorization", `Bearer ${token}`)
-      .expect(404)
+      .expect(400)
 
     expect(body).toMatchObject<StatusResponse>({
-      message: "Not Found",
-      details: "No results found for that query"
+      message: "Bad Request",
+      details: "Invalid query value"
     })
   })
 })
