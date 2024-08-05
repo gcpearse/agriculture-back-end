@@ -1,7 +1,7 @@
 import data from "../../db/data/test-data/test-index"
 import { db } from "../../db"
 import { seed } from "../../db/seeding/seed"
-import { checkEmailConflict, checkPlotNameConflict, checkSubdivisionNameConflict, getCropOwnerId, getPlotOwnerId, getSubdivisionPlotId, getUserRole, searchForUserId, searchForUsername, validateCropCategory, validatePlotType, validateSubdivisionType } from "../../utils/db-queries"
+import { checkEmailConflict, checkPlotNameConflict, checkSubdivisionNameConflict, getCropOwnerId, getPlotOwnerId, getSubdivisionPlotId, getUserRole, searchForUserId, searchForUsername, validateCropCategory, validatePlotType, validateSubdivisionType, validateUserRole } from "../../utils/db-queries"
 import { StatusResponse } from "../../types/response-types"
 
 
@@ -230,5 +230,23 @@ describe("validateSubdivisionType", () => {
     const result = await validateSubdivisionType("bed", false)
 
     expect(result).toBe(false)
+  })
+})
+
+
+describe("validateUserRole", () => {
+
+  test("When the user role is invalid, the promise is rejected", async () => {
+
+    await expect(validateUserRole("foobar")).rejects.toMatchObject<StatusResponse>({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid user role"
+    })
+  })
+
+  test("When the user role is valid, the promise resolves to be undefined", async () => {
+
+    await expect(validateUserRole("admin")).resolves.toBeUndefined()
   })
 })
