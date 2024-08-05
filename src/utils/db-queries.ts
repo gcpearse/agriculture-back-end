@@ -261,3 +261,25 @@ export const validateSubdivisionType = async (
 
   return Boolean(result.rowCount)
 }
+
+
+export const validateUserRole = async (
+  role: string
+): Promise<undefined> => {
+
+  const result = await db.query(`
+    SELECT *
+    FROM unnest(enum_range(null::user_role))
+    AS role
+    WHERE role::VARCHAR ILIKE $1;
+    `,
+    [role])
+
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid user role"
+    })
+  }
+}
