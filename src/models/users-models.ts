@@ -4,7 +4,7 @@ import { compareHash, generateHash } from "../middleware/security"
 import { StatusResponse } from "../types/response-types"
 import { PasswordUpdate, SecureUser } from "../types/user-types"
 import { checkEmailConflict, getUserRole, searchForUsername, validateUnitSystem, validateUserRole } from "../utils/db-queries"
-import { verifyPermission } from "../utils/verification"
+import { verifyPermission, verifyQueryValue } from "../utils/verification"
 import format from "pg-format"
 
 
@@ -12,19 +12,19 @@ export const selectAllUsers = async (
   authUserId: number,
   {
     role,
-    unit_system
+    unit_system,
+    sort = "user_id",
+    order = "asc"
   }: QueryString.ParsedQs
 ): Promise<SecureUser[]> => {
 
   const userRole = await getUserRole(authUserId)
 
-  if (userRole !== "admin") {
-    return Promise.reject({
-      status: 403,
-      message: "Forbidden",
-      details: "Permission to view user data denied"
-    })
-  }
+  await verifyPermission(userRole, "admin", "Permission to view user data denied")
+
+  await verifyQueryValue(["user_id", "email", "first_name", "surname"], sort as string)
+
+  await verifyQueryValue(["asc", "desc"], order as string)
 
   let query = `
   SELECT
@@ -54,6 +54,10 @@ export const selectAllUsers = async (
       AND users.unit_system::VARCHAR ILIKE %L
       `, unit_system)
   }
+
+  query += `
+  ORDER BY ${sort} ${order}
+  `
 
   const result = await db.query(`${query};`)
 
@@ -162,6 +166,14 @@ export const updatePasswordByUsername = async (
   await searchForUsername(username)
 
   await verifyPermission(authUsername, username, "Permission to edit password denied")
+
+  if (!newPassword) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Empty string"
+    })
+  }
 
   const currentPassword = await db.query(`
     SELECT password
