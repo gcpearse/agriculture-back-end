@@ -3,7 +3,7 @@ import { db } from "../db"
 import { compareHash, generateHash } from "../middleware/security"
 import { StatusResponse } from "../types/response-types"
 import { PasswordUpdate, SecureUser } from "../types/user-types"
-import { checkEmailConflict, getUserRole, searchForUsername, validateUserRole } from "../utils/db-queries"
+import { checkEmailConflict, getUserRole, searchForUsername, validateUnitSystem, validateUserRole } from "../utils/db-queries"
 import { verifyPermission } from "../utils/verification"
 import format from "pg-format"
 
@@ -11,7 +11,8 @@ import format from "pg-format"
 export const selectAllUsers = async (
   authUserId: number,
   {
-    role
+    role,
+    unit_preference
   }: QueryString.ParsedQs
 ): Promise<SecureUser[]> => {
 
@@ -44,6 +45,14 @@ export const selectAllUsers = async (
     query += format(`
       AND users.role::VARCHAR ILIKE %L
       `, role)
+  }
+
+  if (unit_preference) {
+    await validateUnitSystem(unit_preference as string)
+    
+    query += format(`
+      AND users.unit_preference::VARCHAR ILIKE %L
+      `, unit_preference)
   }
 
   const result = await db.query(`${query};`)
