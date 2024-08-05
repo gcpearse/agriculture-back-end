@@ -1,18 +1,23 @@
+import QueryString from "qs"
 import { db } from "../db"
 import { compareHash, generateHash } from "../middleware/security"
 import { StatusResponse } from "../types/response-types"
 import { PasswordUpdate, SecureUser } from "../types/user-types"
-import { checkEmailConflict, getUserRole, searchForUsername } from "../utils/db-queries"
+import { checkEmailConflict, getUserRole, searchForUsername, validateUserRole } from "../utils/db-queries"
 import { verifyPermission } from "../utils/verification"
+import format from "pg-format"
 
 
 export const selectAllUsers = async (
-  authUserId: number
+  authUserId: number,
+  {
+    role
+  }: QueryString.ParsedQs
 ): Promise<SecureUser[]> => {
 
-  const role = await getUserRole(authUserId)
+  const userRole = await getUserRole(authUserId)
 
-  if (role !== "admin") {
+  if (userRole !== "admin") {
     return Promise.reject({
       status: 403,
       message: "Forbidden",
@@ -20,17 +25,28 @@ export const selectAllUsers = async (
     })
   }
 
-  const result = await db.query(`
-    SELECT
-      user_id, 
-      username, 
-      email,
-      first_name, 
-      surname,
-      role,
-      unit_preference
-    FROM users;
-    `)
+  let query = `
+  SELECT
+    user_id, 
+    username, 
+    email,
+    first_name, 
+    surname,
+    role,
+    unit_preference
+  FROM users
+  WHERE TRUE
+  `
+
+  if (role) {
+    await validateUserRole(role as string)
+
+    query += format(`
+      AND users.role::VARCHAR ILIKE %L
+      `, role)
+  }
+
+  const result = await db.query(`${query};`)
 
   return result.rows
 }
