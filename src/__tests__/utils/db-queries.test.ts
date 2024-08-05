@@ -133,9 +133,9 @@ describe("getUserRole", () => {
     expect(result).toBe("admin")
   })
 
-  test("Returns an error message when the subdivision_id does not exist", async () => {
+  test("Returns an error message when the user_id does not exist", async () => {
 
-    await expect(searchForUserId(999)).rejects.toMatchObject<StatusResponse>({
+    await expect(getUserRole(999)).rejects.toMatchObject<StatusResponse>({
       status: 404,
       message: "Not Found",
       details: "User not found"
