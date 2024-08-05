@@ -263,6 +263,28 @@ export const validateSubdivisionType = async (
 }
 
 
+export const validateUnitSystem = async (
+  unit_preference: string
+): Promise<undefined> => {
+
+  const result = await db.query(`
+    SELECT *
+    FROM unnest(enum_range(null::unit_system))
+    AS unit_system
+    WHERE unit_system::VARCHAR ILIKE $1;
+    `,
+    [unit_preference])
+
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid unit system"
+    })
+  }
+}
+
+
 export const validateUserRole = async (
   role: string
 ): Promise<undefined> => {
