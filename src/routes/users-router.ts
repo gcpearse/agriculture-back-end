@@ -16,8 +16,13 @@ usersRouter.route("/users")
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve all users' details
- *    description: Responds with an array of user objects. Permission is denied when the current user is not an admin.
+ *    description: Responds with an array of user objects. If a query parameter is invalid, the server responds with an error. Permission is denied when the current user is not an admin.
  *    tags: [Users]
+ *    parameters:
+ *      - in: query
+ *        name: role
+ *        schema:
+ *          type: string
  *    responses:
  *      200:
  *        description: OK
@@ -26,8 +31,16 @@ usersRouter.route("/users")
  *            schema:
  *              type: object
  *              properties:
- *                user:
- *                  $ref: "#/components/schemas/User"
+ *                users:
+ *                  type: array
+ *                  items:
+ *                    $ref: "#/components/schemas/User"
+ *      400:
+ *        description: BadRequest
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/BadRequest"
  *      403:
  *        description: Forbidden
  *        content:
