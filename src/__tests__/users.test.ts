@@ -32,12 +32,20 @@ afterAll(async () => {
 
 describe("GET /api/users", () => {
 
-  test("GET:200 Responds with an array of user objects", async () => {
+  test("GET:200 Responds with an array of user objects sorted by user_id in ascending order", async () => {
 
     const { body } = await request(app)
       .get("/api/users")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
+
+    const sortedUsers = [...body.users].sort((a: SecureUser, b: SecureUser) => {
+      if (a.user_id! > b.user_id!) return 1
+      if (a.user_id! < b.user_id!) return -1
+      return 0
+    })
+
+    expect(body.users).toEqual(sortedUsers)
 
     for (const user of body.users) {
       expect(user).toMatchObject<SecureUser>({
@@ -129,6 +137,112 @@ describe("GET /api/users?unit_system=", () => {
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
       details: "Invalid user role"
+    })
+  })
+})
+
+
+describe("GET /api/users?sort=", () => {
+
+  test("GET:200 Responds with an array of user objects sorted by email in ascending order", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users?sort=email")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    const sortedUsers = [...body.users].sort((a: SecureUser, b: SecureUser) => {
+      if (a.email > b.email) return 1
+      if (a.email < b.email) return -1
+      return 0
+    })
+
+    expect(body.users).toEqual(sortedUsers)
+  })
+
+  test("GET:200 Responds with an array of user objects sorted by surname in ascending order", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users?sort=surname")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    const sortedUsers = [...body.users].sort((a: SecureUser, b: SecureUser) => {
+      if (a.surname > b.surname) return 1
+      if (a.surname < b.surname) return -1
+      return 0
+    })
+
+    expect(body.users).toEqual(sortedUsers)
+  })
+
+  test("GET:404 Responds with an error when passed an invalid sort value", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users?sort=foobar")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "No results found for that query"
+    })
+  })
+})
+
+
+describe("GET /api/users?role=&sort=", () => {
+
+  test("GET:200 Responds with an array of user objects sorted by email in ascending order", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users?role=user&sort=first_name")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    const sortedUsers = [...body.users].sort((a: SecureUser, b: SecureUser) => {
+      if (a.role > b.role) return 1
+      if (a.role < b.role) return -1
+      return 0
+    })
+
+    for (const user of body.users) {
+      expect(user.role).toBe(UserRole.User)
+    }
+
+    expect(body.users).toEqual(sortedUsers)
+  })
+})
+
+
+describe("GET /api/users?order=", () => {
+
+  test("GET:200 Responds with an array of user objects ordered by user_id in descending order", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users?order=desc")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    const sortedUsers = [...body.users].sort((a: SecureUser, b: SecureUser) => {
+      if (a.user_id! < b.user_id!) return 1
+      if (a.user_id! > b.user_id!) return -1
+      return 0
+    })
+
+    expect(body.users).toEqual(sortedUsers)
+  })
+
+  test("GET:404 Responds with an error when passed an invalid order value", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users?order=foobar")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "No results found for that query"
     })
   })
 })
@@ -385,6 +499,24 @@ describe("PATCH /api/users/:username/password", () => {
     })
   })
 
+  test("PATCH:400 Responds with an error when newPassword is missing from the request body", async () => {
+
+    const passwordUpdate = {
+      oldPassword: "carrots123"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/users/carrot_king/password")
+      .send(passwordUpdate)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Empty string"
+    })
+  })
+
   test("PATCH:401 Responds with an error when the old password does not match the current password", async () => {
 
     const passwordUpdate = {
@@ -440,19 +572,5 @@ describe("PATCH /api/users/:username/password", () => {
       message: "Not Found",
       details: "User not found"
     })
-  })
-
-  // 500 status code here as the error is thrown by passing undefined as an argument to generateHash
-  test("PATCH:500 Responds with an error when newPassword is missing from the request body", async () => {
-
-    const passwordUpdate = {
-      oldPassword: "carrots123"
-    }
-
-    await request(app)
-      .patch("/api/users/carrot_king/password")
-      .send(passwordUpdate)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(500)
   })
 })
