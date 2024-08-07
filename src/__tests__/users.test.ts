@@ -58,6 +58,8 @@ describe("GET /api/users", () => {
         unit_system: expect.any(String)
       })
     }
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:403 Responds with a warning when the authenticated user is not an admin", async () => {
@@ -96,6 +98,8 @@ describe("GET /api/users?role=", () => {
     for (const user of body.users) {
       expect(user.role).toBe(UserRole.User)
     }
+
+    expect(body.count).toBe(2)
   })
 
   test("GET:400 Responds with an error message when the query value is invalid", async () => {
@@ -125,6 +129,8 @@ describe("GET /api/users?unit_system=", () => {
     for (const user of body.users) {
       expect(user.unit_system).toBe(UnitSystem.Metric)
     }
+
+    expect(body.count).toBe(2)
   })
 
   test("GET:400 Responds with an error message when the query value is invalid", async () => {
@@ -158,6 +164,8 @@ describe("GET /api/users?sort=", () => {
     })
 
     expect(body.users).toEqual(sortedUsers)
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:200 Responds with an array of user objects sorted by surname in ascending order", async () => {
@@ -174,6 +182,8 @@ describe("GET /api/users?sort=", () => {
     })
 
     expect(body.users).toEqual(sortedUsers)
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:400 Responds with an error when passed an invalid sort value", async () => {
@@ -211,6 +221,8 @@ describe("GET /api/users?role=&sort=", () => {
     }
 
     expect(body.users).toEqual(sortedUsers)
+
+    expect(body.count).toBe(2)
   })
 })
 
@@ -231,6 +243,8 @@ describe("GET /api/users?order=", () => {
     })
 
     expect(body.users).toEqual(sortedUsers)
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:400 Responds with an error when passed an invalid order value", async () => {
@@ -258,6 +272,8 @@ describe("GET /api/users?limit=", () => {
       .expect(200)
 
     expect(body.users).toHaveLength(2)
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:200 Responds with an array of all crops associated with the plot when the limit exceeds the total number of results", async () => {
@@ -268,6 +284,8 @@ describe("GET /api/users?limit=", () => {
       .expect(200)
 
     expect(body.users).toHaveLength(3)
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:400 Responds with an error message when the value of limit is not a positive integer", async () => {
@@ -297,6 +315,8 @@ describe("GET /api/users?page=", () => {
     expect(body.users.map((user: SecureUser) => {
       return user.user_id
     })).toEqual([3])
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:200 The page defaults to page one", async () => {
@@ -309,6 +329,8 @@ describe("GET /api/users?page=", () => {
     expect(body.users.map((user: SecureUser) => {
       return user.user_id
     })).toEqual([1, 2])
+
+    expect(body.count).toBe(3)
   })
 
   test("GET:400 Responds with an error when the value of page is not a positive integer", async () => {
