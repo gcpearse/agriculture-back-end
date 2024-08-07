@@ -4,7 +4,7 @@ import { compareHash, generateHash } from "../middleware/security"
 import { StatusResponse } from "../types/response-types"
 import { PasswordUpdate, SecureUser } from "../types/user-types"
 import { checkEmailConflict, getUserRole, searchForUsername, validateUnitSystem, validateUserRole } from "../utils/db-queries"
-import { verifyParamIsPositiveInt, verifyPermission, verifyQueryValue } from "../utils/verification"
+import { verifyPagination, verifyParamIsPositiveInt, verifyPermission, verifyQueryValue } from "../utils/verification"
 import format from "pg-format"
 
 
@@ -15,11 +15,14 @@ export const selectAllUsers = async (
     unit_system,
     sort = "user_id",
     order = "asc",
-    limit = "50"
+    limit = "50",
+    page = "1"
   }: QueryString.ParsedQs
 ): Promise<SecureUser[]> => {
 
   await verifyParamIsPositiveInt(+limit)
+
+  await verifyParamIsPositiveInt(+page)
 
   const userRole = await getUserRole(authUserId)
 
@@ -61,9 +64,12 @@ export const selectAllUsers = async (
   query += `
   ORDER BY ${sort} ${order}
   LIMIT ${limit}
+  OFFSET ${(+page - 1) * +limit}
   `
 
   const result = await db.query(`${query};`)
+
+  await verifyPagination(+page, result.rows.length)
 
   return result.rows
 }
