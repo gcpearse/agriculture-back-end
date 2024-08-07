@@ -37,6 +37,16 @@ usersRouter.route("/users")
  *        schema:
  *          type: string
  *        default: asc
+ *      - in: query
+ *        name: limit
+ *        schema:
+ *          type: integer
+ *        default: 50
+ *      - in: query
+ *        name: page
+ *        schema:
+ *          type: integer
+ *        default: 1
  *    responses:
  *      200:
  *        description: OK
@@ -49,6 +59,9 @@ usersRouter.route("/users")
  *                  type: array
  *                  items:
  *                    $ref: "#/components/schemas/User"
+ *                count:
+ *                  type: integer
+ *                  example: 1
  *      400:
  *        description: BadRequest
  *        content:
