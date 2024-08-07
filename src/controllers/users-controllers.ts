@@ -8,8 +8,8 @@ export const getUsers = async (req: ExtendedRequest, res: Response, next: NextFu
   const authUserId = req.user!.user_id
 
   try {
-    const users = await selectAllUsers(authUserId, req.query)
-    res.status(200).send({ users })
+    const [users, count] = await selectAllUsers(authUserId, req.query)
+    res.status(200).send({ users, count })
   } catch (err) {
     next(err)
   }

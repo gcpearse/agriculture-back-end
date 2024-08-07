@@ -4,7 +4,7 @@ import { compareHash, generateHash } from "../middleware/security"
 import { StatusResponse } from "../types/response-types"
 import { PasswordUpdate, SecureUser } from "../types/user-types"
 import { checkEmailConflict, getUserRole, searchForUsername, validateUnitSystem, validateUserRole } from "../utils/db-queries"
-import { verifyPermission, verifyQueryValue } from "../utils/verification"
+import { verifyPagination, verifyParamIsPositiveInt, verifyPermission, verifyQueryValue } from "../utils/verification"
 import format from "pg-format"
 
 
@@ -14,9 +14,15 @@ export const selectAllUsers = async (
     role,
     unit_system,
     sort = "user_id",
-    order = "asc"
+    order = "asc",
+    limit = "50",
+    page = "1"
   }: QueryString.ParsedQs
-): Promise<SecureUser[]> => {
+): Promise<[SecureUser[], number]> => {
+
+  await verifyParamIsPositiveInt(+limit)
+
+  await verifyParamIsPositiveInt(+page)
 
   const userRole = await getUserRole(authUserId)
 
@@ -39,10 +45,19 @@ export const selectAllUsers = async (
   WHERE TRUE
   `
 
+  let countQuery = `
+  SELECT COUNT(user_id)::INT
+  FROM users
+  WHERE TRUE
+  `
+
   if (role) {
     await validateUserRole(role as string)
 
     query += format(`
+      AND users.role::VARCHAR ILIKE %L
+      `, role)
+    countQuery += format(`
       AND users.role::VARCHAR ILIKE %L
       `, role)
   }
@@ -53,15 +68,24 @@ export const selectAllUsers = async (
     query += format(`
       AND users.unit_system::VARCHAR ILIKE %L
       `, unit_system)
+    countQuery += format(`
+      AND users.unit_system::VARCHAR ILIKE %L
+      `, unit_system)
   }
 
   query += `
   ORDER BY ${sort} ${order}
+  LIMIT ${limit}
+  OFFSET ${(+page - 1) * +limit}
   `
 
   const result = await db.query(`${query};`)
 
-  return result.rows
+  await verifyPagination(+page, result.rows.length)
+
+  const countResult = await db.query(`${countQuery};`)
+
+  return Promise.all([result.rows, countResult.rows[0].count])
 }
 
 
