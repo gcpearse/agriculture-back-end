@@ -248,6 +248,43 @@ describe("GET /api/users?order=", () => {
 })
 
 
+describe("GET /api/users?limit=", () => {
+
+  test("GET:200 Responds with a limited array of user objects", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users?limit=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.users).toHaveLength(2)
+  })
+
+  test("GET:200 Responds with an array of all crops associated with the plot when the limit exceeds the total number of results", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users?limit=100")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.users).toHaveLength(3)
+  })
+
+  test("GET:400 Responds with an error message when the value of limit is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users?limit=two")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+})
+
+
 describe("GET /api/users/:username", () => {
 
   test("GET:200 Responds with a user object matching the value of the username parameter", async () => {
