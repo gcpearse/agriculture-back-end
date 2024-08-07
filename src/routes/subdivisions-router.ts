@@ -16,7 +16,7 @@ subdivisionsRouter.route("/subdivisions/plot/:plot_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve subdivisions of a plot
- *    description: Responds with an array of subdivision objects. If the query parameter is invalid or the plot_id does not exist, the server responds with an error. Permission is denied when the plot does not belong to the current user.
+ *    description: Responds with an array of subdivision objects. Results can be filtered by name and sorted by subdivision_id or name. If a parameter is invalid, the server responds with an error. Permission is denied when the plot does not belong to the user.
  *    tags: [Subdivisions]
  *    parameters:
  *      - in: path
@@ -111,7 +111,7 @@ subdivisionsRouter.route("/subdivisions/plot/:plot_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Create a new subdivision of a plot
- *    description: Responds with a new subdivision object. If the subdivision name already exists for the given plot or the plot_id does not exist, the server responds with an error. Permission is denied when the plot does not belong to the current user.
+ *    description: Responds with a new subdivision object. If the request body or plot_id parameter is invalid or the subdivision name would be a duplicate, the server responds with an error. Permission is denied when the plot does not belong to the user.
  *    tags: [Subdivisions]
  *    parameters:
  *      - in: path
@@ -173,7 +173,7 @@ subdivisionsRouter.route("/subdivisions/:subdivision_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve a subdivision
- *    description: Responds with a subdivision object. If no subdivision is found, the server responds with an error. Permission is denied when the subdivision does not belong to the current user.
+ *    description: Responds with a subdivision object. If the subdivision_id parameter is invalid, the server responds with an error. Permission is denied when the subdivision does not belong to the user.
  *    tags: [Subdivisions]
  *    parameters:
  *      - in: path
@@ -238,7 +238,7 @@ subdivisionsRouter.route("/subdivisions/:subdivision_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Update a subdivision
- *    description: Responds with an updated subdivision object. If the subdivision name already exists for another subdivision of a plot or the subdivision_id does not exist, the server responds with an error. Permission is denied when the subdivision does not belong to the current user.
+ *    description: Responds with an updated subdivision object. If the request body or subdivision_id parameter is invalid or the subdivision name would be a duplicate, the server responds with an error. Permission is denied when the subdivision does not belong to the user.
  *    tags: [Subdivisions]
  *    parameters:
  *      - in: path
@@ -297,7 +297,7 @@ subdivisionsRouter.route("/subdivisions/:subdivision_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Delete a subdivision from the database
- *    description: Removes the plot subdivision and all associated data from the database. If the subdivision_id does not exist, the server responds with an error. Permission is denied when the subdivision does not belong to the current user.
+ *    description: Removes the subdivision and all associated data from the database. If the subdivision_id parameter is invalid, the server responds with an error. Permission is denied when the subdivision does not belong to the current user.
  *    tags: [Subdivisions]
  *    parameters:
  *      - in: path

@@ -16,7 +16,7 @@ cropsRouter.route("/crops/plot/:plot_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve a plot's crops
- *    description: Responds with an array of crop objects. If a query parameter is invalid or the plot_id does not exist, the server responds with an error. Permission is denied when the plot does not belong to the current user.
+ *    description: Responds with an array of crop objects. Results can be filtered by name or category and sorted by crop_id, name, date_planted, or harvest_date. If a parameter is invalid, the server responds with an error. Permission is denied when the plot does not belong to the user.
  *    tags: [Crops]
  *    parameters:
  *      - in: path
@@ -108,7 +108,7 @@ cropsRouter.route("/crops/plot/:plot_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Add a new crop to a plot
- *    description: Responds with a crop object. If the plot_id does not exist, the server responds with an error. Permission is denied when the plot does not belong to the current user.
+ *    description: Responds with a crop object. If the request body or plot_id parameter is invalid, the server responds with an error. Permission is denied when the plot does not belong to the user.
  *    tags: [Crops]
  *    parameters:
  *      - in: path
@@ -164,7 +164,7 @@ cropsRouter.route("/crops/subdivision/:subdivision_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve a subdivision's crops
- *    description: Responds with an array of crop objects. If a query parameter is invalid or the subdivision_id does not exist, the server responds with an error. Permission is denied when the subdivision does not belong to the current user.
+ *    description: Responds with an array of crop objects. Results can be filtered by name or category and sorted by crop_id, name, date_planted, or harvest_date. If a parameter is invalid, the server responds with an error. Permission is denied when the subdivision does not belong to the user.
  *    tags: [Crops]
  *    parameters:
  *      - in: path
@@ -253,7 +253,7 @@ cropsRouter.route("/crops/subdivision/:subdivision_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Add a new crop to a subdivision
- *    description: Responds with a crop object. If the subdivision_id does not exist, the server responds with an error. Permission is denied when the subdivision does not belong to the current user.
+ *    description: Responds with a crop object. If the request body or subdivision_id parameter is invalid, the server responds with an error. Permission is denied when the subdivision does not belong to the user.
  *    tags: [Crops]
  *    parameters:
  *      - in: path
@@ -309,7 +309,7 @@ cropsRouter.route("/crops/:crop_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve a crop
- *    description: Responds with a crop object. If no crop is found, the server responds with an error. Permission is denied when the crop does not belong to the current user.
+ *    description: Responds with a crop object. If the crop_id parameter is invalid, the server responds with an error. Permission is denied when the crop does not belong to the user.
  *    tags: [Crops]
  *    parameters:
  *      - in: path

@@ -16,7 +16,7 @@ usersRouter.route("/users")
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve all users' details
- *    description: Responds with an array of user objects. If a query parameter is invalid, the server responds with an error. Permission is denied when the current user is not an admin.
+ *    description: Responds with an array of user objects. Results can be filtered by role or unit_system and sorted by user_id, email, first_name, or surname. If a parameter is invalid, the server responds with an error. Permission is denied when the user is not an admin.
  *    tags: [Users]
  *    parameters:
  *      - in: query
@@ -27,6 +27,16 @@ usersRouter.route("/users")
  *        name: unit_system
  *        schema:
  *          type: string
+ *      - in: query
+ *        name: sort
+ *        schema:
+ *          type: string
+ *        default: user_id
+ *      - in: query
+ *        name: order
+ *        schema:
+ *          type: string
+ *        default: asc
  *    responses:
  *      200:
  *        description: OK
@@ -65,7 +75,7 @@ usersRouter.route("/users/:username")
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve a user's details
- *    description: Responds with a user object. If no user is found, the server responds with an error. Permission is denied when the username does not belong to the current user.
+ *    description: Responds with a user object. If the username parameter is invalid, the server responds with an error. Permission is denied when the user's username does not match the target username.
  *    tags: [Users]
  *    parameters:
  *      - name: username
@@ -106,7 +116,7 @@ usersRouter.route("/users/:username")
  *    security:
  *      - bearerAuth: []
  *    summary: Update a user's details
- *    description: Responds with an updated user object. If the value of unit_system is not valid, the email already exists for another user, or the username does not exist, the server responds with an error. Permission is denied when the username does not belong to the current user. 
+ *    description: Responds with an updated user object. If the request body or username parameter is invalid or the email would be a duplicate, the server responds with an error. Permission is denied when the user's username does not match the target username. 
  *    tags: [Users]
  *    parameters:
  *      - in: path
@@ -165,7 +175,7 @@ usersRouter.route("/users/:username")
  *    security:
  *      - bearerAuth: []
  *    summary: Delete a user from the database
- *    description: Removes the user and all associated data from the database. If the username does not exist, the server responds with an error. Permission is denied when the username does not belong to the current user.
+ *    description: Removes the user and all associated data from the database. If the username parameter is invalid, the server responds with an error. Permission is denied when the user's username does not match the target username.
  *    tags: [Users]
  *    parameters:
  *      - in: path
@@ -199,7 +209,7 @@ usersRouter.route("/users/:username")
  *    security:
  *      - bearerAuth: []
  *    summary: Update a user's password
- *    description: Responds with a success message. If the username does not exist, the server responds with an error. Permission is denied when the username does not belong to the current user.
+ *    description: Responds with a success message. If the request body or username parameter is invalid or the old password is incorrect, the server responds with an error. Permission is denied when the user's username does not match the target username.
  *    tags: [Users]
  *    parameters:
  *      - in: path

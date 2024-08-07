@@ -10,7 +10,7 @@ export const registerRouter = Router()
  * /api/register:
  *  post:
  *    summary: Register a new user
- *    description: Responds with a new user object without revealing the password property. If the username or email already exists, the server responds with an error.
+ *    description: Responds with a user object. If the request body is invalid or the username or email already exists, the server responds with an error.
  *    tags: [Register]
  *    requestBody:
  *      required: true
