@@ -18,7 +18,7 @@ export const selectAllUsers = async (
     limit = "50",
     page = "1"
   }: QueryString.ParsedQs
-): Promise<SecureUser[]> => {
+): Promise<[SecureUser[], number]> => {
 
   await verifyParamIsPositiveInt(+limit)
 
@@ -45,10 +45,19 @@ export const selectAllUsers = async (
   WHERE TRUE
   `
 
+  let countQuery = `
+  SELECT COUNT(user_id)::INT
+  FROM users
+  WHERE TRUE
+  `
+
   if (role) {
     await validateUserRole(role as string)
 
     query += format(`
+      AND users.role::VARCHAR ILIKE %L
+      `, role)
+    countQuery += format(`
       AND users.role::VARCHAR ILIKE %L
       `, role)
   }
@@ -57,6 +66,9 @@ export const selectAllUsers = async (
     await validateUnitSystem(unit_system as string)
     
     query += format(`
+      AND users.unit_system::VARCHAR ILIKE %L
+      `, unit_system)
+    countQuery += format(`
       AND users.unit_system::VARCHAR ILIKE %L
       `, unit_system)
   }
@@ -71,7 +83,9 @@ export const selectAllUsers = async (
 
   await verifyPagination(+page, result.rows.length)
 
-  return result.rows
+  const countResult = await db.query(`${countQuery};`)
+
+  return Promise.all([result.rows, countResult.rows[0].count])
 }
 
 
