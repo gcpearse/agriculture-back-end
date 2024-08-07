@@ -10,7 +10,7 @@ export const loginRouter = Router()
  * /api/login:
  *  post:
  *    summary: Log in a user
- *    description: Responds with a JSON Web Token. The server responds with an error if the username or email does not exist or the password is incorrect.
+ *    description: Responds with a JSON Web Token. If the username or email does not exist or the password is incorrect, the server responds with an error.
  *    tags: [Login]
  *    requestBody:
  *      required: true

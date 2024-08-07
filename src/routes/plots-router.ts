@@ -16,7 +16,7 @@ plotsRouter.route("/plots/user/:owner_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve a user's plots
- *    description: Responds with an array of plot objects. If the query parameter is invalid or the owner_id does not exist, the server responds with an error. Permission is denied when the current user's ID does not match the target owner_id.
+ *    description: Responds with an array of plot objects. Results can be filtered by name and sorted by plot_id or name. If a parameter is invalid, the server responds with an error. Permission is denied when the user's ID does not match the target owner ID.
  *    tags: [Plots]
  *    parameters:
  *      - in: path
@@ -114,7 +114,7 @@ plotsRouter.route("/plots/user/:owner_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Create a new plot
- *    description: Responds with a new plot object. If the plot name already exists for the current user or the owner_id does not exist, the server responds with an error. Permission is denied when the current user's ID does not match the target owner_id.
+ *    description: Responds with a new plot object. If the request body or owner_id parameter is invalid or the plot name would be a duplicate, the server responds with an error. Permission is denied when the user's ID does not match the target owner ID.
  *    tags: [Plots]
  *    parameters:
  *      - in: path
@@ -176,7 +176,7 @@ plotsRouter.route("/plots/user/:owner_id/pinned")
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve a user's pinned plots
- *    description: Responds with an array of plot objects. If the owner_id does not exist, the server responds with an error. Permission is denied when the current user's ID does not match the target owner_id.
+ *    description: Responds with an array of plot objects. Results are sorted by name. If the owner_id parameter is invalid, the server responds with an error. Permission is denied when the user's ID does not match the target owner ID.
  *    tags: [Plots]
  *    parameters:
  *      - in: path
@@ -228,7 +228,7 @@ plotsRouter.route("/plots/:plot_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve a plot
- *    description: Responds with a plot object. If no plot is found, the server responds with an error. Permission is denied when the plot does not belong to the current user.
+ *    description: Responds with a plot object. If the plot_id parameter is invalid, the server responds with an error. Permission is denied when the plot does not belong to the user.
  *    tags: [Plots]
  *    parameters:
  *      - in: path
@@ -293,7 +293,7 @@ plotsRouter.route("/plots/:plot_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Update a plot
- *    description: Responds with an updated plot object. If the plot name already exists for one of the current user's other plots or the plot_id does not exist, the server responds with an error. Permission is denied when the plot does not belong to the current user.
+ *    description: Responds with an updated plot object. If the request body or plot_id parameter is invalid or the plot name would be a duplicate, the server responds with an error. Permission is denied when the plot does not belong to the user.
  *    tags: [Plots]
  *    parameters:
  *      - in: path
@@ -352,7 +352,7 @@ plotsRouter.route("/plots/:plot_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Delete a plot from the database
- *    description: Removes the plot and all associated data from the database. If the plot_id does not exist, the server responds with an error. Permission is denied when the plot does not belong to the current user.
+ *    description: Removes the plot and all associated data from the database. If the plot_id parameter is invalid, the server responds with an error. Permission is denied when the plot does not belong to the user.
  *    tags: [Plots]
  *    parameters:
  *      - in: path
@@ -395,7 +395,7 @@ plotsRouter.route("/plots/:plot_id/pin")
  *    security:
  *      - bearerAuth: []
  *    summary: Pin or unpin a plot
- *    description: Responds with a success message. If the maximum number of plots are already pinned or the plot_id does not exist, the server responds with an error. Permission is denied when the plot does not belong to the current user.
+ *    description: Responds with a success message. If the maximum number of plots are already pinned or the plot_id parameter is invalid, the server responds with an error. Permission is denied when the plot does not belong to the user.
  *    tags: [Plots]
  *    parameters:
  *      - in: path
