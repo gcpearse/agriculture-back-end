@@ -285,6 +285,60 @@ describe("GET /api/users?limit=", () => {
 })
 
 
+describe("GET /api/users?page=", () => {
+
+  test("GET:200 Responds with an array of user objects beginning from the page set in the query parameter", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users?limit=2&page=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.users.map((user: SecureUser) => {
+      return user.user_id
+    })).toEqual([3])
+  })
+
+  test("GET:200 The page defaults to page one", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users?limit=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.users.map((user: SecureUser) => {
+      return user.user_id
+    })).toEqual([1, 2])
+  })
+
+  test("GET:400 Responds with an error when the value of page is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users?page=two")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
+  test("GET:404 Responds with an error when the page cannot be found", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users?limit=2&page=3")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Page not found"
+    })
+  })
+})
+
+
 describe("GET /api/users/:username", () => {
 
   test("GET:200 Responds with a user object matching the value of the username parameter", async () => {
