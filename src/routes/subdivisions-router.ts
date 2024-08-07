@@ -297,7 +297,7 @@ subdivisionsRouter.route("/subdivisions/:subdivision_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Delete a subdivision from the database
- *    description: Removes the subdivision and all associated data from the database. If the subdivision_id parameter is invalid, the server responds with an error. Permission is denied when the subdivision does not belong to the current user.
+ *    description: Removes the subdivision and all associated data from the database. If the subdivision_id parameter is invalid, the server responds with an error. Permission is denied when the subdivision does not belong to the user.
  *    tags: [Subdivisions]
  *    parameters:
  *      - in: path
