@@ -4,7 +4,7 @@ import { compareHash, generateHash } from "../middleware/security"
 import { StatusResponse } from "../types/response-types"
 import { PasswordUpdate, SecureUser } from "../types/user-types"
 import { checkEmailConflict, getUserRole, searchForUsername, validateUnitSystem, validateUserRole } from "../utils/db-queries"
-import { verifyPermission, verifyQueryValue } from "../utils/verification"
+import { verifyParamIsPositiveInt, verifyPermission, verifyQueryValue } from "../utils/verification"
 import format from "pg-format"
 
 
@@ -14,9 +14,12 @@ export const selectAllUsers = async (
     role,
     unit_system,
     sort = "user_id",
-    order = "asc"
+    order = "asc",
+    limit = "50"
   }: QueryString.ParsedQs
 ): Promise<SecureUser[]> => {
+
+  await verifyParamIsPositiveInt(+limit)
 
   const userRole = await getUserRole(authUserId)
 
@@ -57,6 +60,7 @@ export const selectAllUsers = async (
 
   query += `
   ORDER BY ${sort} ${order}
+  LIMIT ${limit}
   `
 
   const result = await db.query(`${query};`)
