@@ -16,7 +16,7 @@ plotsRouter.route("/plots/user/:owner_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve a user's plots
- *    description: Responds with an array of plot objects. Results can be filtered by name and sorted by plot_id or name. If a parameter is invalid, the server responds with an error. Permission is denied when the user's ID does not match the target owner ID.
+ *    description: Responds with an array of plot objects. Results can be filtered by name and sorted by plot_id or name. If a parameter is invalid, the server responds with an error. Permission is denied when the user's user ID does not match the owner_id parameter.
  *    tags: [Plots]
  *    parameters:
  *      - in: path
@@ -114,7 +114,7 @@ plotsRouter.route("/plots/user/:owner_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Create a new plot
- *    description: Responds with a new plot object. If the request body or owner_id parameter is invalid or the plot name would be a duplicate, the server responds with an error. Permission is denied when the user's ID does not match the target owner ID.
+ *    description: Responds with a new plot object. If the request body or owner_id parameter is invalid or the plot name would be a duplicate, the server responds with an error. Permission is denied when the user's user ID does not match the owner_id parameter.
  *    tags: [Plots]
  *    parameters:
  *      - in: path
@@ -176,7 +176,7 @@ plotsRouter.route("/plots/user/:owner_id/pinned")
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve a user's pinned plots
- *    description: Responds with an array of plot objects. Results are sorted by name. If the owner_id parameter is invalid, the server responds with an error. Permission is denied when the user's ID does not match the target owner ID.
+ *    description: Responds with an array of plot objects. Results are sorted by name. If the owner_id parameter is invalid, the server responds with an error. Permission is denied when the user's user ID does not match the owner_id parameter.
  *    tags: [Plots]
  *    parameters:
  *      - in: path
