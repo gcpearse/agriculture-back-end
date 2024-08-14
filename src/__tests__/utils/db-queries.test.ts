@@ -1,7 +1,7 @@
 import data from "../../db/data/test-data/test-index"
 import { db } from "../../db"
 import { seed } from "../../db/seeding/seed"
-import { checkEmailConflict, checkPlotNameConflict, checkSubdivisionNameConflict, getCropOwnerId, getPlotOwnerId, getSubdivisionPlotId, getUserRole, searchForUserId, searchForUsername, validateCropCategory, validatePlotType, validateSubdivisionType, validateUnitSystem, validateUserRole } from "../../utils/db-queries"
+import { checkEmailConflict, checkPlotNameConflict, checkSubdivisionNameConflict, getCropOwnerId, getPlotOwnerId, getSubdivisionPlotId, getUserRole, searchForUserId, validateCropCategory, validatePlotType, validateSubdivisionType, validateUnitSystem, validateUserRole } from "../../utils/db-queries"
 import { StatusResponse } from "../../types/response-types"
 
 
@@ -158,24 +158,6 @@ describe("searchForUserId", () => {
   test("When a user_id matching the owner_id is found, the promise resolves to be undefined", async () => {
 
     await expect(searchForUserId(1)).resolves.toBeUndefined()
-  })
-})
-
-
-describe("searchForUsername", () => {
-
-  test("When a match for the username cannot be found, the promise is rejected", async () => {
-
-    await expect(searchForUsername("Foobar")).rejects.toMatchObject<StatusResponse>({
-      status: 404,
-      message: "Not Found",
-      details: "User not found"
-    })
-  })
-
-  test("When a match for the username is found, the promise resolves to be undefined", async () => {
-
-    await expect(searchForUsername("carrot_king")).resolves.toBeUndefined()
   })
 })
 
