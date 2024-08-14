@@ -361,12 +361,12 @@ describe("GET /api/users?page=", () => {
 })
 
 
-describe("GET /api/users/:username", () => {
+describe("GET /api/users/:user_id", () => {
 
-  test("GET:200 Responds with a user object matching the value of the username parameter", async () => {
+  test("GET:200 Responds with a user object matching the value of the user_id parameter", async () => {
 
     const { body } = await request(app)
-      .get("/api/users/carrot_king")
+      .get("/api/users/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -381,10 +381,23 @@ describe("GET /api/users/:username", () => {
     })
   })
 
+  test("GET:400 Responds with an error message when the user_id is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users/one")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
   test("GET:403 Responds with a warning when the authenticated user attempts to retrieve another user's data", async () => {
 
     const { body } = await request(app)
-      .get("/api/users/peach_princess")
+      .get("/api/users/2")
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
@@ -394,10 +407,10 @@ describe("GET /api/users/:username", () => {
     })
   })
 
-  test("GET:404 Responds with an error message when the username does not exist", async () => {
+  test("GET:404 Responds with an error message when the user_id does not exist", async () => {
 
     const { body } = await request(app)
-      .get("/api/users/non_existent_user")
+      .get("/api/users/999")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -409,7 +422,7 @@ describe("GET /api/users/:username", () => {
 })
 
 
-describe("PATCH /api/users/:username", () => {
+describe("PATCH /api/users/:user_id", () => {
 
   test("PATCH:200 Responds with an updated user object", async () => {
 
@@ -421,7 +434,7 @@ describe("PATCH /api/users/:username", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/users/carrot_king")
+      .patch("/api/users/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
@@ -437,6 +450,27 @@ describe("PATCH /api/users/:username", () => {
     })
   })
 
+  test("PATCH:400 Responds with an error message when the user_id is not a positive integer", async () => {
+
+    const newDetails = {
+      email: "jsj@example.com",
+      first_name: "Johnny",
+      surname: "Smith-Jones",
+      unit_system: "metric"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/users/one")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
   test("PATCH:400 Responds with an error when a property is missing from the request body", async () => {
 
     const newDetails = {
@@ -446,7 +480,7 @@ describe("PATCH /api/users/:username", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/users/carrot_king")
+      .patch("/api/users/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -467,7 +501,7 @@ describe("PATCH /api/users/:username", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/users/carrot_king")
+      .patch("/api/users/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -488,7 +522,7 @@ describe("PATCH /api/users/:username", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/users/peach_princess")
+      .patch("/api/users/2")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
@@ -499,7 +533,7 @@ describe("PATCH /api/users/:username", () => {
     })
   })
 
-  test("PATCH:404 Responds with an error message when the username does not exist", async () => {
+  test("PATCH:404 Responds with an error message when the user_id does not exist", async () => {
 
     const newDetails = {
       email: "john.smith@example.com",
@@ -509,7 +543,7 @@ describe("PATCH /api/users/:username", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/users/non_existent_user")
+      .patch("/api/users/999")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
@@ -530,7 +564,7 @@ describe("PATCH /api/users/:username", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/users/carrot_king")
+      .patch("/api/users/1")
       .send(newDetails)
       .set("Authorization", `Bearer ${token}`)
       .expect(409)
@@ -543,17 +577,17 @@ describe("PATCH /api/users/:username", () => {
 })
 
 
-describe("DELETE /api/users/:username", () => {
+describe("DELETE /api/users/:user_id", () => {
 
   test("DELETE:204 Deletes the user with the given username", async () => {
 
     await request(app)
-      .delete("/api/users/carrot_king")
+      .delete("/api/users/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(204)
 
     const { body } = await request(app)
-      .get("/api/users/carrot_king")
+      .get("/api/users/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -563,10 +597,23 @@ describe("DELETE /api/users/:username", () => {
     })
   })
 
+  test("DELETE:400 Responds with an error message when the user_id is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/users/one")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
   test("DELETE:403 Responds with a warning when the authenticated user attempts to delete another user's data", async () => {
 
     const { body } = await request(app)
-      .delete("/api/users/peach_princess")
+      .delete("/api/users/2")
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
@@ -576,10 +623,10 @@ describe("DELETE /api/users/:username", () => {
     })
   })
 
-  test("DELETE:404 Responds with an error message when the username does not exist", async () => {
+  test("DELETE:404 Responds with an error message when the user_id does not exist", async () => {
 
     const { body } = await request(app)
-      .delete("/api/users/non_existent_user")
+      .delete("/api/users/999")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -591,7 +638,7 @@ describe("DELETE /api/users/:username", () => {
 })
 
 
-describe("PATCH /api/users/:username/password", () => {
+describe("PATCH /api/users/:user_id/password", () => {
 
   test("PATCH:200 Responds with a status object confirming success", async () => {
 
@@ -601,7 +648,7 @@ describe("PATCH /api/users/:username/password", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/users/carrot_king/password")
+      .patch("/api/users/1/password")
       .send(passwordUpdate)
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
@@ -612,6 +659,25 @@ describe("PATCH /api/users/:username/password", () => {
     })
   })
 
+  test("PATCH:400 Responds with an error message when the user_id is not a positive integer", async () => {
+
+    const passwordUpdate = {
+      oldPassword: "carrots123",
+      newPassword: "onions789"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/users/one/password")
+      .send(passwordUpdate)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
   test("PATCH:400 Responds with an error when newPassword is missing from the request body", async () => {
 
     const passwordUpdate = {
@@ -619,7 +685,7 @@ describe("PATCH /api/users/:username/password", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/users/carrot_king/password")
+      .patch("/api/users/1/password")
       .send(passwordUpdate)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -638,7 +704,7 @@ describe("PATCH /api/users/:username/password", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/users/carrot_king/password")
+      .patch("/api/users/1/password")
       .send(passwordUpdate)
       .set("Authorization", `Bearer ${token}`)
       .expect(401)
@@ -657,7 +723,7 @@ describe("PATCH /api/users/:username/password", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/users/peach_princess/password")
+      .patch("/api/users/2/password")
       .send(passwordUpdate)
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
@@ -668,7 +734,7 @@ describe("PATCH /api/users/:username/password", () => {
     })
   })
 
-  test("PATCH:404 Responds with an error message when the username does not exist", async () => {
+  test("PATCH:404 Responds with an error message when the user_id does not exist", async () => {
 
     const passwordUpdate = {
       oldPassword: "carrots123",
@@ -676,7 +742,7 @@ describe("PATCH /api/users/:username/password", () => {
     }
 
     const { body } = await request(app)
-      .patch("/api/users/non_existent_user/password")
+      .patch("/api/users/999/password")
       .send(passwordUpdate)
       .set("Authorization", `Bearer ${token}`)
       .expect(404)

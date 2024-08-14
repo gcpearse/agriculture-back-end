@@ -145,7 +145,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
   test("GET:404 When the parent user is deleted, all child crops are also deleted", async () => {
 
     await request(app)
-      .delete("/api/users/carrot_king")
+      .delete("/api/users/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(204)
 
