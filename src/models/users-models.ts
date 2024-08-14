@@ -3,7 +3,7 @@ import { db } from "../db"
 import { compareHash, generateHash } from "../middleware/security"
 import { StatusResponse } from "../types/response-types"
 import { PasswordUpdate, SecureUser } from "../types/user-types"
-import { checkEmailConflict, getUserRole, searchForUsername, validateUnitSystem, validateUserRole } from "../utils/db-queries"
+import { checkEmailConflict, getUserRole, searchForUserId, validateUnitSystem, validateUserRole } from "../utils/db-queries"
 import { verifyPagination, verifyParamIsPositiveInt, verifyPermission, verifyQueryValue } from "../utils/verification"
 import format from "pg-format"
 
@@ -89,14 +89,16 @@ export const selectAllUsers = async (
 }
 
 
-export const selectUserByUsername = async (
-  authUsername: string,
-  username: string
+export const selectUserByUserId = async (
+  authUserId: number,
+  user_id: number
 ): Promise<SecureUser> => {
 
-  await searchForUsername(username)
+  await verifyParamIsPositiveInt(user_id)
 
-  await verifyPermission(authUsername, username, "Permission to view user data denied")
+  await searchForUserId(user_id)
+
+  await verifyPermission(authUserId, user_id, "Permission to view user data denied")
 
   const result = await db.query(`
     SELECT 
@@ -108,24 +110,26 @@ export const selectUserByUsername = async (
       role,
       unit_system
     FROM users
-    WHERE username = $1;
+    WHERE user_id = $1;
     `,
-    [username]
+    [user_id]
   )
 
   return result.rows[0]
 }
 
 
-export const updateUserByUsername = async (
-  authUsername: string,
-  username: string,
+export const updateUserByUserId = async (
+  authUserId: number,
+  user_id: number,
   user: SecureUser
 ): Promise<SecureUser> => {
 
-  await searchForUsername(username)
+  await verifyParamIsPositiveInt(user_id)
 
-  await verifyPermission(authUsername, username, "Permission to edit user data denied")
+  await searchForUserId(user_id)
+
+  await verifyPermission(authUserId, user_id, "Permission to edit user data denied")
 
   await checkEmailConflict(user.email)
 
@@ -136,7 +140,7 @@ export const updateUserByUsername = async (
       first_name = $2, 
       surname = $3, 
       unit_system = $4
-    WHERE username = $5
+    WHERE user_id = $5
     RETURNING 
       user_id, 
       username, 
@@ -151,7 +155,7 @@ export const updateUserByUsername = async (
       user.first_name,
       user.surname,
       user.unit_system,
-      username
+      user_id
     ]
   )
 
@@ -159,37 +163,41 @@ export const updateUserByUsername = async (
 }
 
 
-export const removeUserByUsername = async (
-  authUsername: string,
-  username: string
+export const removeUserByUserId = async (
+  authUserId: number,
+  user_id: number
 ): Promise<void> => {
 
-  await searchForUsername(username)
+  await verifyParamIsPositiveInt(user_id)
 
-  await verifyPermission(authUsername, username, "Permission to delete user data denied")
+  await searchForUserId(user_id)
+
+  await verifyPermission(authUserId, user_id, "Permission to delete user data denied")
 
   await db.query(`
     DELETE FROM users
-    WHERE username = $1
+    WHERE user_id = $1
     RETURNING *;
     `,
-    [username]
+    [user_id]
   )
 }
 
 
-export const updatePasswordByUsername = async (
-  authUsername: string,
-  username: string,
+export const updatePasswordByUserId = async (
+  authUserId: number,
+  user_id: number,
   {
     oldPassword,
     newPassword
   }: PasswordUpdate
 ): Promise<StatusResponse> => {
 
-  await searchForUsername(username)
+  await verifyParamIsPositiveInt(user_id)
 
-  await verifyPermission(authUsername, username, "Permission to edit password denied")
+  await searchForUserId(user_id)
+
+  await verifyPermission(authUserId, user_id, "Permission to edit password denied")
 
   if (!newPassword) {
     return Promise.reject({
@@ -202,9 +210,9 @@ export const updatePasswordByUsername = async (
   const currentPassword = await db.query(`
     SELECT password
     FROM users
-    WHERE username = $1;
+    WHERE user_id = $1;
     `,
-    [username]
+    [user_id]
   )
 
   const isCorrectPassword = await compareHash(oldPassword, currentPassword.rows[0].password)
@@ -222,7 +230,7 @@ export const updatePasswordByUsername = async (
   await db.query(`
     UPDATE users
     SET password = $1
-    WHERE username = $2
+    WHERE user_id = $2
     RETURNING 
       user_id, 
       username, 
@@ -231,7 +239,7 @@ export const updatePasswordByUsername = async (
       surname, 
       unit_system;
     `,
-    [hashedPassword, username]
+    [hashedPassword, user_id]
   )
 
   return {
