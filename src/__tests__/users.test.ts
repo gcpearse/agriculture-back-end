@@ -62,7 +62,7 @@ describe("GET /api/users", () => {
     expect(body.count).toBe(3)
   })
 
-  test("GET:403 Responds with a warning when the authenticated user is not an admin", async () => {
+  test("GET:403 Responds with an error when the authenticated user is not an admin", async () => {
 
     const auth = await request(app)
       .post("/api/login")
@@ -102,7 +102,7 @@ describe("GET /api/users?role=", () => {
     expect(body.count).toBe(2)
   })
 
-  test("GET:400 Responds with an error message when the query value is invalid", async () => {
+  test("GET:400 Responds with an error when the query value is invalid", async () => {
 
     const { body } = await request(app)
       .get("/api/users?unit_system=foobar")
@@ -133,7 +133,7 @@ describe("GET /api/users?unit_system=", () => {
     expect(body.count).toBe(2)
   })
 
-  test("GET:400 Responds with an error message when the query value is invalid", async () => {
+  test("GET:400 Responds with an error when the query value is invalid", async () => {
 
     const { body } = await request(app)
       .get("/api/users?unit_system=foobar")
@@ -288,7 +288,7 @@ describe("GET /api/users?limit=", () => {
     expect(body.count).toBe(3)
   })
 
-  test("GET:400 Responds with an error message when the value of limit is not a positive integer", async () => {
+  test("GET:400 Responds with an error when the value of limit is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/users?limit=two")
@@ -381,7 +381,7 @@ describe("GET /api/users/:user_id", () => {
     })
   })
 
-  test("GET:400 Responds with an error message when the user_id is not a positive integer", async () => {
+  test("GET:400 Responds with an error when the user_id parameter is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/users/one")
@@ -394,7 +394,7 @@ describe("GET /api/users/:user_id", () => {
     })
   })
 
-  test("GET:403 Responds with a warning when the authenticated user attempts to retrieve another user's data", async () => {
+  test("GET:403 Responds with an error when the authenticated user attempts to retrieve another user's data", async () => {
 
     const { body } = await request(app)
       .get("/api/users/2")
@@ -407,7 +407,7 @@ describe("GET /api/users/:user_id", () => {
     })
   })
 
-  test("GET:404 Responds with an error message when the user_id does not exist", async () => {
+  test("GET:404 Responds with an error when the user does not exist", async () => {
 
     const { body } = await request(app)
       .get("/api/users/999")
@@ -450,7 +450,7 @@ describe("PATCH /api/users/:user_id", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error message when the user_id is not a positive integer", async () => {
+  test("PATCH:400 Responds with an error when the user_id parameter is not a positive integer", async () => {
 
     const newDetails = {
       email: "jsj@example.com",
@@ -491,7 +491,7 @@ describe("PATCH /api/users/:user_id", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error when an invalid value is passed for unit_system", async () => {
+  test("PATCH:400 Responds with an error when passed an invalid value for unit_system", async () => {
 
     const newDetails = {
       email: "jsj@example.com",
@@ -512,7 +512,7 @@ describe("PATCH /api/users/:user_id", () => {
     })
   })
 
-  test("PATCH:403 Responds with a warning when the authenticated user attempts to edit another user's data", async () => {
+  test("PATCH:403 Responds with an error when the authenticated user attempts to edit another user's data", async () => {
 
     const newDetails = {
       email: "john.smith@example.com",
@@ -533,7 +533,7 @@ describe("PATCH /api/users/:user_id", () => {
     })
   })
 
-  test("PATCH:404 Responds with an error message when the user_id does not exist", async () => {
+  test("PATCH:404 Responds with an error when the user does not exist", async () => {
 
     const newDetails = {
       email: "john.smith@example.com",
@@ -554,7 +554,7 @@ describe("PATCH /api/users/:user_id", () => {
     })
   })
 
-  test("PATCH:409 Responds with an error message when the email already exists", async () => {
+  test("PATCH:409 Responds with an error when the email already exists", async () => {
 
     const newDetails = {
       email: "olivia.jones@example.com",
@@ -579,7 +579,7 @@ describe("PATCH /api/users/:user_id", () => {
 
 describe("DELETE /api/users/:user_id", () => {
 
-  test("DELETE:204 Deletes the user with the given username", async () => {
+  test("DELETE:204 Deletes the user with the given user ID", async () => {
 
     await request(app)
       .delete("/api/users/1")
@@ -597,7 +597,7 @@ describe("DELETE /api/users/:user_id", () => {
     })
   })
 
-  test("DELETE:400 Responds with an error message when the user_id is not a positive integer", async () => {
+  test("DELETE:400 Responds with an error when the user_id parameter is not a positive integer", async () => {
 
     const { body } = await request(app)
       .delete("/api/users/one")
@@ -610,7 +610,7 @@ describe("DELETE /api/users/:user_id", () => {
     })
   })
 
-  test("DELETE:403 Responds with a warning when the authenticated user attempts to delete another user's data", async () => {
+  test("DELETE:403 Responds with an error when the authenticated user attempts to delete another user's data", async () => {
 
     const { body } = await request(app)
       .delete("/api/users/2")
@@ -623,7 +623,7 @@ describe("DELETE /api/users/:user_id", () => {
     })
   })
 
-  test("DELETE:404 Responds with an error message when the user_id does not exist", async () => {
+  test("DELETE:404 Responds with an error when the user does not exist", async () => {
 
     const { body } = await request(app)
       .delete("/api/users/999")
@@ -640,7 +640,7 @@ describe("DELETE /api/users/:user_id", () => {
 
 describe("PATCH /api/users/:user_id/password", () => {
 
-  test("PATCH:200 Responds with a status object confirming success", async () => {
+  test("PATCH:200 Responds with a success message when the password is changed successfully", async () => {
 
     const passwordUpdate = {
       oldPassword: "carrots123",
@@ -659,7 +659,7 @@ describe("PATCH /api/users/:user_id/password", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error message when the user_id is not a positive integer", async () => {
+  test("PATCH:400 Responds with an error when the user_id is not a positive integer", async () => {
 
     const passwordUpdate = {
       oldPassword: "carrots123",
@@ -696,7 +696,7 @@ describe("PATCH /api/users/:user_id/password", () => {
     })
   })
 
-  test("PATCH:401 Responds with an error when the old password does not match the current password", async () => {
+  test("PATCH:401 Responds with an error when the value of oldPassword does not match the current password", async () => {
 
     const passwordUpdate = {
       oldPassword: "apples567",
@@ -715,7 +715,7 @@ describe("PATCH /api/users/:user_id/password", () => {
     })
   })
 
-  test("PATCH:403 Responds with a warning when the authenticated user attempts to change another user's password", async () => {
+  test("PATCH:403 Responds with an error when the authenticated user attempts to change another user's password", async () => {
 
     const passwordUpdate = {
       oldPassword: "peaches123",
@@ -734,7 +734,7 @@ describe("PATCH /api/users/:user_id/password", () => {
     })
   })
 
-  test("PATCH:404 Responds with an error message when the user_id does not exist", async () => {
+  test("PATCH:404 Responds with an error when the user does not exist", async () => {
 
     const passwordUpdate = {
       oldPassword: "carrots123",

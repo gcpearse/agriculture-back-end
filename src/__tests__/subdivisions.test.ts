@@ -67,7 +67,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
     expect(body.count).toBe(3)
   })
 
-  test("GET:200 Responds with an empty array when no subdivisions are associated with the plot_id", async () => {
+  test("GET:200 Responds with an empty array when no subdivisions are associated with the plot", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/plot/3")
@@ -81,7 +81,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
     expect(body.count).toBe(0)
   })
 
-  test("GET:400 Responds with an error message when the plot_id is not a positive integer", async () => {
+  test("GET:400 Responds with an error when the plot_id parameter is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/plot/foobar")
@@ -94,7 +94,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
     })
   })
 
-  test("GET:403 Responds with a warning when the authenticated user attempts to retrieve another user's subdivision data", async () => {
+  test("GET:403 Responds with an error when the authenticated user attempts to retrieve another user's subdivision data", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/plot/2")
@@ -107,7 +107,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
     })
   })
 
-  test("GET:404 Responds with an error message when the plot_id does not exist", async () => {
+  test("GET:404 Responds with an error when the plot does not exist", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/plot/999")
@@ -176,7 +176,7 @@ describe("GET /api/subdivisions/plot/:plot_id?type=", () => {
     expect(body.count).toBe(2)
   })
 
-  test("GET:404 Responds with an error message when the query value is invalid", async () => {
+  test("GET:404 Responds with an error when the query value is invalid", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/plot/1?type=foobar")
@@ -334,7 +334,7 @@ describe("GET /api/subdivisions/plot/:plot_id?limit=", () => {
     expect(body.count).toBe(3)
   })
 
-  test("GET:400 Responds with an error message when the value of limit is not a positive integer", async () => {
+  test("GET:400 Responds with an error when the value of limit is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/plot/1?limit=two")
@@ -351,7 +351,7 @@ describe("GET /api/subdivisions/plot/:plot_id?limit=", () => {
 
 describe("GET /api/subdivisions/plot/:plot_id?page=", () => {
 
-  test("GET:200 Responds with an array of subdivisions objects associated with the plot beginning from the page set in the query parameter", async () => {
+  test("GET:200 Responds with an array of subdivision objects associated with the plot beginning from the page set in the query parameter", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/plot/1?limit=2&page=2")
@@ -447,7 +447,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
     })
   })
 
-  test("POST:201 Assigns a null value to 'area' when no value is provided", async () => {
+  test("POST:201 Assigns a null value to area when no value is provided", async () => {
 
     const newSubdivision = {
       name: "Wildflowers",
@@ -545,7 +545,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
     })
   })
 
-  test("POST:400 Responds with an error message when the plot_id is not a positive integer", async () => {
+  test("POST:400 Responds with an error when the plot_id parameter is not a positive integer", async () => {
 
     const newSubdivision = {
       name: "Wildflowers",
@@ -566,7 +566,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
     })
   })
 
-  test("POST:403 Responds with a warning when the authenticated user attempts to create a subdivision for another user", async () => {
+  test("POST:403 Responds with an error when the authenticated user attempts to create a subdivision for another user", async () => {
 
     const newSubdivision = {
       name: "Wildflowers",
@@ -587,7 +587,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
     })
   })
 
-  test("POST:404 Responds with an error message when the plot_id does not exist", async () => {
+  test("POST:404 Responds with an error when the plot does not exist", async () => {
 
     const newSubdivision = {
       name: "Wildflowers",
@@ -608,7 +608,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
     })
   })
 
-  test("POST:409 Responds with an error message when the subdivision name already exists for one of the given user's subdivisions of that plot", async () => {
+  test("POST:409 Responds with an error when the subdivision name already exists for a subdivision of the given plot", async () => {
 
     const newSubdivision = {
       name: "Onion Bed",
@@ -655,7 +655,7 @@ describe("GET /api/subdivisions/:subdivision_id", () => {
     })
   })
 
-  test("GET:400 Responds with an error message when the subdivision_id is not a positive integer", async () => {
+  test("GET:400 Responds with an error when the subdivision_id parameter is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/foobar")
@@ -668,7 +668,7 @@ describe("GET /api/subdivisions/:subdivision_id", () => {
     })
   })
 
-  test("GET:403 Responds with a warning when the subdivision does not belong to the authenticated user", async () => {
+  test("GET:403 Responds with an error when the subdivision does not belong to the authenticated user", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/4")
@@ -681,7 +681,7 @@ describe("GET /api/subdivisions/:subdivision_id", () => {
     })
   })
 
-  test("GET:404 Responds with an error message when the subdivision does not exist", async () => {
+  test("GET:404 Responds with an error when the subdivision does not exist", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/999")
@@ -810,7 +810,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error message when the subdivision_id is not a positive integer", async () => {
+  test("PATCH:400 Responds with an error when the subdivision_id parameter is not a positive integer", async () => {
 
     const newDetails = {
       name: "Root Vegetable Patch",
@@ -831,7 +831,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
     })
   })
 
-  test("PATCH:403 Responds with a warning when the plot_id does not belong to the authenticated user", async () => {
+  test("PATCH:403 Responds with an error when the subdivision does not belong to the authenticated user", async () => {
 
     const newDetails = {
       name: "Root Vegetable Patch",
@@ -852,7 +852,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
     })
   })
 
-  test("PATCH:404 Responds with an error message when the subdivision_id does not exist", async () => {
+  test("PATCH:404 Responds with an error when the subdivision does not exist", async () => {
 
     const newDetails = {
       name: "Root Vegetable Patch",
@@ -873,7 +873,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
     })
   })
 
-  test("PATCH:409 Responds with an error message when the subdivision name already exists for one of the subdivisions of the current plot", async () => {
+  test("PATCH:409 Responds with an error when the subdivision name already exists for a subdivision of the given plot", async () => {
 
     const newDetails = {
       name: "Onion Bed",
@@ -898,7 +898,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
 
 describe("DELETE /api/subdivisions/:subdivision_id", () => {
 
-  test("DELETE:204 Deletes the subdivision with the given subdivision_id", async () => {
+  test("DELETE:204 Deletes the subdivision with the given subdivision ID", async () => {
 
     await request(app)
       .delete("/api/subdivisions/1")
@@ -916,7 +916,7 @@ describe("DELETE /api/subdivisions/:subdivision_id", () => {
     })
   })
 
-  test("DELETE:400 Responds with an error message when the subdivision_id is not a positive integer", async () => {
+  test("DELETE:400 Responds with an error when the subdivision_id parameter is not a positive integer", async () => {
 
     const { body } = await request(app)
       .delete("/api/subdivisions/foobar")
@@ -929,7 +929,7 @@ describe("DELETE /api/subdivisions/:subdivision_id", () => {
     })
   })
 
-  test("DELETE:403 Responds with a warning when the authenticated user attempts to delete another user's subdivision", async () => {
+  test("DELETE:403 Responds with an error when the authenticated user attempts to delete another user's subdivision", async () => {
 
     const { body } = await request(app)
       .delete("/api/subdivisions/4")
@@ -942,7 +942,7 @@ describe("DELETE /api/subdivisions/:subdivision_id", () => {
     })
   })
 
-  test("DELETE:404 Responds with an error message when the subdivision does not exist", async () => {
+  test("DELETE:404 Responds with an error when the subdivision does not exist", async () => {
 
     const { body } = await request(app)
       .delete("/api/subdivisions/999")

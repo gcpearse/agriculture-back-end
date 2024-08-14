@@ -71,7 +71,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
     expect(body.count).toBe(4)
   })
 
-  test("GET:200 Responds with an empty array when no crops are associated with the plot_id", async () => {
+  test("GET:200 Responds with an empty array when no crops are associated with the plot", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/plot/4")
@@ -85,7 +85,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
     expect(body.count).toBe(0)
   })
 
-  test("GET:400 Responds with an error message when the plot_id is not a positive integer", async () => {
+  test("GET:400 Responds with an error when the plot_id parameter is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/plot/foobar")
@@ -98,7 +98,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
     })
   })
 
-  test("GET:403 Responds with a warning when the authenticated user attempts to retrieve another user's crop data", async () => {
+  test("GET:403 Responds with an error when the authenticated user attempts to retrieve another user's crop data", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/plot/2")
@@ -111,7 +111,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
     })
   })
 
-  test("GET:404 Responds with an error message when the plot_id does not exist", async () => {
+  test("GET:404 Responds with an error when the plot does not exist", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/plot/999")
@@ -210,7 +210,7 @@ describe("GET /api/crops/plot/:plot_id?category=", () => {
     expect(body.count).toBe(2)
   })
 
-  test("GET:404 Responds with an error message when the query value is invalid", async () => {
+  test("GET:404 Responds with an error when the query value is invalid", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/plot/1?category=foobar")
@@ -414,7 +414,7 @@ describe("GET /api/crops/plot/:plot_id?limit=", () => {
     expect(body.count).toBe(4)
   })
 
-  test("GET:400 Responds with an error message when the value of limit is not a positive integer", async () => {
+  test("GET:400 Responds with an error when the value of limit is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/plot/1?limit=two")
@@ -546,7 +546,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
     })
   })
 
-  test("POST:201 Assigns a null value to 'subdivision_id', 'variety', 'quantity', 'date_planted', and 'harvest_date' when no value is provided", async () => {
+  test("POST:201 Assigns a null value to subdivision_id, variety, quantity, date_planted, and harvest_date when no value is provided", async () => {
 
     const newCrop = {
       name: "Pear",
@@ -646,7 +646,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
     })
   })
 
-  test("POST:400 Responds with an error message when the plot_id is not a positive integer", async () => {
+  test("POST:400 Responds with an error when the plot_id parameter is not a positive integer", async () => {
 
     const newCrop = {
       name: "Pear",
@@ -665,7 +665,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
     })
   })
 
-  test("POST:403 Responds with a warning when the authenticated user attempts to add a crop for another user", async () => {
+  test("POST:403 Responds with an error when the authenticated user attempts to add a crop for another user", async () => {
 
     const newCrop = {
       name: "Pear",
@@ -684,7 +684,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
     })
   })
 
-  test("POST:404 Responds with an error message when the plot_id does not exist", async () => {
+  test("POST:404 Responds with an error when the plot does not exist", async () => {
 
     const newCrop = {
       name: "Pear",
@@ -741,7 +741,7 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
     expect(body.count).toBe(2)
   })
 
-  test("GET:200 Responds with an empty array when no crops are associated with the subdivision_id", async () => {
+  test("GET:200 Responds with an empty array when no crops are associated with the subdivision", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/subdivision/2")
@@ -755,7 +755,7 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
     expect(body.count).toBe(0)
   })
 
-  test("GET:400 Responds with an error message when the subdivision_id is not a positive integer", async () => {
+  test("GET:400 Responds with an error when the subdivision_id parameter is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/subdivision/foobar")
@@ -768,7 +768,7 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
     })
   })
 
-  test("GET:403 Responds with a warning when the authenticated user attempts to retrieve another user's crop data", async () => {
+  test("GET:403 Responds with an error when the authenticated user attempts to retrieve another user's crop data", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/subdivision/4")
@@ -781,7 +781,7 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
     })
   })
 
-  test("GET:404 Responds with an error message when the subdivision_id does not exist", async () => {
+  test("GET:404 Responds with an error when the subdivision does not exist", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/subdivision/999")
@@ -862,7 +862,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?category=", () => {
     expect(body.count).toBe(1)
   })
 
-  test("GET:404 Responds with an error message when the query value is invalid", async () => {
+  test("GET:404 Responds with an error when the query value is invalid", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/subdivision/1?category=foobar")
@@ -1066,7 +1066,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?limit=", () => {
     expect(body.count).toBe(2)
   })
 
-  test("GET:400 Responds with an error message when the value of limit is not a positive integer", async () => {
+  test("GET:400 Responds with an error when the value of limit is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/subdivision/1?limit=two")
@@ -1111,7 +1111,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?page=", () => {
     expect(body.count).toBe(2)
   })
 
-  test("GET:400 Responds with an error message when the value of page is not a positive integer", async () => {
+  test("GET:400 Responds with an error when the value of page is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/subdivision/1?limit=1&page=three")
@@ -1184,7 +1184,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
     })
   })
 
-  test("POST:201 Assigns a null value to 'variety', 'quantity', 'date_planted', and 'harvest_date' when no value is provided", async () => {
+  test("POST:201 Assigns a null value to variety, quantity, date_planted, and harvest_date when no value is provided", async () => {
 
     const newCrop = {
       name: "Pear",
@@ -1284,7 +1284,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
     })
   })
 
-  test("POST:400 Responds with an error message when the plot_id is not a positive integer", async () => {
+  test("POST:400 Responds with an error when the subdivision_id parameter is not a positive integer", async () => {
 
     const newCrop = {
       name: "Pear",
@@ -1303,7 +1303,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
     })
   })
 
-  test("POST:403 Responds with a warning when the authenticated user attempts to add a crop for another user", async () => {
+  test("POST:403 Responds with an error when the authenticated user attempts to add a crop for another user", async () => {
 
     const newCrop = {
       name: "Pear",
@@ -1322,7 +1322,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
     })
   })
 
-  test("POST:404 Responds with an error message when the subdivision does not exist", async () => {
+  test("POST:404 Responds with an error when the subdivision does not exist", async () => {
 
     const newCrop = {
       name: "Pear",
@@ -1369,7 +1369,7 @@ describe("GET /api/crops/:crop_id", () => {
     })
   })
 
-  test("GET:400 Responds with an error message when the crop_id is not a positive integer", async () => {
+  test("GET:400 Responds with an error when the crop_id parameter is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/foobar")
@@ -1382,7 +1382,7 @@ describe("GET /api/crops/:crop_id", () => {
     })
   })
 
-  test("GET:403 Responds with a warning when the crop does not belong to the authenticated user", async () => {
+  test("GET:403 Responds with an error when the crop does not belong to the authenticated user", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/5")
@@ -1395,7 +1395,7 @@ describe("GET /api/crops/:crop_id", () => {
     })
   })
 
-  test("GET:404 Responds with an error message when the crop does not exist", async () => {
+  test("GET:404 Responds with an error when the crop does not exist", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/999")

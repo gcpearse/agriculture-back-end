@@ -33,7 +33,7 @@ describe("GET /api/auth", () => {
     })
   })
 
-  test("GET:401 Responds with a warning when valid credentials have not been provided", async () => {
+  test("GET:401 Responds with a warning when valid credentials are not provided", async () => {
 
     const { body } = await request(app)
       .get("/api/auth")
