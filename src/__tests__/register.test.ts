@@ -17,7 +17,7 @@ afterAll(async () => {
 
 describe("POST /api/register", () => {
 
-  test("POST:201 Responds with a new user object without a password property and an automatically assigned default user role", async () => {
+  test("POST:201 Responds with a new user object with an automatically assigned default user role", async () => {
 
     const newUser = {
       username: "farmer123",
@@ -65,7 +65,7 @@ describe("POST /api/register", () => {
     })
   })
 
-  test("POST:409 Responds with an error message when the username already exists", async () => {
+  test("POST:409 Responds with an error when the username already exists", async () => {
 
     const newUser = {
       username: "carrot_king",
@@ -87,7 +87,7 @@ describe("POST /api/register", () => {
     })
   })
 
-  test("POST:409 Responds with an error message when the email already exists", async () => {
+  test("POST:409 Responds with an error when the email already exists", async () => {
 
     const newUser = {
       username: "farmer123",

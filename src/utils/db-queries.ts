@@ -190,28 +190,6 @@ export const searchForUserId = async (
 }
 
 
-export const searchForUsername = async (
-  username: string
-): Promise<undefined> => {
-
-  const result = await db.query(`
-    SELECT username
-    FROM users
-    WHERE username = $1;
-    `,
-    [username]
-  )
-
-  if (!result.rowCount) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "User not found"
-    })
-  }
-}
-
-
 export const validateCropCategory = async (
   category: string,
   ignoreCase: boolean

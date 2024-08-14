@@ -93,7 +93,7 @@ describe("GET /api/plots/user/:owner_id", () => {
     expect(body.count).toBe(0)
   })
 
-  test("GET:400 Responds with an error message when the owner_id is not a positive integer", async () => {
+  test("GET:400 Responds with an error when the owner_id parameter is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/user/foobar")
@@ -106,7 +106,7 @@ describe("GET /api/plots/user/:owner_id", () => {
     })
   })
 
-  test("GET:403 Responds with a warning when the authenticated user attempts to retrieve another user's plot data", async () => {
+  test("GET:403 Responds with an error when the authenticated user attempts to retrieve another user's plot data", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/user/2")
@@ -119,7 +119,7 @@ describe("GET /api/plots/user/:owner_id", () => {
     })
   })
 
-  test("GET:404 Responds with an error message when the owner_id does not exist", async () => {
+  test("GET:404 Responds with an error when the user does not exist", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/user/999")
@@ -135,7 +135,7 @@ describe("GET /api/plots/user/:owner_id", () => {
   test("GET:404 When the parent user is deleted, all child plots are also deleted", async () => {
 
     await request(app)
-      .delete("/api/users/carrot_king")
+      .delete("/api/users/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(204)
 
@@ -170,7 +170,7 @@ describe("GET /api/plots/user/:owner_id?type=", () => {
     expect(body.count).toBe(2)
   })
 
-  test("GET:404 Responds with an error message when the query value is invalid", async () => {
+  test("GET:404 Responds with an error when the query value is invalid", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/user/1?type=foobar")
@@ -328,7 +328,7 @@ describe("GET /api/plots/user/:owner_id?limit=", () => {
     expect(body.count).toBe(3)
   })
 
-  test("GET:400 Responds with an error message when the value of limit is not a positive integer", async () => {
+  test("GET:400 Responds with an error when the value of limit is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/user/1?limit=two")
@@ -547,7 +547,7 @@ describe("POST /api/plots/user/:owner_id", () => {
     })
   })
 
-  test("POST:400 Responds with an error message when the owner_id is not a positive integer", async () => {
+  test("POST:400 Responds with an error message when the owner_id parameter is not a positive integer", async () => {
 
     const newPlot = {
       name: "John's Field",
@@ -569,7 +569,7 @@ describe("POST /api/plots/user/:owner_id", () => {
     })
   })
 
-  test("POST:403 Responds with a warning when the authenticated user attempts to create a plot for another user", async () => {
+  test("POST:403 Responds with an error when the authenticated user attempts to create a plot for another user", async () => {
 
     const newPlot = {
       name: "John's Field",
@@ -591,7 +591,7 @@ describe("POST /api/plots/user/:owner_id", () => {
     })
   })
 
-  test("POST:404 Responds with an error message when the owner_id does not exist", async () => {
+  test("POST:404 Responds with an error when the user does not exist", async () => {
 
     const newPlot = {
       name: "John's Field",
@@ -613,7 +613,7 @@ describe("POST /api/plots/user/:owner_id", () => {
     })
   })
 
-  test("POST:409 Responds with an error message when the plot name already exists for one of the given user's plots", async () => {
+  test("POST:409 Responds with an error when the plot name already exists for one of the given user's plots", async () => {
 
     const newPlot = {
       name: "John's Garden",
@@ -689,7 +689,7 @@ describe("GET /api/plots/user/:owner_id/pinned", () => {
     expect(body.plots).toHaveLength(0)
   })
 
-  test("GET:400 Responds with an error message when the owner_id is not a positive integer", async () => {
+  test("GET:400 Responds with an error when the owner_id parameter is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/user/foobar/pinned")
@@ -702,7 +702,7 @@ describe("GET /api/plots/user/:owner_id/pinned", () => {
     })
   })
 
-  test("GET:403 Responds with a warning when the authenticated user attempts to retrieve another user's plot data", async () => {
+  test("GET:403 Responds with an error when the authenticated user attempts to retrieve another user's plot data", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/user/2/pinned")
@@ -715,7 +715,7 @@ describe("GET /api/plots/user/:owner_id/pinned", () => {
     })
   })
 
-  test("GET:404 Responds with an error message when the owner_id does not exist", async () => {
+  test("GET:404 Responds with an error when the user does not exist", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/user/999/pinned")
@@ -756,7 +756,7 @@ describe("GET /api/plots/:plot_id", () => {
     })
   })
 
-  test("GET:400 Responds with an error message when the plot_id is not a positive integer", async () => {
+  test("GET:400 Responds with an error when the plot_id parameter is not a positive integer", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/foobar")
@@ -769,7 +769,7 @@ describe("GET /api/plots/:plot_id", () => {
     })
   })
 
-  test("GET:403 Responds with a warning when the plot does not belong to the authenticated user", async () => {
+  test("GET:403 Responds with an error when the plot does not belong to the authenticated user", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/2")
@@ -782,7 +782,7 @@ describe("GET /api/plots/:plot_id", () => {
     })
   })
 
-  test("GET:404 Responds with an error message when the plot does not exist", async () => {
+  test("GET:404 Responds with an error when the plot does not exist", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/999")
@@ -920,7 +920,7 @@ describe("PATCH /api/plots/:plot_id", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error message when the plot_id is not a positive integer", async () => {
+  test("PATCH:400 Responds with an error when the plot_id parameter is not a positive integer", async () => {
 
     const newDetails = {
       name: "John's Homestead",
@@ -942,7 +942,7 @@ describe("PATCH /api/plots/:plot_id", () => {
     })
   })
 
-  test("PATCH:403 Responds with a warning when the plot_id does not belong to the authenticated user", async () => {
+  test("PATCH:403 Responds with an error when the plot does not belong to the authenticated user", async () => {
 
     const newDetails = {
       name: "John's Homestead",
@@ -964,7 +964,7 @@ describe("PATCH /api/plots/:plot_id", () => {
     })
   })
 
-  test("PATCH:404 Responds with an error message when the plot_id does not exist", async () => {
+  test("PATCH:404 Responds with an error when the plot does not exist", async () => {
 
     const newDetails = {
       name: "John's Homestead",
@@ -986,7 +986,7 @@ describe("PATCH /api/plots/:plot_id", () => {
     })
   })
 
-  test("PATCH:409 Responds with an error message when the plot name already exists for one of the given user's other plots", async () => {
+  test("PATCH:409 Responds with an error when the plot name already exists for one of the given user's other plots", async () => {
 
     const newDetails = {
       name: "John's Allotment",
@@ -1012,7 +1012,7 @@ describe("PATCH /api/plots/:plot_id", () => {
 
 describe("DELETE /api/plots/:plot_id", () => {
 
-  test("DELETE:204 Deletes the plot with the given plot_id", async () => {
+  test("DELETE:204 Deletes the plot with the given plot ID", async () => {
 
     await request(app)
       .delete("/api/plots/1")
@@ -1030,7 +1030,7 @@ describe("DELETE /api/plots/:plot_id", () => {
     })
   })
 
-  test("DELETE:400 Responds with an error message when the plot_id is not a positive integer", async () => {
+  test("DELETE:400 Responds with an error when the plot_id parameter is not a positive integer", async () => {
 
     const { body } = await request(app)
       .delete("/api/plots/foobar")
@@ -1043,7 +1043,7 @@ describe("DELETE /api/plots/:plot_id", () => {
     })
   })
 
-  test("DELETE:403 Responds with a warning when the authenticated user attempts to delete another user's plot", async () => {
+  test("DELETE:403 Responds with an error when the authenticated user attempts to delete another user's plot", async () => {
 
     const { body } = await request(app)
       .delete("/api/plots/2")
@@ -1056,7 +1056,7 @@ describe("DELETE /api/plots/:plot_id", () => {
     })
   })
 
-  test("DELETE:404 Responds with an error message when the plot_id does not exist", async () => {
+  test("DELETE:404 Responds with an error when the plot does not exist", async () => {
 
     const { body } = await request(app)
       .delete("/api/plots/999")
@@ -1182,7 +1182,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
     }
   })
 
-  test("PATCH:400 Responds with an error message when the plot_id is not a positive integer", async () => {
+  test("PATCH:400 Responds with an error when the plot_id parameter is not a positive integer", async () => {
 
     const toggle = { bool: true }
 
@@ -1198,7 +1198,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
     })
   })
 
-  test("PATCH:403 Responds with a warning when the plot_id does not belong to the authenticated user", async () => {
+  test("PATCH:403 Responds with an error when the plot does not belong to the authenticated user", async () => {
 
     const toggle = { bool: true }
 
@@ -1214,7 +1214,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
     })
   })
 
-  test("PATCH:404 Responds with an error message when the plot_id does not exist", async () => {
+  test("PATCH:404 Responds with an error when the plot does not exist", async () => {
 
     const toggle = { bool: true }
 

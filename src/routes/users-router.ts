@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { deleteUserByUsername, getUserByUsername, getUsers, patchPasswordByUsername, patchUserByUsername } from "../controllers/users-controllers"
+import { deleteUserByUserId, getUserByUserId, getUsers, patchPasswordByUserId, patchUserByUserId } from "../controllers/users-controllers"
 
 
 export const usersRouter = Router()
@@ -78,24 +78,24 @@ usersRouter.route("/users")
   .get(verifyToken, getUsers)
 
 
-usersRouter.route("/users/:username")
+usersRouter.route("/users/:user_id")
 
 
 /**
  * @swagger
- * /api/users/{username}:
+ * /api/users/{user_id}:
  *  get:
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve a user's details
- *    description: Responds with a user object. If the username parameter is invalid, the server responds with an error. Permission is denied when the user's username does not match the target username.
+ *    description: Responds with a user object. If the user_id parameter is invalid, the server responds with an error. Permission is denied when the user's user ID does not match the user_id parameter.
  *    tags: [Users]
  *    parameters:
- *      - name: username
+ *      - name: user_id
  *        in: path
  *        required: true
  *        schema:
- *          type: string
+ *          type: integer
  *    responses:
  *      200:
  *        description: OK
@@ -106,6 +106,12 @@ usersRouter.route("/users/:username")
  *              properties:
  *                user:
  *                  $ref: "#/components/schemas/User"
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/BadRequest"
  *      403:
  *        description: Forbidden
  *        content:
@@ -119,24 +125,24 @@ usersRouter.route("/users/:username")
  *            schema:
  *              $ref: "#/components/schemas/NotFound"
  */
-  .get(verifyToken, getUserByUsername)
+  .get(verifyToken, getUserByUserId)
 
 
 /**
  * @swagger
- * /api/users/{username}:
+ * /api/users/{user_id}:
  *  patch:
  *    security:
  *      - bearerAuth: []
  *    summary: Update a user's details
- *    description: Responds with an updated user object. If the request body or username parameter is invalid or the email would be a duplicate, the server responds with an error. Permission is denied when the user's username does not match the target username. 
+ *    description: Responds with an updated user object. If the request body or user_id parameter is invalid or the email would be a duplicate, the server responds with an error. Permission is denied when the user's user ID does not match the user_id parameter. 
  *    tags: [Users]
  *    parameters:
  *      - in: path
- *        name: username
+ *        name: user_id
  *        required: true
  *        schema:
- *          type: string
+ *          type: integer
  *    requestBody:
  *      required: true
  *      content:
@@ -178,27 +184,33 @@ usersRouter.route("/users/:username")
  *            schema:
  *              $ref: "#/components/schemas/Conflict"
  */
-  .patch(verifyToken, patchUserByUsername)
+  .patch(verifyToken, patchUserByUserId)
 
 
 /**
  * @swagger
- * /api/users/{username}:
+ * /api/users/{user_id}:
  *  delete:
  *    security:
  *      - bearerAuth: []
  *    summary: Delete a user from the database
- *    description: Removes the user and all associated data from the database. If the username parameter is invalid, the server responds with an error. Permission is denied when the user's username does not match the target username.
+ *    description: Removes the user and all associated data from the database. If the user_id parameter is invalid, the server responds with an error. Permission is denied when the user's user ID does not match the user_id parameter.
  *    tags: [Users]
  *    parameters:
  *      - in: path
- *        name: username
+ *        name: user_id
  *        required: true
  *        schema:
- *          type: string
+ *          type: integer
  *    responses:
  *      204:
  *        description: No Content
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/BadRequest"
  *      403:
  *        description: Forbidden
  *        content:
@@ -212,24 +224,24 @@ usersRouter.route("/users/:username")
  *            schema:
  *              $ref: "#/components/schemas/NotFound"
  */
-  .delete(verifyToken, deleteUserByUsername)
+  .delete(verifyToken, deleteUserByUserId)
 
 
 /**
  * @swagger
- * /api/users/{username}/password:
+ * /api/users/{user_id}/password:
  *  patch:
  *    security:
  *      - bearerAuth: []
  *    summary: Update a user's password
- *    description: Responds with a success message. If the request body or username parameter is invalid or the old password is incorrect, the server responds with an error. Permission is denied when the user's username does not match the target username.
+ *    description: Responds with a success message. If the request body or user_id parameter is invalid or the old password is incorrect, the server responds with an error. Permission is denied when the user's user ID does not match the user_id parameter.
  *    tags: [Users]
  *    parameters:
  *      - in: path
- *        name: username
+ *        name: user_id
  *        required: true
  *        schema:
- *          type: string
+ *          type: integer
  *    requestBody:
  *      required: true
  *      content:
@@ -282,4 +294,4 @@ usersRouter.route("/users/:username")
  *            schema:
  *              $ref: "#/components/schemas/NotFound"
  */
-usersRouter.patch("/users/:username/password", verifyToken, patchPasswordByUsername)
+usersRouter.patch("/users/:user_id/password", verifyToken, patchPasswordByUserId)

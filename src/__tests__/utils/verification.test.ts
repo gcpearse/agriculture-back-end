@@ -36,7 +36,7 @@ describe("verifyPagination", () => {
     expect(verifyPagination(1, 0)).toBeUndefined()
   })
 
-  test("Returns undefined when the query result returns at least one row", () => {
+  test("Returns undefined when the query returns at least one row", () => {
 
     expect(verifyPagination(2, 1)).toBeUndefined()
   })

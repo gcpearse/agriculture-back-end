@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express"
-import { updatePasswordByUsername, removeUserByUsername, selectUserByUsername, updateUserByUsername, selectAllUsers } from "../models/users-models"
+import { selectAllUsers, selectUserByUserId, updateUserByUserId, removeUserByUserId, updatePasswordByUserId } from "../models/users-models"
 import { ExtendedRequest } from "../types/auth-types"
 
 
@@ -16,14 +16,14 @@ export const getUsers = async (req: ExtendedRequest, res: Response, next: NextFu
 }
 
 
-export const getUserByUsername = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
+export const getUserByUserId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUsername = req.user!.username
+  const authUserId = req.user!.user_id
 
-  const { username } = req.params
+  const { user_id } = req.params
 
   try {
-    const user = await selectUserByUsername(authUsername, username)
+    const user = await selectUserByUserId(authUserId, +user_id)
     res.status(200).send({ user })
   } catch (err) {
     next(err)
@@ -31,14 +31,14 @@ export const getUserByUsername = async (req: ExtendedRequest, res: Response, nex
 }
 
 
-export const patchUserByUsername = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
+export const patchUserByUserId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUsername = req.user!.username
+  const authUserId = req.user!.user_id
 
-  const { username } = req.params
+  const { user_id } = req.params
 
   try {
-    const user = await updateUserByUsername(authUsername, username, req.body)
+    const user = await updateUserByUserId(authUserId, +user_id, req.body)
     res.status(200).send({ user })
   } catch (err) {
     next(err)
@@ -46,14 +46,14 @@ export const patchUserByUsername = async (req: ExtendedRequest, res: Response, n
 }
 
 
-export const deleteUserByUsername = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
+export const deleteUserByUserId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUsername = req.user!.username
+  const authUserId = req.user!.user_id
 
-  const { username } = req.params
+  const { user_id } = req.params
 
   try {
-    await removeUserByUsername(authUsername, username)
+    await removeUserByUserId(authUserId, +user_id)
     res.status(204).send()
   } catch (err) {
     next(err)
@@ -61,14 +61,14 @@ export const deleteUserByUsername = async (req: ExtendedRequest, res: Response, 
 }
 
 
-export const patchPasswordByUsername = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
+export const patchPasswordByUserId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const authUsername = req.user!.username
+  const authUserId = req.user!.user_id
 
-  const { username } = req.params
+  const { user_id } = req.params
 
   try {
-    const response = await updatePasswordByUsername(authUsername, username, req.body)
+    const response = await updatePasswordByUserId(authUserId, +user_id, req.body)
     res.status(200).send(response)
   } catch (err) {
     next(err)

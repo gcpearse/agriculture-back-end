@@ -1,7 +1,7 @@
 import data from "../../db/data/test-data/test-index"
 import { db } from "../../db"
 import { seed } from "../../db/seeding/seed"
-import { checkEmailConflict, checkPlotNameConflict, checkSubdivisionNameConflict, getCropOwnerId, getPlotOwnerId, getSubdivisionPlotId, getUserRole, searchForUserId, searchForUsername, validateCropCategory, validatePlotType, validateSubdivisionType, validateUnitSystem, validateUserRole } from "../../utils/db-queries"
+import { checkEmailConflict, checkPlotNameConflict, checkSubdivisionNameConflict, getCropOwnerId, getPlotOwnerId, getSubdivisionPlotId, getUserRole, searchForUserId, validateCropCategory, validatePlotType, validateSubdivisionType, validateUnitSystem, validateUserRole } from "../../utils/db-queries"
 import { StatusResponse } from "../../types/response-types"
 
 
@@ -21,7 +21,7 @@ describe("checkEmailConflict", () => {
     })
   })
 
-  test("When no plot name conflict is found, the promise resolves to be undefined", async () => {
+  test("When no email conflict is found, the promise resolves to be undefined", async () => {
 
     await expect(checkEmailConflict("foobar@foobar.com")).resolves.toBeUndefined()
   })
@@ -57,7 +57,7 @@ describe("checkSubdivisionNameConflict", () => {
     })
   })
 
-  test("When no plot name conflict is found, the promise resolves to be undefined", async () => {
+  test("When no subdivision name conflict is found, the promise resolves to be undefined", async () => {
 
     await expect(checkSubdivisionNameConflict(1, "Foobar")).resolves.toBeUndefined()
   })
@@ -66,14 +66,14 @@ describe("checkSubdivisionNameConflict", () => {
 
 describe("getCropOwnerId", () => {
 
-  test("Returns the owner_id associated with the crop", async () => {
+  test("Returns the owner ID associated with the crop", async () => {
 
     const result = await getCropOwnerId(1)
 
     expect(result).toBe(1)
   })
 
-  test("Returns an error message when the crop_id does not exist", async () => {
+  test("When the crop does not exist, the promise is rejected", async () => {
 
     await expect(getCropOwnerId(999)).rejects.toMatchObject<StatusResponse>({
       status: 404,
@@ -86,14 +86,14 @@ describe("getCropOwnerId", () => {
 
 describe("getPlotOwnerId", () => {
 
-  test("Returns the owner_id associated with the plot", async () => {
+  test("Returns the owner ID associated with the plot", async () => {
 
     const result = await getPlotOwnerId(1)
 
     expect(result).toBe(1)
   })
 
-  test("Returns an error message when the plot_id does not exist", async () => {
+  test("When the plot does not exist, the promise is rejected", async () => {
 
     await expect(getPlotOwnerId(999)).rejects.toMatchObject<StatusResponse>({
       status: 404,
@@ -106,14 +106,14 @@ describe("getPlotOwnerId", () => {
 
 describe("getSubdivisionPlotId", () => {
 
-  test("Returns the plot_id associated with the subdivision", async () => {
+  test("Returns the plot ID associated with the subdivision", async () => {
 
     const result = await getSubdivisionPlotId(1)
 
     expect(result).toBe(1)
   })
 
-  test("Returns an error message when the subdivision_id does not exist", async () => {
+  test("When the subdivision does not exist, the promise is rejected", async () => {
 
     await expect(getSubdivisionPlotId(999)).rejects.toMatchObject<StatusResponse>({
       status: 404,
@@ -126,14 +126,14 @@ describe("getSubdivisionPlotId", () => {
 
 describe("getUserRole", () => {
 
-  test("Returns the role of the user with the given user_id", async () => {
+  test("Returns the role of the user with the given user ID", async () => {
 
     const result = await getUserRole(1)
 
     expect(result).toBe("admin")
   })
 
-  test("Returns an error message when the user_id does not exist", async () => {
+  test("When the user does not exist, the promise is rejected", async () => {
 
     await expect(getUserRole(999)).rejects.toMatchObject<StatusResponse>({
       status: 404,
@@ -146,7 +146,7 @@ describe("getUserRole", () => {
 
 describe("searchForUserId", () => {
 
-  test("When a user_id matching the owner_id cannot be found, the promise is rejected", async () => {
+  test("When a user ID matching the owner_id parameter cannot be found, the promise is rejected", async () => {
 
     await expect(searchForUserId(999)).rejects.toMatchObject<StatusResponse>({
       status: 404,
@@ -155,27 +155,9 @@ describe("searchForUserId", () => {
     })
   })
 
-  test("When a user_id matching the owner_id is found, the promise resolves to be undefined", async () => {
+  test("When a user ID matching the owner_id parameter is found, the promise resolves to be undefined", async () => {
 
     await expect(searchForUserId(1)).resolves.toBeUndefined()
-  })
-})
-
-
-describe("searchForUsername", () => {
-
-  test("When a match for the username cannot be found, the promise is rejected", async () => {
-
-    await expect(searchForUsername("Foobar")).rejects.toMatchObject<StatusResponse>({
-      status: 404,
-      message: "Not Found",
-      details: "User not found"
-    })
-  })
-
-  test("When a match for the username is found, the promise resolves to be undefined", async () => {
-
-    await expect(searchForUsername("carrot_king")).resolves.toBeUndefined()
   })
 })
 
