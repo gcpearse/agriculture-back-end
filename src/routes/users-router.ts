@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { deleteUserByUserId, getUserByUserId, getUsers, patchPasswordByUserId, patchUserByUserId } from "../controllers/users-controllers"
+import { deleteUserByUserId, getUserByUserId, getUsers, patchPasswordByUserId, patchRoleByUserId, patchUserByUserId } from "../controllers/users-controllers"
 
 
 export const usersRouter = Router()
@@ -295,3 +295,60 @@ usersRouter.route("/users/:user_id")
  *              $ref: "#/components/schemas/NotFound"
  */
 usersRouter.patch("/users/:user_id/password", verifyToken, patchPasswordByUserId)
+
+
+/**
+ * @swagger
+ * /api/users/{user_id}/role:
+ *  patch:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Update a user's role
+ *    description: Responds with an updated user object. If the request body or user_id parameter is invalid, the server responds with an error. Permission is denied when the user is not an admin.
+ *    tags: [Users]
+ *    parameters:
+ *      - in: path
+ *        name: user_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              role:
+ *                type: string
+ *                example: supervisor
+ *    responses:
+ *      200:
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                user:
+ *                  $ref: "#/components/schemas/User"
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/BadRequest"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Forbidden"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/NotFound"
+ */
+usersRouter.patch("/users/:user_id/role", verifyToken, patchRoleByUserId)
