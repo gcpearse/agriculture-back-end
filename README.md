@@ -10,7 +10,7 @@ This API serves as the back end for a full-stack application allowing gardeners,
 
 ### Languages and frameworks
 
-This is a **Node.js** REST API built in **TypeScript** with the **Express** framework.
+This is a **Node.js** REST API written in **TypeScript** with the **Express** framework.
 
 ### Database
 
@@ -100,7 +100,7 @@ A repository secret can be added by following these steps:
 
 ## Scripts
 
-The following scripts are included in the `package.json` file:
+The following key scripts are included in the `package.json` file:
 
 ```json
 "scripts": {
@@ -124,3 +124,5 @@ The following scripts are included in the `package.json` file:
 
 `npm t`
 > Runs all tests in the `src` directory serially.
+
+The `package.json` file also includes specific scripts to run individual test suites.
