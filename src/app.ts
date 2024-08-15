@@ -5,7 +5,7 @@ import swaggerUi from "swagger-ui-express"
 import { options } from "./swagger/options"
 
 import { handleCustomErrors, handlePsqlErrors, handleServerErrors } from "./middleware/errors"
-import { handleNotFound } from "./controllers/handle-not-found"
+import { handleNotFound } from "./middleware/not-found"
 
 import { registerRouter } from "./routes/register-router"
 import { loginRouter } from "./routes/login-router"
