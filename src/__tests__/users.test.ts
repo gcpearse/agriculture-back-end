@@ -753,3 +753,127 @@ describe("PATCH /api/users/:user_id/password", () => {
     })
   })
 })
+
+
+describe("PATCH /api/users/:user_id/role", () => {
+
+  test("PATCH:200 Responds with an updated user object", async () => {
+
+    const newRole = {
+      role: "supervisor"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/users/2/role")
+      .send(newRole)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.user).toMatchObject<SecureUser>({
+      user_id: 2,
+      username: "peach_princess",
+      email: "olivia.jones@example.com",
+      first_name: "Olivia",
+      surname: "Jones",
+      role: UserRole.Supervisor,
+      unit_system: UnitSystem.Metric
+    })
+  })
+
+  test("PATCH:400 Responds with an error when the user_id parameter is not a positive integer", async () => {
+
+    const newRole = {
+      role: "supervisor"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/users/two/role")
+      .send(newRole)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when a property is missing from the request body", async () => {
+
+    const newRole = {}
+
+    const { body } = await request(app)
+      .patch("/api/users/2/role")
+      .send(newRole)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Not null violation"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when passed an invalid value for role", async () => {
+
+    const newRole = {
+      role: "foobar"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/users/2/role")
+      .send(newRole)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid text representation"
+    })
+  })
+
+  test("PATCH:403 Responds with an error when the authenticated user is not an admin", async () => {
+
+    const newRole = {
+      role: "supervisor"
+    }
+
+    const auth = await request(app)
+      .post("/api/login")
+      .send({
+        login: "quince_queen",
+        password: "quince123",
+      })
+
+    token = auth.body.token
+
+    const { body } = await request(app)
+      .patch("/api/users/2/role")
+      .send(newRole)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Forbidden",
+      details: "Permission to edit user data denied"
+    })
+  })
+
+  test("PATCH:404 Responds with an error when the user does not exist", async () => {
+
+    const newRole = {
+      role: "supervisor"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/users/999/role")
+      .send(newRole)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "User not found"
+    })
+  })
+})
