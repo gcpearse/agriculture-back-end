@@ -64,7 +64,7 @@ export const selectAllUsers = async (
 
   if (unit_system) {
     await validateUnitSystem(unit_system as string)
-    
+
     query += format(`
       AND users.unit_system::VARCHAR ILIKE %L
       `, unit_system)
@@ -231,13 +231,6 @@ export const updatePasswordByUserId = async (
     UPDATE users
     SET password = $1
     WHERE user_id = $2
-    RETURNING 
-      user_id, 
-      username, 
-      email,
-      first_name, 
-      surname, 
-      unit_system;
     `,
     [hashedPassword, user_id]
   )
@@ -246,4 +239,39 @@ export const updatePasswordByUserId = async (
     message: "OK",
     details: "Password changed successfully"
   }
+}
+
+
+export const updateRoleByUserId = async (
+  authUserId: number,
+  user_id: number,
+  {
+    role
+  }: { role: string }
+): Promise<SecureUser> => {
+
+  await verifyParamIsPositiveInt(user_id)
+
+  await searchForUserId(user_id)
+
+  const userRole = await getUserRole(authUserId)
+
+  await verifyPermission(userRole, "admin", "Permission to edit user data denied")
+
+  const result = await db.query(`
+    UPDATE users
+    SET role = $1
+    WHERE user_id = $2
+    RETURNING 
+      user_id, 
+      username, 
+      email,
+      first_name, 
+      surname, 
+      role,
+      unit_system;
+    `,
+    [role, user_id])
+
+  return result.rows[0]
 }

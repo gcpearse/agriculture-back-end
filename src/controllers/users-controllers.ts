@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express"
-import { selectAllUsers, selectUserByUserId, updateUserByUserId, removeUserByUserId, updatePasswordByUserId } from "../models/users-models"
+import { selectAllUsers, selectUserByUserId, updateUserByUserId, removeUserByUserId, updatePasswordByUserId, updateRoleByUserId } from "../models/users-models"
 import { ExtendedRequest } from "../types/auth-types"
 
 
@@ -70,6 +70,21 @@ export const patchPasswordByUserId = async (req: ExtendedRequest, res: Response,
   try {
     const response = await updatePasswordByUserId(authUserId, +user_id, req.body)
     res.status(200).send(response)
+  } catch (err) {
+    next(err)
+  }
+}
+
+
+export const patchRoleByUserId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
+
+  const authUserId = req.user!.user_id
+
+  const { user_id } = req.params
+
+  try {
+    const user = await updateRoleByUserId(authUserId, +user_id, req.body)
+    res.status(200).send({ user })
   } catch (err) {
     next(err)
   }
