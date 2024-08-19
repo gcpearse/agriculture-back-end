@@ -855,7 +855,7 @@ describe("PATCH /api/users/:user_id/role", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to edit user data denied"
+      details: "Permission to edit user role denied"
     })
   })
 
