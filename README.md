@@ -120,7 +120,7 @@ The following key scripts are included in the `package.json` file:
 `npm run start`
 > Runs the TypeScript compiler and starts the server locally on port 9090. 
 
-> Swagger documentation is then served up at `http://localhost:9090/api/docs/`
+> Swagger documentation is then served up at `http://localhost:9090/api/docs`
 
 `npm t`
 > Runs all tests in the `src` directory serially.
