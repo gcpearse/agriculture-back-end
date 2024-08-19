@@ -855,7 +855,7 @@ describe("PATCH /api/plots/:plot_id", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error when a property is missing from the request body", async () => {
+  test("PATCH:400 Responds with an error when a required property is missing from the request body", async () => {
 
     const newDetails = {
       type: "Homestead",

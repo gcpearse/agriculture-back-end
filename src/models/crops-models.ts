@@ -360,3 +360,52 @@ export const selectCropByCropId = async (
 
   return result.rows[0]
 }
+
+
+export const updateCropByCropId = async (
+  authUserId: number,
+  crop_id: number,
+  crop: CropRequest
+): Promise<Crop> => {
+
+  await verifyParamIsPositiveInt(crop_id)
+
+  const owner_id = await getCropOwnerId(crop_id)
+
+  await verifyPermission(authUserId, owner_id, "Permission to edit crop data denied")
+
+  const isValidCropCategory = await validateCropCategory(crop.category, false)
+
+  if (!isValidCropCategory) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid crop category"
+    })
+  }
+
+  const result = await db.query(`
+    UPDATE crops
+    SET
+      name = $1,
+      variety = $2,
+      category = $3,
+      quantity = $4,
+      date_planted = $5,
+      harvest_date = $6
+    WHERE crop_id = $7
+    RETURNING *;
+    `,
+    [
+      crop.name,
+      crop.variety,
+      crop.category,
+      crop.quantity,
+      crop.date_planted,
+      crop.harvest_date,
+      crop_id
+    ]
+  )
+
+  return result.rows[0]
+}
