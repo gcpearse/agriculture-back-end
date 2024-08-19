@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express"
-import { insertCropByPlotId, insertCropBySubdivisionId, selectCropByCropId, selectCropsByPlotId, selectCropsBySubdivisionId } from "../models/crops-models"
+import { insertCropByPlotId, insertCropBySubdivisionId, selectCropByCropId, selectCropsByPlotId, selectCropsBySubdivisionId, updateCropByCropId } from "../models/crops-models"
 import { ExtendedRequest } from "../types/auth-types"
 
 
@@ -71,6 +71,21 @@ export const getCropByCropId = async (req: ExtendedRequest, res: Response, next:
 
   try {
     const crop = await selectCropByCropId(authUserId, +crop_id)
+    res.status(200).send({ crop })
+  } catch (err) {
+    next(err)
+  }
+}
+
+
+export const patchCropByCropId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
+
+  const authUserId = req.user!.user_id
+
+  const { crop_id } = req.params
+
+  try {
+    const crop = await updateCropByCropId(authUserId, +crop_id, req.body)
     res.status(200).send({ crop })
   } catch (err) {
     next(err)
