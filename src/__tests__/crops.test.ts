@@ -1408,3 +1408,174 @@ describe("GET /api/crops/:crop_id", () => {
     })
   })
 })
+
+
+describe("PATCH /api/crops/:crop_id", () => {
+
+  test("PATCH:200 Responds with an updated crop object", async () => {
+
+    const newDetails = {
+      name: "Carrots",
+      variety: "Chantenay",
+      category: "Vegetables",
+      quantity: 25,
+      date_planted: new Date("2024-06-20"),
+      harvest_date: new Date("2024-09-30")
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.crop).toMatchObject<Crop>({
+      crop_id: 1,
+      plot_id: 1,
+      subdivision_id: 1,
+      name: "Carrots",
+      variety: "Chantenay",
+      category: "Vegetables",
+      quantity: 25,
+      date_planted: expect.stringMatching(regex),
+      harvest_date: expect.stringMatching(regex)
+    })
+  })
+
+  test("PATCH:400 Responds with an error when a required property is missing from the request body", async () => {
+
+    const newDetails = {
+      variety: "Chantenay",
+      category: "Vegetables",
+      quantity: 25,
+      date_planted: new Date("2024-06-20"),
+      harvest_date: new Date("2024-09-30")
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Not null violation"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when passed a property with an invalid data type", async () => {
+
+    const newDetails = {
+      name: "Carrots",
+      variety: "Chantenay",
+      category: "Vegetables",
+      quantity: "twenty",
+      date_planted: new Date("2024-06-20"),
+      harvest_date: new Date("2024-09-30")
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid text representation"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when passed an invalid crop category", async () => {
+
+    const newDetails = {
+      name: "Carrots",
+      variety: "Chantenay",
+      category: "foobar",
+      quantity: 25,
+      date_planted: new Date("2024-06-20"),
+      harvest_date: new Date("2024-09-30")
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid crop category"
+    })
+  })
+
+  test("PATCH:400 Responds with an error whe the crop_id parameter is not a positive integer", async () => {
+
+    const newDetails = {
+      name: "Carrots",
+      variety: "Chantenay",
+      category: "Vegetables",
+      quantity: 25,
+      date_planted: new Date("2024-06-20"),
+      harvest_date: new Date("2024-09-30")
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/foobar")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
+  test("PATCH:403 Responds with an error when the crop does not belong to the authenticated user", async () => {
+
+    const newDetails = {
+      name: "Carrots",
+      variety: "Chantenay",
+      category: "Vegetables",
+      quantity: 25,
+      date_planted: new Date("2024-06-20"),
+      harvest_date: new Date("2024-09-30")
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/5")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Forbidden",
+      details: "Permission to edit crop data denied"
+    })
+  })
+
+  test("PATCH:404 Responds with an error when the crop does not exist", async () => {
+
+    const newDetails = {
+      name: "Carrots",
+      variety: "Chantenay",
+      category: "Vegetables",
+      quantity: 25,
+      date_planted: new Date("2024-06-20"),
+      harvest_date: new Date("2024-09-30")
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/999")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Crop not found"
+    })
+  })
+})
