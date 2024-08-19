@@ -256,7 +256,8 @@ export const updateSubdivisionBySubdivisionId = async (
       subdivision.type,
       subdivision.description,
       subdivision.area,
-      subdivision_id]
+      subdivision_id
+    ]
   )
 
   return result.rows[0]
