@@ -438,7 +438,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
       .expect(201)
 
     expect(body.subdivision).toMatchObject<Subdivision>({
-      subdivision_id: 5,
+      subdivision_id: 6,
       plot_id: 1,
       name: "Wildflowers",
       type: "Flowerbed",
