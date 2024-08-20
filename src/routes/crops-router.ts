@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { getCropByCropId, getCropsByPlotId, getCropsBySubdivisionId, patchCropByCropId, postCropByPlotId, postCropBySubdivisionId } from "../controllers/crops-controllers"
+import { getCropByCropId, getCropsByPlotId, getCropsBySubdivisionId, patchAssociatedPlotByCropId, patchCropByCropId, postCropByPlotId, postCropBySubdivisionId } from "../controllers/crops-controllers"
 
 
 export const cropsRouter = Router()
@@ -417,3 +417,62 @@ cropsRouter.route("/crops/:crop_id")
  *              $ref: "#/components/schemas/NotFound"
  */
   .patch(verifyToken, patchCropByCropId)
+
+
+cropsRouter.route("/crops/:crop_id/plot")
+
+/**
+ * @swagger
+ * /api/crops/{crop_id}/plot:
+ *  patch:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Update a crop's assigned plot
+ *    description: Responds with an updated crop object. If the request body or crop_id parameter is invalid, the server responds with an error. Permission is denied when the crop or target plot does not belong to the user.
+ *    tags: [Crops]
+ *    parameters:
+ *      - in: path
+ *        name: crop_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              plot_id:
+ *                type: integer
+ *                example: 2
+ *    responses:
+ *      200:
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                crop:
+ *                  $ref: "#/components/schemas/Crop"
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/BadRequest"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Forbidden"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/NotFound"
+ */
+  .patch(verifyToken, patchAssociatedPlotByCropId)

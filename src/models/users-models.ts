@@ -256,7 +256,7 @@ export const updateRoleByUserId = async (
 
   const userRole = await getUserRole(authUserId)
 
-  await verifyPermission(userRole, "admin", "Permission to edit user data denied")
+  await verifyPermission(userRole, "admin", "Permission to edit user role denied")
 
   const result = await db.query(`
     UPDATE users

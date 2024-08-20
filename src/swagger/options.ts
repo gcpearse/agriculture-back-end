@@ -3,7 +3,7 @@ export const options = {
     openapi: "3.1.0",
     info: {
       title: "Agriculture API",
-      description: "A full-stack application for gardeners, allotment owners, and other subsistence farmers to keep track of crops and jobs on their plots.",
+      description: "API for gardeners, allotment owners, and other subsistence farmers to keep track of crops, issues, and jobs on their plots.",
       version: "1.0.0"
     },
     components: {
