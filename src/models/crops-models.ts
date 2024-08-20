@@ -409,3 +409,36 @@ export const updateCropByCropId = async (
 
   return result.rows[0]
 }
+
+
+export const updateAssociatedPlotByCropId = async (
+  authUserId: number,
+  crop_id: number,
+  { plot_id }: { plot_id: number }
+): Promise<Crop> => {
+
+  await verifyParamIsPositiveInt(crop_id)
+
+  let owner_id = await getCropOwnerId(crop_id)
+
+  await verifyPermission(authUserId, owner_id, "Permission to move crop denied")
+
+  if (plot_id) {
+    owner_id = await getPlotOwnerId(plot_id)
+
+    await verifyPermission(authUserId, owner_id, "Permission to move crop denied")
+  }
+
+  const result = await db.query(`
+    UPDATE crops
+    SET 
+      plot_id = $1,
+      subdivision_id = NULL
+    WHERE crop_id = $2
+    RETURNING *;
+    `,
+    [plot_id, crop_id]
+  )
+
+  return result.rows[0]
+}
