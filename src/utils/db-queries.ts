@@ -5,7 +5,7 @@ export const checkEmailConflict = async (
   email: string
 ): Promise<undefined> => {
 
-  const dbEmail = await db.query(`
+  const result = await db.query(`
     SELECT email 
     FROM users
     WHERE email = $1;
@@ -13,7 +13,7 @@ export const checkEmailConflict = async (
     [email]
   )
 
-  if (dbEmail.rowCount) {
+  if (result.rowCount) {
     return Promise.reject({
       status: 409,
       message: "Conflict",
