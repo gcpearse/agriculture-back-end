@@ -1579,3 +1579,156 @@ describe("PATCH /api/crops/:crop_id", () => {
     })
   })
 })
+
+
+describe("PATCH /api/crops/:crop_id/plot", () => {
+
+  test("PATCH:200 Responds with an updated crop object, assigning a null value to subdivision_id automatically", async () => {
+
+    const newPlot = {
+      plot_id: 3
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/1/plot")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.crop).toMatchObject<Crop>({
+      crop_id: 1,
+      plot_id: 3,
+      subdivision_id: null,
+      name: "Carrot",
+      variety: null,
+      category: "Vegetables",
+      quantity: 20,
+      date_planted: expect.toBeOneOf([expect.stringMatching(regex), null]),
+      harvest_date: expect.toBeOneOf([expect.stringMatching(regex), null])
+    })
+  })
+
+  test("PATCH:400 Responds with an error when a required property is missing from the request body", async () => {
+
+    const newPlot = {}
+
+    const { body } = await request(app)
+      .patch("/api/crops/1/plot")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Not null violation"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when passed a property with an invalid data type", async () => {
+
+    const newPlot = {
+      plot_id: "three"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/1/plot")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid text representation"
+    })
+  })
+
+  test("PATCH:400 Responds with an error whe the crop_id parameter is not a positive integer", async () => {
+
+    const newPlot = {
+      plot_id: 3
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/foobar/plot")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
+  test("PATCH:403 Responds with an error when the crop does not belong to the authenticated user", async () => {
+
+    const newPlot = {
+      plot_id: 3
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/5/plot")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Forbidden",
+      details: "Permission to move crop denied"
+    })
+  })
+
+  test("PATCH:403 Responds with an error when the target plot does not belong to the authenticated user", async () => {
+
+    const newPlot = {
+      plot_id: 2
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/1/plot")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Forbidden",
+      details: "Permission to move crop denied"
+    })
+  })
+
+  test("PATCH:404 Responds with an error when the crop does not exist", async () => {
+
+    const newPlot = {
+      plot_id: 3
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/999/plot")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Crop not found"
+    })
+  })
+
+  test("PATCH:404 Responds with an error when the target plot does not exist", async () => {
+
+    const newPlot = {
+      plot_id: 999
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/1/plot")
+      .send(newPlot)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Plot not found"
+    })
+  })
+})
