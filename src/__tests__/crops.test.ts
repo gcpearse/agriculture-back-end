@@ -1581,6 +1581,67 @@ describe("PATCH /api/crops/:crop_id", () => {
 })
 
 
+describe("DELETE /api/crops/:crop_id", () => {
+
+  test("DELETE:204 Deletes the crop with the given crop ID", async () => {
+
+    await request(app)
+      .delete("/api/crops/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(204)
+
+    const { body } = await request(app)
+      .get("/api/crops/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Crop not found"
+    })
+  })
+
+  test("DELETE:400 Responds with an error when the crop_id parameter is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/crops/foobar")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
+  test("DELETE:403 Responds with an error when the authenticated user attempts to delete another user's crop", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/crops/5")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Forbidden",
+      details: "Permission to delete crop data denied"
+    })
+  })
+
+  test("DELETE:404 Responds with an error when the crop does not exist", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/crops/999")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Crop not found"
+    })
+  })
+})
+
+
 describe("PATCH /api/crops/:crop_id/plot", () => {
 
   test("PATCH:200 Responds with an updated crop object, assigning a null value to subdivision_id automatically", async () => {
