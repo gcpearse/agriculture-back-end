@@ -6,12 +6,12 @@ import { getCropNotesByCropId } from "../controllers/crop-notes-controllers"
 export const cropNotesRouter = Router()
 
 
-cropNotesRouter.route("/crop_notes/crop/:crop_id")
+cropNotesRouter.route("/crop_notes/crops/:crop_id")
 
 
 /**
  * @swagger
- * /api/crop_notes/crop/{crop_id}:
+ * /api/crop_notes/crops/{crop_id}:
  *  get:
  *    security:
  *      - bearerAuth: []

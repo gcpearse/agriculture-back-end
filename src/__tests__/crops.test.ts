@@ -34,12 +34,12 @@ afterAll(async () => {
 })
 
 
-describe("GET /api/crops/plot/:plot_id", () => {
+describe("GET /api/crops/plots/:plot_id", () => {
 
   test("GET:200 Responds with an array of crop objects sorted by crop_id in descending order", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1")
+      .get("/api/crops/plots/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -74,7 +74,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
   test("GET:200 Responds with an empty array when no crops are associated with the plot", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/4")
+      .get("/api/crops/plots/4")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -88,7 +88,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
   test("GET:400 Responds with an error when the plot_id parameter is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/foobar")
+      .get("/api/crops/plots/foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -101,7 +101,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
   test("GET:403 Responds with an error when the authenticated user attempts to retrieve another user's crop data", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/2")
+      .get("/api/crops/plots/2")
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
@@ -114,7 +114,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
   test("GET:404 Responds with an error when the plot does not exist", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/999")
+      .get("/api/crops/plots/999")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -132,7 +132,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
       .expect(204)
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1")
+      .get("/api/crops/plots/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -150,7 +150,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
       .expect(204)
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1")
+      .get("/api/crops/plots/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -162,12 +162,12 @@ describe("GET /api/crops/plot/:plot_id", () => {
 })
 
 
-describe("GET /api/crops/plot/:plot_id?name=", () => {
+describe("GET /api/crops/plots/:plot_id?name=", () => {
 
   test("GET:200 Responds with an array of crop objects filtered case-insensitively by name", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?name=ca")
+      .get("/api/crops/plots/1?name=ca")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -181,7 +181,7 @@ describe("GET /api/crops/plot/:plot_id?name=", () => {
   test("GET:200 Returns an empty array when the value of name matches no results", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?name=foobar")
+      .get("/api/crops/plots/1?name=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -194,12 +194,12 @@ describe("GET /api/crops/plot/:plot_id?name=", () => {
 })
 
 
-describe("GET /api/crops/plot/:plot_id?category=", () => {
+describe("GET /api/crops/plots/:plot_id?category=", () => {
 
   test("GET:200 Responds with an array of crop objects filtered case-insensitively by category", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?category=vegetables")
+      .get("/api/crops/plots/1?category=vegetables")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -213,7 +213,7 @@ describe("GET /api/crops/plot/:plot_id?category=", () => {
   test("GET:404 Responds with an error when the query value is invalid", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?category=foobar")
+      .get("/api/crops/plots/1?category=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -225,12 +225,12 @@ describe("GET /api/crops/plot/:plot_id?category=", () => {
 })
 
 
-describe("GET /api/crops/plot/:plot_id?name=&category=", () => {
+describe("GET /api/crops/plots/:plot_id?name=&category=", () => {
 
   test("GET:200 Responds with an array of crop objects filtered case-insensitively by name and category", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?name=carrot&category=vegetables")
+      .get("/api/crops/plots/1?name=carrot&category=vegetables")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -244,12 +244,12 @@ describe("GET /api/crops/plot/:plot_id?name=&category=", () => {
 })
 
 
-describe("GET /api/crops/plot/:plot_id?sort=", () => {
+describe("GET /api/crops/plots/:plot_id?sort=", () => {
 
   test("GET:200 Responds with an array of crop objects sorted by name in ascending order", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?sort=name")
+      .get("/api/crops/plots/1?sort=name")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -267,7 +267,7 @@ describe("GET /api/crops/plot/:plot_id?sort=", () => {
   test("GET:200 Responds with an array of crop objects sorted by date_planted in descending order while filtering out null values", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?sort=date_planted")
+      .get("/api/crops/plots/1?sort=date_planted")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -289,7 +289,7 @@ describe("GET /api/crops/plot/:plot_id?sort=", () => {
   test("GET:200 Responds with an array of crop objects sorted by harvest_date in descending order while filtering out null values", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?sort=harvest_date")
+      .get("/api/crops/plots/1?sort=harvest_date")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -311,7 +311,7 @@ describe("GET /api/crops/plot/:plot_id?sort=", () => {
   test("GET:400 Responds with an error when passed an invalid sort value", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?sort=foobar")
+      .get("/api/crops/plots/1?sort=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -323,12 +323,12 @@ describe("GET /api/crops/plot/:plot_id?sort=", () => {
 })
 
 
-describe("GET /api/crops/plot/:plot_id?name=&sort=", () => {
+describe("GET /api/crops/plots/:plot_id?name=&sort=", () => {
 
   test("GET:200 Responds with an array of crop objects filtered by name and sorted by name in ascending order", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?name=ca&sort=name")
+      .get("/api/crops/plots/1?name=ca&sort=name")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -350,7 +350,7 @@ describe("GET /api/crops/plot/:plot_id?name=&sort=", () => {
   test("GET:200 Responds with an array of crop objects filtered by name and sorted by harvest_date in descending order while filtering out null values", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?name=ca&sort=harvest_date")
+      .get("/api/crops/plots/1?name=ca&sort=harvest_date")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -371,12 +371,12 @@ describe("GET /api/crops/plot/:plot_id?name=&sort=", () => {
 })
 
 
-describe("GET /api/crops/plot/:plot_id?order=", () => {
+describe("GET /api/crops/plots/:plot_id?order=", () => {
 
   test("GET:400 Responds with an error when passed an invalid order value", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?order=foobar")
+      .get("/api/crops/plots/1?order=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -388,12 +388,12 @@ describe("GET /api/crops/plot/:plot_id?order=", () => {
 })
 
 
-describe("GET /api/crops/plot/:plot_id?limit=", () => {
+describe("GET /api/crops/plots/:plot_id?limit=", () => {
 
   test("GET:200 Responds with a limited array of crop objects associated with the plot", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?limit=2")
+      .get("/api/crops/plots/1?limit=2")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -405,7 +405,7 @@ describe("GET /api/crops/plot/:plot_id?limit=", () => {
   test("GET:200 Responds with an array of all crops associated with the plot when the limit exceeds the total number of results", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?limit=20")
+      .get("/api/crops/plots/1?limit=20")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -417,7 +417,7 @@ describe("GET /api/crops/plot/:plot_id?limit=", () => {
   test("GET:400 Responds with an error when the value of limit is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?limit=two")
+      .get("/api/crops/plots/1?limit=two")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -429,12 +429,12 @@ describe("GET /api/crops/plot/:plot_id?limit=", () => {
 })
 
 
-describe("GET /api/crops/plot/:plot_id?page=", () => {
+describe("GET /api/crops/plots/:plot_id?page=", () => {
 
   test("GET:200 Responds with an array of crop objects associated with the plot beginning from the page set in the query parameter", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?limit=2&page=2")
+      .get("/api/crops/plots/1?limit=2&page=2")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -448,7 +448,7 @@ describe("GET /api/crops/plot/:plot_id?page=", () => {
   test("GET:200 The page defaults to page one", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?limit=2")
+      .get("/api/crops/plots/1?limit=2")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -462,7 +462,7 @@ describe("GET /api/crops/plot/:plot_id?page=", () => {
   test("GET:200 When there are fewer results on the final page, the response contains those results", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?limit=3&page=2")
+      .get("/api/crops/plots/1?limit=3&page=2")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -476,7 +476,7 @@ describe("GET /api/crops/plot/:plot_id?page=", () => {
   test("GET:400 Responds with an error when the value of page is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?limit=2&page=three")
+      .get("/api/crops/plots/1?limit=2&page=three")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -489,7 +489,7 @@ describe("GET /api/crops/plot/:plot_id?page=", () => {
   test("GET:404 Responds with an error when the page cannot be found", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?limit=2&page=3")
+      .get("/api/crops/plots/1?limit=2&page=3")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -502,7 +502,7 @@ describe("GET /api/crops/plot/:plot_id?page=", () => {
   test("GET:404 Responds with an error when the page cannot be found (multiple queries affecting total query result rows)", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/plot/1?name=ca&sort=harvest_date&limit=2&page=2")
+      .get("/api/crops/plots/1?name=ca&sort=harvest_date&limit=2&page=2")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -514,7 +514,7 @@ describe("GET /api/crops/plot/:plot_id?page=", () => {
 })
 
 
-describe("POST /api/crops/plot/:plot_id", () => {
+describe("POST /api/crops/plots/:plot_id", () => {
 
   test("POST:201 Responds with a new crop object, assigning plot_id and subdivision_id (null) automatically", async () => {
 
@@ -528,7 +528,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/crops/plot/1")
+      .post("/api/crops/plots/1")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
@@ -554,7 +554,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/crops/plot/1")
+      .post("/api/crops/plots/1")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
@@ -581,7 +581,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/crops/plot/1")
+      .post("/api/crops/plots/1")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
@@ -598,7 +598,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/crops/plot/1")
+      .post("/api/crops/plots/1")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -616,7 +616,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/crops/plot/1")
+      .post("/api/crops/plots/1")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -635,7 +635,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/crops/plot/1")
+      .post("/api/crops/plots/1")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -654,7 +654,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/crops/plot/foobar")
+      .post("/api/crops/plots/foobar")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -673,7 +673,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/crops/plot/2")
+      .post("/api/crops/plots/2")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
@@ -692,7 +692,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/crops/plot/999")
+      .post("/api/crops/plots/999")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
@@ -705,12 +705,12 @@ describe("POST /api/crops/plot/:plot_id", () => {
 })
 
 
-describe("GET /api/crops/subdivision/:subdivision_id", () => {
+describe("GET /api/crops/subdivisions/:subdivision_id", () => {
 
   test("GET:200 Responds with an array of crop objects sorted by crop_id in descending order", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1")
+      .get("/api/crops/subdivisions/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -744,7 +744,7 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
   test("GET:200 Responds with an empty array when no crops are associated with the subdivision", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/2")
+      .get("/api/crops/subdivisions/2")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -758,7 +758,7 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
   test("GET:400 Responds with an error when the subdivision_id parameter is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/foobar")
+      .get("/api/crops/subdivisions/foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -771,7 +771,7 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
   test("GET:403 Responds with an error when the authenticated user attempts to retrieve another user's crop data", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/4")
+      .get("/api/crops/subdivisions/4")
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
@@ -784,7 +784,7 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
   test("GET:404 Responds with an error when the subdivision does not exist", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/999")
+      .get("/api/crops/subdivisions/999")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -802,7 +802,7 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
       .expect(204)
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1")
+      .get("/api/crops/subdivisions/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -814,12 +814,12 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
 })
 
 
-describe("GET /api/crops/subdivision/:subdivision_id?name=", () => {
+describe("GET /api/crops/subdivisions/:subdivision_id?name=", () => {
 
   test("GET:200 Responds with an array of crop objects filtered case-insensitively by name", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?name=car")
+      .get("/api/crops/subdivisions/1?name=car")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -833,7 +833,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=", () => {
   test("GET:200 Returns an empty array when the value of name matches no results", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?name=foobar")
+      .get("/api/crops/subdivisions/1?name=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -846,12 +846,12 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=", () => {
 })
 
 
-describe("GET /api/crops/subdivision/:subdivision_id?category=", () => {
+describe("GET /api/crops/subdivisions/:subdivision_id?category=", () => {
 
   test("GET:200 Responds with an array of crop objects filtered case-insensitively by category", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?category=vegetables")
+      .get("/api/crops/subdivisions/1?category=vegetables")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -865,7 +865,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?category=", () => {
   test("GET:404 Responds with an error when the query value is invalid", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?category=foobar")
+      .get("/api/crops/subdivisions/1?category=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -877,12 +877,12 @@ describe("GET /api/crops/subdivision/:subdivision_id?category=", () => {
 })
 
 
-describe("GET /api/crops/subdivision/:subdivision_id?name=&category=", () => {
+describe("GET /api/crops/subdivisions/:subdivision_id?name=&category=", () => {
 
   test("GET:200 Responds with an array of crop objects filtered case-insensitively by name and category", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?name=carrot&category=vegetables")
+      .get("/api/crops/subdivisions/1?name=carrot&category=vegetables")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -896,12 +896,12 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=&category=", () => {
 })
 
 
-describe("GET /api/crops/subdivision/:subdivision_id?sort=", () => {
+describe("GET /api/crops/subdivisions/:subdivision_id?sort=", () => {
 
   test("GET:200 Responds with an array of crop objects sorted by name in ascending order", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?sort=name")
+      .get("/api/crops/subdivisions/1?sort=name")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -919,7 +919,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?sort=", () => {
   test("GET:200 Responds with an array of crop objects sorted by date_planted in descending order while filtering out null values", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?sort=date_planted")
+      .get("/api/crops/subdivisions/1?sort=date_planted")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -941,7 +941,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?sort=", () => {
   test("GET:200 Responds with an array of crop objects sorted by harvest_date in descending order while filtering out null values", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?sort=harvest_date")
+      .get("/api/crops/subdivisions/1?sort=harvest_date")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -963,7 +963,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?sort=", () => {
   test("GET:400 Responds with an error when passed an invalid sort value", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?sort=foobar")
+      .get("/api/crops/subdivisions/1?sort=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -975,12 +975,12 @@ describe("GET /api/crops/subdivision/:subdivision_id?sort=", () => {
 })
 
 
-describe("GET /api/crops/subdivision/:subdivision_id?name=&sort=", () => {
+describe("GET /api/crops/subdivisions/:subdivision_id?name=&sort=", () => {
 
   test("GET:200 Responds with an array of crop objects filtered by name and sorted by name in ascending order", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?name=car&sort=name")
+      .get("/api/crops/subdivisions/1?name=car&sort=name")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -1002,7 +1002,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=&sort=", () => {
   test("GET:200 Responds with an array of crop objects filtered by name and sorted by harvest_date in descending order while filtering out null values", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?name=car&sort=harvest_date")
+      .get("/api/crops/subdivisions/1?name=car&sort=harvest_date")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -1023,12 +1023,12 @@ describe("GET /api/crops/subdivision/:subdivision_id?name=&sort=", () => {
 })
 
 
-describe("GET /api/crops/subdivision/:subdivision_id?order=", () => {
+describe("GET /api/crops/subdivisions/:subdivision_id?order=", () => {
 
   test("GET:400 Responds with an error when passed an invalid order value", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?order=foobar")
+      .get("/api/crops/subdivisions/1?order=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -1040,12 +1040,12 @@ describe("GET /api/crops/subdivision/:subdivision_id?order=", () => {
 })
 
 
-describe("GET /api/crops/subdivision/:subdivision_id?limit=", () => {
+describe("GET /api/crops/subdivisions/:subdivision_id?limit=", () => {
 
   test("GET:200 Responds with a limited array of crop objects associated with the subdivision", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?limit=1")
+      .get("/api/crops/subdivisions/1?limit=1")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -1057,7 +1057,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?limit=", () => {
   test("GET:200 Responds with an array of all crops associated with the subdivision when the limit exceeds the total number of results", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?limit=20")
+      .get("/api/crops/subdivisions/1?limit=20")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -1069,7 +1069,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?limit=", () => {
   test("GET:400 Responds with an error when the value of limit is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?limit=two")
+      .get("/api/crops/subdivisions/1?limit=two")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -1081,12 +1081,12 @@ describe("GET /api/crops/subdivision/:subdivision_id?limit=", () => {
 })
 
 
-describe("GET /api/crops/subdivision/:subdivision_id?page=", () => {
+describe("GET /api/crops/subdivisions/:subdivision_id?page=", () => {
 
   test("GET:200 Responds with an array of crop objects associated with the plot beginning from the page set in the query parameter", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?limit=1&page=2")
+      .get("/api/crops/subdivisions/1?limit=1&page=2")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -1100,7 +1100,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?page=", () => {
   test("GET:200 The page defaults to page one", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?limit=1")
+      .get("/api/crops/subdivisions/1?limit=1")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -1114,7 +1114,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?page=", () => {
   test("GET:400 Responds with an error when the value of page is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?limit=1&page=three")
+      .get("/api/crops/subdivisions/1?limit=1&page=three")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -1127,7 +1127,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?page=", () => {
   test("GET:404 Responds with an error when the page cannot be found", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?limit=1&page=3")
+      .get("/api/crops/subdivisions/1?limit=1&page=3")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -1140,7 +1140,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?page=", () => {
   test("GET:404 Responds with an error when the page cannot be found (multiple queries affecting total query result rows)", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/subdivision/1?name=car&sort=harvest_date&limit=1&page=2")
+      .get("/api/crops/subdivisions/1?name=car&sort=harvest_date&limit=1&page=2")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -1152,7 +1152,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?page=", () => {
 })
 
 
-describe("POST /api/crops/subdivision/:subdivision_id", () => {
+describe("POST /api/crops/subdivisions/:subdivision_id", () => {
 
   test("POST:201 Responds with a new crop object, assigning plot_id and subdivision_id automatically", async () => {
 
@@ -1166,7 +1166,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/crops/subdivision/1")
+      .post("/api/crops/subdivisions/1")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
@@ -1192,7 +1192,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/crops/subdivision/1")
+      .post("/api/crops/subdivisions/1")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
@@ -1219,7 +1219,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/crops/subdivision/1")
+      .post("/api/crops/subdivisions/1")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
@@ -1236,7 +1236,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/crops/subdivision/1")
+      .post("/api/crops/subdivisions/1")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -1254,7 +1254,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/crops/subdivision/1")
+      .post("/api/crops/subdivisions/1")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -1273,7 +1273,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/crops/subdivision/1")
+      .post("/api/crops/subdivisions/1")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -1292,7 +1292,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/crops/subdivision/foobar")
+      .post("/api/crops/subdivisions/foobar")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -1311,7 +1311,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/crops/subdivision/4")
+      .post("/api/crops/subdivisions/4")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
@@ -1330,7 +1330,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/crops/subdivision/999")
+      .post("/api/crops/subdivisions/999")
       .send(newCrop)
       .set("Authorization", `Bearer ${token}`)
       .expect(404)

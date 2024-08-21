@@ -6,12 +6,12 @@ import { deletePlotByPlotId, getPinnedPlotsByOwner, getPlotByPlotId, getPlotsByO
 export const plotsRouter = Router()
 
 
-plotsRouter.route("/plots/user/:owner_id")
+plotsRouter.route("/plots/users/:owner_id")
 
 
 /**
  * @swagger
- * /api/plots/user/{owner_id}:
+ * /api/plots/users/{owner_id}:
  *  get:
  *    security:
  *      - bearerAuth: []
@@ -109,7 +109,7 @@ plotsRouter.route("/plots/user/:owner_id")
 
 /**
  * @swagger
- * /api/plots/user/{owner_id}:
+ * /api/plots/users/{owner_id}:
  *  post:
  *    security:
  *      - bearerAuth: []
@@ -166,12 +166,12 @@ plotsRouter.route("/plots/user/:owner_id")
   .post(verifyToken, postPlotByOwner)
 
 
-plotsRouter.route("/plots/user/:owner_id/pinned")
+plotsRouter.route("/plots/users/:owner_id/pinned")
 
 
 /**
  * @swagger
- * /api/plots/user/{owner_id}/pinned:
+ * /api/plots/users/{owner_id}/pinned:
  *  get:
  *    security:
  *      - bearerAuth: []
