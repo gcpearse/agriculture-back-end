@@ -18,7 +18,8 @@ export const selectCropNotesByCropId = async (
   const result = await db.query(`
     SELECT *
     FROM crop_notes
-    WHERE crop_id = $1;
+    WHERE crop_id = $1
+    ORDER BY created_at;
     `,
     [crop_id]
   )
