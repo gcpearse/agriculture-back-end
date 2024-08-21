@@ -1642,7 +1642,7 @@ describe("PATCH /api/crops/:crop_id/plot", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error whe the crop_id parameter is not a positive integer", async () => {
+  test("PATCH:400 Responds with an error when the crop_id parameter is not a positive integer", async () => {
 
     const newPlot = {
       plot_id: 3
@@ -1729,6 +1729,184 @@ describe("PATCH /api/crops/:crop_id/plot", () => {
     expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Plot not found"
+    })
+  })
+})
+
+
+describe("PATCH /api/crops/:crop_id/subdivision", () => {
+
+  test("PATCH:200 Responds with an updated crop object", async () => {
+
+    const newSubdivision = {
+      subdivision_id: 2
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/1/subdivision")
+      .send(newSubdivision)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.crop).toMatchObject<Crop>({
+      crop_id: 1,
+      plot_id: 1,
+      subdivision_id: 2,
+      name: "Carrot",
+      variety: null,
+      category: "Vegetables",
+      quantity: 20,
+      date_planted: expect.toBeOneOf([expect.stringMatching(regex), null]),
+      harvest_date: expect.toBeOneOf([expect.stringMatching(regex), null])
+    })
+  })
+
+  test("PATCH:200 Sets the value of subdivision_id to null if no value is provided", async () => {
+
+    const newSubdivision = {}
+
+    const { body } = await request(app)
+      .patch("/api/crops/1/subdivision")
+      .send(newSubdivision)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.crop).toMatchObject<Crop>({
+      crop_id: 1,
+      plot_id: 1,
+      subdivision_id: null,
+      name: "Carrot",
+      variety: null,
+      category: "Vegetables",
+      quantity: 20,
+      date_planted: expect.toBeOneOf([expect.stringMatching(regex), null]),
+      harvest_date: expect.toBeOneOf([expect.stringMatching(regex), null])
+    })
+  })
+
+  test("PATCH:400 Responds with an error when passed a property with an invalid data type", async () => {
+
+    const newSubdivision = {
+      subdivision_id: "two"
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/1/subdivision")
+      .send(newSubdivision)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid text representation"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when the crop_id parameter is not a positive integer", async () => {
+
+    const newSubdivision = {
+      subdivision_id: 2
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/foobar/subdivision")
+      .send(newSubdivision)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid parameter"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when the target subdivision belongs to the authenticated user but is not a subdivision of the current plot", async () => {
+
+    const newSubdivision = {
+      subdivision_id: 5
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/1/subdivision")
+      .send(newSubdivision)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid subdivision of current plot"
+    })
+  })
+
+  test("PATCH:403 Responds with an error when the crop does not belong to the authenticated user", async () => {
+
+    const newSubdivision = {
+      subdivision_id: 2
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/5/subdivision")
+      .send(newSubdivision)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Forbidden",
+      details: "Permission to move crop denied"
+    })
+  })
+
+  test("PATCH:403 Responds with an error when the target subdivision does not belong to the authenticated user", async () => {
+
+    const newSubdivision = {
+      subdivision_id: 4
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/1/subdivision")
+      .send(newSubdivision)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Forbidden",
+      details: "Permission to move crop denied"
+    })
+  })
+
+  test("PATCH:404 Responds with an error when the crop does not exist", async () => {
+
+    const newSubdivision = {
+      subdivision_id: 2
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/999/subdivision")
+      .send(newSubdivision)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Crop not found"
+    })
+  })
+
+  test("PATCH:404 Responds with an error when the target subdivision does not exist", async () => {
+
+    const newSubdivision = {
+      subdivision_id: 999
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crops/1/subdivision")
+      .send(newSubdivision)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Subdivision not found"
     })
   })
 })

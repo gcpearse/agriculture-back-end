@@ -442,3 +442,55 @@ export const updateAssociatedPlotByCropId = async (
 
   return result.rows[0]
 }
+
+
+export const updateAssociatedSubdivisionByCropId = async (
+  authUserId: number,
+  crop_id: number,
+  { subdivision_id }: { subdivision_id: number }
+): Promise<Crop> => {
+
+  await verifyParamIsPositiveInt(crop_id)
+
+  let owner_id = await getCropOwnerId(crop_id)
+
+  await verifyPermission(authUserId, owner_id, "Permission to move crop denied")
+
+  if (subdivision_id) {
+    const plot_id = await getSubdivisionPlotId(subdivision_id)
+
+    owner_id = await getPlotOwnerId(plot_id)
+
+    await verifyPermission(authUserId, owner_id, "Permission to move crop denied")
+
+    const validIds = await db.query(`
+      SELECT subdivisions.subdivision_id
+      FROM subdivisions
+      JOIN crops
+      ON subdivisions.plot_id = crops.plot_id
+      WHERE crops.crop_id = $1;
+      `,
+      [crop_id]
+    )
+
+    if (!validIds.rows.map(row => row.subdivision_id).includes(subdivision_id)) {
+      return Promise.reject({
+        status: 400,
+        message: "Bad Request",
+        details: "Invalid subdivision of current plot"
+      })
+    }
+  }
+
+  const result = await db.query(`
+    UPDATE crops
+    SET 
+      subdivision_id = $1
+    WHERE crop_id = $2
+    RETURNING *;
+    `,
+    [subdivision_id, crop_id]
+  )
+
+  return result.rows[0]
+}

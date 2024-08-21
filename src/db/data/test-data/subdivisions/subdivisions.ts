@@ -29,5 +29,12 @@ export const subdivisionData: Subdivision[] = [
     type: "Row",
     description: "Bramley and Lord Derby apple trees",
     area: 20
+  },
+  {
+    plot_id: 4,
+    name: "Beetroot",
+    type: "Bed",
+    description: "Organic beets",
+    area: 12
   }
 ]
