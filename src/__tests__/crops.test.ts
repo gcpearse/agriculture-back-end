@@ -94,7 +94,7 @@ describe("GET /api/crops/plot/:plot_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -423,7 +423,7 @@ describe("GET /api/crops/plot/:plot_id?limit=", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 })
@@ -482,7 +482,7 @@ describe("GET /api/crops/plot/:plot_id?page=", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -661,7 +661,7 @@ describe("POST /api/crops/plot/:plot_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -764,7 +764,7 @@ describe("GET /api/crops/subdivision/:subdivision_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -1075,7 +1075,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?limit=", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 })
@@ -1120,7 +1120,7 @@ describe("GET /api/crops/subdivision/:subdivision_id?page=", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -1299,7 +1299,7 @@ describe("POST /api/crops/subdivision/:subdivision_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -1378,7 +1378,7 @@ describe("GET /api/crops/:crop_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -1529,7 +1529,7 @@ describe("PATCH /api/crops/:crop_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -1610,7 +1610,7 @@ describe("DELETE /api/crops/:crop_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -1717,7 +1717,7 @@ describe("PATCH /api/crops/:crop_id/plot", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -1877,7 +1877,7 @@ describe("PATCH /api/crops/:crop_id/subdivision", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 

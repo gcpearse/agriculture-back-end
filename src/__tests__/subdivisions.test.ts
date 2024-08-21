@@ -90,7 +90,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -343,7 +343,7 @@ describe("GET /api/subdivisions/plot/:plot_id?limit=", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 })
@@ -388,7 +388,7 @@ describe("GET /api/subdivisions/plot/:plot_id?page=", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -562,7 +562,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -664,7 +664,7 @@ describe("GET /api/subdivisions/:subdivision_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -827,7 +827,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -925,7 +925,7 @@ describe("DELETE /api/subdivisions/:subdivision_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 

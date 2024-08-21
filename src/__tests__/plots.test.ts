@@ -102,7 +102,7 @@ describe("GET /api/plots/user/:owner_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -337,7 +337,7 @@ describe("GET /api/plots/user/:owner_id?limit=", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 })
@@ -382,7 +382,7 @@ describe("GET /api/plots/user/:owner_id?page=", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -565,7 +565,7 @@ describe("POST /api/plots/user/:owner_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -698,7 +698,7 @@ describe("GET /api/plots/user/:owner_id/pinned", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -765,7 +765,7 @@ describe("GET /api/plots/:plot_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -938,7 +938,7 @@ describe("PATCH /api/plots/:plot_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -1039,7 +1039,7 @@ describe("DELETE /api/plots/:plot_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -1194,7 +1194,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 

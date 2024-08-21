@@ -3,7 +3,7 @@ import { db } from "../db"
 import format from "pg-format"
 import { ExtendedPlot, Plot, PlotRequest } from "../types/plot-types"
 import { checkPlotNameConflict, getPlotOwnerId, searchForUserId, validatePlotType } from "../utils/db-queries"
-import { verifyPermission, verifyParamIsPositiveInt, verifyPagination, verifyQueryValue } from "../utils/verification"
+import { verifyPermission, verifyValueIsPositiveInt, verifyPagination, verifyQueryValue } from "../utils/verification"
 import { StatusResponse } from "../types/response-types"
 
 
@@ -20,11 +20,11 @@ export const selectPlotsByOwner = async (
   }: QueryString.ParsedQs
 ): Promise<[ExtendedPlot[], number]> => {
 
-  await verifyParamIsPositiveInt(owner_id)
+  await verifyValueIsPositiveInt(owner_id)
 
-  await verifyParamIsPositiveInt(+limit)
+  await verifyValueIsPositiveInt(+limit)
 
-  await verifyParamIsPositiveInt(+page)
+  await verifyValueIsPositiveInt(+page)
 
   await searchForUserId(owner_id)
 
@@ -125,7 +125,7 @@ export const insertPlotByOwner = async (
   plot: PlotRequest
 ): Promise<Plot> => {
 
-  await verifyParamIsPositiveInt(owner_id)
+  await verifyValueIsPositiveInt(owner_id)
 
   await searchForUserId(owner_id)
 
@@ -169,7 +169,7 @@ export const selectPinnedPlotsByOwner = async (
   owner_id: number,
 ): Promise<Plot[]> => {
 
-  await verifyParamIsPositiveInt(owner_id)
+  await verifyValueIsPositiveInt(owner_id)
 
   await searchForUserId(owner_id)
 
@@ -194,7 +194,7 @@ export const selectPlotByPlotId = async (
   plot_id: number
 ): Promise<ExtendedPlot> => {
 
-  await verifyParamIsPositiveInt(plot_id)
+  await verifyValueIsPositiveInt(plot_id)
 
   const owner_id = await getPlotOwnerId(plot_id)
 
@@ -240,7 +240,7 @@ export const updatePlotByPlotId = async (
   plot: PlotRequest
 ): Promise<Plot> => {
 
-  await verifyParamIsPositiveInt(plot_id)
+  await verifyValueIsPositiveInt(plot_id)
 
   const owner_id = await getPlotOwnerId(plot_id)
 
@@ -298,7 +298,7 @@ export const removePlotByPlotId = async (
   plot_id: number
 ): Promise<void> => {
 
-  await verifyParamIsPositiveInt(plot_id)
+  await verifyValueIsPositiveInt(plot_id)
 
   const owner_id = await getPlotOwnerId(plot_id)
 
@@ -320,7 +320,7 @@ export const updateIsPinnedByPlotId = async (
   toggle: { bool: boolean }
 ): Promise<StatusResponse> => {
 
-  await verifyParamIsPositiveInt(plot_id)
+  await verifyValueIsPositiveInt(plot_id)
 
   const owner_id = await getPlotOwnerId(plot_id)
 

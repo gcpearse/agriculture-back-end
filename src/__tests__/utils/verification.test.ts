@@ -1,5 +1,5 @@
 import { StatusResponse } from "../../types/response-types"
-import { verifyPermission, verifyParamIsPositiveInt, verifyPagination, verifyQueryValue } from "../../utils/verification"
+import { verifyPermission, verifyValueIsPositiveInt, verifyPagination, verifyQueryValue } from "../../utils/verification"
 
 
 describe("verifyPermission", () => {
@@ -43,47 +43,47 @@ describe("verifyPagination", () => {
 })
 
 
-describe("verifyParamIsPositiveInt", () => {
+describe("verifyValueIsPositiveInt", () => {
 
   test("When the value of the parameter is not a number (NaN), the promise is rejected", () => {
 
-    expect(verifyParamIsPositiveInt(NaN)).rejects.toMatchObject<StatusResponse>({
+    expect(verifyValueIsPositiveInt(NaN)).rejects.toMatchObject<StatusResponse>({
       status: 400,
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
   test("When the value of the parameter is a negative number, the promise is rejected", () => {
 
-    expect(verifyParamIsPositiveInt(-1)).rejects.toMatchObject<StatusResponse>({
+    expect(verifyValueIsPositiveInt(-1)).rejects.toMatchObject<StatusResponse>({
       status: 400,
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
   test("When the value of the parameter is not an integer, the promise is rejected", () => {
 
-    expect(verifyParamIsPositiveInt(1.1)).rejects.toMatchObject<StatusResponse>({
+    expect(verifyValueIsPositiveInt(1.1)).rejects.toMatchObject<StatusResponse>({
       status: 400,
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
   test("When the value of the parameter is zero, the promise is rejected", () => {
 
-    expect(verifyParamIsPositiveInt(0)).rejects.toMatchObject<StatusResponse>({
+    expect(verifyValueIsPositiveInt(0)).rejects.toMatchObject<StatusResponse>({
       status: 400,
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
   test("Returns undefined when the value of the parameter is a positive integer", () => {
 
-    expect(verifyParamIsPositiveInt(1)).toBeUndefined()
+    expect(verifyValueIsPositiveInt(1)).toBeUndefined()
   })
 })
 
