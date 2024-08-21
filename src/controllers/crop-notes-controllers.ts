@@ -10,8 +10,8 @@ export const getCropNotesByCropId = async (req: ExtendedRequest, res: Response, 
   const { crop_id } = req.params
 
   try {
-    const cropNotes = await selectCropNotesByCropId(authUserId, +crop_id)
-    res.status(200).send({ cropNotes })
+    const notes = await selectCropNotesByCropId(authUserId, +crop_id)
+    res.status(200).send({ notes })
   } catch (err) {
     next(err)
   }

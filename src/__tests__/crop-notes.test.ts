@@ -41,7 +41,7 @@ describe("GET /api/crop_notes/crops/:crop_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    for (const note of body.cropNotes) {
+    for (const note of body.notes) {
       expect(note).toMatchObject<CropNote>({
         note_id: expect.any(Number),
         crop_id: 1,
@@ -58,9 +58,9 @@ describe("GET /api/crop_notes/crops/:crop_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.cropNotes)).toBe(true)
+    expect(Array.isArray(body.notes)).toBe(true)
 
-    expect(body.cropNotes).toHaveLength(0)
+    expect(body.notes).toHaveLength(0)
   })
 
   test("GET:400 Responds with an error when the crop_id parameter is not a positive integer", async () => {

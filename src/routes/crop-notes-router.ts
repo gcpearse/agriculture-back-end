@@ -32,7 +32,7 @@ cropNotesRouter.route("/crop_notes/crops/:crop_id")
  *            schema:
  *              type: object
  *              properties:
- *                cropNotes:
+ *                notes:
  *                  type: array
  *                  items:
  *                    $ref: "#/components/schemas/CropNote"
