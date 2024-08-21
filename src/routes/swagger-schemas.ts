@@ -61,6 +61,21 @@ export const schemaRouter = Router()
  *          type: string
  *          nullable: true
  *          example: 2024-09-14T23:00:00.000Z
+ *    CropNote:
+ *      type: object
+ *      properties:
+ *        note_id:
+ *          type: integer
+ *          example: 1
+ *        crop_id:
+ *          type: integer
+ *          example: 1
+ *        body:
+ *          type: string
+ *          example: These will need more water in future.
+ *        created_at:
+ *          type: string
+ *          example: 2024-07-01T11:05:59.959Z
  *    CropRequest:
  *      type: object
  *      properties:

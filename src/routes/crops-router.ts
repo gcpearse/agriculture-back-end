@@ -6,12 +6,12 @@ import { deleteCropByCropId, getCropByCropId, getCropsByPlotId, getCropsBySubdiv
 export const cropsRouter = Router()
 
 
-cropsRouter.route("/crops/plot/:plot_id")
+cropsRouter.route("/crops/plots/:plot_id")
 
 
 /**
  * @swagger
- * /api/crops/plot/{plot_id}:
+ * /api/crops/plots/{plot_id}:
  *  get:
  *    security:
  *      - bearerAuth: []
@@ -103,7 +103,7 @@ cropsRouter.route("/crops/plot/:plot_id")
 
 /**
  * @swagger
- * /api/crops/plot/{plot_id}:
+ * /api/crops/plots/{plot_id}:
  *  post:
  *    security:
  *      - bearerAuth: []
@@ -154,12 +154,12 @@ cropsRouter.route("/crops/plot/:plot_id")
   .post(verifyToken, postCropByPlotId)
 
 
-cropsRouter.route("/crops/subdivision/:subdivision_id")
+cropsRouter.route("/crops/subdivisions/:subdivision_id")
 
 
 /**
  * @swagger
- * /api/crops/subdivision/{subdivision_id}:
+ * /api/crops/subdivisions/{subdivision_id}:
  *  get:
  *    security:
  *      - bearerAuth: []
@@ -248,7 +248,7 @@ cropsRouter.route("/crops/subdivision/:subdivision_id")
 
 /**
  * @swagger
- * /api/crops/subdivision/{subdivision_id}:
+ * /api/crops/subdivisions/{subdivision_id}:
  *  post:
  *    security:
  *      - bearerAuth: []

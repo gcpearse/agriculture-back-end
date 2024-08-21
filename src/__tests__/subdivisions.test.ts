@@ -32,12 +32,12 @@ afterAll(async () => {
 })
 
 
-describe("GET /api/subdivisions/plot/:plot_id", () => {
+describe("GET /api/subdivisions/plots/:plot_id", () => {
 
   test("GET:200 Responds with an array of subdivision objects sorted by subdivision_id in descending order", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1")
+      .get("/api/subdivisions/plots/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -70,7 +70,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
   test("GET:200 Responds with an empty array when no subdivisions are associated with the plot", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/3")
+      .get("/api/subdivisions/plots/3")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -84,7 +84,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
   test("GET:400 Responds with an error when the plot_id parameter is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/foobar")
+      .get("/api/subdivisions/plots/foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -97,7 +97,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
   test("GET:403 Responds with an error when the authenticated user attempts to retrieve another user's subdivision data", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/2")
+      .get("/api/subdivisions/plots/2")
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
@@ -110,7 +110,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
   test("GET:404 Responds with an error when the plot does not exist", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/999")
+      .get("/api/subdivisions/plots/999")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -128,7 +128,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
       .expect(204)
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1")
+      .get("/api/subdivisions/plots/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -146,7 +146,7 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
       .expect(204)
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1")
+      .get("/api/subdivisions/plots/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -158,12 +158,12 @@ describe("GET /api/subdivisions/plot/:plot_id", () => {
 })
 
 
-describe("GET /api/subdivisions/plot/:plot_id?type=", () => {
+describe("GET /api/subdivisions/plots/:plot_id?type=", () => {
 
   test("GET:200 Responds with an array of subdivision objects filtered case-insensitively by type", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?type=bed")
+      .get("/api/subdivisions/plots/1?type=bed")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -179,7 +179,7 @@ describe("GET /api/subdivisions/plot/:plot_id?type=", () => {
   test("GET:404 Responds with an error when the query value is invalid", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?type=foobar")
+      .get("/api/subdivisions/plots/1?type=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -191,12 +191,12 @@ describe("GET /api/subdivisions/plot/:plot_id?type=", () => {
 })
 
 
-describe("GET /api/subdivisions/plot/:plot_id?name=", () => {
+describe("GET /api/subdivisions/plots/:plot_id?name=", () => {
 
   test("GET:200 Responds with an array of subdivision objects filtered by name", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?name=bed")
+      .get("/api/subdivisions/plots/1?name=bed")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -210,7 +210,7 @@ describe("GET /api/subdivisions/plot/:plot_id?name=", () => {
   test("GET:200 Filtered results are case-insensitive", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?name=BED")
+      .get("/api/subdivisions/plots/1?name=BED")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -224,7 +224,7 @@ describe("GET /api/subdivisions/plot/:plot_id?name=", () => {
   test("GET:200 Returns an empty array when the value of name matches no results", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?name=foobar")
+      .get("/api/subdivisions/plots/1?name=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -237,12 +237,12 @@ describe("GET /api/subdivisions/plot/:plot_id?name=", () => {
 })
 
 
-describe("GET /api/subdivisions/plot/:plot_id?type=&name=", () => {
+describe("GET /api/subdivisions/plots/:plot_id?type=&name=", () => {
 
   test("GET:200 Responds with an array of subdivision objects filtered by type and name", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?type=bed&name=onion")
+      .get("/api/subdivisions/plots/1?type=bed&name=onion")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -256,12 +256,12 @@ describe("GET /api/subdivisions/plot/:plot_id?type=&name=", () => {
 })
 
 
-describe("GET /api/subdivisions/plot/:plot_id?sort=", () => {
+describe("GET /api/subdivisions/plots/:plot_id?sort=", () => {
 
   test("GET:200 Responds with an array of subdivision objects sorted by name in ascending order", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?sort=name")
+      .get("/api/subdivisions/plots/1?sort=name")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -279,7 +279,7 @@ describe("GET /api/subdivisions/plot/:plot_id?sort=", () => {
   test("GET:400 Responds with an error when passed an invalid sort value", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?sort=foobar")
+      .get("/api/subdivisions/plots/1?sort=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -291,12 +291,12 @@ describe("GET /api/subdivisions/plot/:plot_id?sort=", () => {
 })
 
 
-describe("GET /api/subdivisions/plot/:plot_id?order=", () => {
+describe("GET /api/subdivisions/plots/:plot_id?order=", () => {
 
   test("GET:400 Responds with an error when passed an invalid order value", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?order=foobar")
+      .get("/api/subdivisions/plots/1?order=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -308,12 +308,12 @@ describe("GET /api/subdivisions/plot/:plot_id?order=", () => {
 })
 
 
-describe("GET /api/subdivisions/plot/:plot_id?limit=", () => {
+describe("GET /api/subdivisions/plots/:plot_id?limit=", () => {
 
   test("GET:200 Responds with a limited array of subdivision objects associated with the plot", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?limit=2")
+      .get("/api/subdivisions/plots/1?limit=2")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -325,7 +325,7 @@ describe("GET /api/subdivisions/plot/:plot_id?limit=", () => {
   test("GET:200 Responds with an array of all subdivisions associated with the plot when the limit exceeds the total number of results", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?limit=20")
+      .get("/api/subdivisions/plots/1?limit=20")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -337,7 +337,7 @@ describe("GET /api/subdivisions/plot/:plot_id?limit=", () => {
   test("GET:400 Responds with an error when the value of limit is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?limit=two")
+      .get("/api/subdivisions/plots/1?limit=two")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -349,12 +349,12 @@ describe("GET /api/subdivisions/plot/:plot_id?limit=", () => {
 })
 
 
-describe("GET /api/subdivisions/plot/:plot_id?page=", () => {
+describe("GET /api/subdivisions/plots/:plot_id?page=", () => {
 
   test("GET:200 Responds with an array of subdivision objects associated with the plot beginning from the page set in the query parameter", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?limit=2&page=2")
+      .get("/api/subdivisions/plots/1?limit=2&page=2")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -368,7 +368,7 @@ describe("GET /api/subdivisions/plot/:plot_id?page=", () => {
   test("GET:200 The page defaults to page one", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?limit=2")
+      .get("/api/subdivisions/plots/1?limit=2")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -382,7 +382,7 @@ describe("GET /api/subdivisions/plot/:plot_id?page=", () => {
   test("GET:400 Responds with an error when the value of page is not a positive integer", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?limit=2&page=two")
+      .get("/api/subdivisions/plots/1?limit=2&page=two")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -395,7 +395,7 @@ describe("GET /api/subdivisions/plot/:plot_id?page=", () => {
   test("GET:404 Responds with an error when the page cannot be found", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?limit=2&page=3")
+      .get("/api/subdivisions/plots/1?limit=2&page=3")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -408,7 +408,7 @@ describe("GET /api/subdivisions/plot/:plot_id?page=", () => {
   test("GET:404 Responds with an error when the page cannot be found (multiple queries affecting total query result rows)", async () => {
 
     const { body } = await request(app)
-      .get("/api/subdivisions/plot/1?type=bed&name=onion&limit=1&page=2")
+      .get("/api/subdivisions/plots/1?type=bed&name=onion&limit=1&page=2")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -420,7 +420,7 @@ describe("GET /api/subdivisions/plot/:plot_id?page=", () => {
 })
 
 
-describe("POST /api/subdivisions/plot/:plot_id", () => {
+describe("POST /api/subdivisions/plots/:plot_id", () => {
 
   test("POST:201 Responds with a new subdivision object, assigning plot_id automatically", async () => {
 
@@ -432,7 +432,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/plot/1")
+      .post("/api/subdivisions/plots/1")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
@@ -456,7 +456,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/plot/1")
+      .post("/api/subdivisions/plots/1")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
@@ -475,7 +475,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/plot/1")
+      .post("/api/subdivisions/plots/1")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
@@ -493,7 +493,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/plot/1")
+      .post("/api/subdivisions/plots/1")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -513,7 +513,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/plot/1")
+      .post("/api/subdivisions/plots/1")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -534,7 +534,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/plot/1")
+      .post("/api/subdivisions/plots/1")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -555,7 +555,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/plot/foobar")
+      .post("/api/subdivisions/plots/foobar")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
@@ -576,7 +576,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/plot/2")
+      .post("/api/subdivisions/plots/2")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
@@ -597,7 +597,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/plot/999")
+      .post("/api/subdivisions/plots/999")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
@@ -618,7 +618,7 @@ describe("POST /api/subdivisions/plot/:plot_id", () => {
     }
 
     const { body } = await request(app)
-      .post("/api/subdivisions/plot/1")
+      .post("/api/subdivisions/plots/1")
       .send(newSubdivision)
       .set("Authorization", `Bearer ${token}`)
       .expect(409)

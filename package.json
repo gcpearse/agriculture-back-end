@@ -11,6 +11,7 @@
     "test-auth": "jest src/__tests__/auth.test.ts",
     "test-login": "jest src/__tests__/login.test.ts",
     "test-crops": "jest src/__tests__/crops.test.ts",
+    "test-crop-notes": "jest src/__tests__/crop-notes.test.ts",
     "test-plots": "jest src/__tests__/plots.test.ts",
     "test-middleware": "jest src/__tests__/middleware.test.ts",
     "test-register": "jest src/__tests__/register.test.ts",
