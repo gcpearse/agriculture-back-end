@@ -24,5 +24,35 @@ cropNotesRouter.route("/crop_notes/crops/:crop_id")
  *        required: true
  *        schema:
  *          type: integer
+ *    responses:
+ *      200:
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                cropNotes:
+ *                  type: array
+ *                  items:
+ *                    $ref: "#/components/schemas/CropNote"
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/BadRequest"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Forbidden"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/NotFound"
  */
   .get(verifyToken, getCropNotesByCropId)
