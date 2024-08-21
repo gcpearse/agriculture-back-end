@@ -1,7 +1,7 @@
 import QueryString from "qs"
 import { db } from "../db"
 import { checkSubdivisionNameConflict, getPlotOwnerId, getSubdivisionPlotId, validateSubdivisionType } from "../utils/db-queries"
-import { verifyPermission, verifyParamIsPositiveInt, verifyQueryValue, verifyPagination } from "../utils/verification"
+import { verifyPermission, verifyValueIsPositiveInt, verifyQueryValue, verifyPagination } from "../utils/verification"
 import { ExtendedSubdivision, Subdivision, SubdivisionRequest } from "../types/subdivision-types"
 import format from "pg-format"
 
@@ -19,11 +19,11 @@ export const selectSubdivisionsByPlotId = async (
   }: QueryString.ParsedQs
 ): Promise<[ExtendedSubdivision[], number]> => {
 
-  await verifyParamIsPositiveInt(plot_id)
+  await verifyValueIsPositiveInt(plot_id)
 
-  await verifyParamIsPositiveInt(+limit)
+  await verifyValueIsPositiveInt(+limit)
 
-  await verifyParamIsPositiveInt(+page)
+  await verifyValueIsPositiveInt(+page)
 
   const owner_id = await getPlotOwnerId(plot_id)
 
@@ -120,7 +120,7 @@ export const insertSubdivisionByPlotId = async (
   subdivision: SubdivisionRequest
 ): Promise<Subdivision> => {
 
-  await verifyParamIsPositiveInt(plot_id)
+  await verifyValueIsPositiveInt(plot_id)
 
   const owner_id = await getPlotOwnerId(plot_id)
 
@@ -163,7 +163,7 @@ export const selectSubdivisionBySubdivisionId = async (
   subdivision_id: number
 ): Promise<ExtendedSubdivision> => {
 
-  await verifyParamIsPositiveInt(subdivision_id)
+  await verifyValueIsPositiveInt(subdivision_id)
 
   const plot_id = await getSubdivisionPlotId(subdivision_id)
 
@@ -211,7 +211,7 @@ export const updateSubdivisionBySubdivisionId = async (
   subdivision: SubdivisionRequest
 ): Promise<Subdivision> => {
 
-  await verifyParamIsPositiveInt(subdivision_id)
+  await verifyValueIsPositiveInt(subdivision_id)
 
   const plot_id = await getSubdivisionPlotId(subdivision_id)
 
@@ -269,7 +269,7 @@ export const removeSubdivisionBySubdivisionId = async (
   subdivision_id: number
 ): Promise<void> => {
 
-  await verifyParamIsPositiveInt(subdivision_id)
+  await verifyValueIsPositiveInt(subdivision_id)
 
   const plot_id = await getSubdivisionPlotId(subdivision_id)
 

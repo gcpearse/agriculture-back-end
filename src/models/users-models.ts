@@ -4,7 +4,7 @@ import { compareHash, generateHash } from "../middleware/security"
 import { StatusResponse } from "../types/response-types"
 import { PasswordUpdate, SecureUser } from "../types/user-types"
 import { checkEmailConflict, getUserRole, searchForUserId, validateUnitSystem, validateUserRole } from "../utils/db-queries"
-import { verifyPagination, verifyParamIsPositiveInt, verifyPermission, verifyQueryValue } from "../utils/verification"
+import { verifyPagination, verifyValueIsPositiveInt, verifyPermission, verifyQueryValue } from "../utils/verification"
 import format from "pg-format"
 
 
@@ -20,9 +20,9 @@ export const selectAllUsers = async (
   }: QueryString.ParsedQs
 ): Promise<[SecureUser[], number]> => {
 
-  await verifyParamIsPositiveInt(+limit)
+  await verifyValueIsPositiveInt(+limit)
 
-  await verifyParamIsPositiveInt(+page)
+  await verifyValueIsPositiveInt(+page)
 
   const userRole = await getUserRole(authUserId)
 
@@ -94,7 +94,7 @@ export const selectUserByUserId = async (
   user_id: number
 ): Promise<SecureUser> => {
 
-  await verifyParamIsPositiveInt(user_id)
+  await verifyValueIsPositiveInt(user_id)
 
   await searchForUserId(user_id)
 
@@ -125,7 +125,7 @@ export const updateUserByUserId = async (
   user: SecureUser
 ): Promise<SecureUser> => {
 
-  await verifyParamIsPositiveInt(user_id)
+  await verifyValueIsPositiveInt(user_id)
 
   await searchForUserId(user_id)
 
@@ -168,7 +168,7 @@ export const removeUserByUserId = async (
   user_id: number
 ): Promise<void> => {
 
-  await verifyParamIsPositiveInt(user_id)
+  await verifyValueIsPositiveInt(user_id)
 
   await searchForUserId(user_id)
 
@@ -193,7 +193,7 @@ export const updatePasswordByUserId = async (
   }: PasswordUpdate
 ): Promise<StatusResponse> => {
 
-  await verifyParamIsPositiveInt(user_id)
+  await verifyValueIsPositiveInt(user_id)
 
   await searchForUserId(user_id)
 
@@ -250,7 +250,7 @@ export const updateRoleByUserId = async (
   }: { role: string }
 ): Promise<SecureUser> => {
 
-  await verifyParamIsPositiveInt(user_id)
+  await verifyValueIsPositiveInt(user_id)
 
   await searchForUserId(user_id)
 

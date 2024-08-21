@@ -13,15 +13,15 @@ export const verifyPagination = (
 }
 
 
-export const verifyParamIsPositiveInt = (
-  param: number
+export const verifyValueIsPositiveInt = (
+  value: number
 ): Promise<never> | undefined => {
 
-  if (isNaN(param) || param < 1 || Math.floor(param) !== param) {
+  if (isNaN(value) || value < 1 || Math.floor(value) !== value) {
     return Promise.reject({
       status: 400,
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   }
 }

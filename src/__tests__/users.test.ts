@@ -297,7 +297,7 @@ describe("GET /api/users?limit=", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 })
@@ -342,7 +342,7 @@ describe("GET /api/users?page=", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -390,7 +390,7 @@ describe("GET /api/users/:user_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -467,7 +467,7 @@ describe("PATCH /api/users/:user_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -606,7 +606,7 @@ describe("DELETE /api/users/:user_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -674,7 +674,7 @@ describe("PATCH /api/users/:user_id/password", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 
@@ -794,7 +794,7 @@ describe("PATCH /api/users/:user_id/role", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Invalid parameter"
+      details: "Value must be a positive integer"
     })
   })
 

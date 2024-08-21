@@ -2,7 +2,7 @@ import QueryString from "qs"
 import { db } from "../db"
 import { Crop, CropRequest, ExtendedCrop } from "../types/crop-types"
 import { getCropOwnerId, getPlotOwnerId, getSubdivisionPlotId, validateCropCategory } from "../utils/db-queries"
-import { verifyPagination, verifyParamIsPositiveInt, verifyPermission, verifyQueryValue } from "../utils/verification"
+import { verifyPagination, verifyValueIsPositiveInt, verifyPermission, verifyQueryValue } from "../utils/verification"
 import format from "pg-format"
 
 
@@ -19,11 +19,11 @@ export const selectCropsByPlotId = async (
   }: QueryString.ParsedQs
 ): Promise<[ExtendedCrop[], number]> => {
 
-  await verifyParamIsPositiveInt(plot_id)
+  await verifyValueIsPositiveInt(plot_id)
 
-  await verifyParamIsPositiveInt(+limit)
+  await verifyValueIsPositiveInt(+limit)
 
-  await verifyParamIsPositiveInt(+page)
+  await verifyValueIsPositiveInt(+page)
 
   const owner_id = await getPlotOwnerId(plot_id)
 
@@ -125,7 +125,7 @@ export const insertCropByPlotId = async (
   crop: CropRequest
 ): Promise<Crop> => {
 
-  await verifyParamIsPositiveInt(plot_id)
+  await verifyValueIsPositiveInt(plot_id)
 
   const owner_id = await getPlotOwnerId(plot_id)
 
@@ -176,11 +176,11 @@ export const selectCropsBySubdivisionId = async (
   }: QueryString.ParsedQs
 ): Promise<[ExtendedCrop[], number]> => {
 
-  await verifyParamIsPositiveInt(subdivision_id)
+  await verifyValueIsPositiveInt(subdivision_id)
 
-  await verifyParamIsPositiveInt(+limit)
+  await verifyValueIsPositiveInt(+limit)
 
-  await verifyParamIsPositiveInt(+page)
+  await verifyValueIsPositiveInt(+page)
 
   const plot_id = await getSubdivisionPlotId(subdivision_id)
 
@@ -280,7 +280,7 @@ export const insertCropBySubdivisionId = async (
   crop: CropRequest
 ): Promise<Crop> => {
 
-  await verifyParamIsPositiveInt(subdivision_id)
+  await verifyValueIsPositiveInt(subdivision_id)
 
   const plot_id = await getSubdivisionPlotId(subdivision_id)
 
@@ -326,7 +326,7 @@ export const selectCropByCropId = async (
   crop_id: number
 ): Promise<Crop> => {
 
-  await verifyParamIsPositiveInt(crop_id)
+  await verifyValueIsPositiveInt(crop_id)
 
   const owner_id = await getCropOwnerId(crop_id)
 
@@ -368,7 +368,7 @@ export const updateCropByCropId = async (
   crop: CropRequest
 ): Promise<Crop> => {
 
-  await verifyParamIsPositiveInt(crop_id)
+  await verifyValueIsPositiveInt(crop_id)
 
   const owner_id = await getCropOwnerId(crop_id)
 
@@ -411,13 +411,34 @@ export const updateCropByCropId = async (
 }
 
 
+export const removeCropByCropId = async (
+  authUserId: number,
+  crop_id: number
+): Promise<void> => {
+
+  await verifyValueIsPositiveInt(crop_id)
+
+  const owner_id = await getCropOwnerId(crop_id)
+
+  await verifyPermission(authUserId, owner_id, "Permission to delete crop data denied")
+
+  await db.query(`
+    DELETE FROM crops
+    WHERE crop_id = $1
+    RETURNING *;
+    `,
+    [crop_id]
+  )
+}
+
+
 export const updateAssociatedPlotByCropId = async (
   authUserId: number,
   crop_id: number,
   { plot_id }: { plot_id: number }
 ): Promise<Crop> => {
 
-  await verifyParamIsPositiveInt(crop_id)
+  await verifyValueIsPositiveInt(crop_id)
 
   let owner_id = await getCropOwnerId(crop_id)
 
@@ -450,7 +471,7 @@ export const updateAssociatedSubdivisionByCropId = async (
   { subdivision_id }: { subdivision_id: number }
 ): Promise<Crop> => {
 
-  await verifyParamIsPositiveInt(crop_id)
+  await verifyValueIsPositiveInt(crop_id)
 
   let owner_id = await getCropOwnerId(crop_id)
 

@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express"
-import { insertCropByPlotId, insertCropBySubdivisionId, selectCropByCropId, selectCropsByPlotId, selectCropsBySubdivisionId, updateAssociatedPlotByCropId, updateAssociatedSubdivisionByCropId, updateCropByCropId } from "../models/crops-models"
+import { insertCropByPlotId, insertCropBySubdivisionId, removeCropByCropId, selectCropByCropId, selectCropsByPlotId, selectCropsBySubdivisionId, updateAssociatedPlotByCropId, updateAssociatedSubdivisionByCropId, updateCropByCropId } from "../models/crops-models"
 import { ExtendedRequest } from "../types/auth-types"
 
 
@@ -87,6 +87,21 @@ export const patchCropByCropId = async (req: ExtendedRequest, res: Response, nex
   try {
     const crop = await updateCropByCropId(authUserId, +crop_id, req.body)
     res.status(200).send({ crop })
+  } catch (err) {
+    next(err)
+  }
+}
+
+
+export const deleteCropByCropId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
+
+  const authUserId = req.user!.user_id
+
+  const { crop_id } = req.params
+
+  try {
+    await removeCropByCropId(authUserId, +crop_id)
+    res.status(204).send()
   } catch (err) {
     next(err)
   }
