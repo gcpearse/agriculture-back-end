@@ -411,6 +411,27 @@ export const updateCropByCropId = async (
 }
 
 
+export const removeCropByCropId = async (
+  authUserId: number,
+  crop_id: number
+): Promise<void> => {
+
+  await verifyParamIsPositiveInt(crop_id)
+
+  const owner_id = await getCropOwnerId(crop_id)
+
+  await verifyPermission(authUserId, owner_id, "Permission to delete crop data denied")
+
+  await db.query(`
+    DELETE FROM crops
+    WHERE crop_id = $1
+    RETURNING *;
+    `,
+    [crop_id]
+  )
+}
+
+
 export const updateAssociatedPlotByCropId = async (
   authUserId: number,
   crop_id: number,
