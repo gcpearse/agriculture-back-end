@@ -11,6 +11,7 @@ export const jobData: Job[] = [
     description: "Thinking about planting rhubarb.",
     date_added: new Date("2024-07-12"),
     deadline: null,
+    is_priority: false,
     is_started: false,
     is_completed: false
   },
@@ -23,6 +24,7 @@ export const jobData: Job[] = [
     description: "The carrots need compost.",
     date_added: new Date("2024-06-22"),
     deadline: new Date("2024-07-30"),
+    is_priority: true,
     is_started: false,
     is_completed: false
   },
@@ -35,6 +37,7 @@ export const jobData: Job[] = [
     description: "The rotten posts need to be removed first.",
     date_added: new Date("2024-07-12"),
     deadline: new Date("2024-08-01"),
+    is_priority: false,
     is_started: true,
     is_completed: false
   },
@@ -47,6 +50,7 @@ export const jobData: Job[] = [
     description: "Each plant will need a full watering can.",
     date_added: new Date("2024-07-01"),
     deadline: null,
+    is_priority: false,
     is_started: true,
     is_completed: true
   },

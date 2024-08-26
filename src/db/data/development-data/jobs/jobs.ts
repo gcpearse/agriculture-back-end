@@ -11,6 +11,7 @@ export const jobData: Job[] = [
     description: "Example job description.",
     date_added: new Date("2024-07-03"),
     deadline: null,
+    is_priority: true,
     is_started: false,
     is_completed: false
   },
@@ -23,6 +24,7 @@ export const jobData: Job[] = [
     description: "Example job description.",
     date_added: new Date("2024-07-03"),
     deadline: null,
+    is_priority: false,
     is_started: true,
     is_completed: true
   }

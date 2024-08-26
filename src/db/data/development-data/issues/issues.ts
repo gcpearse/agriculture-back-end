@@ -7,6 +7,7 @@ export const issueData: Issue[] = [
     subdivision_id: 1,
     title: "Example Issue",
     description: "This is an unresolved issue",
+    is_critical: true,
     is_resolved: false
   },
   {
@@ -14,6 +15,7 @@ export const issueData: Issue[] = [
     subdivision_id: null,
     title: "Example Issue",
     description: "This is a resolved issue",
+    is_critical: false,
     is_resolved: true
   }
 ]

@@ -8,6 +8,7 @@ export type Job = {
   description: string
   date_added: Date
   deadline: Date | null
+  is_priority: boolean
   is_started: boolean
   is_completed: boolean
 }

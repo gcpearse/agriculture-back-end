@@ -92,15 +92,20 @@ export const seed = async (
   await db.query(`
     DROP TYPE IF EXISTS unit_system;
     CREATE TYPE unit_system 
-    AS ENUM 
-      ('metric', 'imperial');
+    AS ENUM (
+      'metric', 
+      'imperial'
+    );
     `)
 
   await db.query(`
     DROP TYPE IF EXISTS user_role;
     CREATE TYPE user_role 
-    AS ENUM 
-      ('admin', 'supervisor', 'user');
+    AS ENUM (
+      'admin', 
+      'supervisor', 
+      'user'
+    );
     `)
 
   await db.query(`
@@ -217,6 +222,7 @@ export const seed = async (
       subdivision_id INT REFERENCES subdivisions(subdivision_id) ON DELETE CASCADE,
       title VARCHAR NOT NULL,
       description VARCHAR NOT NULL,
+      is_critical BOOLEAN NOT NULL DEFAULT FALSE,
       is_resolved BOOLEAN NOT NULL DEFAULT FALSE
     );
     `)
@@ -249,6 +255,7 @@ export const seed = async (
       description VARCHAR NOT NULL,
       date_added DATE DEFAULT NOW(),
       deadline DATE,
+      is_priority BOOLEAN NOT NULL DEFAULT FALSE,
       is_started BOOLEAN NOT NULL DEFAULT FALSE,
       is_completed BOOLEAN NOT NULL DEFAULT FALSE
     );
@@ -263,8 +270,15 @@ export const seed = async (
     `)
 
   await db.query(format(`
-    INSERT INTO users 
-      (username, password, email, first_name, surname, role, unit_system)
+    INSERT INTO users (
+      username, 
+      password, 
+      email, 
+      first_name, 
+      surname, 
+      role, 
+      unit_system
+    )
     VALUES %L;
     `,
     await Promise.all(
@@ -284,120 +298,176 @@ export const seed = async (
   ))
 
   await db.query(format(`
-    INSERT INTO plots 
-      (owner_id, name, type, description, location, area, is_pinned)
+    INSERT INTO plots (
+      owner_id, 
+      name, 
+      type, 
+      description, 
+      location, 
+      area, 
+      is_pinned
+    )
     VALUES %L;
     `,
     plotData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`
-    INSERT INTO plot_images 
-      (plot_id, image_url)
+    INSERT INTO plot_images (
+      plot_id, 
+      image_url
+    )
     VALUES %L;
     `,
     plotImageData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`
-    INSERT INTO plot_types 
-      (type)
+    INSERT INTO plot_types (
+      type
+    )
     VALUES %L;
     `,
     plotTypeData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`
-    INSERT INTO subdivisions
-      (plot_id, name, type, description, area)
+    INSERT INTO subdivisions (
+      plot_id, 
+      name, 
+      type, 
+      description, 
+      area
+    )
     VALUES %L;
     `,
     subdivisionData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`
-    INSERT INTO subdivision_images 
-      (subdivision_id, image_url)
+    INSERT INTO subdivision_images (
+      subdivision_id, 
+      image_url
+    )
     VALUES %L;
     `,
     subdivisionImageData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`
-    INSERT INTO subdivision_types 
-      (type)
+    INSERT INTO subdivision_types (
+      type
+    )
     VALUES %L;
     `,
     subdivisionTypeData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`
-    INSERT INTO crops 
-      (plot_id, subdivision_id, name, variety, category, quantity, date_planted, harvest_date)
+    INSERT INTO crops (
+      plot_id, 
+      subdivision_id, 
+      name, 
+      variety, 
+      category, 
+      quantity, 
+      date_planted, 
+      harvest_date
+    )
     VALUES %L;
     `,
     cropData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`
-    INSERT INTO crop_notes 
-      (crop_id, body, created_at)
+    INSERT INTO crop_notes (
+      crop_id, 
+      body, 
+      created_at
+    )
     VALUES %L;
     `,
     cropNoteData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`
-    INSERT INTO crop_images 
-      (crop_id, image_url)
+    INSERT INTO crop_images (
+      crop_id, 
+      image_url
+    )
     VALUES %L;
     `,
     cropImageData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`
-    INSERT INTO crop_categories 
-      (category)
+    INSERT INTO crop_categories (
+      category
+    )
     VALUES %L;
     `,
     cropCategoryData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`
-    INSERT INTO issues 
-      (plot_id, subdivision_id, title, description, is_resolved)
+    INSERT INTO issues (
+      plot_id, 
+      subdivision_id, 
+      title, 
+      description, 
+      is_critical, 
+      is_resolved
+    )
     VALUES %L;
     `,
     issueData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`
-    INSERT INTO issue_notes 
-      (issue_id, body, created_at)
+    INSERT INTO issue_notes (
+      issue_id, 
+      body, 
+      created_at
+    )
     VALUES %L;
     `,
     issueNoteData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`
-    INSERT INTO issue_images 
-      (issue_id, image_url)
+    INSERT INTO issue_images (
+      issue_id, 
+      image_url
+    )
     VALUES %L;
     `,
     issueImageData.map(entry => Object.values(entry))
   ))
 
   await db.query(format(`
-    INSERT INTO jobs 
-      (plot_id, subdivision_id, crop_id, issue_id, title, description, date_added, deadline, is_started, is_completed)
+    INSERT INTO jobs (
+      plot_id, 
+      subdivision_id, 
+      crop_id, 
+      issue_id, 
+      title, 
+      description, 
+      date_added, 
+      deadline, 
+      is_priority, 
+      is_started, 
+      is_completed
+    )
     VALUES %L;
     `,
     jobData.map(entry => Object.values(entry))
   ))
 
   return await db.query(format(`
-    INSERT INTO job_images 
-      (job_id, image_url)
+    INSERT INTO job_images (
+      job_id, 
+      image_url
+    )
     VALUES %L;
     `,
     jobImageData.map(entry => Object.values(entry))
