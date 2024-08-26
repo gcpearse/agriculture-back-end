@@ -217,6 +217,7 @@ export const seed = async (
       subdivision_id INT REFERENCES subdivisions(subdivision_id) ON DELETE CASCADE,
       title VARCHAR NOT NULL,
       description VARCHAR NOT NULL,
+      is_critical BOOLEAN NOT NULL DEFAULT FALSE,
       is_resolved BOOLEAN NOT NULL DEFAULT FALSE
     );
     `)
@@ -249,6 +250,7 @@ export const seed = async (
       description VARCHAR NOT NULL,
       date_added DATE DEFAULT NOW(),
       deadline DATE,
+      is_priority BOOLEAN NOT NULL DEFAULT FALSE,
       is_started BOOLEAN NOT NULL DEFAULT FALSE,
       is_completed BOOLEAN NOT NULL DEFAULT FALSE
     );
@@ -365,7 +367,7 @@ export const seed = async (
 
   await db.query(format(`
     INSERT INTO issues 
-      (plot_id, subdivision_id, title, description, is_resolved)
+      (plot_id, subdivision_id, title, description, is_critical, is_resolved)
     VALUES %L;
     `,
     issueData.map(entry => Object.values(entry))
@@ -389,7 +391,7 @@ export const seed = async (
 
   await db.query(format(`
     INSERT INTO jobs 
-      (plot_id, subdivision_id, crop_id, issue_id, title, description, date_added, deadline, is_started, is_completed)
+      (plot_id, subdivision_id, crop_id, issue_id, title, description, date_added, deadline, is_priority, is_started, is_completed)
     VALUES %L;
     `,
     jobData.map(entry => Object.values(entry))
