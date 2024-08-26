@@ -4,5 +4,6 @@ export type Issue = {
   subdivision_id: number | null
   title: string
   description: string
+  is_critical: boolean
   is_resolved: boolean
 }
