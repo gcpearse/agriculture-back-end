@@ -1,3 +1,4 @@
+import format from "pg-format"
 import { db } from "../db"
 import { CropNote } from "../types/note-types"
 import { getCropOwnerId } from "../utils/db-queries"
@@ -25,4 +26,35 @@ export const selectCropNotesByCropId = async (
   )
 
   return result.rows
+}
+
+
+export const insertCropNoteByCropId = async (
+  authUserId: number,
+  crop_id: number,
+  note: { body: string}
+): Promise<CropNote> => {
+
+  await verifyValueIsPositiveInt(crop_id)
+
+  const owner_id = await getCropOwnerId(crop_id)
+
+  await verifyPermission(authUserId, owner_id, "Permission to add crop note denied")
+
+  const result = await db.query(format(`
+    INSERT INTO crop_notes (
+      crop_id,
+      body
+    )
+    VALUES
+      %L
+    RETURNING *;
+    `,
+    [[
+      crop_id,
+      note.body
+    ]]
+  ))
+
+  return result.rows[0]
 }
