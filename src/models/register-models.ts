@@ -37,8 +37,14 @@ export const registerUser = async (
   const hashedPassword = await generateHash(password)
 
   const result = await db.query(format(`
-    INSERT INTO users
-      (username, password, email, first_name, surname, unit_system)
+    INSERT INTO users (
+      username, 
+      password, 
+      email, 
+      first_name, 
+      surname, 
+      unit_system
+    )
     VALUES
       %L
     RETURNING 

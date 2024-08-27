@@ -139,8 +139,13 @@ export const insertSubdivisionByPlotId = async (
   }
 
   const result = await db.query(format(`
-    INSERT INTO subdivisions
-      (plot_id, name, type, description, area)
+    INSERT INTO subdivisions (
+      plot_id, 
+      name, 
+      type, 
+      description, 
+      area
+    )
     VALUES
       %L
     RETURNING *;
