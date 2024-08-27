@@ -144,8 +144,14 @@ export const insertPlotByOwner = async (
   }
 
   const result = await db.query(format(`
-    INSERT INTO plots
-      (owner_id, name, type, description, location, area)
+    INSERT INTO plots (
+      owner_id, 
+      name, 
+      type, 
+      description, 
+      location, 
+      area
+    )
     VALUES
       %L
     RETURNING *;
