@@ -120,3 +120,118 @@ describe("GET /api/crop_notes/crops/:crop_id", () => {
     })
   })
 })
+
+
+describe("POST /api/crop_notes/crops/:crop_id", () => {
+
+  test("POST:201 Responds with a new crop note object", async () => {
+
+    const newNote = {
+      body: "These carrots are ready to harvest."
+    }
+
+    const { body } = await request(app)
+      .post("/api/crop_notes/crops/1")
+      .send(newNote)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(201)
+
+    expect(body.note).toMatchObject<CropNote>({
+      note_id: 5,
+      crop_id: 1,
+      body: "These carrots are ready to harvest.",
+      created_at: expect.stringMatching(regex)
+    })
+  })
+
+  test("POST:201 Ignores any unnecessary properties on the object", async () => {
+
+    const newNote = {
+      body: "These carrots are ready to harvest.",
+      foo: "bar"
+    }
+
+    const { body } = await request(app)
+      .post("/api/crop_notes/crops/1")
+      .send(newNote)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(201)
+
+    expect(body.note).toMatchObject<CropNote>({
+      note_id: 5,
+      crop_id: 1,
+      body: "These carrots are ready to harvest.",
+      created_at: expect.stringMatching(regex)
+    })
+  })
+
+  test("POST:400 Responds with an error when a required property is missing from the request body", async () => {
+
+    const newNote = {}
+
+    const { body } = await request(app)
+      .post("/api/crop_notes/crops/1")
+      .send(newNote)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Not null violation"
+    })
+  })
+
+  test("POST:400 Responds with an error when the crop_id parameter is not a positive integer", async () => {
+
+    const newNote = {
+      body: "These carrots are ready to harvest."
+    }
+
+    const { body } = await request(app)
+      .post("/api/crop_notes/crops/foobar")
+      .send(newNote)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Value must be a positive integer"
+    })
+  })
+
+  test("POST:400 Responds with an error when the authenticated user attempts to add a crop note for another user", async () => {
+
+    const newNote = {
+      body: "These are beautiful peaches."
+    }
+
+    const { body } = await request(app)
+      .post("/api/crop_notes/crops/5")
+      .send(newNote)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Forbidden",
+      details: "Permission to add crop note denied"
+    })
+  })
+
+  test("POST:404 Responds with an error when the crop does not exist", async () => {
+
+    const newNote = {
+      body: "These are beautiful peaches."
+    }
+
+    const { body } = await request(app)
+      .post("/api/crop_notes/crops/999")
+      .send(newNote)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Crop not found"
+    })
+  })
+})
