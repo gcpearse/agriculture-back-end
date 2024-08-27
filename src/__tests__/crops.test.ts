@@ -1510,7 +1510,7 @@ describe("PATCH /api/crops/:crop_id", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error whe the crop_id parameter is not a positive integer", async () => {
+  test("PATCH:400 Responds with an error when the crop_id parameter is not a positive integer", async () => {
 
     const newDetails = {
       name: "Carrots",
