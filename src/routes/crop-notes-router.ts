@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { getCropNotesByCropId } from "../controllers/crop-notes-controllers"
+import { getCropNotesByCropId, postCropNoteByCropId } from "../controllers/crop-notes-controllers"
 
 
 export const cropNotesRouter = Router()
@@ -56,3 +56,23 @@ cropNotesRouter.route("/crop_notes/crops/:crop_id")
  *              $ref: "#/components/schemas/NotFound"
  */
   .get(verifyToken, getCropNotesByCropId)
+
+
+
+/**
+ * @swagger
+ * /api/crop_notes/crops/{crop_id}:
+ *  post:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Add a new note to a crop
+ *    description: Responds with a crop note object.
+ *    tags: [Crop notes]
+ *    parameters:
+ *      - in: path
+ *        name: crop_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ */
+  .post(verifyToken, postCropNoteByCropId)
