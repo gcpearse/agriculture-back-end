@@ -6,16 +6,16 @@ describe("verifyPermission", () => {
 
   test("When the base value does not match the target value, the promise is rejected", () => {
 
-    expect(verifyPermission(1, 2, "Test")).rejects.toMatchObject<StatusResponse>({
+    expect(verifyPermission(1, 2)).rejects.toMatchObject<StatusResponse>({
       status: 403,
       message: "Forbidden",
-      details: "Test"
+      details: "Permission denied"
     })
   })
 
   test("Returns undefined when the base value matches the target value", () => {
 
-    expect(verifyPermission(1, 1, "Test")).toBeUndefined()
+    expect(verifyPermission(1, 1)).toBeUndefined()
   })
 })
 

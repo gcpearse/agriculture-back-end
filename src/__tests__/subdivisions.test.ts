@@ -103,7 +103,7 @@ describe("GET /api/subdivisions/plots/:plot_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to view plot subdivision data denied"
+      details: "Permission denied"
     })
   })
 
@@ -583,7 +583,7 @@ describe("POST /api/subdivisions/plots/:plot_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to create subdivision denied"
+      details: "Permission denied"
     })
   })
 
@@ -677,7 +677,7 @@ describe("GET /api/subdivisions/:subdivision_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to view subdivision data denied"
+      details: "Permission denied"
     })
   })
 
@@ -848,7 +848,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to edit subdivision data denied"
+      details: "Permission denied"
     })
   })
 
@@ -938,7 +938,7 @@ describe("DELETE /api/subdivisions/:subdivision_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to delete subdivision data denied"
+      details: "Permission denied"
     })
   })
 
