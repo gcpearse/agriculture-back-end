@@ -58,3 +58,24 @@ export const insertCropNoteByCropId = async (
 
   return result.rows[0]
 }
+
+
+export const removeCropNotesByCropId = async (
+  authUserId: number,
+  crop_id: number
+): Promise<void> => {
+
+  await verifyValueIsPositiveInt(crop_id)
+
+  const owner_id = await getCropOwnerId(crop_id)
+
+  await verifyPermission(authUserId, owner_id)
+
+  await db.query(`
+    DELETE FROM crop_notes
+    WHERE crop_id = $1
+    RETURNING *;
+    `,
+    [crop_id]
+  )
+}
