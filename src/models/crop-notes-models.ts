@@ -14,7 +14,7 @@ export const selectCropNotesByCropId = async (
 
   const owner_id = await getCropOwnerId(crop_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to view crop note data denied")
+  await verifyPermission(authUserId, owner_id)
 
   const result = await db.query(`
     SELECT *
@@ -39,7 +39,7 @@ export const insertCropNoteByCropId = async (
 
   const owner_id = await getCropOwnerId(crop_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to add crop note denied")
+  await verifyPermission(authUserId, owner_id)
 
   const result = await db.query(format(`
     INSERT INTO crop_notes (

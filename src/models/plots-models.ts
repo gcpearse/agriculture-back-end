@@ -28,7 +28,7 @@ export const selectPlotsByOwner = async (
 
   await searchForUserId(owner_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to view plot data denied")
+  await verifyPermission(authUserId, owner_id)
 
   await verifyQueryValue(["plot_id", "name"], sort as string)
 
@@ -129,7 +129,7 @@ export const insertPlotByOwner = async (
 
   await searchForUserId(owner_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to create plot denied")
+  await verifyPermission(authUserId, owner_id)
 
   await checkPlotNameConflict(owner_id, plot.name)
 
@@ -179,7 +179,7 @@ export const selectPinnedPlotsByOwner = async (
 
   await searchForUserId(owner_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to view pinned plot data denied")
+  await verifyPermission(authUserId, owner_id)
 
   const result = await db.query(`
     SELECT *
@@ -204,7 +204,7 @@ export const selectPlotByPlotId = async (
 
   const owner_id = await getPlotOwnerId(plot_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to view plot data denied")
+  await verifyPermission(authUserId, owner_id)
 
   const result = await db.query(`
     SELECT
@@ -250,7 +250,7 @@ export const updatePlotByPlotId = async (
 
   const owner_id = await getPlotOwnerId(plot_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to edit plot data denied")
+  await verifyPermission(authUserId, owner_id)
 
   const currentPlotName = await db.query(`
     SELECT name
@@ -308,7 +308,7 @@ export const removePlotByPlotId = async (
 
   const owner_id = await getPlotOwnerId(plot_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to delete plot data denied")
+  await verifyPermission(authUserId, owner_id)
 
   await db.query(`
     DELETE FROM plots
@@ -330,7 +330,7 @@ export const updateIsPinnedByPlotId = async (
 
   const owner_id = await getPlotOwnerId(plot_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to edit pinned plot data denied")
+  await verifyPermission(authUserId, owner_id)
 
   if (toggle.bool !== true) {
     return Promise.reject({

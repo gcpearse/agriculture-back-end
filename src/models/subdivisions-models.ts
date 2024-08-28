@@ -27,7 +27,7 @@ export const selectSubdivisionsByPlotId = async (
 
   const owner_id = await getPlotOwnerId(plot_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to view plot subdivision data denied")
+  await verifyPermission(authUserId, owner_id)
 
   await verifyQueryValue(["subdivision_id", "name"], sort as string)
 
@@ -124,7 +124,7 @@ export const insertSubdivisionByPlotId = async (
 
   const owner_id = await getPlotOwnerId(plot_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to create subdivision denied")
+  await verifyPermission(authUserId, owner_id)
 
   await checkSubdivisionNameConflict(plot_id, subdivision.name)
 
@@ -174,7 +174,7 @@ export const selectSubdivisionBySubdivisionId = async (
 
   const owner_id = await getPlotOwnerId(plot_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to view subdivision data denied")
+  await verifyPermission(authUserId, owner_id)
 
   const result = await db.query(`
     SELECT
@@ -222,7 +222,7 @@ export const updateSubdivisionBySubdivisionId = async (
 
   const owner_id = await getPlotOwnerId(plot_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to edit subdivision data denied")
+  await verifyPermission(authUserId, owner_id)
 
   const currentSubdivisionName = await db.query(`
     SELECT name
@@ -280,7 +280,7 @@ export const removeSubdivisionBySubdivisionId = async (
 
   const owner_id = await getPlotOwnerId(plot_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to delete subdivision data denied")
+  await verifyPermission(authUserId, owner_id)
 
   await db.query(`
     DELETE FROM subdivisions
