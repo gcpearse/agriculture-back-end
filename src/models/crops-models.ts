@@ -27,7 +27,7 @@ export const selectCropsByPlotId = async (
 
   const owner_id = await getPlotOwnerId(plot_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to view crop data denied")
+  await verifyPermission(authUserId, owner_id)
 
   await verifyQueryValue(["crop_id", "name", "date_planted", "harvest_date"], sort as string)
 
@@ -129,7 +129,7 @@ export const insertCropByPlotId = async (
 
   const owner_id = await getPlotOwnerId(plot_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to add crop denied")
+  await verifyPermission(authUserId, owner_id)
 
   const isValidCropCategory = await validateCropCategory(crop.category, false)
 
@@ -193,7 +193,7 @@ export const selectCropsBySubdivisionId = async (
 
   const owner_id = await getPlotOwnerId(plot_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to view crop data denied")
+  await verifyPermission(authUserId, owner_id)
 
   await verifyQueryValue(["crop_id", "name", "date_planted", "harvest_date"], sort as string)
 
@@ -293,7 +293,7 @@ export const insertCropBySubdivisionId = async (
 
   const owner_id = await getPlotOwnerId(plot_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to add crop denied")
+  await verifyPermission(authUserId, owner_id)
 
   const isValidCropCategory = await validateCropCategory(crop.category, false)
 
@@ -345,7 +345,7 @@ export const selectCropByCropId = async (
 
   const owner_id = await getCropOwnerId(crop_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to view crop data denied")
+  await verifyPermission(authUserId, owner_id)
 
   const result = await db.query(`
     SELECT
@@ -387,7 +387,7 @@ export const updateCropByCropId = async (
 
   const owner_id = await getCropOwnerId(crop_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to edit crop data denied")
+  await verifyPermission(authUserId, owner_id)
 
   const isValidCropCategory = await validateCropCategory(crop.category, false)
 
@@ -435,7 +435,7 @@ export const removeCropByCropId = async (
 
   const owner_id = await getCropOwnerId(crop_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to delete crop data denied")
+  await verifyPermission(authUserId, owner_id)
 
   await db.query(`
     DELETE FROM crops
@@ -457,12 +457,12 @@ export const updateAssociatedPlotByCropId = async (
 
   let owner_id = await getCropOwnerId(crop_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to move crop denied")
+  await verifyPermission(authUserId, owner_id)
 
   if (plot_id) {
     owner_id = await getPlotOwnerId(plot_id)
 
-    await verifyPermission(authUserId, owner_id, "Permission to move crop denied")
+    await verifyPermission(authUserId, owner_id)
   }
 
   const result = await db.query(`
@@ -490,14 +490,14 @@ export const updateAssociatedSubdivisionByCropId = async (
 
   let owner_id = await getCropOwnerId(crop_id)
 
-  await verifyPermission(authUserId, owner_id, "Permission to move crop denied")
+  await verifyPermission(authUserId, owner_id)
 
   if (subdivision_id) {
     const plot_id = await getSubdivisionPlotId(subdivision_id)
 
     owner_id = await getPlotOwnerId(plot_id)
 
-    await verifyPermission(authUserId, owner_id, "Permission to move crop denied")
+    await verifyPermission(authUserId, owner_id)
 
     const validIds = await db.query(`
       SELECT subdivisions.subdivision_id

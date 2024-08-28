@@ -115,7 +115,7 @@ describe("GET /api/plots/users/:owner_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to view plot data denied"
+      details: "Permission denied"
     })
   })
 
@@ -587,7 +587,7 @@ describe("POST /api/plots/users/:owner_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to create plot denied"
+      details: "Permission denied"
     })
   })
 
@@ -711,7 +711,7 @@ describe("GET /api/plots/users/:owner_id/pinned", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to view pinned plot data denied"
+      details: "Permission denied"
     })
   })
 
@@ -778,7 +778,7 @@ describe("GET /api/plots/:plot_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to view plot data denied"
+      details: "Permission denied"
     })
   })
 
@@ -960,7 +960,7 @@ describe("PATCH /api/plots/:plot_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to edit plot data denied"
+      details: "Permission denied"
     })
   })
 
@@ -1052,7 +1052,7 @@ describe("DELETE /api/plots/:plot_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to delete plot data denied"
+      details: "Permission denied"
     })
   })
 
@@ -1210,7 +1210,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to edit pinned plot data denied"
+      details: "Permission denied"
     })
   })
 

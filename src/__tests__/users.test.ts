@@ -80,7 +80,7 @@ describe("GET /api/users", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to view user data denied"
+      details: "Permission denied"
     })
   })
 })
@@ -403,7 +403,7 @@ describe("GET /api/users/:user_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to view user data denied"
+      details: "Permission denied"
     })
   })
 
@@ -529,7 +529,7 @@ describe("PATCH /api/users/:user_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to edit user data denied"
+      details: "Permission denied"
     })
   })
 
@@ -619,7 +619,7 @@ describe("DELETE /api/users/:user_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to delete user data denied"
+      details: "Permission denied"
     })
   })
 
@@ -730,7 +730,7 @@ describe("PATCH /api/users/:user_id/password", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to edit password denied"
+      details: "Permission denied"
     })
   })
 
@@ -855,7 +855,7 @@ describe("PATCH /api/users/:user_id/role", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to edit user role denied"
+      details: "Permission denied"
     })
   })
 

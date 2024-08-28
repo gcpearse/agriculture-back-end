@@ -107,7 +107,7 @@ describe("GET /api/crops/plots/:plot_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to view crop data denied"
+      details: "Permission denied"
     })
   })
 
@@ -680,7 +680,7 @@ describe("POST /api/crops/plots/:plot_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to add crop denied"
+      details: "Permission denied"
     })
   })
 
@@ -777,7 +777,7 @@ describe("GET /api/crops/subdivisions/:subdivision_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to view crop data denied"
+      details: "Permission denied"
     })
   })
 
@@ -1318,7 +1318,7 @@ describe("POST /api/crops/subdivisions/:subdivision_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to add crop denied"
+      details: "Permission denied"
     })
   })
 
@@ -1391,7 +1391,7 @@ describe("GET /api/crops/:crop_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to view crop data denied"
+      details: "Permission denied"
     })
   })
 
@@ -1552,7 +1552,7 @@ describe("PATCH /api/crops/:crop_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to edit crop data denied"
+      details: "Permission denied"
     })
   })
 
@@ -1623,7 +1623,7 @@ describe("DELETE /api/crops/:crop_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to delete crop data denied"
+      details: "Permission denied"
     })
   })
 
@@ -1735,7 +1735,7 @@ describe("PATCH /api/crops/:crop_id/plot", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to move crop denied"
+      details: "Permission denied"
     })
   })
 
@@ -1753,7 +1753,7 @@ describe("PATCH /api/crops/:crop_id/plot", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to move crop denied"
+      details: "Permission denied"
     })
   })
 
@@ -1913,7 +1913,7 @@ describe("PATCH /api/crops/:crop_id/subdivision", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to move crop denied"
+      details: "Permission denied"
     })
   })
 
@@ -1931,7 +1931,7 @@ describe("PATCH /api/crops/:crop_id/subdivision", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to move crop denied"
+      details: "Permission denied"
     })
   })
 

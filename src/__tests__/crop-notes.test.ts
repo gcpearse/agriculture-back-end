@@ -85,7 +85,7 @@ describe("GET /api/crop_notes/crops/:crop_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to view crop note data denied"
+      details: "Permission denied"
     })
   })
 
@@ -213,7 +213,7 @@ describe("POST /api/crop_notes/crops/:crop_id", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Forbidden",
-      details: "Permission to add crop note denied"
+      details: "Permission denied"
     })
   })
 

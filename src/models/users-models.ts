@@ -26,7 +26,7 @@ export const selectAllUsers = async (
 
   const userRole = await getUserRole(authUserId)
 
-  await verifyPermission(userRole, "admin", "Permission to view user data denied")
+  await verifyPermission(userRole, "admin")
 
   await verifyQueryValue(["user_id", "email", "first_name", "surname"], sort as string)
 
@@ -98,7 +98,7 @@ export const selectUserByUserId = async (
 
   await searchForUserId(user_id)
 
-  await verifyPermission(authUserId, user_id, "Permission to view user data denied")
+  await verifyPermission(authUserId, user_id)
 
   const result = await db.query(`
     SELECT 
@@ -129,7 +129,7 @@ export const updateUserByUserId = async (
 
   await searchForUserId(user_id)
 
-  await verifyPermission(authUserId, user_id, "Permission to edit user data denied")
+  await verifyPermission(authUserId, user_id)
 
   await checkEmailConflict(user.email)
 
@@ -172,7 +172,7 @@ export const removeUserByUserId = async (
 
   await searchForUserId(user_id)
 
-  await verifyPermission(authUserId, user_id, "Permission to delete user data denied")
+  await verifyPermission(authUserId, user_id)
 
   await db.query(`
     DELETE FROM users
@@ -197,7 +197,7 @@ export const updatePasswordByUserId = async (
 
   await searchForUserId(user_id)
 
-  await verifyPermission(authUserId, user_id, "Permission to edit password denied")
+  await verifyPermission(authUserId, user_id)
 
   if (!newPassword) {
     return Promise.reject({
@@ -256,7 +256,7 @@ export const updateRoleByUserId = async (
 
   const userRole = await getUserRole(authUserId)
 
-  await verifyPermission(userRole, "admin", "Permission to edit user role denied")
+  await verifyPermission(userRole, "admin")
 
   const result = await db.query(`
     UPDATE users
