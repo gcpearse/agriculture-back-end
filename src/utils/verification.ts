@@ -13,31 +13,16 @@ export const verifyPagination = (
 }
 
 
-export const verifyValueIsPositiveInt = (
-  value: number
-): Promise<never> | undefined => {
-
-  if (isNaN(value) || value < 1 || Math.floor(value) !== value) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Value must be a positive integer"
-    })
-  }
-}
-
-
 export const verifyPermission = (
   base: string | number,
-  target: string | number,
-  details: string
+  target: string | number
 ): Promise<never> | undefined => {
 
   if (base !== target) {
     return Promise.reject({
       status: 403,
       message: "Forbidden",
-      details
+      details: "Permission denied"
     })
   }
 }
@@ -53,6 +38,20 @@ export const verifyQueryValue = (
       status: 400,
       message: "Bad Request",
       details: "Invalid query value"
+    })
+  }
+}
+
+
+export const verifyValueIsPositiveInt = (
+  value: number
+): Promise<never> | undefined => {
+
+  if (isNaN(value) || value < 1 || Math.floor(value) !== value) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Value must be a positive integer"
     })
   }
 }
