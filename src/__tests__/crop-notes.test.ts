@@ -235,3 +235,63 @@ describe("POST /api/crop_notes/crops/:crop_id", () => {
     })
   })
 })
+
+
+describe("DELETE /api/crop_notes/crops/:crop_id", () => {
+
+  test("DELETE:204 Deletes the crop notes associated with the given crop ID", async () => {
+
+    await request(app)
+      .delete("/api/crop_notes/crops/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(204)
+
+    const { body } = await request(app)
+      .get("/api/crop_notes/crops/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(Array.isArray(body.notes)).toBe(true)
+
+    expect(body.notes).toHaveLength(0)
+  })
+
+  test("DELETE:400 Responds with an error when the crop_id parameter is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/crop_notes/crops/foobar")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Value must be a positive integer"
+    })
+  })
+
+  test("DELETE:403 Responds with an error when the authenticated user attempts to delete another user's crop notes", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/crop_notes/crops/5")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Forbidden",
+      details: "Permission denied"
+    })
+  })
+
+  test("DELETE:404 Responds with an error when the crop does not exist", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/crop_notes/crops/999")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Crop not found"
+    })
+  })
+})
