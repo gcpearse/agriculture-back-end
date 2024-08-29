@@ -312,8 +312,7 @@ export const removePlotByPlotId = async (
 
   await db.query(`
     DELETE FROM plots
-    WHERE plot_id = $1
-    RETURNING *;
+    WHERE plot_id = $1;
     `,
     [plot_id]
   )
