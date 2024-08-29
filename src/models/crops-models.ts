@@ -1,7 +1,7 @@
 import QueryString from "qs"
 import { db } from "../db"
 import { Crop, CropRequest, ExtendedCrop } from "../types/crop-types"
-import { getCropOwnerId, getPlotOwnerId, getSubdivisionPlotId, validateCropCategory } from "../utils/db-queries"
+import { fetchCropOwnerId, fetchPlotOwnerId, fetchSubdivisionPlotId, confirmCropCategoryIsValid } from "../utils/db-queries"
 import { verifyPagination, verifyValueIsPositiveInt, verifyPermission, verifyQueryValue } from "../utils/verification"
 import format from "pg-format"
 
@@ -25,7 +25,7 @@ export const selectCropsByPlotId = async (
 
   await verifyValueIsPositiveInt(+page)
 
-  const owner_id = await getPlotOwnerId(plot_id)
+  const owner_id = await fetchPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id)
 
@@ -33,7 +33,7 @@ export const selectCropsByPlotId = async (
 
   await verifyQueryValue(["asc", "desc"], order as string)
 
-  const isValidCropCategory = await validateCropCategory(category as string, true)
+  const isValidCropCategory = await confirmCropCategoryIsValid(category as string, true)
 
   if (category && !isValidCropCategory) {
     return Promise.reject({
@@ -127,11 +127,11 @@ export const insertCropByPlotId = async (
 
   await verifyValueIsPositiveInt(plot_id)
 
-  const owner_id = await getPlotOwnerId(plot_id)
+  const owner_id = await fetchPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id)
 
-  const isValidCropCategory = await validateCropCategory(crop.category, false)
+  const isValidCropCategory = await confirmCropCategoryIsValid(crop.category, false)
 
   if (!isValidCropCategory) {
     return Promise.reject({
@@ -189,9 +189,9 @@ export const selectCropsBySubdivisionId = async (
 
   await verifyValueIsPositiveInt(+page)
 
-  const plot_id = await getSubdivisionPlotId(subdivision_id)
+  const plot_id = await fetchSubdivisionPlotId(subdivision_id)
 
-  const owner_id = await getPlotOwnerId(plot_id)
+  const owner_id = await fetchPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id)
 
@@ -199,7 +199,7 @@ export const selectCropsBySubdivisionId = async (
 
   await verifyQueryValue(["asc", "desc"], order as string)
 
-  const isValidCropCategory = await validateCropCategory(category as string, true)
+  const isValidCropCategory = await confirmCropCategoryIsValid(category as string, true)
 
   if (category && !isValidCropCategory) {
     return Promise.reject({
@@ -289,13 +289,13 @@ export const insertCropBySubdivisionId = async (
 
   await verifyValueIsPositiveInt(subdivision_id)
 
-  const plot_id = await getSubdivisionPlotId(subdivision_id)
+  const plot_id = await fetchSubdivisionPlotId(subdivision_id)
 
-  const owner_id = await getPlotOwnerId(plot_id)
+  const owner_id = await fetchPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id)
 
-  const isValidCropCategory = await validateCropCategory(crop.category, false)
+  const isValidCropCategory = await confirmCropCategoryIsValid(crop.category, false)
 
   if (!isValidCropCategory) {
     return Promise.reject({
@@ -343,7 +343,7 @@ export const selectCropByCropId = async (
 
   await verifyValueIsPositiveInt(crop_id)
 
-  const owner_id = await getCropOwnerId(crop_id)
+  const owner_id = await fetchCropOwnerId(crop_id)
 
   await verifyPermission(authUserId, owner_id)
 
@@ -385,11 +385,11 @@ export const updateCropByCropId = async (
 
   await verifyValueIsPositiveInt(crop_id)
 
-  const owner_id = await getCropOwnerId(crop_id)
+  const owner_id = await fetchCropOwnerId(crop_id)
 
   await verifyPermission(authUserId, owner_id)
 
-  const isValidCropCategory = await validateCropCategory(crop.category, false)
+  const isValidCropCategory = await confirmCropCategoryIsValid(crop.category, false)
 
   if (!isValidCropCategory) {
     return Promise.reject({
@@ -433,7 +433,7 @@ export const removeCropByCropId = async (
 
   await verifyValueIsPositiveInt(crop_id)
 
-  const owner_id = await getCropOwnerId(crop_id)
+  const owner_id = await fetchCropOwnerId(crop_id)
 
   await verifyPermission(authUserId, owner_id)
 
@@ -454,12 +454,12 @@ export const updateAssociatedPlotByCropId = async (
 
   await verifyValueIsPositiveInt(crop_id)
 
-  let owner_id = await getCropOwnerId(crop_id)
+  let owner_id = await fetchCropOwnerId(crop_id)
 
   await verifyPermission(authUserId, owner_id)
 
   if (plot_id) {
-    owner_id = await getPlotOwnerId(plot_id)
+    owner_id = await fetchPlotOwnerId(plot_id)
 
     await verifyPermission(authUserId, owner_id)
   }
@@ -487,14 +487,14 @@ export const updateAssociatedSubdivisionByCropId = async (
 
   await verifyValueIsPositiveInt(crop_id)
 
-  let owner_id = await getCropOwnerId(crop_id)
+  let owner_id = await fetchCropOwnerId(crop_id)
 
   await verifyPermission(authUserId, owner_id)
 
   if (subdivision_id) {
-    const plot_id = await getSubdivisionPlotId(subdivision_id)
+    const plot_id = await fetchSubdivisionPlotId(subdivision_id)
 
-    owner_id = await getPlotOwnerId(plot_id)
+    owner_id = await fetchPlotOwnerId(plot_id)
 
     await verifyPermission(authUserId, owner_id)
 

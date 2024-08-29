@@ -1,6 +1,6 @@
 import QueryString from "qs"
 import { db } from "../db"
-import { checkSubdivisionNameConflict, getPlotOwnerId, getSubdivisionPlotId, validateSubdivisionType } from "../utils/db-queries"
+import { checkForSubdivisionNameConflict, fetchPlotOwnerId, fetchSubdivisionPlotId, confirmSubdivisionTypeIsValid } from "../utils/db-queries"
 import { verifyPermission, verifyValueIsPositiveInt, verifyQueryValue, verifyPagination } from "../utils/verification"
 import { ExtendedSubdivision, Subdivision, SubdivisionRequest } from "../types/subdivision-types"
 import format from "pg-format"
@@ -25,7 +25,7 @@ export const selectSubdivisionsByPlotId = async (
 
   await verifyValueIsPositiveInt(+page)
 
-  const owner_id = await getPlotOwnerId(plot_id)
+  const owner_id = await fetchPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id)
 
@@ -33,7 +33,7 @@ export const selectSubdivisionsByPlotId = async (
 
   await verifyQueryValue(["asc", "desc"], order as string)
 
-  const isValidSubdivisionType = await validateSubdivisionType(type as string, true)
+  const isValidSubdivisionType = await confirmSubdivisionTypeIsValid(type as string, true)
 
   if (type && !isValidSubdivisionType) {
     return Promise.reject({
@@ -122,13 +122,13 @@ export const insertSubdivisionByPlotId = async (
 
   await verifyValueIsPositiveInt(plot_id)
 
-  const owner_id = await getPlotOwnerId(plot_id)
+  const owner_id = await fetchPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id)
 
-  await checkSubdivisionNameConflict(plot_id, subdivision.name)
+  await checkForSubdivisionNameConflict(plot_id, subdivision.name)
 
-  const isValidSubdivisionType = await validateSubdivisionType(subdivision.type as string, false)
+  const isValidSubdivisionType = await confirmSubdivisionTypeIsValid(subdivision.type as string, false)
 
   if (!isValidSubdivisionType) {
     return Promise.reject({
@@ -170,9 +170,9 @@ export const selectSubdivisionBySubdivisionId = async (
 
   await verifyValueIsPositiveInt(subdivision_id)
 
-  const plot_id = await getSubdivisionPlotId(subdivision_id)
+  const plot_id = await fetchSubdivisionPlotId(subdivision_id)
 
-  const owner_id = await getPlotOwnerId(plot_id)
+  const owner_id = await fetchPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id)
 
@@ -218,9 +218,9 @@ export const updateSubdivisionBySubdivisionId = async (
 
   await verifyValueIsPositiveInt(subdivision_id)
 
-  const plot_id = await getSubdivisionPlotId(subdivision_id)
+  const plot_id = await fetchSubdivisionPlotId(subdivision_id)
 
-  const owner_id = await getPlotOwnerId(plot_id)
+  const owner_id = await fetchPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id)
 
@@ -233,10 +233,10 @@ export const updateSubdivisionBySubdivisionId = async (
   )
 
   if (currentSubdivisionName.rows[0].name !== subdivision.name) {
-    await checkSubdivisionNameConflict(plot_id, subdivision.name)
+    await checkForSubdivisionNameConflict(plot_id, subdivision.name)
   }
 
-  const isValidSubdivisionType = await validateSubdivisionType(subdivision.type, false)
+  const isValidSubdivisionType = await confirmSubdivisionTypeIsValid(subdivision.type, false)
 
   if (!isValidSubdivisionType) {
     return Promise.reject({
@@ -276,9 +276,9 @@ export const removeSubdivisionBySubdivisionId = async (
 
   await verifyValueIsPositiveInt(subdivision_id)
 
-  const plot_id = await getSubdivisionPlotId(subdivision_id)
+  const plot_id = await fetchSubdivisionPlotId(subdivision_id)
 
-  const owner_id = await getPlotOwnerId(plot_id)
+  const owner_id = await fetchPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id)
 

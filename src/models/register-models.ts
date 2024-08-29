@@ -1,7 +1,7 @@
 import format from "pg-format"
 import { db } from "../db"
 import { SecureUser, User } from "../types/user-types"
-import { checkEmailConflict } from "../utils/db-queries"
+import { checkForEmailConflict } from "../utils/db-queries"
 import { generateHash } from "../middleware/security"
 
 
@@ -32,7 +32,7 @@ export const registerUser = async (
     })
   }
 
-  await checkEmailConflict(email)
+  await checkForEmailConflict(email)
 
   const hashedPassword = await generateHash(password)
 

@@ -3,7 +3,7 @@ import { db } from "../db"
 import { compareHash, generateHash } from "../middleware/security"
 import { StatusResponse } from "../types/response-types"
 import { PasswordUpdate, SecureUser } from "../types/user-types"
-import { checkEmailConflict, getUserRole, searchForUserId, validateUnitSystem, validateUserRole } from "../utils/db-queries"
+import { checkForEmailConflict, fetchUserRole, searchForUserId, confirmUnitSystemIsValid, confirmUserRoleIsValid } from "../utils/db-queries"
 import { verifyPagination, verifyValueIsPositiveInt, verifyPermission, verifyQueryValue } from "../utils/verification"
 import format from "pg-format"
 
@@ -24,7 +24,7 @@ export const selectAllUsers = async (
 
   await verifyValueIsPositiveInt(+page)
 
-  const userRole = await getUserRole(authUserId)
+  const userRole = await fetchUserRole(authUserId)
 
   await verifyPermission(userRole, "admin")
 
@@ -52,7 +52,7 @@ export const selectAllUsers = async (
   `
 
   if (role) {
-    await validateUserRole(role as string)
+    await confirmUserRoleIsValid(role as string)
 
     query += format(`
       AND users.role::VARCHAR ILIKE %L
@@ -63,7 +63,7 @@ export const selectAllUsers = async (
   }
 
   if (unit_system) {
-    await validateUnitSystem(unit_system as string)
+    await confirmUnitSystemIsValid(unit_system as string)
 
     query += format(`
       AND users.unit_system::VARCHAR ILIKE %L
@@ -131,7 +131,7 @@ export const updateUserByUserId = async (
 
   await verifyPermission(authUserId, user_id)
 
-  await checkEmailConflict(user.email)
+  await checkForEmailConflict(user.email)
 
   const result = await db.query(`
     UPDATE users
@@ -253,7 +253,7 @@ export const updateRoleByUserId = async (
 
   await searchForUserId(user_id)
 
-  const userRole = await getUserRole(authUserId)
+  const userRole = await fetchUserRole(authUserId)
 
   await verifyPermission(userRole, "admin")
 
