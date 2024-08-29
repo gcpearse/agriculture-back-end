@@ -1,7 +1,7 @@
 import format from "pg-format"
 import { db } from "../db"
 import { CropNote } from "../types/note-types"
-import { getCropOwnerId } from "../utils/db-queries"
+import { getCropNoteCropId, getCropOwnerId } from "../utils/db-queries"
 import { verifyPermission, verifyValueIsPositiveInt } from "../utils/verification"
 
 
@@ -76,5 +76,27 @@ export const removeCropNotesByCropId = async (
     WHERE crop_id = $1;
     `,
     [crop_id]
+  )
+}
+
+
+export const removeCropNoteByNoteId = async (
+  authUserId: number,
+  note_id: number
+): Promise<void> => {
+
+  await verifyValueIsPositiveInt(note_id)
+
+  const crop_id = await getCropNoteCropId(note_id)
+
+  const owner_id = await getCropOwnerId(crop_id)
+
+  await verifyPermission(authUserId, owner_id)
+
+  await db.query(`
+    DELETE FROM crop_notes
+    WHERE note_id = $1;
+    `,
+    [note_id]
   )
 }
