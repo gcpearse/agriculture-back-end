@@ -2,7 +2,7 @@ import QueryString from "qs"
 import { db } from "../db"
 import format from "pg-format"
 import { ExtendedPlot, Plot, PlotRequest } from "../types/plot-types"
-import { checkPlotNameConflict, getPlotOwnerId, searchForUserId, validatePlotType } from "../utils/db-queries"
+import { checkForPlotNameConflict, fetchPlotOwnerId, searchForUserId, confirmPlotTypeIsValid } from "../utils/db-queries"
 import { verifyPermission, verifyValueIsPositiveInt, verifyPagination, verifyQueryValue } from "../utils/verification"
 import { StatusResponse } from "../types/response-types"
 
@@ -34,7 +34,7 @@ export const selectPlotsByOwner = async (
 
   await verifyQueryValue(["asc", "desc"], order as string)
 
-  const isValidPlotType = await validatePlotType(type as string, true)
+  const isValidPlotType = await confirmPlotTypeIsValid(type as string, true)
 
   if (type && !isValidPlotType) {
     return Promise.reject({
@@ -131,9 +131,9 @@ export const insertPlotByOwner = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  await checkPlotNameConflict(owner_id, plot.name)
+  await checkForPlotNameConflict(owner_id, plot.name)
 
-  const isValidPlotType = await validatePlotType(plot.type, false)
+  const isValidPlotType = await confirmPlotTypeIsValid(plot.type, false)
 
   if (!isValidPlotType) {
     return Promise.reject({
@@ -202,7 +202,7 @@ export const selectPlotByPlotId = async (
 
   await verifyValueIsPositiveInt(plot_id)
 
-  const owner_id = await getPlotOwnerId(plot_id)
+  const owner_id = await fetchPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id)
 
@@ -248,7 +248,7 @@ export const updatePlotByPlotId = async (
 
   await verifyValueIsPositiveInt(plot_id)
 
-  const owner_id = await getPlotOwnerId(plot_id)
+  const owner_id = await fetchPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id)
 
@@ -261,10 +261,10 @@ export const updatePlotByPlotId = async (
   )
 
   if (currentPlotName.rows[0].name !== plot.name) {
-    await checkPlotNameConflict(owner_id, plot.name)
+    await checkForPlotNameConflict(owner_id, plot.name)
   }
 
-  const isValidPlotType = await validatePlotType(plot.type, false)
+  const isValidPlotType = await confirmPlotTypeIsValid(plot.type, false)
 
   if (!isValidPlotType) {
     return Promise.reject({
@@ -306,7 +306,7 @@ export const removePlotByPlotId = async (
 
   await verifyValueIsPositiveInt(plot_id)
 
-  const owner_id = await getPlotOwnerId(plot_id)
+  const owner_id = await fetchPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id)
 
@@ -327,7 +327,7 @@ export const updateIsPinnedByPlotId = async (
 
   await verifyValueIsPositiveInt(plot_id)
 
-  const owner_id = await getPlotOwnerId(plot_id)
+  const owner_id = await fetchPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id)
 

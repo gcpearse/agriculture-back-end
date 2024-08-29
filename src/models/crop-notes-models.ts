@@ -1,7 +1,7 @@
 import format from "pg-format"
 import { db } from "../db"
 import { CropNote } from "../types/note-types"
-import { getCropNoteCropId, getCropOwnerId } from "../utils/db-queries"
+import { fetchCropNoteCropId, fetchCropOwnerId } from "../utils/db-queries"
 import { verifyPermission, verifyValueIsPositiveInt } from "../utils/verification"
 
 
@@ -12,7 +12,7 @@ export const selectCropNotesByCropId = async (
 
   await verifyValueIsPositiveInt(crop_id)
 
-  const owner_id = await getCropOwnerId(crop_id)
+  const owner_id = await fetchCropOwnerId(crop_id)
 
   await verifyPermission(authUserId, owner_id)
 
@@ -37,7 +37,7 @@ export const insertCropNoteByCropId = async (
 
   await verifyValueIsPositiveInt(crop_id)
 
-  const owner_id = await getCropOwnerId(crop_id)
+  const owner_id = await fetchCropOwnerId(crop_id)
 
   await verifyPermission(authUserId, owner_id)
 
@@ -67,7 +67,7 @@ export const removeCropNotesByCropId = async (
 
   await verifyValueIsPositiveInt(crop_id)
 
-  const owner_id = await getCropOwnerId(crop_id)
+  const owner_id = await fetchCropOwnerId(crop_id)
 
   await verifyPermission(authUserId, owner_id)
 
@@ -87,9 +87,9 @@ export const removeCropNoteByNoteId = async (
 
   await verifyValueIsPositiveInt(note_id)
 
-  const crop_id = await getCropNoteCropId(note_id)
+  const crop_id = await fetchCropNoteCropId(note_id)
 
-  const owner_id = await getCropOwnerId(crop_id)
+  const owner_id = await fetchCropOwnerId(crop_id)
 
   await verifyPermission(authUserId, owner_id)
 
