@@ -297,7 +297,7 @@ describe("DELETE /api/crop_notes/crops/:crop_id", () => {
 })
 
 
-describe("DELETE /api/crop_notes/crops/:crop_id", () => {
+describe("DELETE /api/crop_notes/:note_id", () => {
 
   test("DELETE:204 Deletes the crop note with the given note ID", async () => {
 
@@ -320,7 +320,7 @@ describe("DELETE /api/crop_notes/crops/:crop_id", () => {
     })
   })
 
-  test("DELETE:403 Responds with an error when the authenticated user attempts to delete another user's crop notes", async () => {
+  test("DELETE:403 Responds with an error when the authenticated user attempts to delete another user's crop note", async () => {
 
     const { body } = await request(app)
       .delete("/api/crop_notes/5")
@@ -333,16 +333,16 @@ describe("DELETE /api/crop_notes/crops/:crop_id", () => {
     })
   })
 
-  test("DELETE:404 Responds with an error when the crop does not exist", async () => {
+  test("DELETE:404 Responds with an error when the crop note does not exist", async () => {
 
     const { body } = await request(app)
-      .delete("/api/crop_notes/crops/999")
+      .delete("/api/crop_notes/999")
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
-      details: "Crop not found"
+      details: "Crop note not found"
     })
   })
 })
