@@ -284,8 +284,7 @@ export const removeSubdivisionBySubdivisionId = async (
 
   await db.query(`
     DELETE FROM subdivisions
-    WHERE subdivision_id = $1
-    RETURNING *;
+    WHERE subdivision_id = $1;
     `,
     [subdivision_id]
   )

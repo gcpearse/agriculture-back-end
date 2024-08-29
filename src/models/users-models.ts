@@ -176,8 +176,7 @@ export const removeUserByUserId = async (
 
   await db.query(`
     DELETE FROM users
-    WHERE user_id = $1
-    RETURNING *;
+    WHERE user_id = $1;
     `,
     [user_id]
   )

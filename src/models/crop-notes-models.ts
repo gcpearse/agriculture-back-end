@@ -73,8 +73,7 @@ export const removeCropNotesByCropId = async (
 
   await db.query(`
     DELETE FROM crop_notes
-    WHERE crop_id = $1
-    RETURNING *;
+    WHERE crop_id = $1;
     `,
     [crop_id]
   )
