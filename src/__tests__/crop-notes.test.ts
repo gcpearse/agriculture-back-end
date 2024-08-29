@@ -137,7 +137,7 @@ describe("POST /api/crop_notes/crops/:crop_id", () => {
       .expect(201)
 
     expect(body.note).toMatchObject<CropNote>({
-      note_id: 5,
+      note_id: 6,
       crop_id: 1,
       body: "These carrots are ready to harvest.",
       created_at: expect.stringMatching(regex)
@@ -158,7 +158,7 @@ describe("POST /api/crop_notes/crops/:crop_id", () => {
       .expect(201)
 
     expect(body.note).toMatchObject<CropNote>({
-      note_id: 5,
+      note_id: 6,
       crop_id: 1,
       body: "These carrots are ready to harvest.",
       created_at: expect.stringMatching(regex)
@@ -292,6 +292,57 @@ describe("DELETE /api/crop_notes/crops/:crop_id", () => {
     expect(body).toMatchObject<StatusResponse>({
       message: "Not Found",
       details: "Crop not found"
+    })
+  })
+})
+
+
+describe("DELETE /api/crop_notes/:note_id", () => {
+
+  test("DELETE:204 Deletes the crop note with the given note ID", async () => {
+
+    await request(app)
+      .delete("/api/crop_notes/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(204)
+  })
+
+  test("DELETE:400 Responds with an error when the note_id parameter is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/crop_notes/foobar")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Value must be a positive integer"
+    })
+  })
+
+  test("DELETE:403 Responds with an error when the authenticated user attempts to delete another user's crop note", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/crop_notes/5")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Forbidden",
+      details: "Permission denied"
+    })
+  })
+
+  test("DELETE:404 Responds with an error when the crop note does not exist", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/crop_notes/999")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Crop note not found"
     })
   })
 })

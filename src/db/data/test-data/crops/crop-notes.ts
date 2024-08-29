@@ -21,5 +21,10 @@ export const cropNoteData: CropNote[] = [
     crop_id: 4,
     body: "Too many for one person to harvest.",
     created_at: "2024-08-20 09:33:12.232"
+  },
+  {
+    crop_id: 5,
+    body: "These peaches are ripening quickly.",
+    created_at: "2024-08-29 10:23:44.192"
   }
 ]
