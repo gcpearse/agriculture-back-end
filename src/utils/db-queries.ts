@@ -1,7 +1,7 @@
 import { db } from "../db"
 
 
-export const checkEmailConflict = async (
+export const checkForEmailConflict = async (
   email: string
 ): Promise<undefined> => {
 
@@ -23,7 +23,7 @@ export const checkEmailConflict = async (
 }
 
 
-export const checkPlotNameConflict = async (
+export const checkForPlotNameConflict = async (
   owner_id: number,
   name: string
 ): Promise<undefined> => {
@@ -47,7 +47,7 @@ export const checkPlotNameConflict = async (
 }
 
 
-export const checkSubdivisionNameConflict = async (
+export const checkForSubdivisionNameConflict = async (
   plot_id: number,
   name: string
 ): Promise<undefined> => {
@@ -71,7 +71,7 @@ export const checkSubdivisionNameConflict = async (
 }
 
 
-export const getCropNoteCropId = async (
+export const fetchCropNoteCropId = async (
   note_id: number
 ): Promise<number> => {
 
@@ -95,7 +95,7 @@ export const getCropNoteCropId = async (
 }
 
 
-export const getCropOwnerId = async (
+export const fetchCropOwnerId = async (
   crop_id: number
 ): Promise<number> => {
 
@@ -121,7 +121,7 @@ export const getCropOwnerId = async (
 }
 
 
-export const getPlotOwnerId = async (
+export const fetchPlotOwnerId = async (
   plot_id: number
 ): Promise<number> => {
 
@@ -145,7 +145,7 @@ export const getPlotOwnerId = async (
 }
 
 
-export const getSubdivisionPlotId = async (
+export const fetchSubdivisionPlotId = async (
   subdivision_id: number
 ): Promise<number> => {
 
@@ -169,7 +169,7 @@ export const getSubdivisionPlotId = async (
 }
 
 
-export const getUserRole = async (
+export const fetchUserRole = async (
   user_id: number
 ): Promise<string> => {
 
@@ -214,7 +214,7 @@ export const searchForUserId = async (
 }
 
 
-export const validateCropCategory = async (
+export const confirmCropCategoryIsValid = async (
   category: string,
   ignoreCase: boolean
 ): Promise<boolean> => {
@@ -231,7 +231,7 @@ export const validateCropCategory = async (
 }
 
 
-export const validatePlotType = async (
+export const confirmPlotTypeIsValid = async (
   type: string,
   ignoreCase: boolean
 ): Promise<boolean> => {
@@ -248,7 +248,7 @@ export const validatePlotType = async (
 }
 
 
-export const validateSubdivisionType = async (
+export const confirmSubdivisionTypeIsValid = async (
   type: string,
   ignoreCase: boolean
 ): Promise<boolean> => {
@@ -265,7 +265,7 @@ export const validateSubdivisionType = async (
 }
 
 
-export const validateUnitSystem = async (
+export const confirmUnitSystemIsValid = async (
   unit_system: string
 ): Promise<undefined> => {
 
@@ -287,7 +287,7 @@ export const validateUnitSystem = async (
 }
 
 
-export const validateUserRole = async (
+export const confirmUserRoleIsValid = async (
   role: string
 ): Promise<undefined> => {
 
