@@ -1,13 +1,12 @@
+# Environment
+.env.*
+
 # Node
 node_modules
 
-# Dotenv
-
-.env.*
+# Notes and templates
+notes*
+templates*
 
 # Output directory
 /dist
-
-# Other
-notes*
-templates*
