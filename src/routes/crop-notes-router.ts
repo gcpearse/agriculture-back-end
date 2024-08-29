@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { deleteCropNotesByCropId, getCropNotesByCropId, postCropNoteByCropId } from "../controllers/crop-notes-controllers"
+import { deleteCropNoteByNoteId, deleteCropNotesByCropId, getCropNotesByCropId, postCropNoteByCropId } from "../controllers/crop-notes-controllers"
 
 
 export const cropNotesRouter = Router()
@@ -154,3 +154,46 @@ cropNotesRouter.route("/crop_notes/crops/:crop_id")
  *              $ref: "#/components/schemas/NotFound"
  */
   .delete(verifyToken, deleteCropNotesByCropId)
+
+
+cropNotesRouter.route("/crop_notes/:note_id")
+
+
+/**
+ * @swagger
+ * /api/crop_notes/{note_id}}:
+ *  delete:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Delete a crop note from the database
+ *    description: Removes the crop note from the database. If the note_id parameter is invalid, the server responds with an error. Permission is denied when the crop note does not belong to the user.
+ *    tags: [Crop notes]
+ *    parameters:
+ *      - in: path
+ *        name: note_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *    responses:
+ *      204:
+ *        description: No Content
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/BadRequest"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Forbidden"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/NotFound"
+ */
+  .delete(verifyToken, deleteCropNoteByNoteId)
