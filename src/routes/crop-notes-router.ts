@@ -161,7 +161,7 @@ cropNotesRouter.route("/crop_notes/:note_id")
 
 /**
  * @swagger
- * /api/crop_notes/{note_id}}:
+ * /api/crop_notes/{note_id}:
  *  delete:
  *    security:
  *      - bearerAuth: []
