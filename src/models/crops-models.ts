@@ -339,7 +339,7 @@ export const insertCropBySubdivisionId = async (
 export const selectCropByCropId = async (
   authUserId: number,
   crop_id: number
-): Promise<Crop> => {
+): Promise<ExtendedCrop> => {
 
   await verifyValueIsPositiveInt(crop_id)
 

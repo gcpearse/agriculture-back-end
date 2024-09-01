@@ -1,6 +1,6 @@
 import { NextFunction, Response } from "express"
 import { ExtendedRequest } from "../types/auth-types"
-import { insertCropNoteByCropId, removeCropNoteByNoteId, removeCropNotesByCropId, selectCropNotesByCropId } from "../models/crop-notes-models"
+import { insertCropNoteByCropId, removeCropNoteByNoteId, removeCropNotesByCropId, selectCropNotesByCropId, updateCropNoteByNoteId } from "../models/crop-notes-models"
 
 
 export const getCropNotesByCropId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
@@ -42,6 +42,21 @@ export const deleteCropNotesByCropId = async (req: ExtendedRequest, res: Respons
   try {
     await removeCropNotesByCropId(authUserId, +crop_id)
     res.status(204).send()
+  } catch (err) {
+    next(err)
+  }
+}
+
+
+export const patchCropNoteByNoteId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
+
+  const authUserId = req.user!.user_id
+
+  const { note_id } = req.params
+
+  try {
+    const note = await updateCropNoteByNoteId(authUserId, +note_id, req.body)
+    res.status(200).send({ note })
   } catch (err) {
     next(err)
   }

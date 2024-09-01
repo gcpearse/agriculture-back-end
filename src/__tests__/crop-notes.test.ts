@@ -297,6 +297,100 @@ describe("DELETE /api/crop_notes/crops/:crop_id", () => {
 })
 
 
+describe("PATCH /api/crop_notes/:note_id", () => {
+
+  test("PATCH:200 Responds with an updated crop note object", async () => {
+
+    const newDetails = {
+      body: "These will need a lot more water."
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crop_notes/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.note).toMatchObject<CropNote>({
+      note_id: 1,
+      crop_id: 1,
+      body: "These will need a lot more water.",
+      created_at: expect.stringMatching(regex)
+    })
+  })
+
+  test("PATCH:400 Responds with an error when a required property is missing from the request body", async () => {
+
+    const newDetails = {}
+
+    const { body } = await request(app)
+      .patch("/api/crop_notes/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Not null violation"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when the note_id parameter is not a positive integer", async () => {
+
+    const newDetails = {
+      body: "These will need a lot more water."
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crop_notes/foobar")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Value must be a positive integer"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when the crop note does not belong to the authenticated user", async () => {
+
+    const newDetails = {
+      body: "These will need a lot more water."
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crop_notes/5")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Forbidden",
+      details: "Permission denied"
+    })
+  })
+
+  test("PATCH:404 Responds with an error when the crop note does not exist", async () => {
+
+    const newDetails = {
+      body: "These will need a lot more water."
+    }
+
+    const { body } = await request(app)
+      .patch("/api/crop_notes/999")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Crop note not found"
+    })
+  })
+})
+
+
 describe("DELETE /api/crop_notes/:note_id", () => {
 
   test("DELETE:204 Deletes the crop note with the given note ID", async () => {
