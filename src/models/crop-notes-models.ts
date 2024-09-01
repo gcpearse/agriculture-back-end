@@ -84,7 +84,7 @@ export const updateCropNoteByNoteId = async (
   authUserId: number,
   note_id: number,
   note: { body: string }
-) => {
+): Promise<CropNote> => {
 
   await verifyValueIsPositiveInt(note_id)
 
