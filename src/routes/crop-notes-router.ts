@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { deleteCropNoteByNoteId, deleteCropNotesByCropId, getCropNotesByCropId, postCropNoteByCropId } from "../controllers/crop-notes-controllers"
+import { deleteCropNoteByNoteId, deleteCropNotesByCropId, getCropNotesByCropId, patchCropNoteByNoteId, postCropNoteByCropId } from "../controllers/crop-notes-controllers"
 
 
 export const cropNotesRouter = Router()
@@ -157,6 +157,63 @@ cropNotesRouter.route("/crop_notes/crops/:crop_id")
 
 
 cropNotesRouter.route("/crop_notes/:note_id")
+
+
+/**
+ * @swagger
+ * /api/crop_notes/{note_id}:
+ *  patch:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Update a crop note
+ *    description: Responds with an updated crop note object. If the request body or note_id parameter is invalid, the server responds with an error. Permission is denied when the crop note does not belong to the user.
+ *    tags: [Crop notes]
+ *    parameters:
+ *      - in: path
+ *        name: note_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              body:
+ *                type: string
+ *                example: These will need more water in future.
+ *    responses:
+ *      200:
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                crop:
+ *                  $ref: "#/components/schemas/CropNote"
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/BadRequest"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Forbidden"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/NotFound"
+ */
+  .patch(verifyToken, patchCropNoteByNoteId)
 
 
 /**
