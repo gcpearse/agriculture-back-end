@@ -32,7 +32,7 @@ export const selectCropNotesByCropId = async (
 export const insertCropNoteByCropId = async (
   authUserId: number,
   crop_id: number,
-  note: { body: string}
+  note: { body: string }
 ): Promise<CropNote> => {
 
   await verifyValueIsPositiveInt(crop_id)
@@ -77,6 +77,34 @@ export const removeCropNotesByCropId = async (
     `,
     [crop_id]
   )
+}
+
+
+export const updateCropNoteByNoteId = async (
+  authUserId: number,
+  note_id: number,
+  note: { body: string }
+) => {
+
+  await verifyValueIsPositiveInt(note_id)
+
+  const crop_id = await fetchCropNoteCropId(note_id)
+
+  const owner_id = await fetchCropOwnerId(crop_id)
+
+  await verifyPermission(authUserId, owner_id)
+
+  const result = await db.query(`
+    UPDATE crop_notes
+    SET
+      body = $1
+    WHERE note_id = $2
+    RETURNING *;
+    `,
+    [note.body, note_id]
+  )
+
+  return result.rows[0]
 }
 
 
