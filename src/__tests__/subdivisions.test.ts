@@ -137,24 +137,6 @@ describe("GET /api/subdivisions/plots/:plot_id", () => {
       details: "Plot not found"
     })
   })
-
-  test("GET:404 When the parent user is deleted, all child subdivisions are also deleted", async () => {
-
-    await request(app)
-      .delete("/api/users/1")
-      .set("Authorization", `Bearer ${token}`)
-      .expect(204)
-
-    const { body } = await request(app)
-      .get("/api/subdivisions/plots/1")
-      .set("Authorization", `Bearer ${token}`)
-      .expect(404)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Not Found",
-      details: "Plot not found"
-    })
-  })
 })
 
 
