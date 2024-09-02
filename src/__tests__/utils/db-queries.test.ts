@@ -68,9 +68,7 @@ describe("fetchCropNoteCropId", () => {
 
   test("Returns the crop ID associated with the crop note", async () => {
 
-    const result = await fetchCropNoteCropId(1)
-
-    expect(result).toBe(1)
+    await expect(fetchCropNoteCropId(1)).resolves.toBe(1)
   })
 
   test("When the crop note does not exist, the promise is rejected", async () => {
@@ -88,9 +86,7 @@ describe("fetchCropOwnerId", () => {
 
   test("Returns the owner ID associated with the crop", async () => {
 
-    const result = await fetchCropOwnerId(1)
-
-    expect(result).toBe(1)
+    await expect(fetchCropOwnerId(1)).resolves.toBe(1)
   })
 
   test("When the crop does not exist, the promise is rejected", async () => {
@@ -108,9 +104,7 @@ describe("fetchPlotOwnerId", () => {
 
   test("Returns the owner ID associated with the plot", async () => {
 
-    const result = await fetchPlotOwnerId(1)
-
-    expect(result).toBe(1)
+    await expect(fetchPlotOwnerId(1)).resolves.toBe(1)
   })
 
   test("When the plot does not exist, the promise is rejected", async () => {
@@ -128,9 +122,7 @@ describe("fetchSubdivisionPlotId", () => {
 
   test("Returns the plot ID associated with the subdivision", async () => {
 
-    const result = await fetchSubdivisionPlotId(1)
-
-    expect(result).toBe(1)
+    await expect(fetchSubdivisionPlotId(1)).resolves.toBe(1)
   })
 
   test("When the subdivision does not exist, the promise is rejected", async () => {
@@ -148,9 +140,7 @@ describe("fetchUserRole", () => {
 
   test("Returns the role of the user with the given user ID", async () => {
 
-    const result = await fetchUserRole(1)
-
-    expect(result).toBe("admin")
+    await expect(fetchUserRole(1)).resolves.toBe("admin")
   })
 
   test("When the user does not exist, the promise is rejected", async () => {
@@ -186,16 +176,12 @@ describe("confirmCropCategoryIsValid", () => {
 
   test("Returns true when the crop category is valid with case-insensitivity enabled", async () => {
 
-    const result = await confirmCropCategoryIsValid("fruits", true)
-
-    expect(result).toBe(true)
+    await expect(confirmCropCategoryIsValid("fruits", true)).resolves.toBe(true)
   })
 
   test("Returns false when the crop category is invalid", async () => {
 
-    const result = await confirmCropCategoryIsValid("fruits", false)
-
-    expect(result).toBe(false)
+    await expect(confirmCropCategoryIsValid("fruits", false)).resolves.toBe(false)
   })
 })
 
@@ -204,16 +190,12 @@ describe("confirmPlotTypeIsValid", () => {
 
   test("Returns true when the plot type is valid with case-insensitivity enabled", async () => {
 
-    const result = await confirmPlotTypeIsValid("field", true)
-
-    expect(result).toBe(true)
+    await expect(confirmPlotTypeIsValid("field", true)).resolves.toBe(true)
   })
 
   test("Returns false when the plot type is invalid", async () => {
 
-    const result = await confirmPlotTypeIsValid("field", false)
-
-    expect(result).toBe(false)
+    await expect(confirmPlotTypeIsValid("field", false)).resolves.toBe(false)
   })
 })
 
@@ -222,16 +204,12 @@ describe("confirmSubdivisionTypeIsValid", () => {
 
   test("Returns true when the plot type is valid with case-insensitivity enabled", async () => {
 
-    const result = await confirmSubdivisionTypeIsValid("bed", true)
-
-    expect(result).toBe(true)
+    await expect(confirmSubdivisionTypeIsValid("bed", true)).resolves.toBe(true)
   })
 
   test("Returns false when the plot type is invalid", async () => {
 
-    const result = await confirmSubdivisionTypeIsValid("bed", false)
-
-    expect(result).toBe(false)
+    await expect(confirmSubdivisionTypeIsValid("bed", false)).resolves.toBe(false)
   })
 })
 
