@@ -1,7 +1,7 @@
 import data from "../../db/data/test-data/test-index"
 import { db } from "../../db"
 import { seed } from "../../db/seeding/seed"
-import { checkForEmailConflict, checkForPlotNameConflict, checkForSubdivisionNameConflict, fetchCropOwnerId, fetchPlotOwnerId, fetchSubdivisionPlotId, fetchUserRole, searchForUserId, confirmCropCategoryIsValid, confirmPlotTypeIsValid, confirmSubdivisionTypeIsValid, confirmUnitSystemIsValid, confirmUserRoleIsValid } from "../../utils/db-queries"
+import { checkForEmailConflict, checkForPlotNameConflict, checkForSubdivisionNameConflict, fetchCropOwnerId, fetchPlotOwnerId, fetchSubdivisionPlotId, fetchUserRole, searchForUserId, confirmCropCategoryIsValid, confirmPlotTypeIsValid, confirmSubdivisionTypeIsValid, confirmUnitSystemIsValid, confirmUserRoleIsValid, fetchCropNoteCropId } from "../../utils/db-queries"
 import { StatusResponse } from "../../types/response-types"
 
 
@@ -60,6 +60,26 @@ describe("checkForSubdivisionNameConflict", () => {
   test("When no subdivision name conflict is found, the promise resolves to be undefined", async () => {
 
     await expect(checkForSubdivisionNameConflict(1, "Foobar")).resolves.toBeUndefined()
+  })
+})
+
+
+describe("fetchCropNoteCropId", () => {
+
+  test("Returns the crop ID associated with the crop note", async () => {
+
+    const result = await fetchCropNoteCropId(1)
+
+    expect(result).toBe(1)
+  })
+
+  test("When the crop note does not exist, the promise is rejected", async () => {
+
+    await expect(fetchCropNoteCropId(999)).rejects.toMatchObject<StatusResponse>({
+      status: 404,
+      message: "Not Found",
+      details: "Crop note not found"
+    })
   })
 })
 
