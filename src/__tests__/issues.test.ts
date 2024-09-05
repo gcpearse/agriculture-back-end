@@ -3,7 +3,7 @@ import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
-import { Issue } from "../types/issue-types"
+import { ExtendedIssue } from "../types/issue-types"
 import { toBeOneOf } from 'jest-extended'
 import { StatusResponse } from "../types/response-types"
 expect.extend({ toBeOneOf })
@@ -41,7 +41,7 @@ describe("GET /api/issues/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedIssues = [...body.issues].sort((a: Issue, b: Issue) => {
+    const sortedIssues = [...body.issues].sort((a: ExtendedIssue, b: ExtendedIssue) => {
       if (a.issue_id! < b.issue_id!) return 1
       if (a.issue_id! > b.issue_id!) return -1
       return 0
@@ -50,14 +50,17 @@ describe("GET /api/issues/plots/:plot_id", () => {
     expect(body.issues).toEqual(sortedIssues)
 
     for (const issue of body.issues) {
-      expect(issue).toMatchObject<Issue>({
+      expect(issue).toMatchObject<ExtendedIssue>({
         issue_id: expect.any(Number),
         plot_id: 1,
         subdivision_id: expect.toBeOneOf([expect.any(Number), null]),
         title: expect.any(String),
         description: expect.any(String),
         is_critical: expect.any(Boolean),
-        is_resolved: expect.any(Boolean)
+        is_resolved: expect.any(Boolean),
+        subdivision_name: expect.toBeOneOf([expect.any(String), null]),
+        note_count: expect.any(Number),
+        image_count: expect.any(Number)
       })
     }
   })
