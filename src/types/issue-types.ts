@@ -7,3 +7,10 @@ export type Issue = {
   is_critical: boolean
   is_resolved: boolean
 }
+
+
+export type ExtendedIssue = {
+  subdivision_name?: string
+  note_count: number
+  image_count: number
+} & Issue
