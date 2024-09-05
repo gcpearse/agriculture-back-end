@@ -13,7 +13,7 @@ export const selectIssuesByPlotId = async (
     is_critical,
     is_resolved,
     sort = "issue_id",
-    order = "desc"
+    order
   }: QueryString.ParsedQs
 ): Promise<ExtendedIssue[]> => {
 
@@ -25,7 +25,9 @@ export const selectIssuesByPlotId = async (
 
   await verifyQueryValue(["issue_id", "title"], sort as string)
 
-  await verifyQueryValue(["asc", "desc"], order as string)
+  if (order) {
+    await verifyQueryValue(["asc", "desc"], order as string)
+  }
 
   let query = `
   SELECT
@@ -66,8 +68,8 @@ export const selectIssuesByPlotId = async (
   GROUP BY issues.issue_id, subdivisions.name
   `
 
-  if (sort === "title") {
-    order = "asc"
+  if (!order) {
+    sort === "issue_id" ? order = "desc" : order = "asc"
   }
 
   query += `
