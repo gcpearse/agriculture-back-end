@@ -28,6 +28,10 @@ issuesRouter.route("/issues/plots/:plot_id")
  *        name: is_critical
  *        schema:
  *          type: boolean
+ *      - in: query
+ *        name: is_resolved
+ *        schema:
+ *          type: boolean
  *    responses:
  *      200:
  *        description: OK
