@@ -10,7 +10,7 @@ export const getIssuesByPlotId = async (req: ExtendedRequest, res: Response, nex
   const { plot_id } = req.params
 
   try {
-    const issues = await selectIssuesByPlotId(authUserId, +plot_id)
+    const issues = await selectIssuesByPlotId(authUserId, +plot_id, req.query)
     res.status(200).send({ issues })
   } catch (err) {
     next(err)
