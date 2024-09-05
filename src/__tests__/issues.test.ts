@@ -184,3 +184,53 @@ describe("GET /api/issues/plots/:plot_id?is_critical=", () => {
     })
   })
 })
+
+
+describe("GET /api/issues/plots/:plot_id?is_resolved=", () => {
+
+  test("GET:200 Responds with an array of issues objects filtered by the value of is_resolved", async () => {
+
+    const { body } = await request(app)
+      .get("/api/issues/plots/1?is_resolved=true")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    for (const issue of body.issues) {
+      expect(issue.is_resolved).toBe(true)
+    }
+  })
+
+  test("GET:200 Returns an empty array when the value of is_resolved matches no results", async () => {
+
+    const auth = await request(app)
+      .post("/api/login")
+      .send({
+        login: "peach_princess",
+        password: "peaches123",
+      })
+
+    token = auth.body.token
+
+    const { body } = await request(app)
+      .get("/api/issues/plots/2?is_resolved=true")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(Array.isArray(body.issues)).toBe(true)
+
+    expect(body.issues).toHaveLength(0)
+  })
+
+  test("GET:400 Responds with an error when passed an invalid value for is_resolved", async () => {
+
+    const { body } = await request(app)
+      .get("/api/issues/plots/1?is_resolved=foobar")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid query value"
+    })
+  })
+})
