@@ -32,6 +32,21 @@ issuesRouter.route("/issues/plots/:plot_id")
  *        name: is_resolved
  *        schema:
  *          type: boolean
+ *      - in: query
+ *        name: sort
+ *        schema:
+ *          type: string
+ *          enum:
+ *            - issue_id
+ *            - title
+ *        default: issue_id
+ *      - in: query
+ *        name: order
+ *        schema:
+ *          type: string
+ *          enum:
+ *            - asc
+ *            - desc
  *    responses:
  *      200:
  *        description: OK
