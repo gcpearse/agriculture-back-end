@@ -1,12 +1,17 @@
+import QueryString from "qs"
 import { db } from "../db"
 import { ExtendedIssue } from "../types/issue-types"
 import { fetchPlotOwnerId } from "../utils/db-queries"
-import { verifyPermission, verifyValueIsPositiveInt } from "../utils/verification"
+import { verifyPermission, verifyQueryValue, verifyValueIsPositiveInt } from "../utils/verification"
+import format from "pg-format"
 
 
 export const selectIssuesByPlotId = async (
   authUserId: number,
-  plot_id: number
+  plot_id: number,
+  {
+    is_critical
+  }: QueryString.ParsedQs
 ): Promise<ExtendedIssue[]> => {
 
   await verifyValueIsPositiveInt(plot_id)
@@ -32,8 +37,22 @@ export const selectIssuesByPlotId = async (
   LEFT JOIN issue_images
   ON issues.issue_id = issue_images.issue_id
   WHERE issues.plot_id = $1
+  `
+
+  if (is_critical) {
+    await verifyQueryValue(["true", "false"], is_critical as string)
+
+    query += format(`
+      AND issues.is_critical = %L
+      `, `${is_critical}`)
+  }
+
+  query += `
   GROUP BY issues.issue_id, subdivisions.name
-  ORDER BY issues.issue_id DESC, issues.title;
+  `
+
+  query += `
+  ORDER BY issues.issue_id DESC, issues.title
   `
 
   const result = await db.query(`${query};`, [plot_id])
