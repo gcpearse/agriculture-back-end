@@ -39,7 +39,7 @@ describe("GET /api/users", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedUsers = [...body.users].sort((a: SecureUser, b: SecureUser) => {
+    const sortedUsers: SecureUser[] = [...body.users].sort((a: SecureUser, b: SecureUser) => {
       if (a.user_id! > b.user_id!) return 1
       if (a.user_id! < b.user_id!) return -1
       return 0
@@ -157,7 +157,7 @@ describe("GET /api/users?sort=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedUsers = [...body.users].sort((a: SecureUser, b: SecureUser) => {
+    const sortedUsers: SecureUser[] = [...body.users].sort((a: SecureUser, b: SecureUser) => {
       if (a.email > b.email) return 1
       if (a.email < b.email) return -1
       return 0
@@ -175,7 +175,7 @@ describe("GET /api/users?sort=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedUsers = [...body.users].sort((a: SecureUser, b: SecureUser) => {
+    const sortedUsers: SecureUser[] = [...body.users].sort((a: SecureUser, b: SecureUser) => {
       if (a.surname > b.surname) return 1
       if (a.surname < b.surname) return -1
       return 0
@@ -210,7 +210,7 @@ describe("GET /api/users?role=&sort=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedUsers = [...body.users].sort((a: SecureUser, b: SecureUser) => {
+    const sortedUsers: SecureUser[] = [...body.users].sort((a: SecureUser, b: SecureUser) => {
       if (a.first_name > b.first_name) return 1
       if (a.first_name < b.first_name) return -1
       return 0
@@ -236,7 +236,7 @@ describe("GET /api/users?order=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedUsers = [...body.users].sort((a: SecureUser, b: SecureUser) => {
+    const sortedUsers: SecureUser[] = [...body.users].sort((a: SecureUser, b: SecureUser) => {
       if (a.user_id! < b.user_id!) return 1
       if (a.user_id! > b.user_id!) return -1
       return 0

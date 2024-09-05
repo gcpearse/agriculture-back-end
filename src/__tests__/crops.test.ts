@@ -43,7 +43,7 @@ describe("GET /api/crops/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedCrops = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
+    const sortedCrops: ExtendedCrop[] = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
       if (a.crop_id! < b.crop_id!) return 1
       if (a.crop_id! > b.crop_id!) return -1
       return 0
@@ -235,7 +235,7 @@ describe("GET /api/crops/plots/:plot_id?sort=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedCrops = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
+    const sortedCrops: ExtendedCrop[] = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
       if (a.name > b.name) return 1
       if (a.name < b.name) return -1
       return 0
@@ -257,7 +257,7 @@ describe("GET /api/crops/plots/:plot_id?sort=", () => {
       expect(crop.date_planted).not.toBeNull()
     }
 
-    const sortedCrops = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
+    const sortedCrops: ExtendedCrop[] = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
       if (a.date_planted! < b.date_planted!) return 1
       if (a.date_planted! > b.date_planted!) return -1
       return 0
@@ -279,7 +279,7 @@ describe("GET /api/crops/plots/:plot_id?sort=", () => {
       expect(crop.harvest_date).not.toBeNull()
     }
 
-    const sortedCrops = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
+    const sortedCrops: ExtendedCrop[] = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
       if (a.harvest_date! < b.harvest_date!) return 1
       if (a.harvest_date! > b.harvest_date!) return -1
       return 0
@@ -318,7 +318,7 @@ describe("GET /api/crops/plots/:plot_id?name=&sort=", () => {
       expect(crop.name).toMatch(/ca/i)
     }
 
-    const sortedCrops = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
+    const sortedCrops: ExtendedCrop[] = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
       if (a.name > b.name) return 1
       if (a.name < b.name) return -1
       return 0
@@ -340,7 +340,7 @@ describe("GET /api/crops/plots/:plot_id?name=&sort=", () => {
       expect(crop.name).toMatch(/ca/i)
     }
 
-    const sortedCrops = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
+    const sortedCrops: ExtendedCrop[] = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
       if (a.harvest_date! < b.harvest_date!) return 1
       if (a.harvest_date! > b.harvest_date!) return -1
       return 0
@@ -696,7 +696,7 @@ describe("GET /api/crops/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedCrops = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
+    const sortedCrops: ExtendedCrop[] = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
       if (a.crop_id! < b.crop_id!) return 1
       if (a.crop_id! > b.crop_id!) return -1
       return 0
@@ -887,7 +887,7 @@ describe("GET /api/crops/subdivisions/:subdivision_id?sort=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedCrops = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
+    const sortedCrops: ExtendedCrop[] = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
       if (a.name > b.name) return 1
       if (a.name < b.name) return -1
       return 0
@@ -909,7 +909,7 @@ describe("GET /api/crops/subdivisions/:subdivision_id?sort=", () => {
       expect(crop.date_planted).not.toBeNull()
     }
 
-    const sortedCrops = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
+    const sortedCrops: ExtendedCrop[] = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
       if (a.date_planted! < b.date_planted!) return 1
       if (a.date_planted! > b.date_planted!) return -1
       return 0
@@ -931,7 +931,7 @@ describe("GET /api/crops/subdivisions/:subdivision_id?sort=", () => {
       expect(crop.date_planted).not.toBeNull()
     }
 
-    const sortedCrops = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
+    const sortedCrops: ExtendedCrop[] = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
       if (a.harvest_date! < b.harvest_date!) return 1
       if (a.harvest_date! > b.harvest_date!) return -1
       return 0
@@ -970,7 +970,7 @@ describe("GET /api/crops/subdivisions/:subdivision_id?name=&sort=", () => {
       expect(crop.name).toMatch(/car/i)
     }
 
-    const sortedCrops = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
+    const sortedCrops: ExtendedCrop[] = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
       if (a.name > b.name) return 1
       if (a.name < b.name) return -1
       return 0
@@ -992,7 +992,7 @@ describe("GET /api/crops/subdivisions/:subdivision_id?name=&sort=", () => {
       expect(crop.name).toMatch(/car/i)
     }
 
-    const sortedCrops = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
+    const sortedCrops: ExtendedCrop[] = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
       if (a.harvest_date! < b.harvest_date!) return 1
       if (a.harvest_date! > b.harvest_date!) return -1
       return 0

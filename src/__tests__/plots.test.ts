@@ -41,7 +41,7 @@ describe("GET /api/plots/users/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedPlots = [...body.plots].sort((a: ExtendedPlot, b: ExtendedPlot) => {
+    const sortedPlots: ExtendedPlot[] = [...body.plots].sort((a: ExtendedPlot, b: ExtendedPlot) => {
       if (a.plot_id! < b.plot_id!) return 1
       if (a.plot_id! > b.plot_id!) return -1
       return 0
@@ -259,7 +259,7 @@ describe("GET /api/plots/users/:owner_id?sort=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedPlots = [...body.plots].sort((a: ExtendedPlot, b: ExtendedPlot) => {
+    const sortedPlots: ExtendedPlot[] = [...body.plots].sort((a: ExtendedPlot, b: ExtendedPlot) => {
       if (a.name! > b.name!) return 1
       if (a.name! < b.name!) return -1
       return 0
@@ -646,7 +646,7 @@ describe("GET /api/plots/users/:owner_id/pinned", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedPlots = [...body.plots].sort((a: Plot, b: Plot) => {
+    const sortedPlots: ExtendedPlot[] = [...body.plots].sort((a: Plot, b: Plot) => {
       if (a.name! > b.name!) return 1
       if (a.name! < b.name!) return -1
       return 0
