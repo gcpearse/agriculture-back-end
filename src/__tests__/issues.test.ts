@@ -41,7 +41,7 @@ describe("GET /api/issues/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedIssues = [...body.issues].sort((a: ExtendedIssue, b: ExtendedIssue) => {
+    const sortedIssues: ExtendedIssue[] = [...body.issues].sort((a: ExtendedIssue, b: ExtendedIssue) => {
       if (a.issue_id! < b.issue_id!) return 1
       if (a.issue_id! > b.issue_id!) return -1
       return 0
@@ -225,6 +225,80 @@ describe("GET /api/issues/plots/:plot_id?is_resolved=", () => {
 
     const { body } = await request(app)
       .get("/api/issues/plots/1?is_resolved=foobar")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid query value"
+    })
+  })
+})
+
+
+describe("GET /api/issues/plots/:plot_id?sort=", () => {
+
+  test("GET:200 Responds with an array of issues objects sorted by title in ascending order", async () => {
+
+    const { body } = await request(app)
+      .get("/api/issues/plots/1?sort=title")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    const sortedIssues: ExtendedIssue[] = [...body.issues].sort((a: ExtendedIssue, b: ExtendedIssue) => {
+      if (a.title! > b.title!) return 1
+      if (a.title! < b.title!) return -1
+      return 0
+    })
+
+    expect(body.issues).toEqual(sortedIssues)
+  })
+
+  test("GET:400 Responds with an error when passed an invalid sort value", async () => {
+
+    const { body } = await request(app)
+      .get("/api/issues/plots/1?sort=foobar")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid query value"
+    })
+  })
+})
+
+
+describe("GET /api/issues/plots/:plot_id?is_critical=&sort=", () => {
+
+  test("GET:200 Responds with an array of issues objects filtered by the value of is_critical and sorted by title in ascending order", async () => {
+
+    const { body } = await request(app)
+      .get("/api/issues/plots/1?is_critical=true&sort=title")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    for (const issue of body.issues) {
+      expect(issue.is_critical).toBe(true)
+    }
+
+    const sortedIssues: ExtendedIssue[] = [...body.issues].sort((a: ExtendedIssue, b: ExtendedIssue) => {
+      if (a.title! > b.title!) return 1
+      if (a.title! < b.title!) return -1
+      return 0
+    })
+
+    expect(body.issues).toEqual(sortedIssues)
+  })
+})
+
+
+describe("GET /api/issues/plots/:plot_id?order=", () => {
+
+  test("GET:400 Responds with an error when passed an invalid order value", async () => {
+
+    const { body } = await request(app)
+      .get("/api/issues/plots/1?order=foobar")
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
