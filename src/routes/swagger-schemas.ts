@@ -110,6 +110,31 @@ export const schemaRouter = Router()
  *        details:
  *          type: string
  *          example: Permission denied
+ *    Issue:
+ *      type: object
+ *      properties:
+ *        issue_id:
+ *          type: integer
+ *          example: 1
+ *        plot_id:
+ *          type: integer
+ *          example: 1
+ *        subdivision_id:
+ *          type: integer
+ *          nullable: true
+ *          example: 1
+ *        title:
+ *          type: string
+ *          example: Broken gate
+ *        description:
+ *          type: string
+ *          example: The gate has fallen off its hinges
+ *        is_critical:
+ *          type: boolean
+ *          example: true
+ *        is_resolved:
+ *          type: boolean
+ *          example: false
  *    NotFound:
  *      type: object
  *      properties:
