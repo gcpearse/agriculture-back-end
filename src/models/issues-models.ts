@@ -10,7 +10,8 @@ export const selectIssuesByPlotId = async (
   authUserId: number,
   plot_id: number,
   {
-    is_critical
+    is_critical,
+    is_resolved
   }: QueryString.ParsedQs
 ): Promise<ExtendedIssue[]> => {
 
@@ -45,6 +46,14 @@ export const selectIssuesByPlotId = async (
     query += format(`
       AND issues.is_critical = %L
       `, `${is_critical}`)
+  }
+
+  if (is_resolved) {
+    await verifyQueryValue(["true", "false"], is_resolved as string)
+
+    query += format(`
+      AND issues.is_resolved = %L
+      `, `${is_resolved}`)
   }
 
   query += `
