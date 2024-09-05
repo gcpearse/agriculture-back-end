@@ -35,7 +35,19 @@ issuesRouter.route("/issues/plots/:plot_id")
  *                issues:
  *                  type: array
  *                  items:
- *                    $ref: "#/components/schemas/Issue"
+ *                    allOf:
+ *                      - $ref: "#/components/schemas/Issue"
+ *                      - type: object
+ *                        properties:        
+ *                          subdivision_name:
+ *                            type: string
+ *                            example: Vegetable Patch
+ *                          note_count:
+ *                            type: integer
+ *                            example: 1
+ *                          image_count:
+ *                            type: integer
+ *                            example: 1
  *      400:
  *        description: Bad Request
  *        content:
