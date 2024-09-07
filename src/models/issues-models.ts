@@ -13,11 +13,14 @@ export const selectIssuesByPlotId = async (
     is_critical,
     is_resolved,
     sort = "issue_id",
-    order
+    order,
+    limit = "10"
   }: QueryString.ParsedQs
 ): Promise<ExtendedIssue[]> => {
 
   await verifyValueIsPositiveInt(plot_id)
+
+  await verifyValueIsPositiveInt(+limit)
 
   const owner_id = await fetchPlotOwnerId(plot_id)
 
@@ -53,7 +56,7 @@ export const selectIssuesByPlotId = async (
 
     query += format(`
       AND issues.is_critical = %L
-      `, `${is_critical}`)
+      `, is_critical)
   }
 
   if (is_resolved) {
@@ -61,7 +64,7 @@ export const selectIssuesByPlotId = async (
 
     query += format(`
       AND issues.is_resolved = %L
-      `, `${is_resolved}`)
+      `, is_resolved)
   }
 
   query += `
@@ -74,6 +77,7 @@ export const selectIssuesByPlotId = async (
 
   query += `
   ORDER BY ${sort} ${order}, issues.title
+  LIMIT ${limit}
   `
 
   const result = await db.query(`${query};`, [plot_id])
