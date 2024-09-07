@@ -76,9 +76,9 @@ export const selectIssuesByPlotId = async (
   }
 
   query += format(`
-  ORDER BY %s %s, issues.title
-  LIMIT %s
-  `, sort, order, limit)
+    ORDER BY %s %s, issues.title
+    LIMIT %s
+    `, sort, order, limit)
 
   const result = await db.query(query, [plot_id])
 
