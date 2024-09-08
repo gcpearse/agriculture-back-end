@@ -31,11 +31,19 @@ usersRouter.route("/users")
  *        name: sort
  *        schema:
  *          type: string
+ *          enum:
+ *            - user_id
+ *            - email
+ *            - first_name
+ *            - surname
  *        default: user_id
  *      - in: query
  *        name: order
  *        schema:
  *          type: string
+ *          enum:
+ *            - asc
+ *            - desc
  *        default: asc
  *      - in: query
  *        name: limit
