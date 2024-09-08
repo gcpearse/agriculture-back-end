@@ -93,13 +93,13 @@ export const selectCropsByPlotId = async (
   }
 
   if (sort === "date_planted" || sort === "harvest_date") {
-    query += `
-    AND crops.${sort} IS NOT NULL
-    `
+    query += format(`
+      AND crops.%I IS NOT NULL
+      `, sort)
 
-    countQuery += `
-    AND crops.${sort} IS NOT NULL
-    `
+    countQuery += format(`
+      AND crops.%I IS NOT NULL
+      `, sort)
   }
 
   query += `
@@ -258,13 +258,13 @@ export const selectCropsBySubdivisionId = async (
   }
 
   if (sort === "date_planted" || sort === "harvest_date") {
-    query += `
-    AND crops.${sort} IS NOT NULL
-    `
+    query += format(`
+      AND crops.%I IS NOT NULL
+      `, sort)
 
-    countQuery += `
-    AND crops.${sort} IS NOT NULL
-    `
+    countQuery += format(`
+      AND crops.%I IS NOT NULL
+      `, sort)
   }
 
   query += `
