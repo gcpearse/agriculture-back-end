@@ -34,7 +34,7 @@ export const selectIssuesByPlotId = async (
   if (order) {
     await verifyQueryValue(["asc", "desc"], order as string)
   } else {
-    sort === "issue_id" ? order = "desc" : order = "asc"
+    sort === "title" ? order = "asc" : order = "desc"
   }
 
   let query = `
