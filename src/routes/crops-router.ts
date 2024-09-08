@@ -36,12 +36,19 @@ cropsRouter.route("/crops/plots/:plot_id")
  *        name: sort
  *        schema:
  *          type: string
+ *          enum:
+ *            - crop_id
+ *            - date_planted
+ *            - harvest_date
+ *            - name
  *        default: crop_id
  *      - in: query
  *        name: order
  *        schema:
  *          type: string
- *        default: desc
+ *          enum:
+ *            - asc
+ *            - desc
  *      - in: query
  *        name: limit
  *        schema:
