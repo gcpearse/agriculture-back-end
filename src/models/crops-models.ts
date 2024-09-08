@@ -179,8 +179,8 @@ export const selectCropsBySubdivisionId = async (
   {
     name,
     category,
-    sort = "crop_id",
-    order = "desc",
+    sort = "name",
+    order,
     limit = "10",
     page = "1"
   }: QueryString.ParsedQs
@@ -200,7 +200,11 @@ export const selectCropsBySubdivisionId = async (
 
   await verifyQueryValue(["crop_id", "name", "date_planted", "harvest_date"], sort as string)
 
-  await verifyQueryValue(["asc", "desc"], order as string)
+  if (order) {
+    await verifyQueryValue(["asc", "desc"], order as string)
+  } else {
+    sort === "name" || sort === "harvest_date" ? order = "asc" : order = "desc"
+  }
 
   const isValidCropCategory = await confirmCropCategoryIsValid(category as string, true)
 
@@ -237,6 +241,7 @@ export const selectCropsBySubdivisionId = async (
     query += format(`
       AND crops.name ILIKE %L
       `, `%${name}%`)
+
     countQuery += format(`
       AND crops.name ILIKE %L
       `, `%${name}%`)
@@ -246,6 +251,7 @@ export const selectCropsBySubdivisionId = async (
     query += format(`
       AND crops.category ILIKE %L
       `, category)
+
     countQuery += format(`
       AND crops.category ILIKE %L
       `, category)
@@ -255,6 +261,7 @@ export const selectCropsBySubdivisionId = async (
     query += `
     AND crops.${sort} IS NOT NULL
     `
+
     countQuery += `
     AND crops.${sort} IS NOT NULL
     `
@@ -264,21 +271,17 @@ export const selectCropsBySubdivisionId = async (
   GROUP BY crops.crop_id
   `
 
-  if (sort === "name") {
-    order = "asc"
-  }
+  query += format(`
+    ORDER BY %s %s, crops.name
+    LIMIT %L
+    OFFSET %L
+    `, sort, order, limit, (+page - 1) * +limit)
 
-  query += `
-  ORDER BY ${sort} ${order}, crops.name
-  LIMIT ${limit}
-  OFFSET ${(+page - 1) * +limit}
-  `
-
-  const result = await db.query(`${query};`, [subdivision_id])
+  const result = await db.query(query, [subdivision_id])
 
   await verifyPagination(+page, result.rows.length)
 
-  const countResult = await db.query(`${countQuery};`, [subdivision_id])
+  const countResult = await db.query(countQuery, [subdivision_id])
 
   return Promise.all([result.rows, countResult.rows[0].count])
 }
