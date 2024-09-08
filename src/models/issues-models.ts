@@ -2,7 +2,7 @@ import QueryString from "qs"
 import { db } from "../db"
 import { ExtendedIssue } from "../types/issue-types"
 import { fetchPlotOwnerId } from "../utils/db-queries"
-import { verifyPermission, verifyQueryValue, verifyValueIsPositiveInt } from "../utils/verification"
+import { verifyPagination, verifyPermission, verifyQueryValue, verifyValueIsPositiveInt } from "../utils/verification"
 import format from "pg-format"
 
 
@@ -14,13 +14,16 @@ export const selectIssuesByPlotId = async (
     is_resolved,
     sort = "issue_id",
     order,
-    limit = "10"
+    limit = "10",
+    page = "1"
   }: QueryString.ParsedQs
 ): Promise<ExtendedIssue[]> => {
 
   await verifyValueIsPositiveInt(plot_id)
 
   await verifyValueIsPositiveInt(+limit)
+
+  await verifyValueIsPositiveInt(+page)
 
   const owner_id = await fetchPlotOwnerId(plot_id)
 
@@ -77,10 +80,13 @@ export const selectIssuesByPlotId = async (
 
   query += format(`
     ORDER BY %s %s, issues.title
-    LIMIT %s
-    `, sort, order, limit)
+    LIMIT %L
+    OFFSET %L
+    `, sort, order, limit, (+page - 1) * +limit)
 
   const result = await db.query(query, [plot_id])
+
+  await verifyPagination(+page, result.rows.length)
 
   return result.rows
 }
