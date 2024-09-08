@@ -34,7 +34,7 @@ afterAll(async () => {
 
 describe("GET /api/subdivisions/plots/:plot_id", () => {
 
-  test("GET:200 Responds with an array of subdivision objects sorted by subdivision_id in descending order", async () => {
+  test("GET:200 Responds with an array of subdivision objects sorted by type in ascending order", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/plots/1")
@@ -42,8 +42,8 @@ describe("GET /api/subdivisions/plots/:plot_id", () => {
       .expect(200)
 
     const sortedSubdivisions: ExtendedSubdivision[] = [...body.subdivisions].sort((a: ExtendedSubdivision, b: ExtendedSubdivision) => {
-      if (a.subdivision_id! < b.subdivision_id!) return 1
-      if (a.subdivision_id! > b.subdivision_id!) return -1
+      if (a.type > b.type) return 1
+      if (a.type < b.type) return -1
       return 0
     })
 
@@ -341,8 +341,8 @@ describe("GET /api/subdivisions/plots/:plot_id?page=", () => {
       .expect(200)
 
     expect(body.subdivisions.map((subdivision: ExtendedSubdivision) => {
-      return subdivision.subdivision_id
-    })).toEqual([1])
+      return subdivision.name
+    })).toEqual(["Woody Herbs"])
 
     expect(body.count).toBe(3)
   })
@@ -355,8 +355,8 @@ describe("GET /api/subdivisions/plots/:plot_id?page=", () => {
       .expect(200)
 
     expect(body.subdivisions.map((subdivision: ExtendedSubdivision) => {
-      return subdivision.subdivision_id
-    })).toEqual([3, 2])
+      return subdivision.name
+    })).toEqual(["Onion Bed", "Root Vegetable Bed"])
 
     expect(body.count).toBe(3)
   })
