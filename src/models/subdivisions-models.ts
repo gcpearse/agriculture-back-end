@@ -12,8 +12,8 @@ export const selectSubdivisionsByPlotId = async (
   {
     name,
     type,
-    sort = "subdivision_id",
-    order = "desc",
+    sort = "type",
+    order,
     limit = "10",
     page = "1"
   }: QueryString.ParsedQs
@@ -29,9 +29,13 @@ export const selectSubdivisionsByPlotId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  await verifyQueryValue(["subdivision_id", "name"], sort as string)
+  await verifyQueryValue(["subdivision_id", "name", "type"], sort as string)
 
-  await verifyQueryValue(["asc", "desc"], order as string)
+  if (order) {
+    await verifyQueryValue(["asc", "desc"], order as string)
+  } else {
+    sort === "name" || sort === "type" ? order = "asc" : order = "desc"
+  }
 
   const isValidSubdivisionType = await confirmSubdivisionTypeIsValid(type as string, true)
 
@@ -76,6 +80,7 @@ export const selectSubdivisionsByPlotId = async (
     query += format(`
       AND subdivisions.name ILIKE %L
       `, `%${name}%`)
+
     countQuery += format(`
       AND subdivisions.name ILIKE %L
       `, `%${name}%`)
@@ -85,6 +90,7 @@ export const selectSubdivisionsByPlotId = async (
     query += format(`
       AND subdivisions.type ILIKE %L
       `, type)
+
     countQuery += format(`
       AND subdivisions.type ILIKE %L
       `, type)
@@ -94,21 +100,17 @@ export const selectSubdivisionsByPlotId = async (
   GROUP BY subdivisions.subdivision_id
   `
 
-  if (sort === "name") {
-    order = "asc"
-  }
+  query += format(`
+    ORDER BY %s %s, subdivisions.name
+    LIMIT %L
+    OFFSET %L
+    `, sort, order, limit, (+page - 1) * +limit)
 
-  query += `
-  ORDER BY ${sort} ${order}, subdivisions.name
-  LIMIT ${limit}
-  OFFSET ${(+page - 1) * +limit}
-  `
-
-  const result = await db.query(`${query};`, [plot_id])
+  const result = await db.query(query, [plot_id])
 
   await verifyPagination(+page, result.rows.length)
 
-  const countResult = await db.query(`${countQuery};`, [plot_id])
+  const countResult = await db.query(countQuery, [plot_id])
 
   return Promise.all([result.rows, countResult.rows[0].count])
 }
