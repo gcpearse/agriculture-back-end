@@ -36,7 +36,7 @@ afterAll(async () => {
 
 describe("GET /api/crops/plots/:plot_id", () => {
 
-  test("GET:200 Responds with an array of crop objects sorted by crop_id in descending order", async () => {
+  test("GET:200 Responds with an array of crop objects sorted by name in ascending order", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/plots/1")
@@ -44,8 +44,8 @@ describe("GET /api/crops/plots/:plot_id", () => {
       .expect(200)
 
     const sortedCrops: ExtendedCrop[] = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
-      if (a.crop_id! < b.crop_id!) return 1
-      if (a.crop_id! > b.crop_id!) return -1
+      if (a.name! > b.name!) return 1
+      if (a.name! < b.name!) return -1
       return 0
     })
 
@@ -268,7 +268,7 @@ describe("GET /api/crops/plots/:plot_id?sort=", () => {
     expect(body.count).toBe(3)
   })
 
-  test("GET:200 Responds with an array of crop objects sorted by harvest_date in descending order while filtering out null values", async () => {
+  test("GET:200 Responds with an array of crop objects sorted by harvest_date in ascending order while filtering out null values", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/plots/1?sort=harvest_date")
@@ -280,8 +280,8 @@ describe("GET /api/crops/plots/:plot_id?sort=", () => {
     }
 
     const sortedCrops: ExtendedCrop[] = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
-      if (a.harvest_date! < b.harvest_date!) return 1
-      if (a.harvest_date! > b.harvest_date!) return -1
+      if (a.harvest_date! > b.harvest_date!) return 1
+      if (a.harvest_date! < b.harvest_date!) return -1
       return 0
     })
 
@@ -329,7 +329,7 @@ describe("GET /api/crops/plots/:plot_id?name=&sort=", () => {
     expect(body.count).toBe(3)
   })
 
-  test("GET:200 Responds with an array of crop objects filtered by name and sorted by harvest_date in descending order while filtering out null values", async () => {
+  test("GET:200 Responds with an array of crop objects filtered by name and sorted by harvest_date in ascending order while filtering out null values", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/plots/1?name=ca&sort=harvest_date")
@@ -341,8 +341,8 @@ describe("GET /api/crops/plots/:plot_id?name=&sort=", () => {
     }
 
     const sortedCrops: ExtendedCrop[] = [...body.crops].sort((a: ExtendedCrop, b: ExtendedCrop) => {
-      if (a.harvest_date! < b.harvest_date!) return 1
-      if (a.harvest_date! > b.harvest_date!) return -1
+      if (a.harvest_date! > b.harvest_date!) return 1
+      if (a.harvest_date! < b.harvest_date!) return -1
       return 0
     })
 
@@ -421,8 +421,8 @@ describe("GET /api/crops/plots/:plot_id?page=", () => {
       .expect(200)
 
     expect(body.crops.map((crop: ExtendedCrop) => {
-      return crop.crop_id
-    })).toEqual([2, 1])
+      return crop.name
+    })).toEqual(["Carrot", "Pecan"])
 
     expect(body.count).toBe(4)
   })
@@ -435,8 +435,8 @@ describe("GET /api/crops/plots/:plot_id?page=", () => {
       .expect(200)
 
     expect(body.crops.map((crop: ExtendedCrop) => {
-      return crop.crop_id
-    })).toEqual([4, 3])
+      return crop.name
+    })).toEqual(["Apple", "Cabbage"])
 
     expect(body.count).toBe(4)
   })
@@ -449,8 +449,8 @@ describe("GET /api/crops/plots/:plot_id?page=", () => {
       .expect(200)
 
     expect(body.crops.map((crop: ExtendedCrop) => {
-      return crop.crop_id
-    })).toEqual([1])
+      return crop.name
+    })).toEqual(["Pecan"])
 
     expect(body.count).toBe(4)
   })
