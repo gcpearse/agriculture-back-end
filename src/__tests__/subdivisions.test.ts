@@ -41,7 +41,7 @@ describe("GET /api/subdivisions/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedSubdivisions = [...body.subdivisions].sort((a: ExtendedSubdivision, b: ExtendedSubdivision) => {
+    const sortedSubdivisions: ExtendedSubdivision[] = [...body.subdivisions].sort((a: ExtendedSubdivision, b: ExtendedSubdivision) => {
       if (a.subdivision_id! < b.subdivision_id!) return 1
       if (a.subdivision_id! > b.subdivision_id!) return -1
       return 0
@@ -247,7 +247,7 @@ describe("GET /api/subdivisions/plots/:plot_id?sort=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    const sortedSubdivisions = [...body.subdivisions].sort((a: ExtendedSubdivision, b: ExtendedSubdivision) => {
+    const sortedSubdivisions: ExtendedSubdivision[] = [...body.subdivisions].sort((a: ExtendedSubdivision, b: ExtendedSubdivision) => {
       if (a.name! > b.name!) return 1
       if (a.name! < b.name!) return -1
       return 0

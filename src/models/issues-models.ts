@@ -2,7 +2,7 @@ import QueryString from "qs"
 import { db } from "../db"
 import { ExtendedIssue } from "../types/issue-types"
 import { fetchPlotOwnerId } from "../utils/db-queries"
-import { verifyPermission, verifyQueryValue, verifyValueIsPositiveInt } from "../utils/verification"
+import { verifyPagination, verifyPermission, verifyQueryValue, verifyValueIsPositiveInt } from "../utils/verification"
 import format from "pg-format"
 
 
@@ -11,15 +11,29 @@ export const selectIssuesByPlotId = async (
   plot_id: number,
   {
     is_critical,
-    is_resolved
+    is_resolved,
+    sort = "issue_id",
+    order,
+    limit = "10",
+    page = "1"
   }: QueryString.ParsedQs
 ): Promise<ExtendedIssue[]> => {
 
   await verifyValueIsPositiveInt(plot_id)
 
+  await verifyValueIsPositiveInt(+limit)
+
+  await verifyValueIsPositiveInt(+page)
+
   const owner_id = await fetchPlotOwnerId(plot_id)
 
   await verifyPermission(authUserId, owner_id)
+
+  await verifyQueryValue(["issue_id", "title"], sort as string)
+
+  if (order) {
+    await verifyQueryValue(["asc", "desc"], order as string)
+  }
 
   let query = `
   SELECT
@@ -40,12 +54,22 @@ export const selectIssuesByPlotId = async (
   WHERE issues.plot_id = $1
   `
 
+  let countQuery = `
+  SELECT COUNT(issue_id)::INT
+  FROM issues
+  WHERE plot_id = $1
+  `
+
   if (is_critical) {
     await verifyQueryValue(["true", "false"], is_critical as string)
 
     query += format(`
       AND issues.is_critical = %L
-      `, `${is_critical}`)
+      `, is_critical)
+
+    countQuery += format(`
+        AND issues.is_critical = %L
+        `, is_critical)
   }
 
   if (is_resolved) {
@@ -53,18 +77,32 @@ export const selectIssuesByPlotId = async (
 
     query += format(`
       AND issues.is_resolved = %L
-      `, `${is_resolved}`)
+      `, is_resolved)
+
+    countQuery += format(`
+        AND issues.is_resolved = %L
+        `, is_resolved)
   }
 
   query += `
   GROUP BY issues.issue_id, subdivisions.name
   `
 
-  query += `
-  ORDER BY issues.issue_id DESC, issues.title
-  `
+  if (!order) {
+    sort === "issue_id" ? order = "desc" : order = "asc"
+  }
 
-  const result = await db.query(`${query};`, [plot_id])
+  query += format(`
+    ORDER BY %s %s, issues.title
+    LIMIT %L
+    OFFSET %L
+    `, sort, order, limit, (+page - 1) * +limit)
 
-  return result.rows
+  const result = await db.query(query, [plot_id])
+
+  await verifyPagination(+page, result.rows.length)
+
+  const countResult = await db.query(countQuery, [plot_id])
+
+  return Promise.all([result.rows, countResult.rows[0].count])
 }
