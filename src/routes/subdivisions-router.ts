@@ -16,7 +16,7 @@ subdivisionsRouter.route("/subdivisions/plots/:plot_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve subdivisions of a plot
- *    description: Responds with an array of subdivision objects. Results can be filtered by name and sorted by subdivision_id or name. If a parameter is invalid, the server responds with an error. Permission is denied when the plot does not belong to the user.
+ *    description: Responds with an array of subdivision objects. Results can be filtered by name or type and sorted by subdivision_id, name, or type. If a parameter is invalid, the server responds with an error. Permission is denied when the plot does not belong to the user.
  *    tags: [Subdivisions]
  *    parameters:
  *      - in: path
@@ -36,12 +36,18 @@ subdivisionsRouter.route("/subdivisions/plots/:plot_id")
  *        name: sort
  *        schema:
  *          type: string
- *        default: subdivision_id
+ *          enum:
+ *            - subdivision_id
+ *            - name
+ *            - type
+ *        default: type
  *      - in: query
  *        name: order
  *        schema:
  *          type: string
- *        default: desc
+ *          enum:
+ *            - asc
+ *            - desc
  *      - in: query
  *        name: limit
  *        schema:
