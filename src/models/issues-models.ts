@@ -33,6 +33,8 @@ export const selectIssuesByPlotId = async (
 
   if (order) {
     await verifyQueryValue(["asc", "desc"], order as string)
+  } else {
+    sort === "issue_id" ? order = "desc" : order = "asc"
   }
 
   let query = `
@@ -87,10 +89,6 @@ export const selectIssuesByPlotId = async (
   query += `
   GROUP BY issues.issue_id, subdivisions.name
   `
-
-  if (!order) {
-    sort === "issue_id" ? order = "desc" : order = "asc"
-  }
 
   query += format(`
     ORDER BY %s %s, issues.title
