@@ -72,6 +72,7 @@ export const selectCropsByPlotId = async (
     query += format(`
       AND crops.name ILIKE %L
       `, `%${name}%`)
+
     countQuery += format(`
       AND crops.name ILIKE %L
       `, `%${name}%`)
@@ -81,6 +82,7 @@ export const selectCropsByPlotId = async (
     query += format(`
       AND crops.category ILIKE %L
       `, category)
+
     countQuery += format(`
       AND crops.category ILIKE %L
       `, category)
@@ -90,6 +92,7 @@ export const selectCropsByPlotId = async (
     query += `
     AND crops.${sort} IS NOT NULL
     `
+
     countQuery += `
     AND crops.${sort} IS NOT NULL
     `
@@ -103,17 +106,17 @@ export const selectCropsByPlotId = async (
     order = "asc"
   }
 
-  query += `
-  ORDER BY ${sort} ${order}, crops.name
-  LIMIT ${limit}
-  OFFSET ${(+page - 1) * +limit}
-  `
+  query += format(`
+    ORDER BY %s %s, crops.name
+    LIMIT %L
+    OFFSET %L
+    `, sort, order, limit, (+page - 1) * +limit)
 
-  const result = await db.query(`${query};`, [plot_id])
+  const result = await db.query(query, [plot_id])
 
   await verifyPagination(+page, result.rows.length)
 
-  const countResult = await db.query(`${countQuery};`, [plot_id])
+  const countResult = await db.query(countQuery, [plot_id])
 
   return Promise.all([result.rows, countResult.rows[0].count])
 }
