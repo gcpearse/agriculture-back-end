@@ -34,7 +34,7 @@ afterAll(async () => {
 
 describe("GET /api/plots/users/:owner_id", () => {
 
-  test("GET:200 Responds with an array of plot objects sorted by plot_id in descending order", async () => {
+  test("GET:200 Responds with an array of plot objects sorted by name in ascending order", async () => {
 
     const { body } = await request(app)
       .get("/api/plots/users/1")
@@ -42,8 +42,8 @@ describe("GET /api/plots/users/:owner_id", () => {
       .expect(200)
 
     const sortedPlots: ExtendedPlot[] = [...body.plots].sort((a: ExtendedPlot, b: ExtendedPlot) => {
-      if (a.plot_id! < b.plot_id!) return 1
-      if (a.plot_id! > b.plot_id!) return -1
+      if (a.name > b.name) return 1
+      if (a.name < b.name) return -1
       return 0
     })
 
@@ -252,16 +252,16 @@ describe("GET /api/plots/users/:owner_id?type=&name=", () => {
 
 describe("GET /api/plots/users/:owner_id?sort=", () => {
 
-  test("GET:200 Responds with an array of plot objects sorted by name in ascending order", async () => {
+  test("GET:200 Responds with an array of plot objects sorted by plot_id in descending order", async () => {
 
     const { body } = await request(app)
-      .get("/api/plots/users/1?sort=name")
+      .get("/api/plots/users/1?sort=plot_id")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
     const sortedPlots: ExtendedPlot[] = [...body.plots].sort((a: ExtendedPlot, b: ExtendedPlot) => {
-      if (a.name! > b.name!) return 1
-      if (a.name! < b.name!) return -1
+      if (a.plot_id! < b.plot_id!) return 1
+      if (a.plot_id! > b.plot_id!) return -1
       return 0
     })
 
@@ -353,8 +353,8 @@ describe("GET /api/plots/users/:owner_id?page=", () => {
       .expect(200)
 
     expect(body.plots.map((crop: ExtendedPlot) => {
-      return crop.plot_id
-    })).toEqual([1])
+      return crop.name
+    })).toEqual(["John's New Allotment"])
 
     expect(body.count).toBe(3)
   })
@@ -367,8 +367,8 @@ describe("GET /api/plots/users/:owner_id?page=", () => {
       .expect(200)
 
     expect(body.plots.map((crop: ExtendedPlot) => {
-      return crop.plot_id
-    })).toEqual([4, 3])
+      return crop.name
+    })).toEqual(["John's Allotment", "John's Garden"])
 
     expect(body.count).toBe(3)
   })
