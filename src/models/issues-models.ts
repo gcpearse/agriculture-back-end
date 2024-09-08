@@ -54,12 +54,22 @@ export const selectIssuesByPlotId = async (
   WHERE issues.plot_id = $1
   `
 
+  let countQuery = `
+  SELECT COUNT(issue_id)::INT
+  FROM issues
+  WHERE issue_id = $1
+  `
+
   if (is_critical) {
     await verifyQueryValue(["true", "false"], is_critical as string)
 
     query += format(`
       AND issues.is_critical = %L
       `, is_critical)
+
+    countQuery += format(`
+        AND issues.is_critical = %L
+        `, is_critical)
   }
 
   if (is_resolved) {
@@ -68,6 +78,10 @@ export const selectIssuesByPlotId = async (
     query += format(`
       AND issues.is_resolved = %L
       `, is_resolved)
+
+    countQuery += format(`
+        AND issues.is_resolved = %L
+        `, is_resolved)
   }
 
   query += `
@@ -88,5 +102,7 @@ export const selectIssuesByPlotId = async (
 
   await verifyPagination(+page, result.rows.length)
 
-  return result.rows
+  const countResult = await db.query(countQuery, [plot_id])
+
+  return Promise.all([result.rows, countResult.rows[0].count])
 }
