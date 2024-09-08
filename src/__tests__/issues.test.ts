@@ -345,3 +345,57 @@ describe("GET /api/issues/plots/:plot_id?limit=", () => {
     })
   })
 })
+
+
+describe("GET /api/issues/plots/:plot_id?page=", () => {
+
+  test("GET:200 Responds with an array of issue objects associated with the plot beginning from the page set in the query parameter", async () => {
+
+    const { body } = await request(app)
+      .get("/api/issues/plots/1?limit=2&page=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.issues.map((issue: ExtendedIssue) => {
+      return issue.issue_id
+    })).toEqual([1])
+  })
+
+  test("GET:200 The page defaults to page one", async () => {
+
+    const { body } = await request(app)
+      .get("/api/issues/plots/1?limit=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.issues.map((issue: ExtendedIssue) => {
+      return issue.issue_id
+    })).toEqual([3, 2])
+  })
+
+  test("GET:400 Responds with an error when the value of page is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/issues/plots/1?limit=2&page=two")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Value must be a positive integer"
+    })
+  })
+
+  test("GET:404 Responds with an error when the page cannot be found", async () => {
+
+    const { body } = await request(app)
+      .get("/api/issues/plots/1?limit=2&page=3")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Page not found"
+    })
+  })
+})
