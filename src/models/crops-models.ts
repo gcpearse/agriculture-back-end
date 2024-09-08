@@ -12,8 +12,8 @@ export const selectCropsByPlotId = async (
   {
     name,
     category,
-    sort = "crop_id",
-    order = "desc",
+    sort = "name",
+    order,
     limit = "10",
     page = "1"
   }: QueryString.ParsedQs
@@ -31,7 +31,11 @@ export const selectCropsByPlotId = async (
 
   await verifyQueryValue(["crop_id", "name", "date_planted", "harvest_date"], sort as string)
 
-  await verifyQueryValue(["asc", "desc"], order as string)
+  if (order) {
+    await verifyQueryValue(["asc", "desc"], order as string)
+  } else {
+    sort === "name" || sort === "harvest_date" ? order = "asc" : order = "desc"
+  }
 
   const isValidCropCategory = await confirmCropCategoryIsValid(category as string, true)
 
@@ -101,10 +105,6 @@ export const selectCropsByPlotId = async (
   query += `
   GROUP BY crops.crop_id, subdivisions.name
   `
-
-  if (sort === "name") {
-    order = "asc"
-  }
 
   query += format(`
     ORDER BY %s %s, crops.name
