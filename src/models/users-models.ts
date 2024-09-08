@@ -57,6 +57,7 @@ export const selectAllUsers = async (
     query += format(`
       AND users.role::VARCHAR ILIKE %L
       `, role)
+
     countQuery += format(`
       AND users.role::VARCHAR ILIKE %L
       `, role)
@@ -68,22 +69,23 @@ export const selectAllUsers = async (
     query += format(`
       AND users.unit_system::VARCHAR ILIKE %L
       `, unit_system)
+
     countQuery += format(`
       AND users.unit_system::VARCHAR ILIKE %L
       `, unit_system)
   }
 
-  query += `
-  ORDER BY ${sort} ${order}
-  LIMIT ${limit}
-  OFFSET ${(+page - 1) * +limit}
-  `
+  query += format(`
+    ORDER BY %s %s
+    LIMIT %L
+    OFFSET %L
+    `, sort, order, limit, (+page - 1) * +limit)
 
-  const result = await db.query(`${query};`)
+  const result = await db.query(query)
 
   await verifyPagination(+page, result.rows.length)
 
-  const countResult = await db.query(`${countQuery};`)
+  const countResult = await db.query(countQuery)
 
   return Promise.all([result.rows, countResult.rows[0].count])
 }

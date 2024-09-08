@@ -36,12 +36,19 @@ cropsRouter.route("/crops/plots/:plot_id")
  *        name: sort
  *        schema:
  *          type: string
- *        default: crop_id
+ *          enum:
+ *            - crop_id
+ *            - date_planted
+ *            - harvest_date
+ *            - name
+ *        default: name
  *      - in: query
  *        name: order
  *        schema:
  *          type: string
- *        default: desc
+ *          enum:
+ *            - asc
+ *            - desc
  *      - in: query
  *        name: limit
  *        schema:
@@ -184,12 +191,19 @@ cropsRouter.route("/crops/subdivisions/:subdivision_id")
  *        name: sort
  *        schema:
  *          type: string
- *        default: crop_id
+ *          enum:
+ *            - crop_id
+ *            - date_planted
+ *            - harvest_date
+ *            - name
+ *        default: name
  *      - in: query
  *        name: order
  *        schema:
  *          type: string
- *        default: desc
+ *          enum:
+ *            - asc
+ *            - desc
  *      - in: query
  *        name: limit
  *        schema:

@@ -36,12 +36,17 @@ plotsRouter.route("/plots/users/:owner_id")
  *        name: sort
  *        schema:
  *          type: string
- *        default: plot_id
+ *          enum:
+ *            - name
+ *            - plot_id
+ *        default: name
  *      - in: query
  *        name: order
  *        schema:
  *          type: string
- *        default: desc
+ *          enum:
+ *            - asc
+ *            - desc
  *      - in: query
  *        name: limit
  *        schema:
