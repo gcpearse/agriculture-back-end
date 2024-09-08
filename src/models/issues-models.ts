@@ -57,7 +57,7 @@ export const selectIssuesByPlotId = async (
   let countQuery = `
   SELECT COUNT(issue_id)::INT
   FROM issues
-  WHERE issue_id = $1
+  WHERE plot_id = $1
   `
 
   if (is_critical) {
