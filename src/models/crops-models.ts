@@ -37,14 +37,8 @@ export const selectCropsByPlotId = async (
     sort === "name" || sort === "harvest_date" ? order = "asc" : order = "desc"
   }
 
-  const isValidCropCategory = await confirmCropCategoryIsValid(category as string, true)
-
-  if (category && !isValidCropCategory) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "No results found for that query"
-    })
+  if (category) {
+    await confirmCropCategoryIsValid(category as string, true)
   }
 
   let query = `
@@ -134,15 +128,7 @@ export const insertCropByPlotId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  const isValidCropCategory = await confirmCropCategoryIsValid(crop.category, false)
-
-  if (!isValidCropCategory) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Invalid crop category"
-    })
-  }
+  await confirmCropCategoryIsValid(crop.category, false)
 
   const result = await db.query(format(`
     INSERT INTO crops (
@@ -206,14 +192,8 @@ export const selectCropsBySubdivisionId = async (
     sort === "name" || sort === "harvest_date" ? order = "asc" : order = "desc"
   }
 
-  const isValidCropCategory = await confirmCropCategoryIsValid(category as string, true)
-
-  if (category && !isValidCropCategory) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "No results found for that query"
-    })
+  if (category) {
+    await confirmCropCategoryIsValid(category as string, true)
   }
 
   let query = `
@@ -301,15 +281,7 @@ export const insertCropBySubdivisionId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  const isValidCropCategory = await confirmCropCategoryIsValid(crop.category, false)
-
-  if (!isValidCropCategory) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Invalid crop category"
-    })
-  }
+  await confirmCropCategoryIsValid(crop.category, false)
 
   const result = await db.query(format(`
     INSERT INTO crops (
@@ -395,15 +367,7 @@ export const updateCropByCropId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  const isValidCropCategory = await confirmCropCategoryIsValid(crop.category, false)
-
-  if (!isValidCropCategory) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Invalid crop category"
-    })
-  }
+  await confirmCropCategoryIsValid(crop.category, false)
 
   const result = await db.query(`
     UPDATE crops
