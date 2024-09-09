@@ -217,7 +217,7 @@ export const searchForUserId = async (
 export const confirmCropCategoryIsValid = async (
   category: string,
   ignoreCase: boolean
-): Promise<boolean> => {
+): Promise<undefined> => {
 
   const result = await db.query(`
     SELECT category 
@@ -227,7 +227,13 @@ export const confirmCropCategoryIsValid = async (
     [category]
   )
 
-  return Boolean(result.rowCount)
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid crop category"
+    })
+  }
 }
 
 
