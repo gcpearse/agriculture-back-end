@@ -174,14 +174,18 @@ describe("searchForUserId", () => {
 
 describe("confirmCropCategoryIsValid", () => {
 
-  test("Returns true when the crop category is valid with case-insensitivity enabled", async () => {
+  test("When the crop category is invalid, the promise is rejected", async () => {
 
-    await expect(confirmCropCategoryIsValid("fruits", true)).resolves.toBe(true)
+    await expect(confirmCropCategoryIsValid("fruits", false)).rejects.toMatchObject<StatusResponse>({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid crop category"
+    })
   })
 
-  test("Returns false when the crop category is invalid", async () => {
+  test("When the crop category is valid with case-insensitivity enabled, the promiswe resolves to be undefined", async () => {
 
-    await expect(confirmCropCategoryIsValid("fruits", false)).resolves.toBe(false)
+    await expect(confirmCropCategoryIsValid("fruits", true)).resolves.toBeUndefined()
   })
 })
 
