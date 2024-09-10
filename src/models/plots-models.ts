@@ -20,11 +20,9 @@ export const selectPlotsByOwner = async (
   }: QueryString.ParsedQs
 ): Promise<[ExtendedPlot[], number]> => {
 
-  await verifyValueIsPositiveInt(owner_id)
-
-  await verifyValueIsPositiveInt(+limit)
-
-  await verifyValueIsPositiveInt(+page)
+  for (const value of [owner_id, +limit, +page]) {
+    await verifyValueIsPositiveInt(value)
+  }
 
   await searchForUserId(owner_id)
 
@@ -93,11 +91,8 @@ export const selectPlotsByOwner = async (
       `, type)
   }
 
-  query += `
-  GROUP BY plots.plot_id
-  `
-
   query += format(`
+    GROUP BY plots.plot_id
     ORDER BY %s %s, plots.name
     LIMIT %L
     OFFSET %L

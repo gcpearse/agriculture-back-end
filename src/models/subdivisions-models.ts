@@ -19,11 +19,9 @@ export const selectSubdivisionsByPlotId = async (
   }: QueryString.ParsedQs
 ): Promise<[ExtendedSubdivision[], number]> => {
 
-  await verifyValueIsPositiveInt(plot_id)
-
-  await verifyValueIsPositiveInt(+limit)
-
-  await verifyValueIsPositiveInt(+page)
+  for (const value of [plot_id, +limit, +page]) {
+    await verifyValueIsPositiveInt(value)
+  }
 
   const owner_id = await fetchPlotOwnerId(plot_id)
 
@@ -88,11 +86,8 @@ export const selectSubdivisionsByPlotId = async (
       `, type)
   }
 
-  query += `
-  GROUP BY subdivisions.subdivision_id
-  `
-
   query += format(`
+    GROUP BY subdivisions.subdivision_id
     ORDER BY %s %s, subdivisions.name
     LIMIT %L
     OFFSET %L

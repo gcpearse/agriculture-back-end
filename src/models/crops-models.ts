@@ -19,11 +19,9 @@ export const selectCropsByPlotId = async (
   }: QueryString.ParsedQs
 ): Promise<[ExtendedCrop[], number]> => {
 
-  await verifyValueIsPositiveInt(plot_id)
-
-  await verifyValueIsPositiveInt(+limit)
-
-  await verifyValueIsPositiveInt(+page)
+  for (const value of [plot_id, +limit, +page]) {
+    await verifyValueIsPositiveInt(value)
+  }
 
   const owner_id = await fetchPlotOwnerId(plot_id)
 
@@ -94,11 +92,8 @@ export const selectCropsByPlotId = async (
       `, sort)
   }
 
-  query += `
-  GROUP BY crops.crop_id, subdivisions.name
-  `
-
   query += format(`
+    GROUP BY crops.crop_id, subdivisions.name
     ORDER BY %s %s, crops.name
     LIMIT %L
     OFFSET %L
@@ -170,11 +165,9 @@ export const selectCropsBySubdivisionId = async (
   }: QueryString.ParsedQs
 ): Promise<[ExtendedCrop[], number]> => {
 
-  await verifyValueIsPositiveInt(subdivision_id)
-
-  await verifyValueIsPositiveInt(+limit)
-
-  await verifyValueIsPositiveInt(+page)
+  for (const value of [subdivision_id, +limit, +page]) {
+    await verifyValueIsPositiveInt(value)
+  }
 
   const plot_id = await fetchSubdivisionPlotId(subdivision_id)
 
@@ -243,11 +236,8 @@ export const selectCropsBySubdivisionId = async (
       `, sort)
   }
 
-  query += `
-  GROUP BY crops.crop_id
-  `
-
   query += format(`
+    GROUP BY crops.crop_id
     ORDER BY %s %s, crops.name
     LIMIT %L
     OFFSET %L
