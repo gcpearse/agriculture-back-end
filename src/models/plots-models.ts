@@ -20,11 +20,9 @@ export const selectPlotsByOwner = async (
   }: QueryString.ParsedQs
 ): Promise<[ExtendedPlot[], number]> => {
 
-  await verifyValueIsPositiveInt(owner_id)
-
-  await verifyValueIsPositiveInt(+limit)
-
-  await verifyValueIsPositiveInt(+page)
+  for (const value of [owner_id, +limit, +page]) {
+    await verifyValueIsPositiveInt(value)
+  }
 
   await searchForUserId(owner_id)
 
@@ -36,16 +34,6 @@ export const selectPlotsByOwner = async (
     await verifyQueryValue(["asc", "desc"], order as string)
   } else {
     sort === "name" ? order = "asc" : order = "desc"
-  }
-
-  const isValidPlotType = await confirmPlotTypeIsValid(type as string, true)
-
-  if (type && !isValidPlotType) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "No results found for that query"
-    })
   }
 
   let query = `
@@ -92,6 +80,8 @@ export const selectPlotsByOwner = async (
   }
 
   if (type) {
+    await confirmPlotTypeIsValid(type as string, true)
+
     query += format(`
       AND plots.type ILIKE %L
       `, type)
@@ -101,11 +91,8 @@ export const selectPlotsByOwner = async (
       `, type)
   }
 
-  query += `
-  GROUP BY plots.plot_id
-  `
-
   query += format(`
+    GROUP BY plots.plot_id
     ORDER BY %s %s, plots.name
     LIMIT %L
     OFFSET %L
@@ -135,15 +122,7 @@ export const insertPlotByOwner = async (
 
   await checkForPlotNameConflict(owner_id, plot.name)
 
-  const isValidPlotType = await confirmPlotTypeIsValid(plot.type, false)
-
-  if (!isValidPlotType) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Invalid plot type"
-    })
-  }
+  await confirmPlotTypeIsValid(plot.type, false)
 
   const result = await db.query(format(`
     INSERT INTO plots (
@@ -266,15 +245,7 @@ export const updatePlotByPlotId = async (
     await checkForPlotNameConflict(owner_id, plot.name)
   }
 
-  const isValidPlotType = await confirmPlotTypeIsValid(plot.type, false)
-
-  if (!isValidPlotType) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Invalid plot type"
-    })
-  }
+  await confirmPlotTypeIsValid(plot.type, false)
 
   const result = await db.query(`
     UPDATE plots

@@ -158,16 +158,16 @@ describe("GET /api/subdivisions/plots/:plot_id?type=", () => {
     expect(body.count).toBe(2)
   })
 
-  test("GET:404 Responds with an error when the query value is invalid", async () => {
+  test("GET:400 Responds with an error when the query value is invalid", async () => {
 
     const { body } = await request(app)
       .get("/api/subdivisions/plots/1?type=foobar")
       .set("Authorization", `Bearer ${token}`)
-      .expect(404)
+      .expect(400)
 
     expect(body).toMatchObject<StatusResponse>({
-      message: "Not Found",
-      details: "No results found for that query"
+      message: "Bad Request",
+      details: "Invalid subdivision type"
     })
   })
 })

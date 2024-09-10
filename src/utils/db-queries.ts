@@ -217,7 +217,7 @@ export const searchForUserId = async (
 export const confirmCropCategoryIsValid = async (
   category: string,
   ignoreCase: boolean
-): Promise<boolean> => {
+): Promise<undefined> => {
 
   const result = await db.query(`
     SELECT category 
@@ -227,14 +227,20 @@ export const confirmCropCategoryIsValid = async (
     [category]
   )
 
-  return Boolean(result.rowCount)
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid crop category"
+    })
+  }
 }
 
 
 export const confirmPlotTypeIsValid = async (
   type: string,
   ignoreCase: boolean
-): Promise<boolean> => {
+): Promise<undefined> => {
 
   const result = await db.query(`
     SELECT type 
@@ -244,14 +250,20 @@ export const confirmPlotTypeIsValid = async (
     [type]
   )
 
-  return Boolean(result.rowCount)
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid plot type"
+    })
+  }
 }
 
 
 export const confirmSubdivisionTypeIsValid = async (
   type: string,
   ignoreCase: boolean
-): Promise<boolean> => {
+): Promise<undefined> => {
 
   const result = await db.query(`
     SELECT type 
@@ -261,7 +273,13 @@ export const confirmSubdivisionTypeIsValid = async (
     [type]
   )
 
-  return Boolean(result.rowCount)
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid subdivision type"
+    })
+  }
 }
 
 

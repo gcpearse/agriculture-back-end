@@ -19,11 +19,9 @@ export const selectCropsByPlotId = async (
   }: QueryString.ParsedQs
 ): Promise<[ExtendedCrop[], number]> => {
 
-  await verifyValueIsPositiveInt(plot_id)
-
-  await verifyValueIsPositiveInt(+limit)
-
-  await verifyValueIsPositiveInt(+page)
+  for (const value of [plot_id, +limit, +page]) {
+    await verifyValueIsPositiveInt(value)
+  }
 
   const owner_id = await fetchPlotOwnerId(plot_id)
 
@@ -35,16 +33,6 @@ export const selectCropsByPlotId = async (
     await verifyQueryValue(["asc", "desc"], order as string)
   } else {
     sort === "name" || sort === "harvest_date" ? order = "asc" : order = "desc"
-  }
-
-  const isValidCropCategory = await confirmCropCategoryIsValid(category as string, true)
-
-  if (category && !isValidCropCategory) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "No results found for that query"
-    })
   }
 
   let query = `
@@ -83,6 +71,8 @@ export const selectCropsByPlotId = async (
   }
 
   if (category) {
+    await confirmCropCategoryIsValid(category as string, true)
+
     query += format(`
       AND crops.category ILIKE %L
       `, category)
@@ -102,11 +92,8 @@ export const selectCropsByPlotId = async (
       `, sort)
   }
 
-  query += `
-  GROUP BY crops.crop_id, subdivisions.name
-  `
-
   query += format(`
+    GROUP BY crops.crop_id, subdivisions.name
     ORDER BY %s %s, crops.name
     LIMIT %L
     OFFSET %L
@@ -134,15 +121,7 @@ export const insertCropByPlotId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  const isValidCropCategory = await confirmCropCategoryIsValid(crop.category, false)
-
-  if (!isValidCropCategory) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Invalid crop category"
-    })
-  }
+  await confirmCropCategoryIsValid(crop.category, false)
 
   const result = await db.query(format(`
     INSERT INTO crops (
@@ -186,11 +165,9 @@ export const selectCropsBySubdivisionId = async (
   }: QueryString.ParsedQs
 ): Promise<[ExtendedCrop[], number]> => {
 
-  await verifyValueIsPositiveInt(subdivision_id)
-
-  await verifyValueIsPositiveInt(+limit)
-
-  await verifyValueIsPositiveInt(+page)
+  for (const value of [subdivision_id, +limit, +page]) {
+    await verifyValueIsPositiveInt(value)
+  }
 
   const plot_id = await fetchSubdivisionPlotId(subdivision_id)
 
@@ -204,16 +181,6 @@ export const selectCropsBySubdivisionId = async (
     await verifyQueryValue(["asc", "desc"], order as string)
   } else {
     sort === "name" || sort === "harvest_date" ? order = "asc" : order = "desc"
-  }
-
-  const isValidCropCategory = await confirmCropCategoryIsValid(category as string, true)
-
-  if (category && !isValidCropCategory) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "No results found for that query"
-    })
   }
 
   let query = `
@@ -248,6 +215,8 @@ export const selectCropsBySubdivisionId = async (
   }
 
   if (category) {
+    await confirmCropCategoryIsValid(category as string, true)
+
     query += format(`
       AND crops.category ILIKE %L
       `, category)
@@ -267,11 +236,8 @@ export const selectCropsBySubdivisionId = async (
       `, sort)
   }
 
-  query += `
-  GROUP BY crops.crop_id
-  `
-
   query += format(`
+    GROUP BY crops.crop_id
     ORDER BY %s %s, crops.name
     LIMIT %L
     OFFSET %L
@@ -301,15 +267,7 @@ export const insertCropBySubdivisionId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  const isValidCropCategory = await confirmCropCategoryIsValid(crop.category, false)
-
-  if (!isValidCropCategory) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Invalid crop category"
-    })
-  }
+  await confirmCropCategoryIsValid(crop.category, false)
 
   const result = await db.query(format(`
     INSERT INTO crops (
@@ -395,15 +353,7 @@ export const updateCropByCropId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  const isValidCropCategory = await confirmCropCategoryIsValid(crop.category, false)
-
-  if (!isValidCropCategory) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Invalid crop category"
-    })
-  }
+  await confirmCropCategoryIsValid(crop.category, false)
 
   const result = await db.query(`
     UPDATE crops

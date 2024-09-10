@@ -174,42 +174,54 @@ describe("searchForUserId", () => {
 
 describe("confirmCropCategoryIsValid", () => {
 
-  test("Returns true when the crop category is valid with case-insensitivity enabled", async () => {
+  test("When the crop category is invalid, the promise is rejected", async () => {
 
-    await expect(confirmCropCategoryIsValid("fruits", true)).resolves.toBe(true)
+    await expect(confirmCropCategoryIsValid("fruits", false)).rejects.toMatchObject<StatusResponse>({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid crop category"
+    })
   })
 
-  test("Returns false when the crop category is invalid", async () => {
+  test("When the crop category is valid with case-insensitivity enabled, the promise resolves to be undefined", async () => {
 
-    await expect(confirmCropCategoryIsValid("fruits", false)).resolves.toBe(false)
+    await expect(confirmCropCategoryIsValid("fruits", true)).resolves.toBeUndefined()
   })
 })
 
 
 describe("confirmPlotTypeIsValid", () => {
 
-  test("Returns true when the plot type is valid with case-insensitivity enabled", async () => {
+  test("When the plot type is invalid, the promise is rejected", async () => {
 
-    await expect(confirmPlotTypeIsValid("field", true)).resolves.toBe(true)
+    await expect(confirmPlotTypeIsValid("field", false)).rejects.toMatchObject<StatusResponse>({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid plot type"
+    })
   })
 
-  test("Returns false when the plot type is invalid", async () => {
+  test("When the plot type is valid with case-insensitivity enabled, the promise resolves to be undefined", async () => {
 
-    await expect(confirmPlotTypeIsValid("field", false)).resolves.toBe(false)
+    await expect(confirmPlotTypeIsValid("field", true)).resolves.toBeUndefined()
   })
 })
 
 
 describe("confirmSubdivisionTypeIsValid", () => {
 
-  test("Returns true when the plot type is valid with case-insensitivity enabled", async () => {
+  test("When the subdivision type is invalid, the promise is rejected", async () => {
 
-    await expect(confirmSubdivisionTypeIsValid("bed", true)).resolves.toBe(true)
+    await expect(confirmSubdivisionTypeIsValid("bed", false)).rejects.toMatchObject<StatusResponse>({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid subdivision type"
+    })
   })
 
-  test("Returns false when the plot type is invalid", async () => {
+  test("When the subdivision type is valid with case-insensitivity enabled, the promise resolves to be undefined", async () => {
 
-    await expect(confirmSubdivisionTypeIsValid("bed", false)).resolves.toBe(false)
+    await expect(confirmSubdivisionTypeIsValid("bed", true)).resolves.toBeUndefined()
   })
 })
 

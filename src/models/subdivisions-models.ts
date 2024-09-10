@@ -19,11 +19,9 @@ export const selectSubdivisionsByPlotId = async (
   }: QueryString.ParsedQs
 ): Promise<[ExtendedSubdivision[], number]> => {
 
-  await verifyValueIsPositiveInt(plot_id)
-
-  await verifyValueIsPositiveInt(+limit)
-
-  await verifyValueIsPositiveInt(+page)
+  for (const value of [plot_id, +limit, +page]) {
+    await verifyValueIsPositiveInt(value)
+  }
 
   const owner_id = await fetchPlotOwnerId(plot_id)
 
@@ -35,16 +33,6 @@ export const selectSubdivisionsByPlotId = async (
     await verifyQueryValue(["asc", "desc"], order as string)
   } else {
     sort === "name" || sort === "type" ? order = "asc" : order = "desc"
-  }
-
-  const isValidSubdivisionType = await confirmSubdivisionTypeIsValid(type as string, true)
-
-  if (type && !isValidSubdivisionType) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "No results found for that query"
-    })
   }
 
   let query = `
@@ -87,6 +75,8 @@ export const selectSubdivisionsByPlotId = async (
   }
 
   if (type) {
+    await confirmSubdivisionTypeIsValid(type as string, true)
+
     query += format(`
       AND subdivisions.type ILIKE %L
       `, type)
@@ -96,11 +86,8 @@ export const selectSubdivisionsByPlotId = async (
       `, type)
   }
 
-  query += `
-  GROUP BY subdivisions.subdivision_id
-  `
-
   query += format(`
+    GROUP BY subdivisions.subdivision_id
     ORDER BY %s %s, subdivisions.name
     LIMIT %L
     OFFSET %L
@@ -130,15 +117,7 @@ export const insertSubdivisionByPlotId = async (
 
   await checkForSubdivisionNameConflict(plot_id, subdivision.name)
 
-  const isValidSubdivisionType = await confirmSubdivisionTypeIsValid(subdivision.type as string, false)
-
-  if (!isValidSubdivisionType) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Invalid subdivision type"
-    })
-  }
+  await confirmSubdivisionTypeIsValid(subdivision.type as string, false)
 
   const result = await db.query(format(`
     INSERT INTO subdivisions (
@@ -238,15 +217,7 @@ export const updateSubdivisionBySubdivisionId = async (
     await checkForSubdivisionNameConflict(plot_id, subdivision.name)
   }
 
-  const isValidSubdivisionType = await confirmSubdivisionTypeIsValid(subdivision.type, false)
-
-  if (!isValidSubdivisionType) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Invalid subdivision type"
-    })
-  }
+  await confirmSubdivisionTypeIsValid(subdivision.type, false)
 
   const result = await db.query(`
     UPDATE subdivisions

@@ -192,16 +192,16 @@ describe("GET /api/crops/plots/:plot_id?category=", () => {
     expect(body.count).toBe(2)
   })
 
-  test("GET:404 Responds with an error when the query value is invalid", async () => {
+  test("GET:400 Responds with an error when the query value is invalid", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/plots/1?category=foobar")
       .set("Authorization", `Bearer ${token}`)
-      .expect(404)
+      .expect(400)
 
     expect(body).toMatchObject<StatusResponse>({
-      message: "Not Found",
-      details: "No results found for that query"
+      message: "Bad Request",
+      details: "Invalid crop category"
     })
   })
 })
@@ -844,16 +844,16 @@ describe("GET /api/crops/subdivisions/:subdivision_id?category=", () => {
     expect(body.count).toBe(1)
   })
 
-  test("GET:404 Responds with an error when the query value is invalid", async () => {
+  test("GET:400 Responds with an error when the query value is invalid", async () => {
 
     const { body } = await request(app)
       .get("/api/crops/subdivisions/1?category=foobar")
       .set("Authorization", `Bearer ${token}`)
-      .expect(404)
+      .expect(400)
 
     expect(body).toMatchObject<StatusResponse>({
-      message: "Not Found",
-      details: "No results found for that query"
+      message: "Bad Request",
+      details: "Invalid crop category"
     })
   })
 })

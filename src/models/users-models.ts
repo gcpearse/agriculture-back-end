@@ -20,9 +20,9 @@ export const selectAllUsers = async (
   }: QueryString.ParsedQs
 ): Promise<[SecureUser[], number]> => {
 
-  await verifyValueIsPositiveInt(+limit)
-
-  await verifyValueIsPositiveInt(+page)
+  for (const value of [+limit, +page]) {
+    await verifyValueIsPositiveInt(value)
+  }
 
   const userRole = await fetchUserRole(authUserId)
 
