@@ -210,14 +210,18 @@ describe("confirmPlotTypeIsValid", () => {
 
 describe("confirmSubdivisionTypeIsValid", () => {
 
-  test("Returns true when the plot type is valid with case-insensitivity enabled", async () => {
+  test("When the subdivision type is invalid, the promise is rejected", async () => {
 
-    await expect(confirmSubdivisionTypeIsValid("bed", true)).resolves.toBe(true)
+    await expect(confirmSubdivisionTypeIsValid("bed", false)).rejects.toMatchObject<StatusResponse>({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid subdivision type"
+    })
   })
 
-  test("Returns false when the plot type is invalid", async () => {
+  test("When the subdivision type is valid with case-insensitivity enabled, the promise resolves to be undefined", async () => {
 
-    await expect(confirmSubdivisionTypeIsValid("bed", false)).resolves.toBe(false)
+    await expect(confirmSubdivisionTypeIsValid("bed", true)).resolves.toBeUndefined()
   })
 })
 
