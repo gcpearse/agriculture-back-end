@@ -183,7 +183,7 @@ describe("confirmCropCategoryIsValid", () => {
     })
   })
 
-  test("When the crop category is valid with case-insensitivity enabled, the promiswe resolves to be undefined", async () => {
+  test("When the crop category is valid with case-insensitivity enabled, the promise resolves to be undefined", async () => {
 
     await expect(confirmCropCategoryIsValid("fruits", true)).resolves.toBeUndefined()
   })
@@ -192,14 +192,18 @@ describe("confirmCropCategoryIsValid", () => {
 
 describe("confirmPlotTypeIsValid", () => {
 
-  test("Returns true when the plot type is valid with case-insensitivity enabled", async () => {
+  test("When the plot type is invalid, the promise is rejected", async () => {
 
-    await expect(confirmPlotTypeIsValid("field", true)).resolves.toBe(true)
+    await expect(confirmPlotTypeIsValid("field", false)).rejects.toMatchObject<StatusResponse>({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid plot type"
+    })
   })
 
-  test("Returns false when the plot type is invalid", async () => {
+  test("When the plot type is valid with case-insensitivity enabled, the promise resolves to be undefined", async () => {
 
-    await expect(confirmPlotTypeIsValid("field", false)).resolves.toBe(false)
+    await expect(confirmPlotTypeIsValid("field", true)).resolves.toBeUndefined()
   })
 })
 
