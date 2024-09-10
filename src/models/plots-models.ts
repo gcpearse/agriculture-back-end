@@ -38,16 +38,6 @@ export const selectPlotsByOwner = async (
     sort === "name" ? order = "asc" : order = "desc"
   }
 
-  const isValidPlotType = await confirmPlotTypeIsValid(type as string, true)
-
-  if (type && !isValidPlotType) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "No results found for that query"
-    })
-  }
-
   let query = `
   SELECT
     plots.*,
@@ -92,6 +82,8 @@ export const selectPlotsByOwner = async (
   }
 
   if (type) {
+    await confirmPlotTypeIsValid(type as string, true)
+
     query += format(`
       AND plots.type ILIKE %L
       `, type)
@@ -135,15 +127,7 @@ export const insertPlotByOwner = async (
 
   await checkForPlotNameConflict(owner_id, plot.name)
 
-  const isValidPlotType = await confirmPlotTypeIsValid(plot.type, false)
-
-  if (!isValidPlotType) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Invalid plot type"
-    })
-  }
+  await confirmPlotTypeIsValid(plot.type, false)
 
   const result = await db.query(format(`
     INSERT INTO plots (
@@ -266,15 +250,7 @@ export const updatePlotByPlotId = async (
     await checkForPlotNameConflict(owner_id, plot.name)
   }
 
-  const isValidPlotType = await confirmPlotTypeIsValid(plot.type, false)
-
-  if (!isValidPlotType) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Invalid plot type"
-    })
-  }
+  await confirmPlotTypeIsValid(plot.type, false)
 
   const result = await db.query(`
     UPDATE plots
