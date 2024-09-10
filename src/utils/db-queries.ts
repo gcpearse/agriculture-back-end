@@ -263,7 +263,7 @@ export const confirmPlotTypeIsValid = async (
 export const confirmSubdivisionTypeIsValid = async (
   type: string,
   ignoreCase: boolean
-): Promise<boolean> => {
+): Promise<undefined> => {
 
   const result = await db.query(`
     SELECT type 
@@ -273,7 +273,13 @@ export const confirmSubdivisionTypeIsValid = async (
     [type]
   )
 
-  return Boolean(result.rowCount)
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid subdivision type"
+    })
+  }
 }
 
 
