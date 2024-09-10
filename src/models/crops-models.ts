@@ -37,10 +37,6 @@ export const selectCropsByPlotId = async (
     sort === "name" || sort === "harvest_date" ? order = "asc" : order = "desc"
   }
 
-  if (category) {
-    await confirmCropCategoryIsValid(category as string, true)
-  }
-
   let query = `
   SELECT
     crops.*,
@@ -77,6 +73,8 @@ export const selectCropsByPlotId = async (
   }
 
   if (category) {
+    await confirmCropCategoryIsValid(category as string, true)
+
     query += format(`
       AND crops.category ILIKE %L
       `, category)
