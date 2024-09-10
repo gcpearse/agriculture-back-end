@@ -37,16 +37,6 @@ export const selectSubdivisionsByPlotId = async (
     sort === "name" || sort === "type" ? order = "asc" : order = "desc"
   }
 
-  const isValidSubdivisionType = await confirmSubdivisionTypeIsValid(type as string, true)
-
-  if (type && !isValidSubdivisionType) {
-    return Promise.reject({
-      status: 404,
-      message: "Not Found",
-      details: "No results found for that query"
-    })
-  }
-
   let query = `
   SELECT
     subdivisions.*,
@@ -87,6 +77,8 @@ export const selectSubdivisionsByPlotId = async (
   }
 
   if (type) {
+    await confirmSubdivisionTypeIsValid(type as string, true)
+
     query += format(`
       AND subdivisions.type ILIKE %L
       `, type)
@@ -130,15 +122,7 @@ export const insertSubdivisionByPlotId = async (
 
   await checkForSubdivisionNameConflict(plot_id, subdivision.name)
 
-  const isValidSubdivisionType = await confirmSubdivisionTypeIsValid(subdivision.type as string, false)
-
-  if (!isValidSubdivisionType) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Invalid subdivision type"
-    })
-  }
+  await confirmSubdivisionTypeIsValid(subdivision.type as string, false)
 
   const result = await db.query(format(`
     INSERT INTO subdivisions (
@@ -238,15 +222,7 @@ export const updateSubdivisionBySubdivisionId = async (
     await checkForSubdivisionNameConflict(plot_id, subdivision.name)
   }
 
-  const isValidSubdivisionType = await confirmSubdivisionTypeIsValid(subdivision.type, false)
-
-  if (!isValidSubdivisionType) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Invalid subdivision type"
-    })
-  }
+  await confirmSubdivisionTypeIsValid(subdivision.type, false)
 
   const result = await db.query(`
     UPDATE subdivisions
