@@ -99,3 +99,12 @@ export const selectIssuesByPlotId = async (
 
   return Promise.all([result.rows, countResult.rows[0].count])
 }
+
+
+export const selectIssuesBySubdvisionId = async (
+  authUserId: number,
+  subdivision_id: number
+) => {
+
+  console.log(authUserId, subdivision_id)
+}
