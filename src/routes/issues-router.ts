@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { getIssuesByPlotId } from "../controllers/issues-controllers"
+import { getIssuesByPlotId, getIssuesBySubdivisionId } from "../controllers/issues-controllers"
 
 
 export const issuesRouter = Router()
@@ -101,3 +101,25 @@ issuesRouter.route("/issues/plots/:plot_id")
  *              $ref: "#/components/schemas/NotFound"
  */
   .get(verifyToken, getIssuesByPlotId)
+
+
+issuesRouter.route("/issues/plots/:subdivision_id")
+
+
+/**
+ * @swagger
+ * /api/issues/plots/{subdivision_id}:
+ *  get:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Retrieve a subdivision's issues
+ *    description: Responds with an array of issue objects.
+ *    tags: [Issues]
+ *    parameters:
+ *      - in: path
+ *        name: subdivision_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ */
+  .get(verifyToken, getIssuesBySubdivisionId)
