@@ -103,7 +103,7 @@ issuesRouter.route("/issues/plots/:plot_id")
   .get(verifyToken, getIssuesByPlotId)
 
 
-issuesRouter.route("/issues/plots/:subdivision_id")
+issuesRouter.route("/issues/subdivisions/:subdivision_id")
 
 
 /**
