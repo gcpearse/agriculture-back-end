@@ -34,7 +34,7 @@ afterAll(async () => {
 
 describe("GET /api/issues/plots/:plot_id", () => {
 
-  test("GET:200 Responds with an array of issues objects sorted by issue_id in descending order", async () => {
+  test("GET:200 Responds with an array of issue objects sorted by issue_id in descending order", async () => {
 
     const { body } = await request(app)
       .get("/api/issues/plots/1")
@@ -67,7 +67,7 @@ describe("GET /api/issues/plots/:plot_id", () => {
     expect(body.count).toBe(3)
   })
 
-  test("GET:200 Responds with an empty array when no crops are associated with the plot", async () => {
+  test("GET:200 Responds with an empty array when no issues are associated with the plot", async () => {
 
     const { body } = await request(app)
       .get("/api/issues/plots/3")
@@ -142,7 +142,7 @@ describe("GET /api/issues/plots/:plot_id", () => {
 
 describe("GET /api/issues/plots/:plot_id?is_critical=", () => {
 
-  test("GET:200 Responds with an array of issues objects filtered by the value of is_critical", async () => {
+  test("GET:200 Responds with an array of issue objects filtered by the value of is_critical", async () => {
 
     const { body } = await request(app)
       .get("/api/issues/plots/1?is_critical=true")
@@ -196,7 +196,7 @@ describe("GET /api/issues/plots/:plot_id?is_critical=", () => {
 
 describe("GET /api/issues/plots/:plot_id?is_resolved=", () => {
 
-  test("GET:200 Responds with an array of issues objects filtered by the value of is_resolved", async () => {
+  test("GET:200 Responds with an array of issue objects filtered by the value of is_resolved", async () => {
 
     const { body } = await request(app)
       .get("/api/issues/plots/1?is_resolved=true")
@@ -250,7 +250,7 @@ describe("GET /api/issues/plots/:plot_id?is_resolved=", () => {
 
 describe("GET /api/issues/plots/:plot_id?sort=", () => {
 
-  test("GET:200 Responds with an array of issues objects sorted by title in ascending order", async () => {
+  test("GET:200 Responds with an array of issue objects sorted by title in ascending order", async () => {
 
     const { body } = await request(app)
       .get("/api/issues/plots/1?sort=title")
@@ -285,7 +285,7 @@ describe("GET /api/issues/plots/:plot_id?sort=", () => {
 
 describe("GET /api/issues/plots/:plot_id?is_critical=&sort=", () => {
 
-  test("GET:200 Responds with an array of issues objects filtered by the value of is_critical and sorted by title in ascending order", async () => {
+  test("GET:200 Responds with an array of issue objects filtered by the value of is_critical and sorted by title in ascending order", async () => {
 
     const { body } = await request(app)
       .get("/api/issues/plots/1?is_critical=true&sort=title")
