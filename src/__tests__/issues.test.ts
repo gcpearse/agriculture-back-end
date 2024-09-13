@@ -658,3 +658,40 @@ describe("GET /api/issues/subdivisions/:subdivision_id?order=", () => {
     })
   })
 })
+
+
+describe("GET /api/issues/subdivisions/:subdivision_id?limit=", () => {
+
+  test("GET:200 Responds with a limited array of issue objects associated with the subdivision", async () => {
+
+    const { body } = await request(app)
+      .get("/api/issues/subdivisions/1?limit=1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.issues).toHaveLength(1)
+  })
+
+  test("GET:200 Responds with an array of all issues associated with the plot when the limit exceeds the total number of results", async () => {
+
+    const { body } = await request(app)
+      .get("/api/issues/subdivisions/1?limit=20")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.issues).toHaveLength(2)
+  })
+
+  test("GET:400 Responds with an error when the value of limit is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/issues/subdivisions/1?limit=foobar")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Value must be a positive integer"
+    })
+  })
+})
