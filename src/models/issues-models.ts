@@ -109,10 +109,14 @@ export const selectIssuesBySubdivisionId = async (
     is_resolved,
     sort = "issue_id",
     order,
+    limit = "10",
+    page = "1"
   }: QueryString.ParsedQs
 ): Promise<ExtendedIssue[]> => {
 
-  await verifyValueIsPositiveInt(subdivision_id)
+  for (const value of [subdivision_id, +limit, +page]) {
+    await verifyValueIsPositiveInt(value)
+  }
 
   const plot_id = await fetchSubdivisionPlotId(subdivision_id)
 
@@ -162,7 +166,8 @@ export const selectIssuesBySubdivisionId = async (
   query += format(`
     GROUP BY issues.issue_id
     ORDER BY %s %s, issues.title
-    `, sort, order)
+    LIMIT %L
+    `, sort, order, +limit)
 
   const result = await db.query(query, [subdivision_id])
 
