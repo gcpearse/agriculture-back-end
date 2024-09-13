@@ -751,7 +751,7 @@ describe("GET /api/plots/:plot_id", () => {
       image_count: 1,
       subdivision_count: 3,
       crop_count: 4,
-      issue_count: 3,
+      issue_count: 4,
       job_count: 2
     })
   })
