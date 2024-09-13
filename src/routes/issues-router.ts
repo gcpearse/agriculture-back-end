@@ -81,6 +81,9 @@ issuesRouter.route("/issues/plots/:plot_id")
  *                          image_count:
  *                            type: integer
  *                            example: 1
+ *                count:
+ *                  type: integer
+ *                  example: 1
  *      400:
  *        description: Bad Request
  *        content:
@@ -175,6 +178,9 @@ issuesRouter.route("/issues/subdivisions/:subdivision_id")
  *                          image_count:
  *                            type: integer
  *                            example: 1
+ *                count:
+ *                  type: integer
+ *                  example: 1
  *      400:
  *        description: Bad Request
  *        content:
