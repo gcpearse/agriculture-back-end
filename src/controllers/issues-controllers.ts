@@ -1,6 +1,6 @@
 import { NextFunction, Response } from "express";
 import { ExtendedRequest } from "../types/auth-types";
-import { selectIssuesByPlotId, selectIssuesBySubdvisionId } from "../models/issues-models";
+import { selectIssuesByPlotId, selectIssuesBySubdivisionId } from "../models/issues-models";
 
 
 export const getIssuesByPlotId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
@@ -25,7 +25,7 @@ export const getIssuesBySubdivisionId = async (req: ExtendedRequest, res: Respon
   const { subdivision_id } = req.params
 
   try {
-    const issues = await selectIssuesBySubdvisionId(authUserId, +subdivision_id)
+    const issues = await selectIssuesBySubdivisionId(authUserId, +subdivision_id)
     res.status(200).send({ issues })
   } catch (err) {
     next(err)

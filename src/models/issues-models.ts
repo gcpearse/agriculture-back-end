@@ -1,7 +1,7 @@
 import QueryString from "qs"
 import { db } from "../db"
 import { ExtendedIssue } from "../types/issue-types"
-import { fetchPlotOwnerId } from "../utils/db-queries"
+import { fetchPlotOwnerId, fetchSubdivisionPlotId } from "../utils/db-queries"
 import { verifyPagination, verifyPermission, verifyQueryValue, verifyValueIsPositiveInt } from "../utils/verification"
 import format from "pg-format"
 
@@ -104,7 +104,37 @@ export const selectIssuesByPlotId = async (
 export const selectIssuesBySubdvisionId = async (
   authUserId: number,
   subdivision_id: number
-) => {
+): Promise<ExtendedIssue[]> => {
 
-  console.log(authUserId, subdivision_id)
+  await verifyValueIsPositiveInt(subdivision_id)
+
+  const plot_id = await fetchSubdivisionPlotId(subdivision_id)
+
+  const owner_id = await fetchPlotOwnerId(plot_id)
+
+  await verifyPermission(authUserId, owner_id)
+
+  let query = `
+  SELECT
+    issues.*,
+    COUNT(DISTINCT issue_notes.note_id)::INT
+    AS note_count,
+    COUNT(DISTINCT issue_images.image_id)::INT
+    AS image_count
+  FROM issues
+  LEFT JOIN issue_notes
+  ON issues.issue_id = issue_notes.issue_id
+  LEFT JOIN issue_images
+  ON issues.issue_id = issue_images.issue_id
+  WHERE issues.subdivision_id = $1
+  `
+
+  query += format(`
+    GROUP BY issues.issue_id
+    ORDER BY issue_id DESC
+    `)
+
+  const result = await db.query(query, [subdivision_id])
+
+  return result.rows
 }
