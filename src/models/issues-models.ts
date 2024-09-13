@@ -103,7 +103,10 @@ export const selectIssuesByPlotId = async (
 
 export const selectIssuesBySubdivisionId = async (
   authUserId: number,
-  subdivision_id: number
+  subdivision_id: number,
+  {
+    is_critical
+  }: QueryString.ParsedQs
 ): Promise<ExtendedIssue[]> => {
 
   await verifyValueIsPositiveInt(subdivision_id)
@@ -128,6 +131,14 @@ export const selectIssuesBySubdivisionId = async (
   ON issues.issue_id = issue_images.issue_id
   WHERE issues.subdivision_id = $1
   `
+
+  if (is_critical) {
+    await verifyQueryValue(["true", "false"], is_critical as string)
+
+    query += format(`
+      AND issues.is_critical = %L
+      `, is_critical)
+  }
 
   query += format(`
     GROUP BY issues.issue_id
