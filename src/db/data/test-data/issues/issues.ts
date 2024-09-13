@@ -33,5 +33,13 @@ export const issueData: Issue[] = [
     description: "Some of the fence posts are rotting and need replacing",
     is_critical: false,
     is_resolved: false
+  },
+  {
+    plot_id: 1,
+    subdivision_id: 1,
+    title: "Weeds amongst the beetroot",
+    description: "There are weeds growing between the beetroot plants that need to be removed",
+    is_critical: false,
+    is_resolved: false
   }
 ]
