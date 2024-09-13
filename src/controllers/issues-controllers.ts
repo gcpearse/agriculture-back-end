@@ -25,8 +25,8 @@ export const getIssuesBySubdivisionId = async (req: ExtendedRequest, res: Respon
   const { subdivision_id } = req.params
 
   try {
-    const issues = await selectIssuesBySubdivisionId(authUserId, +subdivision_id, req.query)
-    res.status(200).send({ issues })
+    const [issues, count] = await selectIssuesBySubdivisionId(authUserId, +subdivision_id, req.query)
+    res.status(200).send({ issues, count })
   } catch (err) {
     next(err)
   }
