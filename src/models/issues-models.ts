@@ -167,9 +167,12 @@ export const selectIssuesBySubdivisionId = async (
     GROUP BY issues.issue_id
     ORDER BY %s %s, issues.title
     LIMIT %L
-    `, sort, order, +limit)
+    OFFSET %L
+    `, sort, order, +limit, (+page - 1) * +limit)
 
   const result = await db.query(query, [subdivision_id])
+
+  await verifyPagination(+page, result.rows.length)
 
   return result.rows
 }
