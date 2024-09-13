@@ -608,3 +608,53 @@ describe("GET /api/issues/subdivisions/:subdivision_id?is_resolved=", () => {
     })
   })
 })
+
+
+describe("GET /api/issues/subdivisions/:subdivision_id?sort=", () => {
+
+  test("GET:200 Responds with an array of issue objects sorted by title in ascending order", async () => {
+
+    const { body } = await request(app)
+      .get("/api/issues/subdivisions/1?sort=title")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    const sortedIssues: ExtendedIssue[] = [...body.issues].sort((a: ExtendedIssue, b: ExtendedIssue) => {
+      if (a.title! > b.title!) return 1
+      if (a.title! < b.title!) return -1
+      return 0
+    })
+
+    expect(body.issues).toEqual(sortedIssues)
+  })
+
+  test("GET:400 Responds with an error when passed an invalid sort value", async () => {
+
+    const { body } = await request(app)
+      .get("/api/issues/subdivisions/1?sort=foobar")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid query value"
+    })
+  })
+})
+
+
+describe("GET /api/issues/subdivisions/:subdivision_id?order=", () => {
+
+  test("GET:400 Responds with an error when passed an invalid order value", async () => {
+
+    const { body } = await request(app)
+      .get("/api/issues/subdivisions/1?order=foobar")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid query value"
+    })
+  })
+})
