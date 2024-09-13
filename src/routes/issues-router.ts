@@ -144,6 +144,16 @@ issuesRouter.route("/issues/subdivisions/:subdivision_id")
  *          enum:
  *            - asc
  *            - desc
+ *      - in: query
+ *        name: limit
+ *        schema:
+ *          type: integer
+ *        default: 10
+ *      - in: query
+ *        name: page
+ *        schema:
+ *          type: integer
+ *        default: 1
  *    responses:
  *      200:
  *        description: OK
