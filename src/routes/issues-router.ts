@@ -111,7 +111,7 @@ issuesRouter.route("/issues/subdivisions/:subdivision_id")
 
 /**
  * @swagger
- * /api/issues/plots/{subdivision_id}:
+ * /api/issues/subdivisions/{subdivision_id}:
  *  get:
  *    security:
  *      - bearerAuth: []
