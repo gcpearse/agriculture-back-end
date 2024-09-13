@@ -632,7 +632,7 @@ describe("GET /api/subdivisions/:subdivision_id", () => {
       plot_name: "John's Garden",
       image_count: 1,
       crop_count: 2,
-      issue_count: 1,
+      issue_count: 2,
       job_count: 1
     })
   })
