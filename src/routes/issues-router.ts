@@ -113,7 +113,7 @@ issuesRouter.route("/issues/subdivisions/:subdivision_id")
  *    security:
  *      - bearerAuth: []
  *    summary: Retrieve a subdivision's issues
- *    description: Responds with an array of issue objects. If a parameter is invalid, the server responds with an error. Permission is denied when the plot does not belong to the user.
+ *    description: Responds with an array of issue objects. Results can be filtered by is_critical or is_resolved. If a parameter is invalid, the server responds with an error. Permission is denied when the plot does not belong to the user.
  *    tags: [Issues]
  *    parameters:
  *      - in: path
@@ -121,6 +121,14 @@ issuesRouter.route("/issues/subdivisions/:subdivision_id")
  *        required: true
  *        schema:
  *          type: integer
+ *      - in: query
+ *        name: is_critical
+ *        schema:
+ *          type: boolean
+ *      - in: query
+ *        name: is_resolved
+ *        schema:
+ *          type: boolean
  *    responses:
  *      200:
  *        description: OK
