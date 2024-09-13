@@ -17,7 +17,7 @@ export const selectIssuesByPlotId = async (
     limit = "10",
     page = "1"
   }: QueryString.ParsedQs
-): Promise<ExtendedIssue[]> => {
+): Promise<[ExtendedIssue[], number]> => {
 
   for (const value of [plot_id, +limit, +page]) {
     await verifyValueIsPositiveInt(value)
@@ -112,7 +112,7 @@ export const selectIssuesBySubdivisionId = async (
     limit = "10",
     page = "1"
   }: QueryString.ParsedQs
-): Promise<ExtendedIssue[]> => {
+): Promise<[ExtendedIssue[], number]> => {
 
   for (const value of [subdivision_id, +limit, +page]) {
     await verifyValueIsPositiveInt(value)
@@ -147,10 +147,20 @@ export const selectIssuesBySubdivisionId = async (
   WHERE issues.subdivision_id = $1
   `
 
+  let countQuery = `
+  SELECT COUNT(issue_id)::INT
+  FROM issues
+  WHERE subdivision_id = $1
+  `
+
   if (is_critical) {
     await verifyQueryValue(["true", "false"], is_critical as string)
 
     query += format(`
+      AND issues.is_critical = %L
+      `, is_critical)
+
+    countQuery += format(`
       AND issues.is_critical = %L
       `, is_critical)
   }
@@ -159,6 +169,10 @@ export const selectIssuesBySubdivisionId = async (
     await verifyQueryValue(["true", "false"], is_resolved as string)
 
     query += format(`
+      AND issues.is_resolved = %L
+      `, is_resolved)
+
+    countQuery += format(`
       AND issues.is_resolved = %L
       `, is_resolved)
   }
@@ -174,5 +188,7 @@ export const selectIssuesBySubdivisionId = async (
 
   await verifyPagination(+page, result.rows.length)
 
-  return result.rows
+  const countResult = await db.query(countQuery, [subdivision_id])
+
+  return Promise.all([result.rows, countResult.rows[0].count])
 }
