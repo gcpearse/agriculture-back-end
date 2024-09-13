@@ -101,7 +101,7 @@ export const selectIssuesByPlotId = async (
 }
 
 
-export const selectIssuesBySubdvisionId = async (
+export const selectIssuesBySubdivisionId = async (
   authUserId: number,
   subdivision_id: number
 ): Promise<ExtendedIssue[]> => {
