@@ -708,7 +708,7 @@ describe("GET /api/crops/subdivisions/:subdivision_id", () => {
       expect(crop).toMatchObject<ExtendedCrop>({
         crop_id: expect.any(Number),
         plot_id: 1,
-        subdivision_id: expect.toBeOneOf([expect.any(Number), null]),
+        subdivision_id: 1,
         name: expect.any(String),
         variety: expect.toBeOneOf([expect.any(String), null]),
         category: expect.any(String),
