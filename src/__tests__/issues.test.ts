@@ -455,9 +455,11 @@ describe("GET /api/issues/subdivisions/:subdivision_id", () => {
         image_count: expect.any(Number)
       })
     }
+
+    expect(body.count).toBe(2)
   })
 
-  test("GET:200 Responds with an empty array when no issues are associated with the plot", async () => {
+  test("GET:200 Responds with an empty array when no issues are associated with the subdivisions", async () => {
 
     const { body } = await request(app)
       .get("/api/issues/subdivisions/2")
@@ -467,6 +469,8 @@ describe("GET /api/issues/subdivisions/:subdivision_id", () => {
     expect(Array.isArray(body.issues)).toBe(true)
 
     expect(body.issues).toHaveLength(0)
+
+    expect(body.count).toBe(0)
   })
 
   test("GET:400 Responds with an error when the subdivision_id parameter is not a positive integer", async () => {
@@ -540,6 +544,8 @@ describe("GET /api/issues/subdivisions/:subdivision_id?is_critical=", () => {
     for (const issue of body.issues) {
       expect(issue.is_critical).toBe(true)
     }
+
+    expect(body.count).toBe(1)
   })
 
   test("GET:200 Returns an empty array when the value of is_critical matches no results", async () => {
@@ -552,6 +558,8 @@ describe("GET /api/issues/subdivisions/:subdivision_id?is_critical=", () => {
     expect(Array.isArray(body.issues)).toBe(true)
 
     expect(body.issues).toHaveLength(0)
+
+    expect(body.count).toBe(0)
   })
 
   test("GET:400 Responds with an error when passed an invalid value for is_critical", async () => {
@@ -581,6 +589,8 @@ describe("GET /api/issues/subdivisions/:subdivision_id?is_resolved=", () => {
     for (const issue of body.issues) {
       expect(issue.is_resolved).toBe(false)
     }
+
+    expect(body.count).toBe(2)
   })
 
   test("GET:200 Returns an empty array when the value of is_resolved matches no results", async () => {
@@ -593,6 +603,8 @@ describe("GET /api/issues/subdivisions/:subdivision_id?is_resolved=", () => {
     expect(Array.isArray(body.issues)).toBe(true)
 
     expect(body.issues).toHaveLength(0)
+
+    expect(body.count).toBe(0)
   })
 
   test("GET:400 Responds with an error when passed an invalid value for is_resolved", async () => {
@@ -626,6 +638,8 @@ describe("GET /api/issues/subdivisions/:subdivision_id?sort=", () => {
     })
 
     expect(body.issues).toEqual(sortedIssues)
+
+    expect(body.count).toBe(2)
   })
 
   test("GET:400 Responds with an error when passed an invalid sort value", async () => {
@@ -670,6 +684,8 @@ describe("GET /api/issues/subdivisions/:subdivision_id?limit=", () => {
       .expect(200)
 
     expect(body.issues).toHaveLength(1)
+
+    expect(body.count).toBe(2)
   })
 
   test("GET:200 Responds with an array of all issues associated with the plot when the limit exceeds the total number of results", async () => {
@@ -680,6 +696,8 @@ describe("GET /api/issues/subdivisions/:subdivision_id?limit=", () => {
       .expect(200)
 
     expect(body.issues).toHaveLength(2)
+
+    expect(body.count).toBe(2)
   })
 
   test("GET:400 Responds with an error when the value of limit is not a positive integer", async () => {
@@ -709,6 +727,8 @@ describe("GET /api/issues/subdivisions/:subdivision_id?page=", () => {
     expect(body.issues.map((issue: ExtendedIssue) => {
       return issue.issue_id
     })).toEqual([3])
+
+    expect(body.count).toBe(2)
   })
 
   test("GET:200 The page defaults to page one", async () => {
@@ -721,6 +741,8 @@ describe("GET /api/issues/subdivisions/:subdivision_id?page=", () => {
     expect(body.issues.map((issue: ExtendedIssue) => {
       return issue.issue_id
     })).toEqual([5])
+
+    expect(body.count).toBe(2)
   })
 
   test("GET:400 Responds with an error when the value of page is not a positive integer", async () => {
