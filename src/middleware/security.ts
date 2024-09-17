@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs"
 
 
-export const generateHash = async (plaintext: string) => {
+export const generateHash = async (plaintext: string): Promise<string> => {
 
   let saltRounds = 10
 
@@ -13,7 +13,7 @@ export const generateHash = async (plaintext: string) => {
 }
 
 
-export const compareHash = async (plaintext: string, hash: string) => {
+export const compareHash = async (plaintext: string, hash: string): Promise<boolean> => {
 
   return await bcrypt.compare(plaintext, hash)
 }
