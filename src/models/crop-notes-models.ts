@@ -1,6 +1,6 @@
 import format from "pg-format"
 import { db } from "../db"
-import { CropNote } from "../types/note-types"
+import { CropNote, NoteRequest } from "../types/note-types"
 import { fetchCropNoteCropId, fetchCropOwnerId } from "../utils/db-queries"
 import { verifyPermission, verifyValueIsPositiveInt } from "../utils/verification"
 
@@ -32,7 +32,7 @@ export const selectCropNotesByCropId = async (
 export const insertCropNoteByCropId = async (
   authUserId: number,
   crop_id: number,
-  note: { body: string }
+  note: NoteRequest
 ): Promise<CropNote> => {
 
   await verifyValueIsPositiveInt(crop_id)
@@ -83,7 +83,7 @@ export const removeCropNotesByCropId = async (
 export const updateCropNoteByNoteId = async (
   authUserId: number,
   note_id: number,
-  note: { body: string }
+  note: NoteRequest
 ): Promise<CropNote> => {
 
   await verifyValueIsPositiveInt(note_id)
