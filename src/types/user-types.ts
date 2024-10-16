@@ -31,12 +31,15 @@ export enum UnitSystem {
 }
 
 
-export type UnregisteredUser = {
+export type UserRequest = {
   email: string
   first_name: string
   surname: string
   unit_system: UnitSystem
-} & Username & Password
+}
+
+
+export type UnregisteredUser = UserRequest & Username & Password
 
 
 export type SecureUser = {
