@@ -106,6 +106,7 @@ export const insertIssueByPlotId = async (
   plot_id: number,
   issue: IssueRequest
 ) => {
+
   await verifyValueIsPositiveInt(plot_id)
 
   const owner_id = await fetchPlotOwnerId(plot_id)
@@ -225,4 +226,43 @@ export const selectIssuesBySubdivisionId = async (
   const countResult = await db.query(countQuery, [subdivision_id])
 
   return Promise.all([result.rows, countResult.rows[0].count])
+}
+
+
+export const insertIssueBySubdivisionId = async (
+  authUserId: number,
+  subdivision_id: number,
+  issue: IssueRequest
+) => {
+
+  await verifyValueIsPositiveInt(subdivision_id)
+
+  const plot_id = await fetchSubdivisionPlotId(subdivision_id)
+
+  const owner_id = await fetchPlotOwnerId(plot_id)
+
+  await verifyPermission(authUserId, owner_id)
+
+  const result = await db.query(format(`
+    INSERT INTO issues (
+      plot_id,
+      subdivision_id,
+      title,
+      description,
+      is_critical
+    )
+    VALUES
+      %L
+    RETURNING *;
+    `,
+    [[
+      plot_id,
+      subdivision_id,
+      issue.title,
+      issue.description,
+      issue.is_critical ?? false
+    ]]
+  ))
+
+  return result.rows[0]
 }
