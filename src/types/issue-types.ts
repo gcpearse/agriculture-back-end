@@ -14,3 +14,10 @@ export type ExtendedIssue = {
   note_count: number
   image_count: number
 } & Issue
+
+
+export type IssueRequest = {
+  title: string
+  description: string
+  is_critical?: boolean
+}

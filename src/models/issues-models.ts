@@ -1,6 +1,6 @@
 import QueryString from "qs"
 import { db } from "../db"
-import { ExtendedIssue } from "../types/issue-types"
+import { ExtendedIssue, IssueRequest } from "../types/issue-types"
 import { fetchPlotOwnerId, fetchSubdivisionPlotId } from "../utils/db-queries"
 import { verifyPagination, verifyPermission, verifyQueryValue, verifyValueIsPositiveInt } from "../utils/verification"
 import format from "pg-format"
@@ -98,6 +98,40 @@ export const selectIssuesByPlotId = async (
   const countResult = await db.query(countQuery, [plot_id])
 
   return Promise.all([result.rows, countResult.rows[0].count])
+}
+
+
+export const insertIssueByPlotId = async (
+  authUserId: number,
+  plot_id: number,
+  issue: IssueRequest
+) => {
+  await verifyValueIsPositiveInt(plot_id)
+
+  const owner_id = await fetchPlotOwnerId(plot_id)
+
+  await verifyPermission(authUserId, owner_id)
+
+  const result = await db.query(format(`
+    INSERT INTO issues (
+      plot_id,
+      title,
+      description,
+      is_critical
+    )
+    VALUES
+      %L
+    RETURNING *;
+    `,
+    [[
+      plot_id,
+      issue.title,
+      issue.description,
+      issue.is_critical ?? false
+    ]]
+  ))
+
+  return result.rows[0]
 }
 
 
