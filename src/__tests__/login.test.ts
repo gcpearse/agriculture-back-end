@@ -64,7 +64,7 @@ describe("POST /api/login", () => {
 
   test("POST:404 Responds with an error message when the username or email is not found", async () => {
 
-    const user = {
+    const user: Credentials = {
       login: "mango_man",
       password: "carrots123"
     }
