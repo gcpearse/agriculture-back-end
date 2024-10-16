@@ -13,3 +13,8 @@ export type CropNote = {
 export type IssueNote = {
   issue_id: number
 } & Note
+
+
+export type NoteRequest = {
+  body: string
+}

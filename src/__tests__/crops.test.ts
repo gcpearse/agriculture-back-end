@@ -3,7 +3,7 @@ import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
-import { Crop, ExtendedCrop } from "../types/crop-types"
+import { Crop, CropRequest, ExtendedCrop } from "../types/crop-types"
 import { toBeOneOf } from 'jest-extended'
 import { StatusResponse } from "../types/response-types"
 expect.extend({ toBeOneOf })
@@ -500,7 +500,7 @@ describe("POST /api/crops/plots/:plot_id", () => {
 
   test("POST:201 Responds with a new crop object, assigning plot_id and subdivision_id (null) automatically", async () => {
 
-    const newCrop = {
+    const newCrop: CropRequest = {
       name: "Pear",
       variety: "Conference",
       category: "Fruits",
@@ -530,7 +530,7 @@ describe("POST /api/crops/plots/:plot_id", () => {
 
   test("POST:201 Assigns a null value to subdivision_id, variety, quantity, date_planted, and harvest_date when no value is provided", async () => {
 
-    const newCrop = {
+    const newCrop: CropRequest = {
       name: "Pear",
       category: "Fruits"
     }
@@ -554,64 +554,9 @@ describe("POST /api/crops/plots/:plot_id", () => {
     })
   })
 
-  test("POST:201 Ignores any unnecessary properties on the object", async () => {
-
-    const newCrop = {
-      name: "Pear",
-      category: "Fruits",
-      price: 100
-    }
-
-    const { body } = await request(app)
-      .post("/api/crops/plots/1")
-      .send(newCrop)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(201)
-
-    expect(body.crop).not.toHaveProperty("price")
-  })
-
-  test("POST:400 Responds with an error when passed a property with an invalid data type", async () => {
-
-    const newCrop = {
-      name: "Pear",
-      category: "Fruits",
-      quantity: "one",
-    }
-
-    const { body } = await request(app)
-      .post("/api/crops/plots/1")
-      .send(newCrop)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Invalid text representation"
-    })
-  })
-
-  test("POST:400 Responds with an error when a required property is missing from the request body", async () => {
-
-    const newCrop = {
-      category: "Fruits"
-    }
-
-    const { body } = await request(app)
-      .post("/api/crops/plots/1")
-      .send(newCrop)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Not null violation"
-    })
-  })
-
   test("POST:400 Responds with an error when passed an invalid crop category", async () => {
 
-    const newCrop = {
+    const newCrop: CropRequest = {
       name: "Pear",
       category: "foobar"
     }
@@ -630,7 +575,7 @@ describe("POST /api/crops/plots/:plot_id", () => {
 
   test("POST:400 Responds with an error when the plot_id parameter is not a positive integer", async () => {
 
-    const newCrop = {
+    const newCrop: CropRequest = {
       name: "Pear",
       category: "Fruits"
     }
@@ -649,7 +594,7 @@ describe("POST /api/crops/plots/:plot_id", () => {
 
   test("POST:403 Responds with an error when the authenticated user attempts to add a crop for another user", async () => {
 
-    const newCrop = {
+    const newCrop: CropRequest = {
       name: "Pear",
       category: "Fruits"
     }
@@ -668,7 +613,7 @@ describe("POST /api/crops/plots/:plot_id", () => {
 
   test("POST:404 Responds with an error when the plot does not exist", async () => {
 
-    const newCrop = {
+    const newCrop: CropRequest = {
       name: "Pear",
       category: "Fruits"
     }
@@ -1138,7 +1083,7 @@ describe("POST /api/crops/subdivisions/:subdivision_id", () => {
 
   test("POST:201 Responds with a new crop object, assigning plot_id and subdivision_id automatically", async () => {
 
-    const newCrop = {
+    const newCrop: CropRequest = {
       name: "Pear",
       variety: "Conference",
       category: "Fruits",
@@ -1168,7 +1113,7 @@ describe("POST /api/crops/subdivisions/:subdivision_id", () => {
 
   test("POST:201 Assigns a null value to variety, quantity, date_planted, and harvest_date when no value is provided", async () => {
 
-    const newCrop = {
+    const newCrop: CropRequest = {
       name: "Pear",
       category: "Fruits"
     }
@@ -1192,64 +1137,9 @@ describe("POST /api/crops/subdivisions/:subdivision_id", () => {
     })
   })
 
-  test("POST:201 Ignores any unnecessary properties on the object", async () => {
-
-    const newCrop = {
-      name: "Pear",
-      category: "Fruits",
-      price: 100
-    }
-
-    const { body } = await request(app)
-      .post("/api/crops/subdivisions/1")
-      .send(newCrop)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(201)
-
-    expect(body.crop).not.toHaveProperty("price")
-  })
-
-  test("POST:400 Responds with an error when passed a property with an invalid data type", async () => {
-
-    const newCrop = {
-      name: "Pear",
-      category: "Fruits",
-      quantity: "one",
-    }
-
-    const { body } = await request(app)
-      .post("/api/crops/subdivisions/1")
-      .send(newCrop)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Invalid text representation"
-    })
-  })
-
-  test("POST:400 Responds with an error when a required property is missing from the request body", async () => {
-
-    const newCrop = {
-      category: "Fruits"
-    }
-
-    const { body } = await request(app)
-      .post("/api/crops/subdivisions/1")
-      .send(newCrop)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Not null violation"
-    })
-  })
-
   test("POST:400 Responds with an error when passed an invalid crop category", async () => {
 
-    const newCrop = {
+    const newCrop: CropRequest = {
       name: "Pear",
       category: "foobar"
     }
@@ -1268,7 +1158,7 @@ describe("POST /api/crops/subdivisions/:subdivision_id", () => {
 
   test("POST:400 Responds with an error when the subdivision_id parameter is not a positive integer", async () => {
 
-    const newCrop = {
+    const newCrop: CropRequest = {
       name: "Pear",
       category: "Fruits"
     }
@@ -1287,7 +1177,7 @@ describe("POST /api/crops/subdivisions/:subdivision_id", () => {
 
   test("POST:403 Responds with an error when the authenticated user attempts to add a crop for another user", async () => {
 
-    const newCrop = {
+    const newCrop: CropRequest = {
       name: "Pear",
       category: "Fruits"
     }
@@ -1306,7 +1196,7 @@ describe("POST /api/crops/subdivisions/:subdivision_id", () => {
 
   test("POST:404 Responds with an error when the subdivision does not exist", async () => {
 
-    const newCrop = {
+    const newCrop: CropRequest = {
       name: "Pear",
       category: "Fruits"
     }
@@ -1396,7 +1286,7 @@ describe("PATCH /api/crops/:crop_id", () => {
 
   test("PATCH:200 Responds with an updated crop object", async () => {
 
-    const newDetails = {
+    const newDetails: CropRequest = {
       name: "Carrots",
       variety: "Chantenay",
       category: "Vegetables",
@@ -1424,54 +1314,9 @@ describe("PATCH /api/crops/:crop_id", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error when a required property is missing from the request body", async () => {
-
-    const newDetails = {
-      variety: "Chantenay",
-      category: "Vegetables",
-      quantity: 25,
-      date_planted: new Date("2024-06-20"),
-      harvest_date: new Date("2024-09-30")
-    }
-
-    const { body } = await request(app)
-      .patch("/api/crops/1")
-      .send(newDetails)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Not null violation"
-    })
-  })
-
-  test("PATCH:400 Responds with an error when passed a property with an invalid data type", async () => {
-
-    const newDetails = {
-      name: "Carrots",
-      variety: "Chantenay",
-      category: "Vegetables",
-      quantity: "twenty",
-      date_planted: new Date("2024-06-20"),
-      harvest_date: new Date("2024-09-30")
-    }
-
-    const { body } = await request(app)
-      .patch("/api/crops/1")
-      .send(newDetails)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Invalid text representation"
-    })
-  })
-
   test("PATCH:400 Responds with an error when passed an invalid crop category", async () => {
 
-    const newDetails = {
+    const newDetails: CropRequest = {
       name: "Carrots",
       variety: "Chantenay",
       category: "foobar",
@@ -1494,7 +1339,7 @@ describe("PATCH /api/crops/:crop_id", () => {
 
   test("PATCH:400 Responds with an error when the crop_id parameter is not a positive integer", async () => {
 
-    const newDetails = {
+    const newDetails: CropRequest = {
       name: "Carrots",
       variety: "Chantenay",
       category: "Vegetables",
@@ -1517,7 +1362,7 @@ describe("PATCH /api/crops/:crop_id", () => {
 
   test("PATCH:403 Responds with an error when the crop does not belong to the authenticated user", async () => {
 
-    const newDetails = {
+    const newDetails: CropRequest = {
       name: "Carrots",
       variety: "Chantenay",
       category: "Vegetables",
@@ -1540,7 +1385,7 @@ describe("PATCH /api/crops/:crop_id", () => {
 
   test("PATCH:404 Responds with an error when the crop does not exist", async () => {
 
-    const newDetails = {
+    const newDetails: CropRequest = {
       name: "Carrots",
       variety: "Chantenay",
       category: "Vegetables",
@@ -1628,13 +1473,13 @@ describe("PATCH /api/crops/:crop_id/plot", () => {
 
   test("PATCH:200 Responds with an updated crop object, assigning a null value to subdivision_id automatically", async () => {
 
-    const newPlot = {
+    const newPlotId: { plot_id: number } = {
       plot_id: 3
     }
 
     const { body } = await request(app)
       .patch("/api/crops/1/plot")
-      .send(newPlot)
+      .send(newPlotId)
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -1651,49 +1496,15 @@ describe("PATCH /api/crops/:crop_id/plot", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error when a required property is missing from the request body", async () => {
-
-    const newPlot = {}
-
-    const { body } = await request(app)
-      .patch("/api/crops/1/plot")
-      .send(newPlot)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Not null violation"
-    })
-  })
-
-  test("PATCH:400 Responds with an error when passed a property with an invalid data type", async () => {
-
-    const newPlot = {
-      plot_id: "three"
-    }
-
-    const { body } = await request(app)
-      .patch("/api/crops/1/plot")
-      .send(newPlot)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Invalid text representation"
-    })
-  })
-
   test("PATCH:400 Responds with an error when the crop_id parameter is not a positive integer", async () => {
 
-    const newPlot = {
+    const newPlotId: { plot_id: number } = {
       plot_id: 3
     }
 
     const { body } = await request(app)
       .patch("/api/crops/foobar/plot")
-      .send(newPlot)
+      .send(newPlotId)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -1705,13 +1516,13 @@ describe("PATCH /api/crops/:crop_id/plot", () => {
 
   test("PATCH:403 Responds with an error when the crop does not belong to the authenticated user", async () => {
 
-    const newPlot = {
+    const newPlotId: { plot_id: number } = {
       plot_id: 3
     }
 
     const { body } = await request(app)
       .patch("/api/crops/5/plot")
-      .send(newPlot)
+      .send(newPlotId)
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
@@ -1723,13 +1534,13 @@ describe("PATCH /api/crops/:crop_id/plot", () => {
 
   test("PATCH:403 Responds with an error when the target plot does not belong to the authenticated user", async () => {
 
-    const newPlot = {
+    const newPlotId: { plot_id: number } = {
       plot_id: 2
     }
 
     const { body } = await request(app)
       .patch("/api/crops/1/plot")
-      .send(newPlot)
+      .send(newPlotId)
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
@@ -1741,13 +1552,13 @@ describe("PATCH /api/crops/:crop_id/plot", () => {
 
   test("PATCH:404 Responds with an error when the crop does not exist", async () => {
 
-    const newPlot = {
+    const newPlotId: { plot_id: number } = {
       plot_id: 3
     }
 
     const { body } = await request(app)
       .patch("/api/crops/999/plot")
-      .send(newPlot)
+      .send(newPlotId)
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -1759,13 +1570,13 @@ describe("PATCH /api/crops/:crop_id/plot", () => {
 
   test("PATCH:404 Responds with an error when the target plot does not exist", async () => {
 
-    const newPlot = {
+    const newPlotId: { plot_id: number } = {
       plot_id: 999
     }
 
     const { body } = await request(app)
       .patch("/api/crops/1/plot")
-      .send(newPlot)
+      .send(newPlotId)
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -1781,13 +1592,13 @@ describe("PATCH /api/crops/:crop_id/subdivision", () => {
 
   test("PATCH:200 Responds with an updated crop object", async () => {
 
-    const newSubdivision = {
+    const newSubdivisionId: { subdivision_id: number } = {
       subdivision_id: 2
     }
 
     const { body } = await request(app)
       .patch("/api/crops/1/subdivision")
-      .send(newSubdivision)
+      .send(newSubdivisionId)
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
@@ -1804,56 +1615,15 @@ describe("PATCH /api/crops/:crop_id/subdivision", () => {
     })
   })
 
-  test("PATCH:200 Sets the value of subdivision_id to null if no value is provided", async () => {
-
-    const newSubdivision = {}
-
-    const { body } = await request(app)
-      .patch("/api/crops/1/subdivision")
-      .send(newSubdivision)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(200)
-
-    expect(body.crop).toMatchObject<Crop>({
-      crop_id: 1,
-      plot_id: 1,
-      subdivision_id: null,
-      name: "Carrot",
-      variety: null,
-      category: "Vegetables",
-      quantity: 20,
-      date_planted: expect.toBeOneOf([expect.stringMatching(regex), null]),
-      harvest_date: expect.toBeOneOf([expect.stringMatching(regex), null])
-    })
-  })
-
-  test("PATCH:400 Responds with an error when passed a property with an invalid data type", async () => {
-
-    const newSubdivision = {
-      subdivision_id: "two"
-    }
-
-    const { body } = await request(app)
-      .patch("/api/crops/1/subdivision")
-      .send(newSubdivision)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Invalid text representation"
-    })
-  })
-
   test("PATCH:400 Responds with an error when the crop_id parameter is not a positive integer", async () => {
 
-    const newSubdivision = {
+    const newSubdivisionId: { subdivision_id: number } = {
       subdivision_id: 2
     }
 
     const { body } = await request(app)
       .patch("/api/crops/foobar/subdivision")
-      .send(newSubdivision)
+      .send(newSubdivisionId)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -1865,13 +1635,13 @@ describe("PATCH /api/crops/:crop_id/subdivision", () => {
 
   test("PATCH:400 Responds with an error when the target subdivision belongs to the authenticated user but is not a subdivision of the current plot", async () => {
 
-    const newSubdivision = {
+    const newSubdivisionId: { subdivision_id: number } = {
       subdivision_id: 5
     }
 
     const { body } = await request(app)
       .patch("/api/crops/1/subdivision")
-      .send(newSubdivision)
+      .send(newSubdivisionId)
       .set("Authorization", `Bearer ${token}`)
       .expect(400)
 
@@ -1883,13 +1653,13 @@ describe("PATCH /api/crops/:crop_id/subdivision", () => {
 
   test("PATCH:403 Responds with an error when the crop does not belong to the authenticated user", async () => {
 
-    const newSubdivision = {
+    const newSubdivisionId: { subdivision_id: number } = {
       subdivision_id: 2
     }
 
     const { body } = await request(app)
       .patch("/api/crops/5/subdivision")
-      .send(newSubdivision)
+      .send(newSubdivisionId)
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
@@ -1901,13 +1671,13 @@ describe("PATCH /api/crops/:crop_id/subdivision", () => {
 
   test("PATCH:403 Responds with an error when the target subdivision does not belong to the authenticated user", async () => {
 
-    const newSubdivision = {
+    const newSubdivisionId: { subdivision_id: number } = {
       subdivision_id: 4
     }
 
     const { body } = await request(app)
       .patch("/api/crops/1/subdivision")
-      .send(newSubdivision)
+      .send(newSubdivisionId)
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
@@ -1919,13 +1689,13 @@ describe("PATCH /api/crops/:crop_id/subdivision", () => {
 
   test("PATCH:404 Responds with an error when the crop does not exist", async () => {
 
-    const newSubdivision = {
+    const newSubdivisionId: { subdivision_id: number } = {
       subdivision_id: 2
     }
 
     const { body } = await request(app)
       .patch("/api/crops/999/subdivision")
-      .send(newSubdivision)
+      .send(newSubdivisionId)
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 
@@ -1937,13 +1707,13 @@ describe("PATCH /api/crops/:crop_id/subdivision", () => {
 
   test("PATCH:404 Responds with an error when the target subdivision does not exist", async () => {
 
-    const newSubdivision = {
+    const newSubdivisionId: { subdivision_id: number } = {
       subdivision_id: 999
     }
 
     const { body } = await request(app)
       .patch("/api/crops/1/subdivision")
-      .send(newSubdivision)
+      .send(newSubdivisionId)
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 

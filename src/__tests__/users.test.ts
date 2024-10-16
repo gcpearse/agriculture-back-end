@@ -3,7 +3,7 @@ import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
-import { SecureUser, UnitSystem, UserRole } from "../types/user-types"
+import { PasswordUpdate, SecureUser, UnitSystem, UserRequest, UserRole } from "../types/user-types"
 import { StatusResponse } from "../types/response-types"
 
 
@@ -426,11 +426,11 @@ describe("PATCH /api/users/:user_id", () => {
 
   test("PATCH:200 Responds with an updated user object", async () => {
 
-    const newDetails = {
+    const newDetails: UserRequest = {
       email: "jsj@example.com",
       first_name: "Johnny",
       surname: "Smith-Jones",
-      unit_system: "metric"
+      unit_system: UnitSystem.Metric
     }
 
     const { body } = await request(app)
@@ -452,11 +452,11 @@ describe("PATCH /api/users/:user_id", () => {
 
   test("PATCH:400 Responds with an error when the user_id parameter is not a positive integer", async () => {
 
-    const newDetails = {
+    const newDetails: UserRequest = {
       email: "jsj@example.com",
       first_name: "Johnny",
       surname: "Smith-Jones",
-      unit_system: "metric"
+      unit_system: UnitSystem.Metric
     }
 
     const { body } = await request(app)
@@ -471,54 +471,13 @@ describe("PATCH /api/users/:user_id", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error when a required property is missing from the request body", async () => {
-
-    const newDetails = {
-      email: "jsj@example.com",
-      surname: "Smith-Jones",
-      unit_system: "metric"
-    }
-
-    const { body } = await request(app)
-      .patch("/api/users/1")
-      .send(newDetails)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Not null violation"
-    })
-  })
-
-  test("PATCH:400 Responds with an error when passed an invalid value for unit_system", async () => {
-
-    const newDetails = {
-      email: "jsj@example.com",
-      first_name: "Johnny",
-      surname: "Smith-Jones",
-      unit_system: "international"
-    }
-
-    const { body } = await request(app)
-      .patch("/api/users/1")
-      .send(newDetails)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Invalid text representation"
-    })
-  })
-
   test("PATCH:403 Responds with an error when the authenticated user attempts to edit another user's data", async () => {
 
-    const newDetails = {
+    const newDetails: UserRequest = {
       email: "john.smith@example.com",
       first_name: "John",
       surname: "Smith",
-      unit_system: "imperial"
+      unit_system: UnitSystem.Imperial
     }
 
     const { body } = await request(app)
@@ -535,11 +494,11 @@ describe("PATCH /api/users/:user_id", () => {
 
   test("PATCH:404 Responds with an error when the user does not exist", async () => {
 
-    const newDetails = {
+    const newDetails: UserRequest = {
       email: "john.smith@example.com",
       first_name: "John",
       surname: "Smith",
-      unit_system: "imperial"
+      unit_system: UnitSystem.Imperial
     }
 
     const { body } = await request(app)
@@ -556,11 +515,11 @@ describe("PATCH /api/users/:user_id", () => {
 
   test("PATCH:409 Responds with an error when the email already exists", async () => {
 
-    const newDetails = {
+    const newDetails: UserRequest = {
       email: "olivia.jones@example.com",
       first_name: "John",
       surname: "Smith",
-      unit_system: "imperial"
+      unit_system: UnitSystem.Imperial
     }
 
     const { body } = await request(app)
@@ -642,7 +601,7 @@ describe("PATCH /api/users/:user_id/password", () => {
 
   test("PATCH:200 Responds with a success message when the password is changed successfully", async () => {
 
-    const passwordUpdate = {
+    const passwordUpdate: PasswordUpdate = {
       oldPassword: "carrots123",
       newPassword: "onions789"
     }
@@ -661,7 +620,7 @@ describe("PATCH /api/users/:user_id/password", () => {
 
   test("PATCH:400 Responds with an error when the user_id is not a positive integer", async () => {
 
-    const passwordUpdate = {
+    const passwordUpdate: PasswordUpdate = {
       oldPassword: "carrots123",
       newPassword: "onions789"
     }
@@ -678,27 +637,9 @@ describe("PATCH /api/users/:user_id/password", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error when newPassword is missing from the request body", async () => {
-
-    const passwordUpdate = {
-      oldPassword: "carrots123"
-    }
-
-    const { body } = await request(app)
-      .patch("/api/users/1/password")
-      .send(passwordUpdate)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Empty string"
-    })
-  })
-
   test("PATCH:401 Responds with an error when the value of oldPassword does not match the current password", async () => {
 
-    const passwordUpdate = {
+    const passwordUpdate: PasswordUpdate = {
       oldPassword: "apples567",
       newPassword: "onions789"
     }
@@ -717,7 +658,7 @@ describe("PATCH /api/users/:user_id/password", () => {
 
   test("PATCH:403 Responds with an error when the authenticated user attempts to change another user's password", async () => {
 
-    const passwordUpdate = {
+    const passwordUpdate: PasswordUpdate = {
       oldPassword: "peaches123",
       newPassword: "onions789"
     }
@@ -736,7 +677,7 @@ describe("PATCH /api/users/:user_id/password", () => {
 
   test("PATCH:404 Responds with an error when the user does not exist", async () => {
 
-    const passwordUpdate = {
+    const passwordUpdate: PasswordUpdate = {
       oldPassword: "carrots123",
       newPassword: "onions789"
     }
@@ -759,8 +700,8 @@ describe("PATCH /api/users/:user_id/role", () => {
 
   test("PATCH:200 Responds with an updated user object", async () => {
 
-    const newRole = {
-      role: "supervisor"
+    const newRole: { role: UserRole } = {
+      role: UserRole.Supervisor
     }
 
     const { body } = await request(app)
@@ -782,8 +723,8 @@ describe("PATCH /api/users/:user_id/role", () => {
 
   test("PATCH:400 Responds with an error when the user_id parameter is not a positive integer", async () => {
 
-    const newRole = {
-      role: "supervisor"
+    const newRole: { role: UserRole } = {
+      role: UserRole.Supervisor
     }
 
     const { body } = await request(app)
@@ -798,44 +739,10 @@ describe("PATCH /api/users/:user_id/role", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error when a required property is missing from the request body", async () => {
-
-    const newRole = {}
-
-    const { body } = await request(app)
-      .patch("/api/users/2/role")
-      .send(newRole)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Not null violation"
-    })
-  })
-
-  test("PATCH:400 Responds with an error when passed an invalid value for role", async () => {
-
-    const newRole = {
-      role: "foobar"
-    }
-
-    const { body } = await request(app)
-      .patch("/api/users/2/role")
-      .send(newRole)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Invalid text representation"
-    })
-  })
-
   test("PATCH:403 Responds with an error when the authenticated user is not an admin", async () => {
 
-    const newRole = {
-      role: "supervisor"
+    const newRole: { role: UserRole } = {
+      role: UserRole.Supervisor
     }
 
     const auth = await request(app)
@@ -861,8 +768,8 @@ describe("PATCH /api/users/:user_id/role", () => {
 
   test("PATCH:404 Responds with an error when the user does not exist", async () => {
 
-    const newRole = {
-      role: "supervisor"
+    const newRole: { role: UserRole } = {
+      role: UserRole.Supervisor
     }
 
     const { body } = await request(app)

@@ -1,6 +1,6 @@
 import format from "pg-format"
 import { db } from "../db"
-import { SecureUser, User } from "../types/user-types"
+import { SecureUser, UnregisteredUser } from "../types/user-types"
 import { checkForEmailConflict } from "../utils/db-queries"
 import { generateHash } from "../middleware/security"
 
@@ -13,7 +13,7 @@ export const registerUser = async (
     first_name,
     surname,
     unit_system
-  }: User
+  }: UnregisteredUser
 ): Promise<SecureUser> => {
 
   const dbUsername = await db.query(`

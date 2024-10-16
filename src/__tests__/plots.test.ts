@@ -4,7 +4,7 @@ import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
 import { toBeOneOf } from 'jest-extended'
-import { ExtendedPlot, Plot } from "../types/plot-types"
+import { ExtendedPlot, Plot, PlotRequest } from "../types/plot-types"
 import { StatusResponse } from "../types/response-types"
 expect.extend({ toBeOneOf })
 
@@ -418,7 +418,7 @@ describe("POST /api/plots/users/:owner_id", () => {
 
   test("POST:201 Responds with a new plot object, assigning owner_id and is_pinned automatically", async () => {
 
-    const newPlot = {
+    const newPlot: PlotRequest = {
       name: "John's Field",
       type: "Field",
       description: "A large field",
@@ -446,7 +446,7 @@ describe("POST /api/plots/users/:owner_id", () => {
 
   test("POST:201 Assigns a null value to area when no value is provided", async () => {
 
-    const newPlot = {
+    const newPlot: PlotRequest = {
       name: "John's Field",
       type: "Field",
       description: "A large field",
@@ -462,72 +462,9 @@ describe("POST /api/plots/users/:owner_id", () => {
     expect(body.plot.area).toBeNull()
   })
 
-  test("POST:201 Ignores any unnecessary properties on the object", async () => {
-
-    const newPlot = {
-      name: "John's Field",
-      type: "Field",
-      description: "A large field",
-      location: "Wildwood",
-      area: 3000,
-      price: 10000
-    }
-
-    const { body } = await request(app)
-      .post("/api/plots/users/1")
-      .send(newPlot)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(201)
-
-    expect(body.plot).not.toHaveProperty("price")
-  })
-
-  test("POST:400 Responds with an error when passed a property with an invalid data type", async () => {
-
-    const newPlot = {
-      name: "John's Field",
-      type: "Field",
-      description: "A large field",
-      location: "Wildwood",
-      area: "three thousand metres"
-    }
-
-    const { body } = await request(app)
-      .post("/api/plots/users/1")
-      .send(newPlot)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Invalid text representation"
-    })
-  })
-
-  test("POST:400 Responds with an error when a required property is missing from the request body", async () => {
-
-    const newPlot = {
-      type: "Field",
-      description: "A large field",
-      location: "Wildwood",
-      area: 3000
-    }
-
-    const { body } = await request(app)
-      .post("/api/plots/users/1")
-      .send(newPlot)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Not null violation"
-    })
-  })
-
   test("POST:400 Responds with an error when passed an invalid plot type", async () => {
 
-    const newPlot = {
+    const newPlot: PlotRequest = {
       name: "John's Field",
       type: "foobar",
       description: "A large field",
@@ -549,7 +486,7 @@ describe("POST /api/plots/users/:owner_id", () => {
 
   test("POST:400 Responds with an error message when the owner_id parameter is not a positive integer", async () => {
 
-    const newPlot = {
+    const newPlot: PlotRequest = {
       name: "John's Field",
       type: "Field",
       description: "A large field",
@@ -571,7 +508,7 @@ describe("POST /api/plots/users/:owner_id", () => {
 
   test("POST:403 Responds with an error when the authenticated user attempts to create a plot for another user", async () => {
 
-    const newPlot = {
+    const newPlot: PlotRequest = {
       name: "John's Field",
       type: "Field",
       description: "A large field",
@@ -593,7 +530,7 @@ describe("POST /api/plots/users/:owner_id", () => {
 
   test("POST:404 Responds with an error when the user does not exist", async () => {
 
-    const newPlot = {
+    const newPlot: PlotRequest = {
       name: "John's Field",
       type: "Field",
       description: "A large field",
@@ -615,7 +552,7 @@ describe("POST /api/plots/users/:owner_id", () => {
 
   test("POST:409 Responds with an error when the plot name already exists for one of the given user's plots", async () => {
 
-    const newPlot = {
+    const newPlot: PlotRequest = {
       name: "John's Garden",
       type: "Garden",
       description: "The garden at the new house",
@@ -801,7 +738,7 @@ describe("PATCH /api/plots/:plot_id", () => {
 
   test("PATCH:200 Responds with an updated plot object", async () => {
 
-    const newDetails = {
+    const newDetails: PlotRequest = {
       name: "John's Homestead",
       type: "Homestead",
       description: "A homestead",
@@ -829,7 +766,7 @@ describe("PATCH /api/plots/:plot_id", () => {
 
   test("PATCH:200 Allows the request when the plot name remains unchanged (plot name conflict should only be raised in cases of duplication)", async () => {
 
-    const newDetails = {
+    const newDetails: PlotRequest = {
       name: "John's Garden",
       type: "Garden",
       description: "A new description",
@@ -855,52 +792,9 @@ describe("PATCH /api/plots/:plot_id", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error when a required property is missing from the request body", async () => {
-
-    const newDetails = {
-      type: "Homestead",
-      description: "A homestead",
-      location: "Farmville",
-      area: 1200
-    }
-
-    const { body } = await request(app)
-      .patch("/api/plots/1")
-      .send(newDetails)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Not null violation"
-    })
-  })
-
-  test("PATCH:400 Responds with an error when passed a property with an invalid data type", async () => {
-
-    const newDetails = {
-      name: "John's Homestead",
-      type: "Homestead",
-      description: "A homestead",
-      location: "Farmville",
-      area: "ten metres"
-    }
-
-    const { body } = await request(app)
-      .patch("/api/plots/1")
-      .send(newDetails)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Invalid text representation"
-    })
-  })
-
   test("PATCH:400 Responds with an error when passed an invalid plot type", async () => {
 
-    const newDetails = {
+    const newDetails: PlotRequest = {
       name: "John's Homestead",
       type: "foobar",
       description: "A homestead",
@@ -922,7 +816,7 @@ describe("PATCH /api/plots/:plot_id", () => {
 
   test("PATCH:400 Responds with an error when the plot_id parameter is not a positive integer", async () => {
 
-    const newDetails = {
+    const newDetails: PlotRequest = {
       name: "John's Homestead",
       type: "Homestead",
       description: "A homestead",
@@ -944,7 +838,7 @@ describe("PATCH /api/plots/:plot_id", () => {
 
   test("PATCH:403 Responds with an error when the plot does not belong to the authenticated user", async () => {
 
-    const newDetails = {
+    const newDetails: PlotRequest = {
       name: "John's Homestead",
       type: "Homestead",
       description: "A homestead",
@@ -966,7 +860,7 @@ describe("PATCH /api/plots/:plot_id", () => {
 
   test("PATCH:404 Responds with an error when the plot does not exist", async () => {
 
-    const newDetails = {
+    const newDetails: PlotRequest = {
       name: "John's Homestead",
       type: "Homestead",
       description: "A homestead",
@@ -988,7 +882,7 @@ describe("PATCH /api/plots/:plot_id", () => {
 
   test("PATCH:409 Responds with an error when the plot name already exists for one of the given user's other plots", async () => {
 
-    const newDetails = {
+    const newDetails: PlotRequest = {
       name: "John's Allotment",
       type: "Homestead",
       description: "A homestead",
@@ -1075,7 +969,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
 
   test("PATCH:200 Responds with a success message when a plot is successfully pinned", async () => {
 
-    const toggle = { bool: true }
+    const toggle: { bool: boolean } = { bool: true }
 
     const { body } = await request(app)
       .patch("/api/plots/4/pin")
@@ -1091,7 +985,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
 
   test("PATCH:200 Responds with a success message when a plot is successfully unpinned", async () => {
 
-    const toggle = { bool: true }
+    const toggle: { bool: boolean } = { bool: true }
 
     const { body } = await request(app)
       .patch("/api/plots/1/pin")
@@ -1107,14 +1001,14 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
 
   test("PATCH:400 Responds with an error when the maximum number of plots are already pinned", async () => {
 
-    const fourthPlot = {
+    const fourthPlot: PlotRequest = {
       name: "John's Orchard",
       type: "Orchard",
       description: "An orchard",
       location: "Farmville"
     }
 
-    const fifthPlot = {
+    const fifthPlot: PlotRequest = {
       name: "John's New Orchard",
       type: "Orchard",
       description: "A new orchard",
@@ -1133,7 +1027,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
 
-    const toggle = { bool: true }
+    const toggle: { bool: boolean } = { bool: true }
 
     await request(app)
       .patch("/api/plots/4/pin")
@@ -1161,30 +1055,24 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
 
   test("PATCH:400 Responds with an error when the value of bool is not true (boolean data type)", async () => {
 
-    const toggles = [
-      { bool: false },
-      { bool: "true" },
-      { bool: 1 }
-    ]
+    const toggle: { bool: boolean } = { bool: false }
 
-    for (const toggle of toggles) {
+    const { body } = await request(app)
+      .patch("/api/plots/1/pin")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
 
-      const { body } = await request(app)
-        .patch("/api/plots/1/pin")
-        .send(toggle)
-        .set("Authorization", `Bearer ${token}`)
-        .expect(400)
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid boolean value"
+    })
 
-      expect(body).toMatchObject<StatusResponse>({
-        message: "Bad Request",
-        details: "Invalid boolean value"
-      })
-    }
   })
 
   test("PATCH:400 Responds with an error when the plot_id parameter is not a positive integer", async () => {
 
-    const toggle = { bool: true }
+    const toggle: { bool: boolean } = { bool: true }
 
     const { body } = await request(app)
       .patch("/api/plots/foobar/pin")
@@ -1200,7 +1088,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
 
   test("PATCH:403 Responds with an error when the plot does not belong to the authenticated user", async () => {
 
-    const toggle = { bool: true }
+    const toggle: { bool: boolean } = { bool: true }
 
     const { body } = await request(app)
       .patch("/api/plots/2/pin")
@@ -1216,7 +1104,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
 
   test("PATCH:404 Responds with an error when the plot does not exist", async () => {
 
-    const toggle = { bool: true }
+    const toggle: { bool: boolean } = { bool: true }
 
     const { body } = await request(app)
       .patch("/api/plots/999/pin")

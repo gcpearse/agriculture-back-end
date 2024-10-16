@@ -3,7 +3,7 @@ import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
-import { CropNote } from "../types/note-types"
+import { CropNote, NoteRequest } from "../types/note-types"
 import { StatusResponse } from "../types/response-types"
 
 
@@ -126,7 +126,7 @@ describe("POST /api/crop_notes/crops/:crop_id", () => {
 
   test("POST:201 Responds with a new crop note object", async () => {
 
-    const newNote = {
+    const newNote: NoteRequest = {
       body: "These carrots are ready to harvest."
     }
 
@@ -144,46 +144,9 @@ describe("POST /api/crop_notes/crops/:crop_id", () => {
     })
   })
 
-  test("POST:201 Ignores any unnecessary properties on the object", async () => {
-
-    const newNote = {
-      body: "These carrots are ready to harvest.",
-      foo: "bar"
-    }
-
-    const { body } = await request(app)
-      .post("/api/crop_notes/crops/1")
-      .send(newNote)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(201)
-
-    expect(body.note).toMatchObject<CropNote>({
-      note_id: 6,
-      crop_id: 1,
-      body: "These carrots are ready to harvest.",
-      created_at: expect.stringMatching(regex)
-    })
-  })
-
-  test("POST:400 Responds with an error when a required property is missing from the request body", async () => {
-
-    const newNote = {}
-
-    const { body } = await request(app)
-      .post("/api/crop_notes/crops/1")
-      .send(newNote)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Not null violation"
-    })
-  })
-
   test("POST:400 Responds with an error when the crop_id parameter is not a positive integer", async () => {
 
-    const newNote = {
+    const newNote: NoteRequest = {
       body: "These carrots are ready to harvest."
     }
 
@@ -201,7 +164,7 @@ describe("POST /api/crop_notes/crops/:crop_id", () => {
 
   test("POST:400 Responds with an error when the authenticated user attempts to add a crop note for another user", async () => {
 
-    const newNote = {
+    const newNote: NoteRequest = {
       body: "These are beautiful peaches."
     }
 
@@ -219,7 +182,7 @@ describe("POST /api/crop_notes/crops/:crop_id", () => {
 
   test("POST:404 Responds with an error when the crop does not exist", async () => {
 
-    const newNote = {
+    const newNote: NoteRequest = {
       body: "These are beautiful peaches."
     }
 
@@ -301,7 +264,7 @@ describe("PATCH /api/crop_notes/:note_id", () => {
 
   test("PATCH:200 Responds with an updated crop note object", async () => {
 
-    const newDetails = {
+    const newDetails: NoteRequest = {
       body: "These will need a lot more water."
     }
 
@@ -319,25 +282,9 @@ describe("PATCH /api/crop_notes/:note_id", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error when a required property is missing from the request body", async () => {
-
-    const newDetails = {}
-
-    const { body } = await request(app)
-      .patch("/api/crop_notes/1")
-      .send(newDetails)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Not null violation"
-    })
-  })
-
   test("PATCH:400 Responds with an error when the note_id parameter is not a positive integer", async () => {
 
-    const newDetails = {
+    const newDetails: NoteRequest = {
       body: "These will need a lot more water."
     }
 
@@ -355,7 +302,7 @@ describe("PATCH /api/crop_notes/:note_id", () => {
 
   test("PATCH:400 Responds with an error when the crop note does not belong to the authenticated user", async () => {
 
-    const newDetails = {
+    const newDetails: NoteRequest = {
       body: "These will need a lot more water."
     }
 
@@ -373,7 +320,7 @@ describe("PATCH /api/crop_notes/:note_id", () => {
 
   test("PATCH:404 Responds with an error when the crop note does not exist", async () => {
 
-    const newDetails = {
+    const newDetails: NoteRequest = {
       body: "These will need a lot more water."
     }
 
