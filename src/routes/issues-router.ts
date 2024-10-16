@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { getIssuesByPlotId, getIssuesBySubdivisionId, postIssueByPlotId } from "../controllers/issues-controllers"
+import { getIssuesByPlotId, getIssuesBySubdivisionId, postIssueByPlotId, postIssueBySubdivisionId } from "../controllers/issues-controllers"
 
 
 export const issuesRouter = Router()
@@ -253,3 +253,55 @@ issuesRouter.route("/issues/subdivisions/:subdivision_id")
  *              $ref: "#/components/schemas/NotFound"
  */
   .get(verifyToken, getIssuesBySubdivisionId)
+
+/**
+ * @swagger
+ * /api/issues/subdivisions/{subdivision_id}:
+ *  post:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Add a new issue to a subdivision
+ *    description: Responds with an issue object. If the request body or subdivision_id parameter is invalid, the server responds with an error. Permission is denied when the subdivision does not belong to the user.
+ *    tags: [Issues]
+ *    parameters:
+ *      - in: path
+ *        name: subdivision_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: "#/components/schemas/IssueRequest"
+ *    responses:
+ *      201:
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                issue:
+ *                  $ref: "#/components/schemas/Issue"
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/BadRequest"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Forbidden"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/NotFound"
+ */
+  .post(verifyToken, postIssueBySubdivisionId)
