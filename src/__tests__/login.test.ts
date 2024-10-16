@@ -4,6 +4,7 @@ import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
 import { StatusResponse } from "../types/response-types"
+import { Credentials } from "../types/user-types"
 
 
 beforeEach(() => seed(data))
@@ -15,7 +16,7 @@ describe("POST /api/login", () => {
 
   test("POST:200 Responds with a JWT token when passed a valid username and password", async () => {
 
-    const user = {
+    const user: Credentials = {
       login: "carrot_king",
       password: "carrots123"
     }
@@ -30,7 +31,7 @@ describe("POST /api/login", () => {
 
   test("POST:200 Responds with a JWT token when passed a valid email and password", async () => {
 
-    const user = {
+    const user: Credentials = {
       login: "john.smith@example.com",
       password: "carrots123"
     }
@@ -45,7 +46,7 @@ describe("POST /api/login", () => {
 
   test("POST:401 Responds with an error message when the password is incorrect", async () => {
 
-    const user = {
+    const user: Credentials = {
       login: "carrot_king",
       password: "apples123"
     }
