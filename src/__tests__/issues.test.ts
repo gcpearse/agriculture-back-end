@@ -881,3 +881,113 @@ describe("GET /api/issues/subdivisions/:subdivision_id?page=", () => {
     })
   })
 })
+
+
+describe("POST /api/issues/subdivisions/:subdivision_id", () => {
+
+  test("POST:201 Responds with a new crop object, assigning plot_id, subdivision_id, and is_resolved (false) automatically", async () => {
+
+    const newIssue: IssueRequest = {
+      title: "Fallen tree",
+      description: "A tree has been knocked over by the wind",
+      is_critical: true
+    }
+
+    const { body } = await request(app)
+      .post("/api/issues/subdivisions/1")
+      .send(newIssue)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(201)
+
+    expect(body.issue).toMatchObject<Issue>({
+      issue_id: 6,
+      plot_id: 1,
+      subdivision_id: 1,
+      title: "Fallen tree",
+      description: "A tree has been knocked over by the wind",
+      is_critical: true,
+      is_resolved: false
+    })
+  })
+
+  test("POST:201 Assigns a false value to is_critical when no value is provided", async () => {
+
+    const newIssue: IssueRequest = {
+      title: "Fallen tree",
+      description: "A tree has been knocked over by the wind"
+    }
+
+    const { body } = await request(app)
+      .post("/api/issues/subdivisions/1")
+      .send(newIssue)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(201)
+
+    expect(body.issue).toMatchObject<Issue>({
+      issue_id: 6,
+      plot_id: 1,
+      subdivision_id: 1,
+      title: "Fallen tree",
+      description: "A tree has been knocked over by the wind",
+      is_critical: false,
+      is_resolved: false
+    })
+  })
+
+  test("POST:400 Responds with an error when the subdivision_id parameter is not a positive integer", async () => {
+
+    const newIssue: IssueRequest = {
+      title: "Fallen tree",
+      description: "A tree has been knocked over by the wind"
+    }
+
+    const { body } = await request(app)
+      .post("/api/issues/subdivisions/foobar")
+      .send(newIssue)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Value must be a positive integer"
+    })
+  })
+
+  test("POST:403 Responds with an error when the authenticated user attempts to add an issue for another user", async () => {
+
+    const newIssue: IssueRequest = {
+      title: "Fallen tree",
+      description: "A tree has been knocked over by the wind"
+    }
+
+    const { body } = await request(app)
+      .post("/api/issues/subdivisions/4")
+      .send(newIssue)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Forbidden",
+      details: "Permission denied"
+    })
+  })
+
+  test("POST:404 Responds with an error when the subdivision does not exist", async () => {
+
+    const newIssue: IssueRequest = {
+      title: "Fallen tree",
+      description: "A tree has been knocked over by the wind"
+    }
+
+    const { body } = await request(app)
+      .post("/api/issues/subdivisions/999")
+      .send(newIssue)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Subdivision not found"
+    })
+  })
+})
