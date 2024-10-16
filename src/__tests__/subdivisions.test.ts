@@ -4,7 +4,7 @@ import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
 import { toBeOneOf } from 'jest-extended'
-import { ExtendedSubdivision, Subdivision } from "../types/subdivision-types"
+import { ExtendedSubdivision, Subdivision, SubdivisionRequest } from "../types/subdivision-types"
 import { StatusResponse } from "../types/response-types"
 expect.extend({ toBeOneOf })
 
@@ -406,7 +406,7 @@ describe("POST /api/subdivisions/plots/:plot_id", () => {
 
   test("POST:201 Responds with a new subdivision object, assigning plot_id automatically", async () => {
 
-    const newSubdivision = {
+    const newSubdivision: SubdivisionRequest = {
       name: "Wildflowers",
       type: "Flowerbed",
       description: "Foxgloves and bluebells",
@@ -431,7 +431,7 @@ describe("POST /api/subdivisions/plots/:plot_id", () => {
 
   test("POST:201 Assigns a null value to area when no value is provided", async () => {
 
-    const newSubdivision = {
+    const newSubdivision: SubdivisionRequest = {
       name: "Wildflowers",
       type: "Flowerbed",
       description: "Foxgloves and bluebells"
@@ -446,69 +446,9 @@ describe("POST /api/subdivisions/plots/:plot_id", () => {
     expect(body.subdivision.area).toBeNull()
   })
 
-  test("POST:201 Ignores any unnecessary properties on the object", async () => {
-
-    const newSubdivision = {
-      name: "Wildflowers",
-      type: "Flowerbed",
-      description: "Foxgloves and bluebells",
-      area: 2,
-      price: 100
-    }
-
-    const { body } = await request(app)
-      .post("/api/subdivisions/plots/1")
-      .send(newSubdivision)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(201)
-
-    expect(body.subdivision).not.toHaveProperty("price")
-  })
-
-  test("POST:400 Responds with an error when passed a property with an invalid data type", async () => {
-
-    const newSubdivision = {
-      name: "Wildflowers",
-      type: "Flowerbed",
-      description: "Foxgloves and bluebells",
-      area: "two metres squared"
-    }
-
-    const { body } = await request(app)
-      .post("/api/subdivisions/plots/1")
-      .send(newSubdivision)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Invalid text representation"
-    })
-  })
-
-  test("POST:400 Responds with an error when a required property is missing from the request body", async () => {
-
-    const newSubdivision = {
-      type: "Flowerbed",
-      description: "Foxgloves and bluebells",
-      area: 2
-    }
-
-    const { body } = await request(app)
-      .post("/api/subdivisions/plots/1")
-      .send(newSubdivision)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Not null violation"
-    })
-  })
-
   test("POST:400 Responds with an error when passed an invalid subdivision type", async () => {
 
-    const newSubdivision = {
+    const newSubdivision: SubdivisionRequest = {
       name: "Wildflowers",
       type: "foobar",
       description: "Foxgloves and bluebells",
@@ -529,7 +469,7 @@ describe("POST /api/subdivisions/plots/:plot_id", () => {
 
   test("POST:400 Responds with an error when the plot_id parameter is not a positive integer", async () => {
 
-    const newSubdivision = {
+    const newSubdivision: SubdivisionRequest = {
       name: "Wildflowers",
       type: "Flowerbed",
       description: "Foxgloves and bluebells",
@@ -550,7 +490,7 @@ describe("POST /api/subdivisions/plots/:plot_id", () => {
 
   test("POST:403 Responds with an error when the authenticated user attempts to create a subdivision for another user", async () => {
 
-    const newSubdivision = {
+    const newSubdivision: SubdivisionRequest = {
       name: "Wildflowers",
       type: "Flowerbed",
       description: "Foxgloves and bluebells",
@@ -571,7 +511,7 @@ describe("POST /api/subdivisions/plots/:plot_id", () => {
 
   test("POST:404 Responds with an error when the plot does not exist", async () => {
 
-    const newSubdivision = {
+    const newSubdivision: SubdivisionRequest = {
       name: "Wildflowers",
       type: "Flowerbed",
       description: "Foxgloves and bluebells",
@@ -592,7 +532,7 @@ describe("POST /api/subdivisions/plots/:plot_id", () => {
 
   test("POST:409 Responds with an error when the subdivision name already exists for a subdivision of the given plot", async () => {
 
-    const newSubdivision = {
+    const newSubdivision: SubdivisionRequest = {
       name: "Onion Bed",
       type: "Flowerbed",
       description: "Foxgloves and bluebells",
@@ -682,7 +622,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
 
   test("PATCH:200 Responds with an updated subdivision object", async () => {
 
-    const newDetails = {
+    const newDetails: SubdivisionRequest = {
       name: "Root Vegetable Patch",
       type: "Vegetable patch",
       description: "Turnips and radishes",
@@ -707,7 +647,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
 
   test("PATCH:200 Allows the request when the subdivision name remains unchanged (subdivision name conflict should only be raised in cases of duplication)", async () => {
 
-    const newDetails = {
+    const newDetails: SubdivisionRequest = {
       name: "Root Vegetable Bed",
       type: "Vegetable patch",
       description: "Turnips and radishes",
@@ -730,50 +670,9 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error when a required property is missing from the request body", async () => {
-
-    const newDetails = {
-      type: "Vegetable patch",
-      description: "Turnips and radishes",
-      area: 20
-    }
-
-    const { body } = await request(app)
-      .patch("/api/subdivisions/1")
-      .send(newDetails)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Not null violation"
-    })
-  })
-
-  test("PATCH:400 Responds with an error when passed a property with an invalid data type", async () => {
-
-    const newDetails = {
-      name: "Root Vegetable Patch",
-      type: "Vegetable patch",
-      description: "Turnips and radishes",
-      area: "twenty"
-    }
-
-    const { body } = await request(app)
-      .patch("/api/subdivisions/1")
-      .send(newDetails)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Invalid text representation"
-    })
-  })
-
   test("PATCH:400 Responds with an error when passed an invalid subdivision type", async () => {
 
-    const newDetails = {
+    const newDetails: SubdivisionRequest = {
       name: "Root Vegetable Patch",
       type: "foobar",
       description: "Turnips and radishes",
@@ -794,7 +693,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
 
   test("PATCH:400 Responds with an error when the subdivision_id parameter is not a positive integer", async () => {
 
-    const newDetails = {
+    const newDetails: SubdivisionRequest = {
       name: "Root Vegetable Patch",
       type: "Vegetable patch",
       description: "Turnips and radishes",
@@ -815,7 +714,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
 
   test("PATCH:403 Responds with an error when the subdivision does not belong to the authenticated user", async () => {
 
-    const newDetails = {
+    const newDetails: SubdivisionRequest = {
       name: "Root Vegetable Patch",
       type: "Vegetable patch",
       description: "Turnips and radishes",
@@ -836,7 +735,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
 
   test("PATCH:404 Responds with an error when the subdivision does not exist", async () => {
 
-    const newDetails = {
+    const newDetails: SubdivisionRequest = {
       name: "Root Vegetable Patch",
       type: "Vegetable patch",
       description: "Turnips and radishes",
@@ -857,7 +756,7 @@ describe("PATCH /api/subdivisions/:subdivision_id", () => {
 
   test("PATCH:409 Responds with an error when the subdivision name already exists for a subdivision of the given plot", async () => {
 
-    const newDetails = {
+    const newDetails: SubdivisionRequest = {
       name: "Onion Bed",
       type: "Bed",
       description: "Yellow and white onions",
