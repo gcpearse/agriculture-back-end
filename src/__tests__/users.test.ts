@@ -754,7 +754,7 @@ describe("PATCH /api/users/:user_id/password", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Conflict",
-      details: "Old password and new password must be different"
+      details: "Old and new password values cannot be equal"
     })
   })
 })
