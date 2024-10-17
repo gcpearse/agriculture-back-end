@@ -21,7 +21,7 @@ describe("POST /api/register", () => {
 
     const newUser: UnregisteredUser = {
       username: "farmer123",
-      password: "password123",
+      password: "Password123",
       email: "fred.flint@example.com",
       first_name: "Fred",
       surname: "Flint",
@@ -41,6 +41,28 @@ describe("POST /api/register", () => {
       surname: "Flint",
       role: UserRole.User,
       unit_system: UnitSystem.Metric
+    })
+  })
+
+  test("POST:400 Responds with an error when the password format is invalid", async () => {
+
+    const newUser: UnregisteredUser = {
+      username: "farmer123",
+      password: "password123",
+      email: "fred.flint@example.com",
+      first_name: "Fred",
+      surname: "Flint",
+      unit_system: UnitSystem.Metric
+    }
+
+    const { body } = await request(app)
+      .post("/api/register")
+      .send(newUser)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid password format"
     })
   })
 
