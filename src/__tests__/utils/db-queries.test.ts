@@ -14,7 +14,7 @@ describe("checkForEmailConflict", () => {
 
   test("When an email conflict is found, the promise is rejected", async () => {
 
-    await expect(checkForEmailConflict("john.smith@example.com")).rejects.toMatchObject<StatusResponse>({
+    await expect(checkForEmailConflict("john.smith@example.com", undefined)).rejects.toMatchObject<StatusResponse>({
       status: 409,
       message: "Conflict",
       details: "Email already exists"
@@ -23,7 +23,10 @@ describe("checkForEmailConflict", () => {
 
   test("When no email conflict is found, the promise resolves to be undefined", async () => {
 
-    await expect(checkForEmailConflict("foobar@foobar.com")).resolves.toBeUndefined()
+    await Promise.all([
+      expect(checkForEmailConflict("foobar@foobar.com", undefined)).resolves.toBeUndefined(),
+      expect(checkForEmailConflict("john.smith@example.com", 1)).resolves.toBeUndefined()
+    ])
   })
 })
 
