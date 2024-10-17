@@ -10,6 +10,7 @@ export type Issue = {
 
 
 export type ExtendedIssue = {
+  plot_name?: string
   subdivision_name?: string | null
   note_count: number
   image_count: number
