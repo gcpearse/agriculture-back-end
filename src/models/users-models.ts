@@ -2,7 +2,7 @@ import QueryString from "qs"
 import { db } from "../db"
 import { compareHash, generateHash } from "../middleware/security"
 import { StatusResponse } from "../types/response-types"
-import { PasswordUpdate, SecureUser } from "../types/user-types"
+import { PasswordUpdate, SecureUser, UserRequest } from "../types/user-types"
 import { checkForEmailConflict, fetchUserRole, searchForUserId, confirmUnitSystemIsValid, confirmUserRoleIsValid } from "../utils/db-queries"
 import { verifyPagination, verifyValueIsPositiveInt, verifyPermission, verifyQueryValue } from "../utils/verification"
 import format from "pg-format"
@@ -124,7 +124,7 @@ export const selectUserByUserId = async (
 export const updateUserByUserId = async (
   authUserId: number,
   user_id: number,
-  user: SecureUser
+  user: UserRequest
 ): Promise<SecureUser> => {
 
   await verifyValueIsPositiveInt(user_id)
@@ -133,7 +133,7 @@ export const updateUserByUserId = async (
 
   await verifyPermission(authUserId, user_id)
 
-  await checkForEmailConflict(user.email)
+  await checkForEmailConflict(user.email, user_id)
 
   const result = await db.query(`
     UPDATE users
