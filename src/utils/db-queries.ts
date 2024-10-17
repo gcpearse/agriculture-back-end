@@ -121,6 +121,32 @@ export const fetchCropOwnerId = async (
 }
 
 
+export const fetchIssueOwnerId = async (
+  issue_id: number
+): Promise<number> => {
+
+  const result = await db.query(`
+    SELECT owner_id
+    FROM plots
+    JOIN issues
+    ON plots.plot_id = issues.plot_id
+    WHERE issue_id = $1;
+    `,
+    [issue_id]
+  )
+
+  if (!result.rowCount) {
+    return Promise.reject({
+      status: 404,
+      message: "Not Found",
+      details: "Issue not found"
+    })
+  }
+
+  return result.rows[0].owner_id
+}
+
+
 export const fetchPlotOwnerId = async (
   plot_id: number
 ): Promise<number> => {

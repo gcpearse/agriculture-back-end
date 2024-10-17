@@ -1220,24 +1220,24 @@ describe("GET /api/crops/:crop_id", () => {
   test("GET:200 Responds with a crop object", async () => {
 
     const { body } = await request(app)
-      .get("/api/crops/1")
+      .get("/api/crops/2")
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
     expect(body.crop).toMatchObject<ExtendedCrop>({
-      crop_id: 1,
+      crop_id: 2,
       plot_id: 1,
-      subdivision_id: 1,
-      name: "Carrot",
-      variety: null,
-      category: "Vegetables",
-      quantity: 20,
+      subdivision_id: null,
+      name: "Apple",
+      variety: "Lord Derby",
+      category: "Fruits",
+      quantity: 1,
       date_planted: expect.stringMatching(regex),
       harvest_date: expect.stringMatching(regex),
       plot_name: "John's Garden",
-      subdivision_name: "Root Vegetable Bed",
-      note_count: 2,
-      image_count: 2
+      subdivision_name: null,
+      note_count: 0,
+      image_count: 1
     })
   })
 

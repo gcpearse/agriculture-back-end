@@ -339,25 +339,23 @@ cropsRouter.route("/crops/:crop_id")
  *            schema:
  *              type: object
  *              properties:
- *                crops:
- *                  type: array
- *                  items:
- *                    allOf:
- *                      - $ref: "#/components/schemas/Crop"
- *                      - type: object
- *                        properties:
- *                          plot_name:
- *                            type: string
- *                            example: John's Garden          
- *                          subdivision_name:
- *                            type: string
- *                            example: Vegetable Patch
- *                          note_count:
- *                            type: integer
- *                            example: 1
- *                          image_count:
- *                            type: integer
- *                            example: 1
+ *                crop:
+ *                  allOf:
+ *                    - $ref: "#/components/schemas/Crop"
+ *                    - type: object
+ *                      properties:
+ *                        plot_name:
+ *                          type: string
+ *                          example: John's Garden          
+ *                        subdivision_name:
+ *                          type: string
+ *                          example: Vegetable Patch
+ *                        note_count:
+ *                          type: integer
+ *                          example: 1
+ *                        image_count:
+ *                          type: integer
+ *                          example: 1
  *      400:
  *        description: Bad Request
  *        content:

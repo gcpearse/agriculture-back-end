@@ -991,3 +991,68 @@ describe("POST /api/issues/subdivisions/:subdivision_id", () => {
     })
   })
 })
+
+
+describe("GET /api/issues/:issue_id", () => {
+
+  test("GET:200 Responds with an issue object", async () => {
+
+    const { body } = await request(app)
+      .get("/api/issues/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.issue).toMatchObject<ExtendedIssue>({
+      issue_id: 1,
+      plot_id: 1,
+      subdivision_id: null,
+      title: "Broken gate",
+      description: "The gate has fallen off its hinges",
+      is_critical: true,
+      is_resolved: false,
+      plot_name: "John's Garden",
+      subdivision_name: null,
+      note_count: 2,
+      image_count: 2
+    })
+  })
+
+  test("GET:400 Responds with an error when the issue_id parameter is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .get("/api/issues/foobar")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Value must be a positive integer"
+    })
+  })
+
+  test("GET:403 Responds with an error when the issue does not belong to the authenticated user", async () => {
+
+    const { body } = await request(app)
+      .get("/api/issues/4")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Forbidden",
+      details: "Permission denied"
+    })
+  })
+
+  test("GET:404 Responds with an error when the issue does not exist", async () => {
+
+    const { body } = await request(app)
+      .get("/api/issues/999")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Issue not found"
+    })
+  })
+})
