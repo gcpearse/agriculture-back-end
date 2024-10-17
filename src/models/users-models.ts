@@ -226,6 +226,15 @@ export const updatePasswordByUserId = async (
     })
   }
 
+  // Compare values once old password has been verified
+  if (oldPassword === newPassword) {
+    return Promise.reject({
+      status: 409,
+      message: "Conflict",
+      details: "New password must not match old password"
+    })
+  }
+
   const hashedPassword = await generateHash(newPassword)
 
   await db.query(`
