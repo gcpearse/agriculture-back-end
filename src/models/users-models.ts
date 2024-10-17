@@ -231,7 +231,7 @@ export const updatePasswordByUserId = async (
     return Promise.reject({
       status: 409,
       message: "Conflict",
-      details: "New password must not match old password"
+      details: "Old password and new password must be different"
     })
   }
 
