@@ -19,7 +19,7 @@ describe("GET /api/auth", () => {
       .post("/api/login")
       .send({
         login: "carrot_king",
-        password: "carrots123",
+        password: "Carrots123",
       })
 
     const { body } = await request(app)
