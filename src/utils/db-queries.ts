@@ -1,17 +1,26 @@
+import format from "pg-format"
 import { db } from "../db"
 
 
 export const checkForEmailConflict = async (
-  email: string
+  email: string,
+  user_id: number | undefined
 ): Promise<undefined> => {
 
-  const result = await db.query(`
+  let query = format(`
     SELECT email 
     FROM users
-    WHERE email = $1;
-    `,
-    [email]
-  )
+    WHERE email = %L
+    `, email)
+
+  // Prevents conflict when current user updates details
+  if (user_id) {
+    query += format(`
+      AND NOT user_id = %L
+      `, user_id)
+  }
+
+  const result = await db.query(query)
 
   if (result.rowCount) {
     return Promise.reject({
