@@ -1,7 +1,7 @@
 import QueryString from "qs"
 import { db } from "../db"
 import { ExtendedIssue, IssueRequest } from "../types/issue-types"
-import { fetchPlotOwnerId, fetchSubdivisionPlotId } from "../utils/db-queries"
+import { fetchIssueOwnerId, fetchPlotOwnerId, fetchSubdivisionPlotId } from "../utils/db-queries"
 import { verifyPagination, verifyPermission, verifyQueryValue, verifyValueIsPositiveInt } from "../utils/verification"
 import format from "pg-format"
 
@@ -263,6 +263,47 @@ export const insertIssueBySubdivisionId = async (
       issue.is_critical ?? false
     ]]
   ))
+
+  return result.rows[0]
+}
+
+
+export const selectIssueByIssueId = async (
+  authUserId: number,
+  issue_id: number
+): Promise<ExtendedIssue> => {
+
+  await verifyValueIsPositiveInt(issue_id)
+
+  const owner_id = await fetchIssueOwnerId(issue_id)
+
+  await verifyPermission(authUserId, owner_id)
+
+  const result = await db.query(`
+    SELECT
+      issues.*,
+      plots.name
+      AS plot_name,
+      subdivisions.name
+      AS subdivision_name,
+      COUNT(DISTINCT issue_notes.note_id)::INT
+      AS note_count,
+      COUNT(DISTINCT issue_images.image_id)::INT
+      AS image_count
+    FROM issues
+    LEFT JOIN plots
+    ON issues.plot_id = plots.plot_id
+    LEFT JOIN subdivisions
+    ON issues.subdivision_id = subdivisions.subdivision_id
+    LEFT JOIN issue_notes
+    ON issues.issue_id = issue_notes.issue_id
+    LEFT JOIN issue_images
+    ON issues.issue_id = issue_images.issue_id
+    WHERE issues.issue_id = $1
+    GROUP BY issues.issue_id, plots.name, subdivisions.name;
+    `,
+    [issue_id]
+  )
 
   return result.rows[0]
 }
