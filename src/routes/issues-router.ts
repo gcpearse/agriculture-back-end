@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { getIssuesByPlotId, getIssuesBySubdivisionId, postIssueByPlotId, postIssueBySubdivisionId } from "../controllers/issues-controllers"
+import { getIssueByIssueId, getIssuesByPlotId, getIssuesBySubdivisionId, postIssueByPlotId, postIssueBySubdivisionId } from "../controllers/issues-controllers"
 
 
 export const issuesRouter = Router()
@@ -305,3 +305,68 @@ issuesRouter.route("/issues/subdivisions/:subdivision_id")
  *              $ref: "#/components/schemas/NotFound"
  */
   .post(verifyToken, postIssueBySubdivisionId)
+
+
+issuesRouter.route("/issues/:issue_id")
+
+
+/**
+ * @swagger
+ * /api/issues/{issue_id}:
+ *  get:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Retrieve an issue
+ *    description: Responds with an issue object. If the issue_id parameter is invalid, the server responds with an error. Permission is denied when the issue does not belong to the user.
+ *    tags: [Issues]
+ *    parameters:
+ *      - in: path
+ *        name: issue_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *    responses:
+ *      200:
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                issue:
+ *                  allOf:
+ *                    - $ref: "#/components/schemas/Issue"
+ *                    - type: object
+ *                      properties:
+ *                        plot_name:
+ *                          type: string
+ *                          example: John's Garden          
+ *                        subdivision_name:
+ *                          type: string
+ *                          example: Vegetable Patch
+ *                        note_count:
+ *                          type: integer
+ *                          example: 1
+ *                        image_count:
+ *                          type: integer
+ *                          example: 1
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/BadRequest"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Forbidden"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/NotFound"
+ */
+  .get(verifyToken, getIssueByIssueId)
