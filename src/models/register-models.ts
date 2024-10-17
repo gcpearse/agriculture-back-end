@@ -3,6 +3,7 @@ import { db } from "../db"
 import { SecureUser, UnregisteredUser } from "../types/user-types"
 import { checkForEmailConflict } from "../utils/db-queries"
 import { generateHash } from "../middleware/security"
+import { verifyPasswordFormat } from "../utils/verification"
 
 
 export const registerUser = async (
@@ -33,6 +34,8 @@ export const registerUser = async (
   }
 
   await checkForEmailConflict(email, undefined)
+
+  await verifyPasswordFormat(password)
 
   const hashedPassword = await generateHash(password)
 
