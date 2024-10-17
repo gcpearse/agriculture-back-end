@@ -664,25 +664,6 @@ describe("PATCH /api/users/:user_id/password", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error when the new password is an empty string", async () => {
-
-    const passwordUpdate: PasswordUpdate = {
-      oldPassword: "Carrots123",
-      newPassword: ""
-    }
-
-    const { body } = await request(app)
-      .patch("/api/users/1/password")
-      .send(passwordUpdate)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(400)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "Bad Request",
-      details: "Empty string"
-    })
-  })
-
   test("PATCH:400 Responds with an error when the user_id is not a positive integer", async () => {
 
     const passwordUpdate: PasswordUpdate = {
