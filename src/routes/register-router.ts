@@ -81,7 +81,7 @@ export const registerRouter = Router()
  *                  example: Bad Request
  *                details:
  *                  type: string
- *                  example: Not null violation
+ *                  example: Invalid password format
  *      409:
  *        description: Conflict
  *        content:
