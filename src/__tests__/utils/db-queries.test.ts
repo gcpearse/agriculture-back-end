@@ -1,7 +1,7 @@
 import data from "../../db/data/test-data/test-index"
 import { db } from "../../db"
 import { seed } from "../../db/seeding/seed"
-import { checkForEmailConflict, checkForPlotNameConflict, checkForSubdivisionNameConflict, fetchCropOwnerId, fetchPlotOwnerId, fetchSubdivisionPlotId, fetchUserRole, searchForUserId, confirmCropCategoryIsValid, confirmPlotTypeIsValid, confirmSubdivisionTypeIsValid, confirmUnitSystemIsValid, confirmUserRoleIsValid, fetchCropNoteCropId } from "../../utils/db-queries"
+import { checkForEmailConflict, checkForPlotNameConflict, checkForSubdivisionNameConflict, fetchCropOwnerId, fetchPlotOwnerId, fetchSubdivisionPlotId, fetchUserRole, searchForUserId, confirmCropCategoryIsValid, confirmPlotTypeIsValid, confirmSubdivisionTypeIsValid, confirmUnitSystemIsValid, confirmUserRoleIsValid, fetchCropNoteCropId, fetchIssueOwnerId } from "../../utils/db-queries"
 import { StatusResponse } from "../../types/response-types"
 
 
@@ -68,7 +68,10 @@ describe("fetchCropNoteCropId", () => {
 
   test("Returns the crop ID associated with the crop note", async () => {
 
-    await expect(fetchCropNoteCropId(1)).resolves.toBe(1)
+    await Promise.all([
+      expect(fetchCropNoteCropId(1)).resolves.toBe(1),
+      expect(fetchCropNoteCropId(2)).resolves.toBe(1)
+    ])
   })
 
   test("When the crop note does not exist, the promise is rejected", async () => {
@@ -86,7 +89,10 @@ describe("fetchCropOwnerId", () => {
 
   test("Returns the owner ID associated with the crop", async () => {
 
-    await expect(fetchCropOwnerId(1)).resolves.toBe(1)
+    await Promise.all([
+      expect(fetchCropOwnerId(1)).resolves.toBe(1),
+      expect(fetchCropOwnerId(5)).resolves.toBe(2)
+    ])
   })
 
   test("When the crop does not exist, the promise is rejected", async () => {
@@ -100,11 +106,34 @@ describe("fetchCropOwnerId", () => {
 })
 
 
+describe("fetchIssueOwnerId", () => {
+
+  test("Returns the owner ID associated with the issue", async () => {
+    await Promise.all([
+      expect(fetchIssueOwnerId(1)).resolves.toBe(1),
+      expect(fetchIssueOwnerId(4)).resolves.toBe(2)
+    ])
+  })
+
+  test("When the issue does not exist, the promise is rejected", async () => {
+
+    await expect(fetchIssueOwnerId(999)).rejects.toMatchObject<StatusResponse>({
+      status: 404,
+      message: "Not Found",
+      details: "Issue not found"
+    })
+  })
+})
+
+
 describe("fetchPlotOwnerId", () => {
 
   test("Returns the owner ID associated with the plot", async () => {
 
-    await expect(fetchPlotOwnerId(1)).resolves.toBe(1)
+    await Promise.all([
+      expect(fetchPlotOwnerId(1)).resolves.toBe(1),
+      expect(fetchPlotOwnerId(2)).resolves.toBe(2)
+    ])
   })
 
   test("When the plot does not exist, the promise is rejected", async () => {
@@ -122,7 +151,10 @@ describe("fetchSubdivisionPlotId", () => {
 
   test("Returns the plot ID associated with the subdivision", async () => {
 
-    await expect(fetchSubdivisionPlotId(1)).resolves.toBe(1)
+    await Promise.all([
+      expect(fetchSubdivisionPlotId(1)).resolves.toBe(1),
+      expect(fetchSubdivisionPlotId(4)).resolves.toBe(2)
+    ])
   })
 
   test("When the subdivision does not exist, the promise is rejected", async () => {
@@ -140,7 +172,10 @@ describe("fetchUserRole", () => {
 
   test("Returns the role of the user with the given user ID", async () => {
 
-    await expect(fetchUserRole(1)).resolves.toBe("admin")
+    await Promise.all([
+      expect(fetchUserRole(1)).resolves.toBe("admin"),
+      expect(fetchUserRole(2)).resolves.toBe("user"),
+    ])
   })
 
   test("When the user does not exist, the promise is rejected", async () => {
