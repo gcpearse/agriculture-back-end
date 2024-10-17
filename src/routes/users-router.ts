@@ -301,6 +301,12 @@ usersRouter.route("/users/:user_id")
  *          application/json:
  *            schema:
  *              $ref: "#/components/schemas/NotFound"
+ *      409:
+ *        description: Conflict
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Conflict"
  */
 usersRouter.patch("/users/:user_id/password", verifyToken, patchPasswordByUserId)
 
