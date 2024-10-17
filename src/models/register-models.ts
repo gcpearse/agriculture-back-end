@@ -32,7 +32,7 @@ export const registerUser = async (
     })
   }
 
-  await checkForEmailConflict(email)
+  await checkForEmailConflict(email, undefined)
 
   const hashedPassword = await generateHash(password)
 

@@ -450,6 +450,32 @@ describe("PATCH /api/users/:user_id", () => {
     })
   })
 
+  test("PATCH:200 Does not flag an email conflict when the current email address matches the email address in the request body", async () => {
+
+    const newDetails: UserRequest = {
+      email: "john.smith@example.com",
+      first_name: "J",
+      surname: "Smith-Jones",
+      unit_system: UnitSystem.Metric
+    }
+
+    const { body } = await request(app)
+      .patch("/api/users/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.user).toMatchObject<SecureUser>({
+      user_id: 1,
+      username: "carrot_king",
+      email: "john.smith@example.com",
+      first_name: "J",
+      surname: "Smith-Jones",
+      role: UserRole.Admin,
+      unit_system: UnitSystem.Metric
+    })
+  })
+
   test("PATCH:400 Responds with an error when the user_id parameter is not a positive integer", async () => {
 
     const newDetails: UserRequest = {
