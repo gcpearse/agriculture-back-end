@@ -30,6 +30,7 @@ describe("verifyPasswordFormat", () => {
   test("When the password format is invalid, the promise is rejected", () => {
 
     const invalidPasswords = [
+      "",
       "Abcdef1",
       "Abcdef1!",
       "abcdefgh",
