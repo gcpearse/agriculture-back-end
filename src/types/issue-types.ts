@@ -10,7 +10,7 @@ export type Issue = {
 
 
 export type ExtendedIssue = {
-  subdivision_name?: string
+  subdivision_name?: string | null
   note_count: number
   image_count: number
 } & Issue
