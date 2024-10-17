@@ -13,6 +13,21 @@ export const verifyPagination = (
 }
 
 
+export const verifyPasswordFormat = (
+  password: string
+): Promise<never> | undefined => {
+  // 8-18 chars: letters, numbers, underscores
+  // At least one of: uppercase letter, lowercase letter, number
+  if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[\w\d]{8,18}$/.test(password)) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid password format"
+    })
+  }
+}
+
+
 export const verifyPermission = (
   base: string | number,
   target: string | number
