@@ -200,14 +200,6 @@ export const updatePasswordByUserId = async (
 
   await verifyPermission(authUserId, user_id)
 
-  if (!newPassword) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Empty string"
-    })
-  }
-
   await verifyPasswordFormat(newPassword)
 
   const currentPassword = await db.query(`
