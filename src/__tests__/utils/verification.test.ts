@@ -1,23 +1,5 @@
 import { StatusResponse } from "../../types/response-types"
-import { verifyPermission, verifyValueIsPositiveInt, verifyPagination, verifyQueryValue } from "../../utils/verification"
-
-
-describe("verifyPermission", () => {
-
-  test("When the base value does not match the target value, the promise is rejected", () => {
-
-    expect(verifyPermission(1, 2)).rejects.toMatchObject<StatusResponse>({
-      status: 403,
-      message: "Forbidden",
-      details: "Permission denied"
-    })
-  })
-
-  test("Returns undefined when the base value matches the target value", () => {
-
-    expect(verifyPermission(1, 1)).toBeUndefined()
-  })
-})
+import { verifyPermission, verifyValueIsPositiveInt, verifyPagination, verifyQueryValue, verifyPasswordFormat } from "../../utils/verification"
 
 
 describe("verifyPagination", () => {
@@ -39,6 +21,61 @@ describe("verifyPagination", () => {
   test("Returns undefined when the query returns at least one row", () => {
 
     expect(verifyPagination(2, 1)).toBeUndefined()
+  })
+})
+
+
+describe("verifyPasswordFormat", () => {
+
+  test("When the password format is invalid, the promise is rejected", () => {
+
+    const invalidPasswords = [
+      "Abcdef1",
+      "Abcdef1!",
+      "abcdefgh",
+      "Abcdefgh",
+      "abcdefg1",
+      "Abcdefghijklmnopqrstuvwzyx1",
+    ]
+
+    for (const password of invalidPasswords) {
+      expect(verifyPasswordFormat(password)).rejects.toMatchObject<StatusResponse>({
+        status: 400,
+        message: "Bad Request",
+        details: "Invalid password format"
+      })
+    }
+  })
+
+  test("Returns undefined when the password format is valid", () => {
+
+    const validPasswords = [
+      "Abcd1234",
+      "Abcd_123",
+      "Abcdefghijklmnopq1"
+    ]
+
+    for (const password of validPasswords) {
+      expect(verifyPasswordFormat(password)).toBeUndefined()
+    }
+  })
+})
+
+
+describe("verifyPermission", () => {
+
+  test("When the base value does not match the target value, the promise is rejected", () => {
+
+    expect(verifyPermission(1, 2)).rejects.toMatchObject<StatusResponse>({
+      status: 403,
+      message: "Forbidden",
+      details: "Permission denied"
+    })
+  })
+
+  test("Returns undefined when the base value matches the target value", () => {
+
+    expect(verifyPermission(1, 1)).toBeUndefined()
   })
 })
 
