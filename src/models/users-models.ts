@@ -2,7 +2,7 @@ import QueryString from "qs"
 import { db } from "../db"
 import { compareHash, generateHash } from "../middleware/security"
 import { StatusResponse } from "../types/response-types"
-import { PasswordUpdate, SecureUser, UserRequest } from "../types/user-types"
+import { PasswordUpdate, SecureUser, UserRequest, UserRole } from "../types/user-types"
 import { checkForEmailConflict, fetchUserRole, searchForUserId, confirmUnitSystemIsValid, confirmUserRoleIsValid } from "../utils/db-queries"
 import { verifyPagination, verifyValueIsPositiveInt, verifyPermission, verifyQueryValue, verifyPasswordFormat } from "../utils/verification"
 import format from "pg-format"
@@ -26,7 +26,7 @@ export const selectAllUsers = async (
 
   const userRole = await fetchUserRole(authUserId)
 
-  await verifyPermission(userRole, "admin")
+  await verifyPermission(userRole, UserRole.Admin)
 
   await verifyQueryValue(["user_id", "email", "first_name", "surname"], sort as string)
 
@@ -100,7 +100,11 @@ export const selectUserByUserId = async (
 
   await searchForUserId(user_id)
 
-  await verifyPermission(authUserId, user_id)
+  const userRole = await fetchUserRole(authUserId)
+
+  if (userRole !== UserRole.Admin) {
+    await verifyPermission(authUserId, user_id)
+  }
 
   const result = await db.query(`
     SELECT 
@@ -260,7 +264,7 @@ export const updateRoleByUserId = async (
 
   const userRole = await fetchUserRole(authUserId)
 
-  await verifyPermission(userRole, "admin")
+  await verifyPermission(userRole, UserRole.Admin)
 
   const result = await db.query(`
     UPDATE users
