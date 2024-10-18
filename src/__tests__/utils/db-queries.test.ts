@@ -3,6 +3,7 @@ import { db } from "../../db"
 import { seed } from "../../db/seeding/seed"
 import { checkForEmailConflict, checkForPlotNameConflict, checkForSubdivisionNameConflict, fetchCropOwnerId, fetchPlotOwnerId, fetchSubdivisionPlotId, fetchUserRole, searchForUserId, confirmCropCategoryIsValid, confirmPlotTypeIsValid, confirmSubdivisionTypeIsValid, confirmUnitSystemIsValid, confirmUserRoleIsValid, fetchCropNoteCropId, fetchIssueOwnerId } from "../../utils/db-queries"
 import { StatusResponse } from "../../types/response-types"
+import { UserRole } from "../../types/user-types"
 
 
 beforeEach(() => seed(data))
@@ -176,8 +177,8 @@ describe("fetchUserRole", () => {
   test("Returns the role of the user with the given user ID", async () => {
 
     await Promise.all([
-      expect(fetchUserRole(1)).resolves.toBe("admin"),
-      expect(fetchUserRole(2)).resolves.toBe("user"),
+      expect(fetchUserRole(1)).resolves.toBe(UserRole.Admin),
+      expect(fetchUserRole(2)).resolves.toBe(UserRole.User),
     ])
   })
 
