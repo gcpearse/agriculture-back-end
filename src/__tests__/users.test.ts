@@ -381,6 +381,24 @@ describe("GET /api/users/:user_id", () => {
     })
   })
 
+  test("GET:200 An admin can retrieve another user's data", async () => {
+
+    const { body } = await request(app)
+      .get("/api/users/2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.user).toMatchObject<SecureUser>({
+      user_id: 2,
+      username: "peach_princess",
+      email: "olivia.jones@example.com",
+      first_name: "Olivia",
+      surname: "Jones",
+      role: UserRole.User,
+      unit_system: UnitSystem.Metric
+    })
+  })
+
   test("GET:400 Responds with an error when the user_id parameter is not a positive integer", async () => {
 
     const { body } = await request(app)
@@ -394,10 +412,19 @@ describe("GET /api/users/:user_id", () => {
     })
   })
 
-  test("GET:403 Responds with an error when the authenticated user attempts to retrieve another user's data", async () => {
+  test("GET:403 Responds with an error when a non-admin authenticated user attempts to retrieve another user's data", async () => {
+
+    const auth = await request(app)
+      .post("/api/login")
+      .send({
+        login: "peach_princess",
+        password: "Peaches123",
+      })
+
+    token = auth.body.token
 
     const { body } = await request(app)
-      .get("/api/users/2")
+      .get("/api/users/1")
       .set("Authorization", `Bearer ${token}`)
       .expect(403)
 
