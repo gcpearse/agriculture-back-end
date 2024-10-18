@@ -5,8 +5,7 @@
 node_modules
 
 # Notes and templates
-notes*
-templates*
+/notes
 
 # Output directory
 /dist
