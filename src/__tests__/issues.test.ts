@@ -20,7 +20,7 @@ beforeEach(async () => {
     .post("/api/login")
     .send({
       login: "carrot_king",
-      password: "carrots123",
+      password: "Carrots123",
     })
 
   token = auth.body.token
@@ -162,7 +162,7 @@ describe("GET /api/issues/plots/:plot_id?is_critical=", () => {
       .post("/api/login")
       .send({
         login: "peach_princess",
-        password: "peaches123",
+        password: "Peaches123",
       })
 
     token = auth.body.token
@@ -216,7 +216,7 @@ describe("GET /api/issues/plots/:plot_id?is_resolved=", () => {
       .post("/api/login")
       .send({
         login: "peach_princess",
-        password: "peaches123",
+        password: "Peaches123",
       })
 
     token = auth.body.token

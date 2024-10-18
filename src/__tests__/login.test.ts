@@ -18,7 +18,7 @@ describe("POST /api/login", () => {
 
     const user: Credentials = {
       login: "carrot_king",
-      password: "carrots123"
+      password: "Carrots123"
     }
 
     const { body } = await request(app)
@@ -33,7 +33,7 @@ describe("POST /api/login", () => {
 
     const user: Credentials = {
       login: "john.smith@example.com",
-      password: "carrots123"
+      password: "Carrots123"
     }
 
     const { body } = await request(app)
@@ -66,7 +66,7 @@ describe("POST /api/login", () => {
 
     const user: Credentials = {
       login: "mango_man",
-      password: "carrots123"
+      password: "Carrots123"
     }
 
     const { body } = await request(app)

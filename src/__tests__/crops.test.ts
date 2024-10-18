@@ -22,7 +22,7 @@ beforeEach(async () => {
     .post("/api/login")
     .send({
       login: "carrot_king",
-      password: "carrots123",
+      password: "Carrots123",
     })
 
   token = auth.body.token

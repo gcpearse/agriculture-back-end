@@ -4,7 +4,7 @@ import { compareHash, generateHash } from "../middleware/security"
 import { StatusResponse } from "../types/response-types"
 import { PasswordUpdate, SecureUser, UserRequest } from "../types/user-types"
 import { checkForEmailConflict, fetchUserRole, searchForUserId, confirmUnitSystemIsValid, confirmUserRoleIsValid } from "../utils/db-queries"
-import { verifyPagination, verifyValueIsPositiveInt, verifyPermission, verifyQueryValue } from "../utils/verification"
+import { verifyPagination, verifyValueIsPositiveInt, verifyPermission, verifyQueryValue, verifyPasswordFormat } from "../utils/verification"
 import format from "pg-format"
 
 
@@ -200,13 +200,7 @@ export const updatePasswordByUserId = async (
 
   await verifyPermission(authUserId, user_id)
 
-  if (!newPassword) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Empty string"
-    })
-  }
+  await verifyPasswordFormat(newPassword)
 
   const currentPassword = await db.query(`
     SELECT password

@@ -4,7 +4,7 @@ import { UnitSystem, User, UserRole } from "../../../../types/user-types";
 export const userData: User[] = [
   {
     username: "carrot_king",
-    password: "carrots123",
+    password: "Carrots123",
     email: "john.smith@example.com",
     first_name: "John",
     surname: "Smith",
@@ -15,7 +15,7 @@ export const userData: User[] = [
   },
   {
     username: "peach_princess",
-    password: "peaches123",
+    password: "Peaches123",
     email: "olivia.jones@example.com",
     first_name: "Olivia",
     surname: "Jones",
@@ -26,7 +26,7 @@ export const userData: User[] = [
   },
   {
     username: "quince_queen",
-    password: "quince123",
+    password: "Quince123",
     email: "maria.perez@example.com",
     first_name: "Maria",
     surname: "Perez",

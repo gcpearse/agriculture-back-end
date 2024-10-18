@@ -18,7 +18,7 @@ beforeEach(async () => {
     .post("/api/login")
     .send({
       login: "carrot_king",
-      password: "carrots123",
+      password: "Carrots123",
     })
 
   token = auth.body.token
@@ -68,7 +68,7 @@ describe("GET /api/users", () => {
       .post("/api/login")
       .send({
         login: "quince_queen",
-        password: "quince123",
+        password: "Quince123",
       })
 
     token = auth.body.token
@@ -628,8 +628,8 @@ describe("PATCH /api/users/:user_id/password", () => {
   test("PATCH:200 Responds with a success message when the password is changed successfully", async () => {
 
     const passwordUpdate: PasswordUpdate = {
-      oldPassword: "carrots123",
-      newPassword: "onions789"
+      oldPassword: "Carrots123",
+      newPassword: "Onions789"
     }
 
     const { body } = await request(app)
@@ -644,11 +644,12 @@ describe("PATCH /api/users/:user_id/password", () => {
     })
   })
 
-  test("PATCH:400 Responds with an error when the new password is an empty string", async () => {
+
+  test("PATCH:400 Responds with an error when the password format is invalid", async () => {
 
     const passwordUpdate: PasswordUpdate = {
-      oldPassword: "carrots123",
-      newPassword: ""
+      oldPassword: "Carrots123",
+      newPassword: "onions789"
     }
 
     const { body } = await request(app)
@@ -659,15 +660,15 @@ describe("PATCH /api/users/:user_id/password", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Empty string"
+      details: "Invalid password format"
     })
   })
 
   test("PATCH:400 Responds with an error when the user_id is not a positive integer", async () => {
 
     const passwordUpdate: PasswordUpdate = {
-      oldPassword: "carrots123",
-      newPassword: "onions789"
+      oldPassword: "Carrots123",
+      newPassword: "Onions789"
     }
 
     const { body } = await request(app)
@@ -686,7 +687,7 @@ describe("PATCH /api/users/:user_id/password", () => {
 
     const passwordUpdate: PasswordUpdate = {
       oldPassword: "apples567",
-      newPassword: "onions789"
+      newPassword: "Onions789"
     }
 
     const { body } = await request(app)
@@ -704,7 +705,7 @@ describe("PATCH /api/users/:user_id/password", () => {
   test("PATCH:403 Responds with an error when the authenticated user attempts to change another user's password", async () => {
 
     const passwordUpdate: PasswordUpdate = {
-      oldPassword: "peaches123",
+      oldPassword: "Peaches123",
       newPassword: "onions789"
     }
 
@@ -723,7 +724,7 @@ describe("PATCH /api/users/:user_id/password", () => {
   test("PATCH:404 Responds with an error when the user does not exist", async () => {
 
     const passwordUpdate: PasswordUpdate = {
-      oldPassword: "carrots123",
+      oldPassword: "Carrots123",
       newPassword: "onions789"
     }
 
@@ -742,8 +743,8 @@ describe("PATCH /api/users/:user_id/password", () => {
   test("PATCH:409 Responds with an error when the new password matches the old password", async () => {
 
     const passwordUpdate: PasswordUpdate = {
-      oldPassword: "carrots123",
-      newPassword: "carrots123"
+      oldPassword: "Carrots123",
+      newPassword: "Carrots123"
     }
 
     const { body } = await request(app)
@@ -813,7 +814,7 @@ describe("PATCH /api/users/:user_id/role", () => {
       .post("/api/login")
       .send({
         login: "quince_queen",
-        password: "quince123",
+        password: "Quince123",
       })
 
     token = auth.body.token
