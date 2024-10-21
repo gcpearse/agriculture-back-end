@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express"
-import { insertPlotByOwner, removePlotByPlotId, selectPinnedPlotsByOwner, selectPlotByPlotId, selectPlotsByOwner, updateIsPinnedByPlotId, updatePlotByPlotId } from "../models/plots-models"
+import { insertPlotByOwner, removePlotByPlotId, selectPinnedPlotsByOwner, selectPlotByPlotId, selectPlotsByOwner, setIsPinnedByPlotId, updatePlotByPlotId } from "../models/plots-models"
 import { ExtendedRequest } from "../types/auth-types"
 
 
@@ -93,14 +93,14 @@ export const deletePlotByPlotId = async (req: ExtendedRequest, res: Response, ne
 }
 
 
-export const patchIsPinnedByPlotId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
+export const pinPlotByPlotId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
   const authUserId = req.user!.user_id
 
   const { plot_id } = req.params
 
   try {
-    const response = await updateIsPinnedByPlotId(authUserId, +plot_id, req.body)
+    const response = await setIsPinnedByPlotId(authUserId, +plot_id, req.body)
     res.status(200).send(response)
   } catch (err) {
     next(err)
