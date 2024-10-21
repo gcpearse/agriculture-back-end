@@ -343,3 +343,49 @@ export const setIsPinnedByPlotId = async (
     details: "Plot pinned successfully"
   }
 }
+
+
+export const unsetIsPinnedByPlotId = async (
+  authUserId: number,
+  plot_id: number,
+  toggle: { isPinned: boolean }
+): Promise<StatusResponse> => {
+
+  await verifyValueIsPositiveInt(plot_id)
+
+  const owner_id = await fetchPlotOwnerId(plot_id)
+
+  await verifyPermission(authUserId, owner_id)
+
+  if (toggle.isPinned !== false) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid boolean value"
+    })
+  }
+
+  const result = await db.query(`
+    UPDATE plots
+    SET
+      is_pinned = FALSE
+    WHERE plot_id = $1
+    AND is_pinned = TRUE
+    RETURNING *;
+    `,
+    [plot_id]
+  )
+
+  if (!result.rows[0]) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Plot already unpinned"
+    })
+  }
+
+  return {
+    message: "OK",
+    details: "Plot unpinned successfully"
+  }
+}
