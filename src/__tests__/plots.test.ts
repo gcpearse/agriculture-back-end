@@ -969,7 +969,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
 
   test("PATCH:200 Responds with a success message when a plot is successfully pinned", async () => {
 
-    const toggle: { bool: boolean } = { bool: true }
+    const toggle: { isPinned: boolean } = { isPinned: true }
 
     const { body } = await request(app)
       .patch("/api/plots/4/pin")
@@ -983,23 +983,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
     })
   })
 
-  test("PATCH:200 Responds with a success message when a plot is successfully unpinned", async () => {
-
-    const toggle: { bool: boolean } = { bool: true }
-
-    const { body } = await request(app)
-      .patch("/api/plots/1/pin")
-      .send(toggle)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(200)
-
-    expect(body).toMatchObject<StatusResponse>({
-      message: "OK",
-      details: "Plot unpinned successfully"
-    })
-  })
-
-  test("PATCH:400 Responds with an error when the maximum number of plots are already pinned", async () => {
+  test("PATCH:400 Responds with an error when the plot is already pinned or the the maximum number of pinned plots has been reached", async () => {
 
     const fourthPlot: PlotRequest = {
       name: "John's Orchard",
@@ -1027,7 +1011,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(201)
 
-    const toggle: { bool: boolean } = { bool: true }
+    const toggle: { isPinned: boolean } = { isPinned: true }
 
     await request(app)
       .patch("/api/plots/4/pin")
@@ -1049,13 +1033,13 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
 
     expect(body).toMatchObject<StatusResponse>({
       message: "Bad Request",
-      details: "Pin limit reached"
+      details: "Plot already pinned or pin limit reached"
     })
   })
 
-  test("PATCH:400 Responds with an error when the value of bool is not true (boolean data type)", async () => {
+  test("PATCH:400 Responds with an error when the value of isPinned is not true", async () => {
 
-    const toggle: { bool: boolean } = { bool: false }
+    const toggle: { isPinned: boolean } = { isPinned: false }
 
     const { body } = await request(app)
       .patch("/api/plots/1/pin")
@@ -1072,7 +1056,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
 
   test("PATCH:400 Responds with an error when the plot_id parameter is not a positive integer", async () => {
 
-    const toggle: { bool: boolean } = { bool: true }
+    const toggle: { isPinned: boolean } = { isPinned: true }
 
     const { body } = await request(app)
       .patch("/api/plots/foobar/pin")
@@ -1088,7 +1072,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
 
   test("PATCH:403 Responds with an error when the plot does not belong to the authenticated user", async () => {
 
-    const toggle: { bool: boolean } = { bool: true }
+    const toggle: { isPinned: boolean } = { isPinned: true }
 
     const { body } = await request(app)
       .patch("/api/plots/2/pin")
@@ -1104,7 +1088,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
 
   test("PATCH:404 Responds with an error when the plot does not exist", async () => {
 
-    const toggle: { bool: boolean } = { bool: true }
+    const toggle: { isPinned: boolean } = { isPinned: true }
 
     const { body } = await request(app)
       .patch("/api/plots/999/pin")
