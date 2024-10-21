@@ -292,10 +292,10 @@ export const removePlotByPlotId = async (
 }
 
 
-export const updateIsPinnedByPlotId = async (
+export const setIsPinnedByPlotId = async (
   authUserId: number,
   plot_id: number,
-  toggle: { bool: boolean }
+  toggle: { isPinned: boolean }
 ): Promise<StatusResponse> => {
 
   await verifyValueIsPositiveInt(plot_id)
@@ -304,7 +304,7 @@ export const updateIsPinnedByPlotId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  if (toggle.bool !== true) {
+  if (toggle.isPinned !== true) {
     return Promise.reject({
       status: 400,
       message: "Bad Request",
@@ -312,50 +312,34 @@ export const updateIsPinnedByPlotId = async (
     })
   }
 
-  const countResult = await db.query(`
-    SELECT COUNT(plots.plot_id)::INT 
-    AS plot_count 
-    FROM plots 
-    WHERE owner_id = $1 
-    AND is_pinned IS TRUE;
-    `,
-    [owner_id]
-  )
-
-  const count = countResult.rows[0].plot_count
-
-  const isPinnedResult = await db.query(`
-    SELECT is_pinned
-    FROM plots
-    WHERE plot_id = $1;
-    `,
-    [plot_id]
-  )
-
-  let isPinned = isPinnedResult.rows[0].is_pinned
-
-  if (!isPinned && count === 4) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Pin limit reached"
-    })
-  }
-
   const result = await db.query(`
     UPDATE plots
     SET
-      is_pinned = NOT is_pinned
+      is_pinned = TRUE
     WHERE plot_id = $1
-    RETURNING is_pinned;
+    AND is_pinned = FALSE
+    AND ((
+          SELECT COUNT(plots.plot_id)::INT
+          AS pin_count 
+          FROM plots 
+          WHERE owner_id = $2 
+          AND is_pinned IS TRUE
+        ) < 4)
+    RETURNING *;
     `,
-    [plot_id]
+    [plot_id, owner_id]
   )
 
-  isPinned = result.rows[0].is_pinned
+  if (!result.rows[0]) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Plot already pinned or pin limit reached"
+    })
+  }
 
   return {
     message: "OK",
-    details: `Plot ${isPinned ? "pinned" : "unpinned"} successfully`
+    details: "Plot pinned successfully"
   }
 }
