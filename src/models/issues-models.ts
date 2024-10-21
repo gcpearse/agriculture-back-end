@@ -1,6 +1,6 @@
 import QueryString from "qs"
 import { db } from "../db"
-import { ExtendedIssue, IssueRequest } from "../types/issue-types"
+import { ExtendedIssue, Issue, IssueRequest } from "../types/issue-types"
 import { fetchIssueOwnerId, fetchPlotOwnerId, fetchSubdivisionPlotId } from "../utils/db-queries"
 import { verifyPagination, verifyPermission, verifyQueryValue, verifyValueIsPositiveInt } from "../utils/verification"
 import format from "pg-format"
@@ -105,7 +105,7 @@ export const insertIssueByPlotId = async (
   authUserId: number,
   plot_id: number,
   issue: IssueRequest
-) => {
+): Promise<Issue> => {
 
   await verifyValueIsPositiveInt(plot_id)
 
@@ -303,6 +303,39 @@ export const selectIssueByIssueId = async (
     GROUP BY issues.issue_id, plots.name, subdivisions.name;
     `,
     [issue_id]
+  )
+
+  return result.rows[0]
+}
+
+
+export const updateIssueByIssueId = async (
+  authUserId: number,
+  issue_id: number,
+  issue: IssueRequest
+): Promise<Issue> => {
+
+  await verifyValueIsPositiveInt(issue_id)
+
+  const owner_id = await fetchIssueOwnerId(issue_id)
+
+  await verifyPermission(authUserId, owner_id)
+
+  const result = await db.query(`
+    UPDATE issues
+    SET
+      title = $1,
+      description = $2,
+      is_critical = $3
+    WHERE issue_id = $4
+    RETURNING*;
+    `,
+    [
+      issue.title,
+      issue.description,
+      issue.is_critical,
+      issue_id
+    ]
   )
 
   return result.rows[0]
