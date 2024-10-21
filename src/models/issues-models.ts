@@ -340,3 +340,47 @@ export const updateIssueByIssueId = async (
 
   return result.rows[0]
 }
+
+
+export const setIsResolvedByIssueId = async (
+  authUserId: number,
+  issue_id: number,
+  toggle: { isResolved: boolean }
+): Promise<Issue> => {
+
+  await verifyValueIsPositiveInt(issue_id)
+
+  const owner_id = await fetchIssueOwnerId(issue_id)
+
+  await verifyPermission(authUserId, owner_id)
+
+  if (toggle.isResolved !== true) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid boolean value"
+    })
+  }
+
+  const result = await db.query(`
+    UPDATE issues
+    SET
+      is_critical = FALSE,
+      is_resolved = TRUE
+    WHERE issue_id = $1
+    AND is_resolved = FALSE
+    RETURNING *;
+    `,
+    [issue_id]
+  )
+
+  if (!result.rows[0]) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Issue already resolved"
+    })
+  }
+
+  return result.rows[0]
+}
