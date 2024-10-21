@@ -1145,3 +1145,126 @@ describe("PATCH /api/issues/:issue_id", () => {
     })
   })
 })
+
+
+describe("PATCH /api/issues/:issue_id/resolve", () => {
+
+  test("PATCH:200 Responds with an updated issue object setting is_critical to false automatically", async () => {
+
+    const toggle: { isResolved: boolean } = { isResolved: true }
+
+    const { body } = await request(app)
+      .patch("/api/issues/1/resolve")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body).toMatchObject<Issue>({
+      issue_id: 1,
+      plot_id: 1,
+      subdivision_id: null,
+      title: "Broken gate",
+      description: "The gate has fallen off its hinges",
+      is_critical: false,
+      is_resolved: true
+    })
+  })
+
+  test("PATCH:200 The value of is_critical is automatically set to false when an issue is resolved", async () => {
+
+    const toggle: { isResolved: boolean } = { isResolved: true }
+
+    await request(app)
+      .patch("/api/issues/1/resolve")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    const { body } = await request(app)
+      .get("/api/issues/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.issue.is_critical).toBe(false)
+  })
+
+  test("PATCH:400 Responds with an error when the issue is already resolved", async () => {
+
+    const toggle: { isResolved: boolean } = { isResolved: true }
+
+    const { body } = await request(app)
+      .patch("/api/issues/2/resolve")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Issue already resolved"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when the value of isResolved is not true", async () => {
+
+    const toggle: { isResolved: boolean } = { isResolved: false }
+
+    const { body } = await request(app)
+      .patch("/api/issues/1/resolve")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid boolean value"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when the issue_id parameter is not a positive integer", async () => {
+
+    const toggle: { isResolved: boolean } = { isResolved: true }
+
+    const { body } = await request(app)
+      .patch("/api/issues/foobar/resolve")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Value must be a positive integer"
+    })
+  })
+
+  test("PATCH:403 Responds with an error when the issue does not belong to the authenticated user", async () => {
+
+    const toggle: { isResolved: boolean } = { isResolved: true }
+
+    const { body } = await request(app)
+      .patch("/api/issues/4/resolve")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Forbidden",
+      details: "Permission denied"
+    })
+  })
+
+  test("PATCH:404 Responds with an error when the issue does not exist", async () => {
+
+    const toggle: { isResolved: boolean } = { isResolved: true }
+
+    const { body } = await request(app)
+      .patch("/api/issues/999/resolve")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Issue not found"
+    })
+  })
+})
