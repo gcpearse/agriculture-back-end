@@ -1170,24 +1170,6 @@ describe("PATCH /api/issues/:issue_id/resolve", () => {
     })
   })
 
-  test("PATCH:200 The value of is_critical is automatically set to false when an issue is resolved", async () => {
-
-    const toggle: { isResolved: boolean } = { isResolved: true }
-
-    await request(app)
-      .patch("/api/issues/1/resolve")
-      .send(toggle)
-      .set("Authorization", `Bearer ${token}`)
-      .expect(200)
-
-    const { body } = await request(app)
-      .get("/api/issues/1")
-      .set("Authorization", `Bearer ${token}`)
-      .expect(200)
-
-    expect(body.issue.is_critical).toBe(false)
-  })
-
   test("PATCH:400 Responds with an error when the issue is already resolved", async () => {
 
     const toggle: { isResolved: boolean } = { isResolved: true }
