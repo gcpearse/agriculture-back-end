@@ -23,7 +23,7 @@ export const seed = async (
     jobData,
     jobImageData
   }: SeedData
-) => {
+): Promise<void> => {
 
   await db.query(`
     DROP TABLE IF EXISTS job_images;
@@ -463,7 +463,7 @@ export const seed = async (
     jobData.map(entry => Object.values(entry))
   ))
 
-  return await db.query(format(`
+  await db.query(format(`
     INSERT INTO job_images (
       job_id, 
       image_url
