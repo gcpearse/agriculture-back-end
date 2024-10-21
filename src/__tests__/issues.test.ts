@@ -1056,3 +1056,92 @@ describe("GET /api/issues/:issue_id", () => {
     })
   })
 })
+
+
+describe("PATCH /api/issues/:issue_id", () => {
+
+  test("PATCH:200 Responds with an updated issue object", async () => {
+
+    const newDetails: IssueRequest = {
+      title: "Damaged gate",
+      description: "The hinges are rusty",
+      is_critical: false
+    }
+
+    const { body } = await request(app)
+      .patch("/api/issues/1")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.issue).toMatchObject<Issue>({
+      issue_id: 1,
+      plot_id: 1,
+      subdivision_id: null,
+      title: "Damaged gate",
+      description: "The hinges are rusty",
+      is_critical: false,
+      is_resolved: false
+    })
+  })
+
+  test("PATCH:400 Responds with an error when the issue_id parameter is not a positive integer", async () => {
+
+    const newDetails: IssueRequest = {
+      title: "Damaged gate",
+      description: "The hinges are rusty",
+      is_critical: false
+    }
+
+    const { body } = await request(app)
+      .patch("/api/issues/foobar")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Value must be a positive integer"
+    })
+  })
+
+  test("PATCH:403 Responds with an error when the issue does not belong to the authenticated user", async () => {
+
+    const newDetails: IssueRequest = {
+      title: "Damaged gate",
+      description: "The hinges are rusty",
+      is_critical: false
+    }
+
+    const { body } = await request(app)
+      .patch("/api/issues/4")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Forbidden",
+      details: "Permission denied"
+    })
+  })
+
+  test("PATCH:404 Responds with an error when the issue does not exist", async () => {
+
+    const newDetails: IssueRequest = {
+      title: "Damaged gate",
+      description: "The hinges are rusty",
+      is_critical: false
+    }
+
+    const { body } = await request(app)
+      .patch("/api/issues/999")
+      .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Issue not found"
+    })
+  })
+})
