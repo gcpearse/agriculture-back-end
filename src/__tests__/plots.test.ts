@@ -1102,3 +1102,104 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
     })
   })
 })
+
+
+describe("PATCH /api/plots/:plot_id/unpin", () => {
+
+  test("PATCH:200 Responds with a success message when a plot is successfully unpinned", async () => {
+
+    const toggle: { isPinned: boolean } = { isPinned: false }
+
+    const { body } = await request(app)
+      .patch("/api/plots/1/unpin")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "OK",
+      details: "Plot unpinned successfully"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when the plot is already unpinned", async () => {
+
+    const toggle: { isPinned: boolean } = { isPinned: false }
+
+    const { body } = await request(app)
+      .patch("/api/plots/4/unpin")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Plot already unpinned"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when the value of isPinned is not false", async () => {
+
+    const toggle: { isPinned: boolean } = { isPinned: true }
+
+    const { body } = await request(app)
+      .patch("/api/plots/1/unpin")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid boolean value"
+    })
+
+  })
+
+  test("PATCH:400 Responds with an error when the plot_id parameter is not a positive integer", async () => {
+
+    const toggle: { isPinned: boolean } = { isPinned: false }
+
+    const { body } = await request(app)
+      .patch("/api/plots/foobar/unpin")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Value must be a positive integer"
+    })
+  })
+
+  test("PATCH:403 Responds with an error when the plot does not belong to the authenticated user", async () => {
+
+    const toggle: { isPinned: boolean } = { isPinned: false }
+
+    const { body } = await request(app)
+      .patch("/api/plots/2/unpin")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Forbidden",
+      details: "Permission denied"
+    })
+  })
+
+  test("PATCH:404 Responds with an error when the plot does not exist", async () => {
+
+    const toggle: { isPinned: boolean } = { isPinned: false }
+
+    const { body } = await request(app)
+      .patch("/api/plots/999/unpin")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Plot not found"
+    })
+  })
+})
