@@ -4,6 +4,8 @@ import { ExtendedIssue, Issue, IssueRequest } from "../types/issue-types"
 import { fetchIssueOwnerId, fetchPlotOwnerId, fetchSubdivisionPlotId } from "../utils/db-queries"
 import { verifyPagination, verifyPermission, verifyQueryValue, verifyValueIsPositiveInt } from "../utils/verification"
 import format from "pg-format"
+import { QueryResult } from "pg"
+import { Count } from "../types/aggregation-types"
 
 
 export const selectIssuesByPlotId = async (
@@ -91,11 +93,11 @@ export const selectIssuesByPlotId = async (
     OFFSET %L
     `, sort, order, limit, (+page - 1) * +limit)
 
-  const result = await db.query(query, [plot_id])
+  const result: QueryResult<ExtendedIssue> = await db.query(query, [plot_id])
 
   await verifyPagination(+page, result.rows.length)
 
-  const countResult = await db.query(countQuery, [plot_id])
+  const countResult: QueryResult<Count> = await db.query(countQuery, [plot_id])
 
   return Promise.all([result.rows, countResult.rows[0].count])
 }
@@ -113,7 +115,7 @@ export const insertIssueByPlotId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  const result = await db.query(format(`
+  const result: QueryResult<Issue> = await db.query(format(`
     INSERT INTO issues (
       plot_id,
       title,
@@ -219,11 +221,11 @@ export const selectIssuesBySubdivisionId = async (
     OFFSET %L
     `, sort, order, +limit, (+page - 1) * +limit)
 
-  const result = await db.query(query, [subdivision_id])
+  const result: QueryResult<ExtendedIssue> = await db.query(query, [subdivision_id])
 
   await verifyPagination(+page, result.rows.length)
 
-  const countResult = await db.query(countQuery, [subdivision_id])
+  const countResult: QueryResult<Count> = await db.query(countQuery, [subdivision_id])
 
   return Promise.all([result.rows, countResult.rows[0].count])
 }
@@ -233,7 +235,7 @@ export const insertIssueBySubdivisionId = async (
   authUserId: number,
   subdivision_id: number,
   issue: IssueRequest
-) => {
+): Promise<Issue> => {
 
   await verifyValueIsPositiveInt(subdivision_id)
 
@@ -243,7 +245,7 @@ export const insertIssueBySubdivisionId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  const result = await db.query(format(`
+  const result: QueryResult<Issue> = await db.query(format(`
     INSERT INTO issues (
       plot_id,
       subdivision_id,
@@ -279,7 +281,7 @@ export const selectIssueByIssueId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  const result = await db.query(`
+  const result: QueryResult<ExtendedIssue> = await db.query(`
     SELECT
       issues.*,
       plots.name
@@ -321,14 +323,14 @@ export const updateIssueByIssueId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  const result = await db.query(`
+  const result: QueryResult<Issue> = await db.query(`
     UPDATE issues
     SET
       title = $1,
       description = $2,
       is_critical = $3
     WHERE issue_id = $4
-    RETURNING*;
+    RETURNING *;
     `,
     [
       issue.title,
@@ -362,7 +364,7 @@ export const setIsResolvedByIssueId = async (
     })
   }
 
-  const result = await db.query(`
+  const result: QueryResult<Issue> = await db.query(`
     UPDATE issues
     SET
       is_critical = FALSE,

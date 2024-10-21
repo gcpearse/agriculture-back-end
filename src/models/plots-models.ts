@@ -5,6 +5,8 @@ import { ExtendedPlot, Plot, PlotRequest } from "../types/plot-types"
 import { checkForPlotNameConflict, fetchPlotOwnerId, searchForUserId, confirmPlotTypeIsValid } from "../utils/db-queries"
 import { verifyPermission, verifyValueIsPositiveInt, verifyPagination, verifyQueryValue } from "../utils/verification"
 import { StatusResponse } from "../types/response-types"
+import { QueryResult } from "pg"
+import { Count } from "../types/aggregation-types"
 
 
 export const selectPlotsByOwner = async (
@@ -98,11 +100,11 @@ export const selectPlotsByOwner = async (
     OFFSET %L
     `, sort, order, limit, (+page - 1) * +limit)
 
-  const result = await db.query(query, [owner_id])
+  const result: QueryResult<ExtendedPlot> = await db.query(query, [owner_id])
 
   await verifyPagination(+page, result.rows.length)
 
-  const countResult = await db.query(countQuery, [owner_id])
+  const countResult: QueryResult<Count> = await db.query(countQuery, [owner_id])
 
   return Promise.all([result.rows, countResult.rows[0].count])
 }
@@ -124,7 +126,7 @@ export const insertPlotByOwner = async (
 
   await confirmPlotTypeIsValid(plot.type, false)
 
-  const result = await db.query(format(`
+  const result: QueryResult<Plot> = await db.query(format(`
     INSERT INTO plots (
       owner_id, 
       name, 
@@ -162,7 +164,7 @@ export const selectPinnedPlotsByOwner = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  const result = await db.query(`
+  const result: QueryResult<Plot> = await db.query(`
     SELECT *
     FROM plots
     WHERE owner_id = $1
@@ -187,7 +189,7 @@ export const selectPlotByPlotId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  const result = await db.query(`
+  const result: QueryResult<ExtendedPlot> = await db.query(`
     SELECT
       plots.*,
       COUNT(DISTINCT plot_images.image_id)::INT
@@ -233,7 +235,7 @@ export const updatePlotByPlotId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  const currentPlotName = await db.query(`
+  const plotNameResult: QueryResult<{ name: string }> = await db.query(`
     SELECT name
     FROM plots
     WHERE plot_id = $1;
@@ -241,13 +243,13 @@ export const updatePlotByPlotId = async (
     [plot_id]
   )
 
-  if (currentPlotName.rows[0].name !== plot.name) {
+  if (plotNameResult.rows[0].name !== plot.name) {
     await checkForPlotNameConflict(owner_id, plot.name)
   }
 
   await confirmPlotTypeIsValid(plot.type, false)
 
-  const result = await db.query(`
+  const result: QueryResult<Plot> = await db.query(`
     UPDATE plots
     SET
       name = $1,
@@ -312,7 +314,7 @@ export const setIsPinnedByPlotId = async (
     })
   }
 
-  const result = await db.query(`
+  const result: QueryResult<Plot> = await db.query(`
     UPDATE plots
     SET
       is_pinned = TRUE
@@ -365,7 +367,7 @@ export const unsetIsPinnedByPlotId = async (
     })
   }
 
-  const result = await db.query(`
+  const result: QueryResult<Plot> = await db.query(`
     UPDATE plots
     SET
       is_pinned = FALSE
