@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { deletePlotByPlotId, getPinnedPlotsByOwner, getPlotByPlotId, getPlotsByOwner, patchIsPinnedByPlotId, patchPlotByPlotId, postPlotByOwner } from "../controllers/plots-controllers"
+import { deletePlotByPlotId, getPinnedPlotsByOwner, getPlotByPlotId, getPlotsByOwner, patchPlotByPlotId, pinPlotByPlotId, postPlotByOwner } from "../controllers/plots-controllers"
 
 
 export const plotsRouter = Router()
@@ -399,8 +399,8 @@ plotsRouter.route("/plots/:plot_id/pin")
  *  patch:
  *    security:
  *      - bearerAuth: []
- *    summary: Pin or unpin a plot
- *    description: Responds with a success message. If the maximum number of plots are already pinned or the plot_id parameter is invalid, the server responds with an error. Permission is denied when the plot does not belong to the user.
+ *    summary: Pin a plot
+ *    description: Responds with a success message. If plot is already pinned, the maximum number of pinned plots has been reached, or the plot_id parameter is invalid, the server responds with an error. Permission is denied when the plot does not belong to the user.
  *    tags: [Plots]
  *    parameters:
  *      - in: path
@@ -415,7 +415,7 @@ plotsRouter.route("/plots/:plot_id/pin")
  *          schema:
  *            type: object
  *            properties:
- *              bool:
+ *              isPinned:
  *                type: boolean
  *                example: true
  *    responses:
@@ -428,17 +428,10 @@ plotsRouter.route("/plots/:plot_id/pin")
  *              properties:
  *                message:
  *                  type: string
+ *                  example: OK
  *                details:
  *                  type: string
- *            examples:
- *              Plot pinned:
- *                value:
- *                  message: OK
- *                  details: Plot pinned successfully
- *              Plot unpinned:
- *                value:
- *                  message: OK
- *                  details: Plot unpinned successfully
+ *                  example: Plot pinned successfully
  *      400:
  *        description: Bad Request
  *        content:
@@ -458,4 +451,4 @@ plotsRouter.route("/plots/:plot_id/pin")
  *            schema:
  *              $ref: "#/components/schemas/NotFound"
  */
-  .patch(verifyToken, patchIsPinnedByPlotId)
+  .patch(verifyToken, pinPlotByPlotId)
