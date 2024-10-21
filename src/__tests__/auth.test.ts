@@ -1,8 +1,10 @@
 import data from "../db/data/test-data/test-index"
 import { db } from "../db"
 import { seed } from "../db/seeding/seed"
-import request from "supertest"
 import { app } from "../app"
+
+import request from "supertest"
+
 import { StatusResponse } from "../types/response-types"
 
 
