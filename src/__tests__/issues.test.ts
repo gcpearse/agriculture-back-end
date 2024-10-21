@@ -1159,7 +1159,7 @@ describe("PATCH /api/issues/:issue_id/resolve", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body).toMatchObject<Issue>({
+    expect(body.issue).toMatchObject<Issue>({
       issue_id: 1,
       plot_id: 1,
       subdivision_id: null,
