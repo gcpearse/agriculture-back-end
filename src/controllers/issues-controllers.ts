@@ -1,6 +1,6 @@
 import { NextFunction, Response } from "express";
 import { ExtendedRequest } from "../types/auth-types";
-import { insertIssueByPlotId, insertIssueBySubdivisionId, selectIssueByIssueId, selectIssuesByPlotId, selectIssuesBySubdivisionId, updateIssueByIssueId } from "../models/issues-models";
+import { insertIssueByPlotId, insertIssueBySubdivisionId, selectIssueByIssueId, selectIssuesByPlotId, selectIssuesBySubdivisionId, setIsResolvedByIssueId, updateIssueByIssueId } from "../models/issues-models";
 
 
 export const getIssuesByPlotId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
@@ -86,6 +86,21 @@ export const patchIssueByIssueId = async (req: ExtendedRequest, res: Response, n
 
   try {
     const issue = await updateIssueByIssueId(authUserId, +issue_id, req.body)
+    res.status(200).send({ issue })
+  } catch (err) {
+    next(err)
+  }
+}
+
+
+export const resolveIssueByIssueId = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
+
+  const authUserId = req.user!.user_id
+
+  const { issue_id } = req.params
+
+  try {
+    const issue = await setIsResolvedByIssueId(authUserId, +issue_id, req.body)
     res.status(200).send({ issue })
   } catch (err) {
     next(err)

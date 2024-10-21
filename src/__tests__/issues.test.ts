@@ -1,12 +1,16 @@
 import data from "../db/data/test-data/test-index"
 import { db } from "../db"
 import { seed } from "../db/seeding/seed"
-import request from "supertest"
 import { app } from "../app"
+
+import request from "supertest"
+import { toBeOneOf, toBeArrayOfSize } from 'jest-extended'
+
 import { ExtendedIssue, Issue, IssueRequest } from "../types/issue-types"
-import { toBeOneOf } from 'jest-extended'
 import { StatusResponse } from "../types/response-types"
-expect.extend({ toBeOneOf })
+
+
+expect.extend({ toBeOneOf, toBeArrayOfSize })
 
 
 let token: string
@@ -74,9 +78,7 @@ describe("GET /api/issues/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.issues)).toBe(true)
-
-    expect(body.issues).toHaveLength(0)
+    expect(body.issues).toBeArrayOfSize(0)
 
     expect(body.count).toBe(0)
   })
@@ -172,9 +174,7 @@ describe("GET /api/issues/plots/:plot_id?is_critical=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.issues)).toBe(true)
-
-    expect(body.issues).toHaveLength(0)
+    expect(body.issues).toBeArrayOfSize(0)
 
     expect(body.count).toBe(0)
   })
@@ -226,9 +226,7 @@ describe("GET /api/issues/plots/:plot_id?is_resolved=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.issues)).toBe(true)
-
-    expect(body.issues).toHaveLength(0)
+    expect(body.issues).toBeArrayOfSize(0)
 
     expect(body.count).toBe(0)
   })
@@ -576,9 +574,7 @@ describe("GET /api/issues/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.issues)).toBe(true)
-
-    expect(body.issues).toHaveLength(0)
+    expect(body.issues).toBeArrayOfSize(0)
 
     expect(body.count).toBe(0)
   })
@@ -665,9 +661,7 @@ describe("GET /api/issues/subdivisions/:subdivision_id?is_critical=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.issues)).toBe(true)
-
-    expect(body.issues).toHaveLength(0)
+    expect(body.issues).toBeArrayOfSize(0)
 
     expect(body.count).toBe(0)
   })
@@ -710,9 +704,7 @@ describe("GET /api/issues/subdivisions/:subdivision_id?is_resolved=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.issues)).toBe(true)
-
-    expect(body.issues).toHaveLength(0)
+    expect(body.issues).toBeArrayOfSize(0)
 
     expect(body.count).toBe(0)
   })
@@ -1136,6 +1128,111 @@ describe("PATCH /api/issues/:issue_id", () => {
     const { body } = await request(app)
       .patch("/api/issues/999")
       .send(newDetails)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Issue not found"
+    })
+  })
+})
+
+
+describe("PATCH /api/issues/:issue_id/resolve", () => {
+
+  test("PATCH:200 Responds with an updated issue object setting is_critical to false automatically", async () => {
+
+    const toggle: { isResolved: boolean } = { isResolved: true }
+
+    const { body } = await request(app)
+      .patch("/api/issues/1/resolve")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+
+    expect(body.issue).toMatchObject<Issue>({
+      issue_id: 1,
+      plot_id: 1,
+      subdivision_id: null,
+      title: "Broken gate",
+      description: "The gate has fallen off its hinges",
+      is_critical: false,
+      is_resolved: true
+    })
+  })
+
+  test("PATCH:400 Responds with an error when the issue is already resolved", async () => {
+
+    const toggle: { isResolved: boolean } = { isResolved: true }
+
+    const { body } = await request(app)
+      .patch("/api/issues/2/resolve")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Issue already resolved"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when the value of isResolved is not true", async () => {
+
+    const toggle: { isResolved: boolean } = { isResolved: false }
+
+    const { body } = await request(app)
+      .patch("/api/issues/1/resolve")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Invalid boolean value"
+    })
+  })
+
+  test("PATCH:400 Responds with an error when the issue_id parameter is not a positive integer", async () => {
+
+    const toggle: { isResolved: boolean } = { isResolved: true }
+
+    const { body } = await request(app)
+      .patch("/api/issues/foobar/resolve")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Value must be a positive integer"
+    })
+  })
+
+  test("PATCH:403 Responds with an error when the issue does not belong to the authenticated user", async () => {
+
+    const toggle: { isResolved: boolean } = { isResolved: true }
+
+    const { body } = await request(app)
+      .patch("/api/issues/4/resolve")
+      .send(toggle)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Forbidden",
+      details: "Permission denied"
+    })
+  })
+
+  test("PATCH:404 Responds with an error when the issue does not exist", async () => {
+
+    const toggle: { isResolved: boolean } = { isResolved: true }
+
+    const { body } = await request(app)
+      .patch("/api/issues/999/resolve")
+      .send(toggle)
       .set("Authorization", `Bearer ${token}`)
       .expect(404)
 

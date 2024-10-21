@@ -1,12 +1,16 @@
 import data from "../db/data/test-data/test-index"
 import { db } from "../db"
 import { seed } from "../db/seeding/seed"
-import request from "supertest"
 import { app } from "../app"
+
+import request from "supertest"
+import { toBeOneOf, toBeArrayOfSize } from 'jest-extended'
+
 import { Crop, CropRequest, ExtendedCrop } from "../types/crop-types"
-import { toBeOneOf } from 'jest-extended'
 import { StatusResponse } from "../types/response-types"
-expect.extend({ toBeOneOf })
+
+
+expect.extend({ toBeOneOf, toBeArrayOfSize })
 
 
 let token: string
@@ -78,9 +82,7 @@ describe("GET /api/crops/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.crops)).toBe(true)
-
-    expect(body.crops).toHaveLength(0)
+    expect(body.crops).toBeArrayOfSize(0)
 
     expect(body.count).toBe(0)
   })
@@ -167,9 +169,7 @@ describe("GET /api/crops/plots/:plot_id?name=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.crops)).toBe(true)
-
-    expect(body.crops).toHaveLength(0)
+    expect(body.crops).toBeArrayOfSize(0)
 
     expect(body.count).toBe(0)
   })
@@ -675,9 +675,7 @@ describe("GET /api/crops/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.crops)).toBe(true)
-
-    expect(body.crops).toHaveLength(0)
+    expect(body.crops).toBeArrayOfSize(0)
 
     expect(body.count).toBe(0)
   })
@@ -764,9 +762,7 @@ describe("GET /api/crops/subdivisions/:subdivision_id?name=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.crops)).toBe(true)
-
-    expect(body.crops).toHaveLength(0)
+    expect(body.crops).toBeArrayOfSize(0)
 
     expect(body.count).toBe(0)
   })

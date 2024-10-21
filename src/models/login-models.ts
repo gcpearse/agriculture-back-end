@@ -1,13 +1,14 @@
+import { QueryResult } from "pg"
 import { db } from "../db"
 import { compareHash } from "../middleware/security"
-import { Credentials, LoggedInUser } from "../types/user-types"
+import { Credentials, LoggedInUser, Password } from "../types/user-types"
 
 
 export const logInUser = async (
   { login, password }: Credentials
 ): Promise<LoggedInUser> => {
 
-  const result = await db.query(`
+  const result: QueryResult<LoggedInUser> = await db.query(`
     SELECT 
       user_id, 
       username 
@@ -26,7 +27,7 @@ export const logInUser = async (
     })
   }
 
-  const dbPassword = await db.query(`
+  const passwordResult: QueryResult<Password> = await db.query(`
     SELECT password
     FROM users
     WHERE username = $1
@@ -35,7 +36,10 @@ export const logInUser = async (
     [login]
   )
 
-  const isCorrectPassword = await compareHash(password, dbPassword.rows[0].password)
+  const isCorrectPassword = await compareHash(
+    password,
+    passwordResult.rows[0].password
+  )
 
   if (!isCorrectPassword) {
     return Promise.reject({

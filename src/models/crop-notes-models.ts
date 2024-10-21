@@ -3,6 +3,7 @@ import { db } from "../db"
 import { CropNote, NoteRequest } from "../types/note-types"
 import { fetchCropNoteCropId, fetchCropOwnerId } from "../utils/db-queries"
 import { verifyPermission, verifyValueIsPositiveInt } from "../utils/verification"
+import { QueryResult } from "pg"
 
 
 export const selectCropNotesByCropId = async (
@@ -16,7 +17,7 @@ export const selectCropNotesByCropId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  const result = await db.query(`
+  const result: QueryResult<CropNote> = await db.query(`
     SELECT *
     FROM crop_notes
     WHERE crop_id = $1
@@ -41,7 +42,7 @@ export const insertCropNoteByCropId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  const result = await db.query(format(`
+  const result: QueryResult<CropNote> = await db.query(format(`
     INSERT INTO crop_notes (
       crop_id,
       body
@@ -94,7 +95,7 @@ export const updateCropNoteByNoteId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  const result = await db.query(`
+  const result: QueryResult<CropNote> = await db.query(`
     UPDATE crop_notes
     SET
       body = $1

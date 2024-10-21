@@ -1,9 +1,10 @@
 import format from "pg-format"
 import { db } from "../db"
-import { SecureUser, UnregisteredUser } from "../types/user-types"
+import { SecureUser, UnregisteredUser, Username } from "../types/user-types"
 import { checkForEmailConflict } from "../utils/db-queries"
 import { generateHash } from "../middleware/security"
 import { verifyPasswordFormat } from "../utils/verification"
+import { QueryResult } from "pg"
 
 
 export const registerUser = async (
@@ -17,7 +18,7 @@ export const registerUser = async (
   }: UnregisteredUser
 ): Promise<SecureUser> => {
 
-  const dbUsername = await db.query(`
+  const usernameResult: QueryResult<Username> = await db.query(`
     SELECT username 
     FROM users 
     WHERE username = $1;
@@ -25,7 +26,7 @@ export const registerUser = async (
     [username]
   )
 
-  if (dbUsername.rowCount) {
+  if (usernameResult.rowCount) {
     return Promise.reject({
       status: 409,
       message: "Conflict",
@@ -39,7 +40,7 @@ export const registerUser = async (
 
   const hashedPassword = await generateHash(password)
 
-  const result = await db.query(format(`
+  const result: QueryResult<SecureUser> = await db.query(format(`
     INSERT INTO users (
       username, 
       password, 

@@ -4,6 +4,8 @@ import { checkForSubdivisionNameConflict, fetchPlotOwnerId, fetchSubdivisionPlot
 import { verifyPermission, verifyValueIsPositiveInt, verifyQueryValue, verifyPagination } from "../utils/verification"
 import { ExtendedSubdivision, Subdivision, SubdivisionRequest } from "../types/subdivision-types"
 import format from "pg-format"
+import { QueryResult } from "pg"
+import { Count } from "../types/aggregation-types"
 
 
 export const selectSubdivisionsByPlotId = async (
@@ -93,11 +95,11 @@ export const selectSubdivisionsByPlotId = async (
     OFFSET %L
     `, sort, order, limit, (+page - 1) * +limit)
 
-  const result = await db.query(query, [plot_id])
+  const result: QueryResult<ExtendedSubdivision> = await db.query(query, [plot_id])
 
   await verifyPagination(+page, result.rows.length)
 
-  const countResult = await db.query(countQuery, [plot_id])
+  const countResult: QueryResult<Count> = await db.query(countQuery, [plot_id])
 
   return Promise.all([result.rows, countResult.rows[0].count])
 }
@@ -119,7 +121,7 @@ export const insertSubdivisionByPlotId = async (
 
   await confirmSubdivisionTypeIsValid(subdivision.type as string, false)
 
-  const result = await db.query(format(`
+  const result: QueryResult<Subdivision> = await db.query(format(`
     INSERT INTO subdivisions (
       plot_id, 
       name, 
@@ -157,7 +159,7 @@ export const selectSubdivisionBySubdivisionId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  const result = await db.query(`
+  const result: QueryResult<ExtendedSubdivision> = await db.query(`
     SELECT
       subdivisions.*,
       plots.name
@@ -205,7 +207,7 @@ export const updateSubdivisionBySubdivisionId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  const currentSubdivisionName = await db.query(`
+  const subdivisionNameResult: QueryResult<{ name: string }> = await db.query(`
     SELECT name
     FROM subdivisions
     WHERE subdivision_id = $1;
@@ -213,13 +215,13 @@ export const updateSubdivisionBySubdivisionId = async (
     [subdivision_id]
   )
 
-  if (currentSubdivisionName.rows[0].name !== subdivision.name) {
+  if (subdivisionNameResult.rows[0].name !== subdivision.name) {
     await checkForSubdivisionNameConflict(plot_id, subdivision.name)
   }
 
   await confirmSubdivisionTypeIsValid(subdivision.type, false)
 
-  const result = await db.query(`
+  const result: QueryResult<Subdivision> = await db.query(`
     UPDATE subdivisions
     SET
       name = $1,

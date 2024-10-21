@@ -2,10 +2,12 @@ import QueryString from "qs"
 import { db } from "../db"
 import { compareHash, generateHash } from "../middleware/security"
 import { StatusResponse } from "../types/response-types"
-import { PasswordUpdate, SecureUser, UserRequest, UserRole } from "../types/user-types"
+import { Password, PasswordUpdate, SecureUser, UserRequest, UserRole } from "../types/user-types"
 import { checkForEmailConflict, fetchUserRole, searchForUserId, confirmUnitSystemIsValid, confirmUserRoleIsValid } from "../utils/db-queries"
 import { verifyPagination, verifyValueIsPositiveInt, verifyPermission, verifyQueryValue, verifyPasswordFormat } from "../utils/verification"
 import format from "pg-format"
+import { QueryResult } from "pg"
+import { Count } from "../types/aggregation-types"
 
 
 export const selectAllUsers = async (
@@ -81,11 +83,11 @@ export const selectAllUsers = async (
     OFFSET %L
     `, sort, order, limit, (+page - 1) * +limit)
 
-  const result = await db.query(query)
+  const result: QueryResult<SecureUser> = await db.query(query)
 
   await verifyPagination(+page, result.rows.length)
 
-  const countResult = await db.query(countQuery)
+  const countResult: QueryResult<Count> = await db.query(countQuery)
 
   return Promise.all([result.rows, countResult.rows[0].count])
 }
@@ -106,7 +108,7 @@ export const selectUserByUserId = async (
     await verifyPermission(authUserId, user_id)
   }
 
-  const result = await db.query(`
+  const result: QueryResult<SecureUser> = await db.query(`
     SELECT 
       user_id, 
       username, 
@@ -139,7 +141,7 @@ export const updateUserByUserId = async (
 
   await checkForEmailConflict(user.email, user_id)
 
-  const result = await db.query(`
+  const result: QueryResult<SecureUser> = await db.query(`
     UPDATE users
     SET 
       email = $1,
@@ -206,7 +208,7 @@ export const updatePasswordByUserId = async (
 
   await verifyPasswordFormat(newPassword)
 
-  const currentPassword = await db.query(`
+  const passwordResult: QueryResult<Password> = await db.query(`
     SELECT password
     FROM users
     WHERE user_id = $1;
@@ -214,7 +216,10 @@ export const updatePasswordByUserId = async (
     [user_id]
   )
 
-  const isCorrectPassword = await compareHash(oldPassword, currentPassword.rows[0].password)
+  const isCorrectPassword = await compareHash(
+    oldPassword,
+    passwordResult.rows[0].password
+  )
 
   if (!isCorrectPassword) {
     return Promise.reject({
@@ -266,7 +271,7 @@ export const updateRoleByUserId = async (
 
   await verifyPermission(userRole, UserRole.Admin)
 
-  const result = await db.query(`
+  const result: QueryResult<SecureUser> = await db.query(`
     UPDATE users
     SET role = $1
     WHERE user_id = $2

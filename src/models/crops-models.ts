@@ -4,6 +4,8 @@ import { Crop, CropRequest, ExtendedCrop } from "../types/crop-types"
 import { fetchCropOwnerId, fetchPlotOwnerId, fetchSubdivisionPlotId, confirmCropCategoryIsValid } from "../utils/db-queries"
 import { verifyPagination, verifyValueIsPositiveInt, verifyPermission, verifyQueryValue } from "../utils/verification"
 import format from "pg-format"
+import { QueryResult } from "pg"
+import { Count } from "../types/aggregation-types"
 
 
 export const selectCropsByPlotId = async (
@@ -99,11 +101,11 @@ export const selectCropsByPlotId = async (
     OFFSET %L
     `, sort, order, limit, (+page - 1) * +limit)
 
-  const result = await db.query(query, [plot_id])
+  const result: QueryResult<ExtendedCrop> = await db.query(query, [plot_id])
 
   await verifyPagination(+page, result.rows.length)
 
-  const countResult = await db.query(countQuery, [plot_id])
+  const countResult: QueryResult<Count> = await db.query(countQuery, [plot_id])
 
   return Promise.all([result.rows, countResult.rows[0].count])
 }
@@ -123,7 +125,7 @@ export const insertCropByPlotId = async (
 
   await confirmCropCategoryIsValid(crop.category, false)
 
-  const result = await db.query(format(`
+  const result: QueryResult<Crop> = await db.query(format(`
     INSERT INTO crops (
       plot_id, 
       name, 
@@ -243,11 +245,11 @@ export const selectCropsBySubdivisionId = async (
     OFFSET %L
     `, sort, order, limit, (+page - 1) * +limit)
 
-  const result = await db.query(query, [subdivision_id])
+  const result: QueryResult<ExtendedCrop> = await db.query(query, [subdivision_id])
 
   await verifyPagination(+page, result.rows.length)
 
-  const countResult = await db.query(countQuery, [subdivision_id])
+  const countResult: QueryResult<Count> = await db.query(countQuery, [subdivision_id])
 
   return Promise.all([result.rows, countResult.rows[0].count])
 }
@@ -269,7 +271,7 @@ export const insertCropBySubdivisionId = async (
 
   await confirmCropCategoryIsValid(crop.category, false)
 
-  const result = await db.query(format(`
+  const result: QueryResult<Crop> = await db.query(format(`
     INSERT INTO crops (
       plot_id, 
       subdivision_id, 
@@ -311,7 +313,7 @@ export const selectCropByCropId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  const result = await db.query(`
+  const result: QueryResult<ExtendedCrop> = await db.query(`
     SELECT
       crops.*,
       plots.name
@@ -355,7 +357,7 @@ export const updateCropByCropId = async (
 
   await confirmCropCategoryIsValid(crop.category, false)
 
-  const result = await db.query(`
+  const result: QueryResult<Crop> = await db.query(`
     UPDATE crops
     SET
       name = $1,
@@ -420,7 +422,7 @@ export const updateAssociatedPlotByCropId = async (
     await verifyPermission(authUserId, owner_id)
   }
 
-  const result = await db.query(`
+  const result: QueryResult<Crop> = await db.query(`
     UPDATE crops
     SET 
       plot_id = $1,
@@ -473,7 +475,7 @@ export const updateAssociatedSubdivisionByCropId = async (
     }
   }
 
-  const result = await db.query(`
+  const result: QueryResult<Crop> = await db.query(`
     UPDATE crops
     SET 
       subdivision_id = $1
