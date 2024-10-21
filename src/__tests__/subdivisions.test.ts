@@ -3,10 +3,12 @@ import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
-import { toBeOneOf } from 'jest-extended'
 import { ExtendedSubdivision, Subdivision, SubdivisionRequest } from "../types/subdivision-types"
 import { StatusResponse } from "../types/response-types"
-expect.extend({ toBeOneOf })
+import { toBeOneOf, toBeArrayOfSize } from 'jest-extended'
+
+
+expect.extend({ toBeOneOf, toBeArrayOfSize })
 
 
 let token: string
@@ -74,9 +76,7 @@ describe("GET /api/subdivisions/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.subdivisions)).toBe(true)
-
-    expect(body.subdivisions).toHaveLength(0)
+    expect(body.subdivisions).toBeArrayOfSize(0)
 
     expect(body.count).toBe(0)
   })
@@ -210,9 +210,7 @@ describe("GET /api/subdivisions/plots/:plot_id?name=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.subdivisions)).toBe(true)
-
-    expect(body.subdivisions).toHaveLength(0)
+    expect(body.subdivisions).toBeArrayOfSize(0)
 
     expect(body.count).toBe(0)
   })

@@ -3,10 +3,12 @@ import { db } from "../db"
 import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
-import { toBeOneOf } from 'jest-extended'
 import { ExtendedPlot, Plot, PlotRequest } from "../types/plot-types"
 import { StatusResponse } from "../types/response-types"
-expect.extend({ toBeOneOf })
+import { toBeOneOf, toBeArrayOfSize } from 'jest-extended'
+
+
+expect.extend({ toBeOneOf, toBeArrayOfSize })
 
 
 let token: string
@@ -86,9 +88,7 @@ describe("GET /api/plots/users/:owner_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.plots)).toBe(true)
-
-    expect(body.plots).toHaveLength(0)
+    expect(body.plots).toBeArrayOfSize(0)
 
     expect(body.count).toBe(0)
   })
@@ -222,9 +222,7 @@ describe("GET /api/plots/users/:owner_id?name=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.plots)).toBe(true)
-
-    expect(body.plots).toHaveLength(0)
+    expect(body.plots).toBeArrayOfSize(0)
 
     expect(body.count).toBe(0)
   })
@@ -621,9 +619,7 @@ describe("GET /api/plots/users/:owner_id/pinned", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.plots)).toBe(true)
-
-    expect(body.plots).toHaveLength(0)
+    expect(body.plots).toBeArrayOfSize(0)
   })
 
   test("GET:400 Responds with an error when the owner_id parameter is not a positive integer", async () => {

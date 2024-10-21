@@ -5,6 +5,10 @@ import request from "supertest"
 import { app } from "../app"
 import { CropNote, NoteRequest } from "../types/note-types"
 import { StatusResponse } from "../types/response-types"
+import { toBeArrayOfSize } from 'jest-extended'
+
+
+expect.extend({ toBeArrayOfSize })
 
 
 let token: string
@@ -58,9 +62,7 @@ describe("GET /api/crop_notes/crops/:crop_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.notes)).toBe(true)
-
-    expect(body.notes).toHaveLength(0)
+    expect(body.notes).toBeArrayOfSize(0)
   })
 
   test("GET:400 Responds with an error when the crop_id parameter is not a positive integer", async () => {
@@ -214,9 +216,7 @@ describe("DELETE /api/crop_notes/crops/:crop_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.notes)).toBe(true)
-
-    expect(body.notes).toHaveLength(0)
+    expect(body.notes).toBeArrayOfSize(0)
   })
 
   test("DELETE:400 Responds with an error when the crop_id parameter is not a positive integer", async () => {

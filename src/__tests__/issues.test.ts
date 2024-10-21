@@ -4,9 +4,11 @@ import { seed } from "../db/seeding/seed"
 import request from "supertest"
 import { app } from "../app"
 import { ExtendedIssue, Issue, IssueRequest } from "../types/issue-types"
-import { toBeOneOf } from 'jest-extended'
 import { StatusResponse } from "../types/response-types"
-expect.extend({ toBeOneOf })
+import { toBeOneOf, toBeArrayOfSize } from 'jest-extended'
+
+
+expect.extend({ toBeOneOf, toBeArrayOfSize })
 
 
 let token: string
@@ -74,9 +76,7 @@ describe("GET /api/issues/plots/:plot_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.issues)).toBe(true)
-
-    expect(body.issues).toHaveLength(0)
+    expect(body.issues).toBeArrayOfSize(0)
 
     expect(body.count).toBe(0)
   })
@@ -172,9 +172,7 @@ describe("GET /api/issues/plots/:plot_id?is_critical=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.issues)).toBe(true)
-
-    expect(body.issues).toHaveLength(0)
+    expect(body.issues).toBeArrayOfSize(0)
 
     expect(body.count).toBe(0)
   })
@@ -226,9 +224,7 @@ describe("GET /api/issues/plots/:plot_id?is_resolved=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.issues)).toBe(true)
-
-    expect(body.issues).toHaveLength(0)
+    expect(body.issues).toBeArrayOfSize(0)
 
     expect(body.count).toBe(0)
   })
@@ -576,9 +572,7 @@ describe("GET /api/issues/subdivisions/:subdivision_id", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.issues)).toBe(true)
-
-    expect(body.issues).toHaveLength(0)
+    expect(body.issues).toBeArrayOfSize(0)
 
     expect(body.count).toBe(0)
   })
@@ -665,9 +659,7 @@ describe("GET /api/issues/subdivisions/:subdivision_id?is_critical=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.issues)).toBe(true)
-
-    expect(body.issues).toHaveLength(0)
+    expect(body.issues).toBeArrayOfSize(0)
 
     expect(body.count).toBe(0)
   })
@@ -710,9 +702,7 @@ describe("GET /api/issues/subdivisions/:subdivision_id?is_resolved=", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(Array.isArray(body.issues)).toBe(true)
-
-    expect(body.issues).toHaveLength(0)
+    expect(body.issues).toBeArrayOfSize(0)
 
     expect(body.count).toBe(0)
   })
