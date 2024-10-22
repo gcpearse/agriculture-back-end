@@ -460,7 +460,7 @@ plotsRouter.route("/plots/:plot_id/unpin")
  *    security:
  *      - bearerAuth: []
  *    summary: Unpin a plot
- *    description: Responds with a success message. If plot is already unpinned or the plot_id parameter is invalid, the server responds with an error. Permission is denied when the plot does not belong to the user.
+ *    description: Responds with an updated plot object. If plot is already unpinned or the plot_id parameter is invalid, the server responds with an error. Permission is denied when the plot does not belong to the user.
  *    tags: [Plots]
  *    parameters:
  *      - in: path
@@ -486,12 +486,8 @@ plotsRouter.route("/plots/:plot_id/unpin")
  *            schema:
  *              type: object
  *              properties:
- *                message:
- *                  type: string
- *                  example: OK
- *                details:
- *                  type: string
- *                  example: Plot unpinned successfully
+ *                plot:
+ *                  $ref: "#/components/schemas/Plot"
  *      400:
  *        description: Bad Request
  *        content:
