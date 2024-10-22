@@ -298,7 +298,7 @@ export const setIsPinnedByPlotId = async (
   authUserId: number,
   plot_id: number,
   toggle: { isPinned: boolean }
-): Promise<StatusResponse> => {
+): Promise<Plot> => {
 
   await verifyValueIsPositiveInt(plot_id)
 
@@ -340,10 +340,7 @@ export const setIsPinnedByPlotId = async (
     })
   }
 
-  return {
-    message: "OK",
-    details: "Plot pinned successfully"
-  }
+  return result.rows[0]
 }
 
 
