@@ -1108,7 +1108,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
 })
 
 
-describe.only("PATCH /api/plots/:plot_id/unpin", () => {
+describe("PATCH /api/plots/:plot_id/unpin", () => {
 
   test("PATCH:200 Responds with a success message when a plot is successfully unpinned", async () => {
 
