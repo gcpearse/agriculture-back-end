@@ -4,7 +4,6 @@ import format from "pg-format"
 import { ExtendedPlot, Plot, PlotRequest } from "../types/plot-types"
 import { checkForPlotNameConflict, fetchPlotOwnerId, searchForUserId, confirmPlotTypeIsValid } from "../utils/db-queries"
 import { verifyPermission, verifyValueIsPositiveInt, verifyPagination, verifyQueryValue } from "../utils/verification"
-import { StatusResponse } from "../types/response-types"
 import { QueryResult } from "pg"
 import { Count } from "../types/aggregation-types"
 
@@ -348,7 +347,7 @@ export const unsetIsPinnedByPlotId = async (
   authUserId: number,
   plot_id: number,
   toggle: { isPinned: boolean }
-): Promise<StatusResponse> => {
+): Promise<Plot> => {
 
   await verifyValueIsPositiveInt(plot_id)
 
@@ -383,8 +382,5 @@ export const unsetIsPinnedByPlotId = async (
     })
   }
 
-  return {
-    message: "OK",
-    details: "Plot unpinned successfully"
-  }
+  return result.rows[0]
 }
