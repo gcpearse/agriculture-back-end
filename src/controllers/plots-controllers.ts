@@ -100,8 +100,8 @@ export const pinPlotByPlotId = async (req: ExtendedRequest, res: Response, next:
   const { plot_id } = req.params
 
   try {
-    const response = await setIsPinnedByPlotId(authUserId, +plot_id, req.body)
-    res.status(200).send(response)
+    const plot = await setIsPinnedByPlotId(authUserId, +plot_id, req.body)
+    res.status(200).send({ plot })
   } catch (err) {
     next(err)
   }
@@ -115,8 +115,8 @@ export const unpinPlotByPlotId = async (req: ExtendedRequest, res: Response, nex
   const { plot_id } = req.params
 
   try {
-    const response = await unsetIsPinnedByPlotId(authUserId, +plot_id, req.body)
-    res.status(200).send(response)
+    const plot = await unsetIsPinnedByPlotId(authUserId, +plot_id, req.body)
+    res.status(200).send({ plot })
   } catch (err) {
     next(err)
   }
