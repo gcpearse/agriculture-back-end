@@ -386,3 +386,46 @@ export const setIsResolvedByIssueId = async (
 
   return result.rows[0]
 }
+
+
+export const unsetIsResolvedByIssueId = async (
+  authUserId: number,
+  issue_id: number,
+  toggle: { isResolved: boolean }
+): Promise<Issue> => {
+
+  await verifyValueIsPositiveInt(issue_id)
+
+  const owner_id = await fetchIssueOwnerId(issue_id)
+
+  await verifyPermission(authUserId, owner_id)
+
+  if (toggle.isResolved !== false) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid boolean value"
+    })
+  }
+
+  const result: QueryResult<Issue> = await db.query(`
+    UPDATE issues
+    SET
+      is_resolved = FALSE
+    WHERE issue_id = $1
+    AND is_resolved = TRUE
+    RETURNING *;
+    `,
+    [issue_id]
+  )
+
+  if (!result.rows[0]) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Issue already unresolved"
+    })
+  }
+
+  return result.rows[0]
+}
