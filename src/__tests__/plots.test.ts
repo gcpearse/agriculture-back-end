@@ -1110,7 +1110,7 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
 
 describe("PATCH /api/plots/:plot_id/unpin", () => {
 
-  test("PATCH:200 Responds with a success message when a plot is successfully unpinned", async () => {
+  test("PATCH:200 Responds with an updated plot object", async () => {
 
     const toggle: { isPinned: boolean } = { isPinned: false }
 
