@@ -963,9 +963,9 @@ describe("DELETE /api/plots/:plot_id", () => {
 })
 
 
-describe("PATCH /api/plots/:plot_id/pin", () => {
+describe.only("PATCH /api/plots/:plot_id/pin", () => {
 
-  test("PATCH:200 Responds with a success message when a plot is successfully pinned", async () => {
+  test("PATCH:200 Responds with an updated plot object", async () => {
 
     const toggle: { isPinned: boolean } = { isPinned: true }
 
@@ -975,9 +975,15 @@ describe("PATCH /api/plots/:plot_id/pin", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body).toMatchObject<StatusResponse>({
-      message: "OK",
-      details: "Plot pinned successfully"
+    expect(body.plot).toMatchObject<Plot>({
+      plot_id: 4,
+      owner_id: 1,
+      name: "John's New Allotment",
+      type: "Allotment",
+      description: "A second allotment",
+      location: "Farmville",
+      area: 40,
+      is_pinned: true
     })
   })
 
