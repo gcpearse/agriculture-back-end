@@ -2,7 +2,7 @@ import QueryString from "qs"
 import { db } from "../db"
 import { ExtendedIssue, Issue, IssueRequest } from "../types/issue-types"
 import { fetchIssueOwnerId, fetchPlotOwnerId, fetchSubdivisionPlotId } from "../utils/db-queries"
-import { verifyPagination, verifyPermission, verifyQueryValue, verifyValueIsPositiveInt } from "../utils/verification"
+import { verifyBooleanValue, verifyPagination, verifyPermission, verifyQueryValue, verifyValueIsPositiveInt } from "../utils/verification"
 import format from "pg-format"
 import { QueryResult } from "pg"
 import { Count } from "../types/aggregation-types"
@@ -356,13 +356,7 @@ export const setIsResolvedByIssueId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  if (toggle.isResolved !== true) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Invalid boolean value"
-    })
-  }
+  await verifyBooleanValue(toggle.isResolved, true)
 
   const result: QueryResult<Issue> = await db.query(`
     UPDATE issues
@@ -400,13 +394,7 @@ export const unsetIsResolvedByIssueId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  if (toggle.isResolved !== false) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Invalid boolean value"
-    })
-  }
+  await verifyBooleanValue(toggle.isResolved, false)
 
   const result: QueryResult<Issue> = await db.query(`
     UPDATE issues
