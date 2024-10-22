@@ -963,7 +963,7 @@ describe("DELETE /api/plots/:plot_id", () => {
 })
 
 
-describe.only("PATCH /api/plots/:plot_id/pin", () => {
+describe("PATCH /api/plots/:plot_id/pin", () => {
 
   test("PATCH:200 Responds with an updated plot object", async () => {
 
@@ -1108,7 +1108,7 @@ describe.only("PATCH /api/plots/:plot_id/pin", () => {
 })
 
 
-describe("PATCH /api/plots/:plot_id/unpin", () => {
+describe.only("PATCH /api/plots/:plot_id/unpin", () => {
 
   test("PATCH:200 Responds with a success message when a plot is successfully unpinned", async () => {
 
@@ -1120,9 +1120,15 @@ describe("PATCH /api/plots/:plot_id/unpin", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
 
-    expect(body).toMatchObject<StatusResponse>({
-      message: "OK",
-      details: "Plot unpinned successfully"
+    expect(body.plot).toMatchObject<Plot>({
+      plot_id: 1,
+      owner_id: 1,
+      name: "John's Garden",
+      type: "Garden",
+      description: "A vegetable garden",
+      location: "Farmville",
+      area: 100,
+      is_pinned: false
     })
   })
 
