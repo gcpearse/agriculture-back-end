@@ -400,7 +400,7 @@ plotsRouter.route("/plots/:plot_id/pin")
  *    security:
  *      - bearerAuth: []
  *    summary: Pin a plot
- *    description: Responds with a success message. If the plot is already pinned, the maximum number of pinned plots has been reached, or the plot_id parameter is invalid, the server responds with an error. Permission is denied when the plot does not belong to the user.
+ *    description: Responds with an updated plot object. If the plot is already pinned, the maximum number of pinned plots has been reached, or the plot_id parameter is invalid, the server responds with an error. Permission is denied when the plot does not belong to the user.
  *    tags: [Plots]
  *    parameters:
  *      - in: path
@@ -426,12 +426,8 @@ plotsRouter.route("/plots/:plot_id/pin")
  *            schema:
  *              type: object
  *              properties:
- *                message:
- *                  type: string
- *                  example: OK
- *                details:
- *                  type: string
- *                  example: Plot pinned successfully
+ *                plot:
+ *                  $ref: "#/components/schemas/Plot"
  *      400:
  *        description: Bad Request
  *        content:
