@@ -1,5 +1,23 @@
 import { StatusResponse } from "../../types/response-types"
-import { verifyPermission, verifyValueIsPositiveInt, verifyPagination, verifyQueryValue, verifyPasswordFormat } from "../../utils/verification"
+import { verifyPermission, verifyValueIsPositiveInt, verifyPagination, verifyQueryValue, verifyPasswordFormat, verifyBooleanValue } from "../../utils/verification"
+
+
+describe("verifyBooleanValue", () => {
+
+  test("When the actual value does not match the expected value, the promise is rejected", () => {
+
+    expect(verifyBooleanValue(false, true)).rejects.toMatchObject<StatusResponse>({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid boolean value"
+    })
+  })
+
+  test("Returns undefined when the actual value matches the expected value", () => {
+
+    expect(verifyBooleanValue(true, true)).toBeUndefined()
+  })
+})
 
 
 describe("verifyPagination", () => {
