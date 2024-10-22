@@ -1,3 +1,18 @@
+export const verifyBooleanValue = (
+  actual: boolean,
+  expected: boolean
+): Promise<never> | undefined => {
+
+  if (actual !== expected) {
+    return Promise.reject({
+      status: 400,
+      message: "Bad Request",
+      details: "Invalid boolean value"
+    })
+  }
+}
+
+
 export const verifyPagination = (
   page: number,
   queryResultRowsLength: number

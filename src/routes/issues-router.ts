@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { getIssueByIssueId, getIssuesByPlotId, getIssuesBySubdivisionId, patchIssueByIssueId, postIssueByPlotId, postIssueBySubdivisionId, resolveIssueByIssueId } from "../controllers/issues-controllers"
+import { getIssueByIssueId, getIssuesByPlotId, getIssuesBySubdivisionId, patchIssueByIssueId, postIssueByPlotId, postIssueBySubdivisionId, resolveIssueByIssueId, unresolveIssueByIssueId } from "../controllers/issues-controllers"
 
 
 export const issuesRouter = Router()
@@ -483,3 +483,63 @@ issuesRouter.route("/issues/:issue_id/resolve")
  *              $ref: "#/components/schemas/NotFound"
  */
   .patch(verifyToken, resolveIssueByIssueId)
+
+
+issuesRouter.route("/issues/:issue_id/unresolve")
+
+
+/**
+ * @swagger
+ * /api/issues/{issue_id}/unresolve:
+ *  patch:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Unresolve an issue
+ *    description: Responds with an updated issue object. If the issue is already unresolved or the issue_id parameter is invalid, the server responds with an error. Permission is denied when the issue does not belong to the user.
+ *    tags: [Issues]
+ *    parameters:
+ *      - in: path
+ *        name: issue_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              isResolved:
+ *                type: boolean
+ *                example: false
+ *    responses:
+ *      200:
+ *        description: OK
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                issue:
+ *                  $ref: "#/components/schemas/Issue"
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/BadRequest"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Forbidden"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/NotFound"
+ */
+  .patch(verifyToken, unresolveIssueByIssueId)

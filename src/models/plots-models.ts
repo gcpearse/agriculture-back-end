@@ -3,7 +3,7 @@ import { db } from "../db"
 import format from "pg-format"
 import { ExtendedPlot, Plot, PlotRequest } from "../types/plot-types"
 import { checkForPlotNameConflict, fetchPlotOwnerId, searchForUserId, confirmPlotTypeIsValid } from "../utils/db-queries"
-import { verifyPermission, verifyValueIsPositiveInt, verifyPagination, verifyQueryValue } from "../utils/verification"
+import { verifyPermission, verifyValueIsPositiveInt, verifyPagination, verifyQueryValue, verifyBooleanValue } from "../utils/verification"
 import { QueryResult } from "pg"
 import { Count } from "../types/aggregation-types"
 
@@ -305,13 +305,7 @@ export const setIsPinnedByPlotId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  if (toggle.isPinned !== true) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Invalid boolean value"
-    })
-  }
+  await verifyBooleanValue(toggle.isPinned, true)
 
   const result: QueryResult<Plot> = await db.query(`
     UPDATE plots
@@ -355,13 +349,7 @@ export const unsetIsPinnedByPlotId = async (
 
   await verifyPermission(authUserId, owner_id)
 
-  if (toggle.isPinned !== false) {
-    return Promise.reject({
-      status: 400,
-      message: "Bad Request",
-      details: "Invalid boolean value"
-    })
-  }
+  await verifyBooleanValue(toggle.isPinned, false)
 
   const result: QueryResult<Plot> = await db.query(`
     UPDATE plots
