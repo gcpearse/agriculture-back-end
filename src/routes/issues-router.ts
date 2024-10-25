@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { verifyToken } from "../middleware/authentication"
-import { getIssueByIssueId, getIssuesByPlotId, getIssuesBySubdivisionId, patchIssueByIssueId, postIssueByPlotId, postIssueBySubdivisionId, resolveIssueByIssueId, unresolveIssueByIssueId } from "../controllers/issues-controllers"
+import { deleteIssueByIssueId, getIssueByIssueId, getIssuesByPlotId, getIssuesBySubdivisionId, patchIssueByIssueId, postIssueByPlotId, postIssueBySubdivisionId, resolveIssueByIssueId, unresolveIssueByIssueId } from "../controllers/issues-controllers"
 
 
 export const issuesRouter = Router()
@@ -423,6 +423,46 @@ issuesRouter.route("/issues/:issue_id")
  *              $ref: "#/components/schemas/NotFound"
  */
   .patch(verifyToken, patchIssueByIssueId)
+
+
+/**
+ * @swagger
+ * /api/issues/{issue_id}:
+ *  delete:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Remove an issue from the database
+ *    description: Removes the issue and all associated data from the database. If the issue_id parameter is invalid, the server responds with an error. Permission is denied when the issue does not belong to the user.
+ *    tags: [Issues]
+ *    parameters:
+ *      - in: path
+ *        name: issue_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *    responses:
+ *      204:
+ *        description: No Content
+ *      400:
+ *        description: Bad Request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/BadRequest"
+ *      403:
+ *        description: Forbidden
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Forbidden"
+ *      404:
+ *        description: Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/NotFound"
+ */
+  .delete(verifyToken, deleteIssueByIssueId)
 
 
 issuesRouter.route("/issues/:issue_id/resolve")
