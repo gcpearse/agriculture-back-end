@@ -344,6 +344,26 @@ export const updateIssueByIssueId = async (
 }
 
 
+export const removeIssueByIssueId = async (
+  authUserId: number,
+  issue_id: number
+) => {
+
+  await verifyValueIsPositiveInt(issue_id)
+
+  const owner_id = await fetchIssueOwnerId(issue_id)
+
+  await verifyPermission(authUserId, owner_id)
+
+  await db.query(`
+    DELETE FROM issues
+    WHERE issue_id = $1;
+    `,
+    [issue_id]
+  )
+}
+
+
 export const setIsResolvedByIssueId = async (
   authUserId: number,
   issue_id: number,
