@@ -1139,6 +1139,67 @@ describe("PATCH /api/issues/:issue_id", () => {
 })
 
 
+describe("DELETE /api/issues/:issue_id", () => {
+
+  test("DELETE:204 Deletes the issue with the given issue ID", async () => {
+
+    await request(app)
+      .delete("/api/issues/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(204)
+
+    const { body } = await request(app)
+      .get("/api/issues/1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Issue not found"
+    })
+  })
+
+  test("DELETE:400 Responds with an error when the issue_id parameter is not a positive integer", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/issues/foobar")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Bad Request",
+      details: "Value must be a positive integer"
+    })
+  })
+
+  test("DELETE:403 Responds with an error when the authenticated user attempts to delete another user's issue", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/issues/4")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(403)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Forbidden",
+      details: "Permission denied"
+    })
+  })
+
+  test("DELETE:404 Responds with an error when the issue does not exist", async () => {
+
+    const { body } = await request(app)
+      .delete("/api/issues/999")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404)
+
+    expect(body).toMatchObject<StatusResponse>({
+      message: "Not Found",
+      details: "Issue not found"
+    })
+  })
+})
+
+
 describe("PATCH /api/issues/:issue_id/resolve", () => {
 
   test("PATCH:200 Responds with an updated issue object setting is_critical to false automatically", async () => {
